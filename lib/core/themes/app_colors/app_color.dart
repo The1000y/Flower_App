@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-
-
   static const Color white10 = Color(0xFFFEFEFE);
   static const Color white20 = Color(0xFFFDFDFD);
   static const Color white30 = Color(0xFFFCFCFC);
@@ -17,8 +15,6 @@ class AppColors {
   static const Color white90 = Color(0xFF535353);
   static const Color white100 = Color(0xFF323232);
 
- 
-
   static const Color pink10 = Color(0xFFFD2E1F);
   static const Color pink20 = Color(0xFFF08DCD);
   static const Color pink30 = Color(0xFFE98FB5);
@@ -30,7 +26,6 @@ class AppColors {
   static const Color pink80 = Color(0xFF690F35);
   static const Color pink90 = Color(0xFF460A23);
   static const Color pink100 = Color(0xFF2A0615);
-
 
   static const Color black10 = Color(0xFFCCCDF0);
   static const Color black20 = Color(0xFFAAAFB1);

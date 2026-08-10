@@ -1,20 +1,23 @@
+import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
-
 import 'core/shared/app_widgets/bottom_navigation_bar.dart';
-import 'core/shared/app_widgets/custom_button.dart';
-import 'core/shared/app_widgets/test_screen.dart';
 
-void main(){
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
   runApp(
-     ScreenUtilPlusInit(
+    ScreenUtilPlusInit(
       designSize: const Size(375, 812),
 
       minTextAdapt: true,
 
       splitScreenMode: true,
-    
-    child:  FlowerApp()));
+
+      child: FlowerApp(),
+    ),
+  );
 }
 
 class FlowerApp extends StatelessWidget {
@@ -22,7 +25,8 @@ class FlowerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
+      onGenerateRoute: AppRoutes().onGenerateRoute,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
       home: PersistenBottomNavBarDemo(),
