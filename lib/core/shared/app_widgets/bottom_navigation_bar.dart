@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class PersistenBottomNavBarDemo extends StatelessWidget {
-  @override
+  PersistenBottomNavBarDemo({super.key});
+
   final Widget gomeScreen = TestScreen();
   final Widget categoriesScreen = Padding(
     padding: const EdgeInsets.all(30.0),
@@ -12,6 +13,8 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
   );
   final Widget cartScreen = Placeholder();
   final Widget profileScreen2 = Placeholder();
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Persistent Bottom Navigation Bar Demo',
