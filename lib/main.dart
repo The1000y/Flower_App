@@ -27,7 +27,7 @@ class FlowerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateRoute: AppRoutes().onGenerateRoute,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
       theme: AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
