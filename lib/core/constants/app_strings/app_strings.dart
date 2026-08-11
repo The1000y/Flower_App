@@ -1,5 +1,5 @@
 
-class app_strings{
+class AppStrings{
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
@@ -39,7 +39,7 @@ class app_strings{
   static const String resetPasswordTitle = 'Reset password';
   static const String resetPasswordSubtitle = 'Password must not be empty and must contain 6 characters with upper case letter and one number at least';
   static const String newPasswordLabel = 'New password';
-  static const String flowery_appbar_title='Flowery';
+  static const String floweryAppbarTitle='Flowery';
   static const String searchHint='Search';
   static const String deliverToPrefix = 'Deliver to ';
   static const String categoriesLabel='Categories';
