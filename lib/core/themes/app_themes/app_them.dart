@@ -1,5 +1,6 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppThem {
@@ -38,14 +39,18 @@ class AppThem {
       hintStyle: const TextStyle(color: AppColors.white70),
 
       errorStyle: const TextStyle(color: AppColors.error, fontSize: 10),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: AppColors.white60)
+      ),
 
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.white60),
       ),
 
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.pinkBase, width: 1.5),
       ),
 
@@ -55,7 +60,7 @@ class AppThem {
       ),
 
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.error, width: 1.5),
       ),
     ),
@@ -66,14 +71,15 @@ class AppThem {
 
         elevation: 0,
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
 
-        textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        textStyle:  TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.blackBase,
+        elevation: 0,
 
         side: const BorderSide(color: AppColors.gray),
 
@@ -130,18 +136,7 @@ class AppThem {
         fontWeight: FontWeight.w400,
       ),
 
-      labelLarge: TextStyle(
-        color: AppColors.blackBase,
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
-      // Card title → Inter
-  titleSmall: GoogleFonts.inter(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.blackBase,
-  ),
+      labelLarge: TextStyle(color: AppColors.blackBase),
     ),
-    
   );
 }
