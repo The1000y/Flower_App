@@ -28,7 +28,6 @@ class FlowerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: AppRoutes().onGenerateRoute,
-    return  MaterialApp(
       theme:AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
