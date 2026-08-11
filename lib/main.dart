@@ -1,3 +1,4 @@
+import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -23,6 +24,7 @@ class FlowerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
+      theme:AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
       home: PersistenBottomNavBarDemo(),

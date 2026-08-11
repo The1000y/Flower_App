@@ -1,5 +1,6 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppThem {
   AppThem._();
@@ -94,14 +95,53 @@ class AppThem {
         return Colors.transparent;
       }),
     ),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: AppColors.blackBase),
 
-      bodyMedium: TextStyle(color: AppColors.gray),
+       // Default font for the whole app
+    fontFamily: GoogleFonts.roboto().fontFamily,
+     textTheme:  TextTheme(
+      // Roboto
+      titleLarge: TextStyle(
+        color: AppColors.blackBase,
+        fontSize: 22,
+        fontWeight: FontWeight.w400,
+      ),
 
-      bodySmall: TextStyle(color: AppColors.gray),
+      titleMedium: TextStyle(
+        color: AppColors.blackBase,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
 
-      labelLarge: TextStyle(color: AppColors.blackBase),
+      bodyLarge: TextStyle(
+        color: AppColors.blackBase,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
+
+      bodyMedium: TextStyle(
+        color: AppColors.gray,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+
+      bodySmall: TextStyle(
+        color: AppColors.gray,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+      ),
+
+      labelLarge: TextStyle(
+        color: AppColors.blackBase,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+      // Card title → Inter
+  titleSmall: GoogleFonts.inter(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.blackBase,
+  ),
     ),
+    
   );
 }
