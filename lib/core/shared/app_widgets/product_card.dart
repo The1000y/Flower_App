@@ -118,15 +118,7 @@ class ProductCard extends StatelessWidget {
                  AppStrings.addToCart,
                   style: TextStyle(fontSize: 22.sp, color: Colors.white),
                 ),
-               /* style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD81B60),
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: const Color(0xFFD81B60),
-                  disabledForegroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                ),*/
+              
               ),
             ),
           ],
