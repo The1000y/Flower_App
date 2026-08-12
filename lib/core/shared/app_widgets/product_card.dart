@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -43,10 +47,10 @@ class ProductCard extends StatelessWidget {
                 height: 200.h,
                 fit: BoxFit.cover,
                 errorBuilder: (_, error, stackTrace) {
-                  print(
+                  log(
                     'Error loading image++++++++++++++++++++++++++++++++++++++++++++++++++++: $error',
                   );
-                  print(error);
+                  (error);
                   return Center(
                     child: const Icon(Icons.image_not_supported, size: 100),
                   );
@@ -81,7 +85,7 @@ class ProductCard extends StatelessWidget {
                     'EGP ${oldPrice!.toInt()}',
                     style: TextStyle(
                       fontSize: 20.sp,
-                      color: Colors.grey,
+                      color:AppColors.gray,
                       decoration: TextDecoration.lineThrough,
                     ),
                   ),
@@ -107,14 +111,14 @@ class ProductCard extends StatelessWidget {
                 onPressed: onAddToCart,
                 icon: Icon(
                   Icons.shopping_cart_outlined,
-                  color: Colors.white,
+                  color: AppColors.whiteBase,
                   size: 28.sp,
                 ),
                 label: Text(
-                  'Add to cart',
+                 AppStrings.addToCart,
                   style: TextStyle(fontSize: 22.sp, color: Colors.white),
                 ),
-                style: ElevatedButton.styleFrom(
+               /* style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFD81B60),
                   foregroundColor: Colors.white,
                   disabledBackgroundColor: const Color(0xFFD81B60),
@@ -122,7 +126,7 @@ class ProductCard extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.r),
                   ),
-                ),
+                ),*/
               ),
             ),
           ],
