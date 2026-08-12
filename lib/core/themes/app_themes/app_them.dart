@@ -76,18 +76,30 @@ class AppThem {
         textStyle:  TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
     ),
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.blackBase,
-        elevation: 0,
+   outlinedButtonTheme: OutlinedButtonThemeData(
+  style: OutlinedButton.styleFrom(
+    backgroundColor: AppColors.whiteBase,
+    foregroundColor: AppColors.gray,
 
-        side: const BorderSide(color: AppColors.gray),
+    elevation: 0,
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+    minimumSize: Size(double.infinity, 50.h),
 
-        textStyle: const TextStyle(fontSize: 14),
-      ),
+    side: const BorderSide(
+      color: AppColors.gray,
+      width: 1,
     ),
+
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30.r),
+    ),
+
+    textStyle: TextStyle(
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w500,
+    ),
+  ),
+),
     checkboxTheme: CheckboxThemeData(
       side: const BorderSide(color: AppColors.gray),
 
