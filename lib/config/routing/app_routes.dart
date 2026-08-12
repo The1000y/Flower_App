@@ -1,8 +1,8 @@
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flutter/material.dart';
 
- class AppRoutes {
-  Route<dynamic> onGenerateRoute(RouteSettings settings) {
+ abstract class AppRoutes {
+ static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       // Auth
       case Routes.login:

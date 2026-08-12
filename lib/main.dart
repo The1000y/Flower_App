@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
+import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'core/shared/app_widgets/bottom_navigation_bar.dart';
@@ -26,7 +27,8 @@ class FlowerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateRoute: AppRoutes().onGenerateRoute,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
+      theme: AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
       home: PersistenBottomNavBarDemo(),

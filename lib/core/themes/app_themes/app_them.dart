@@ -1,5 +1,7 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppThem {
   AppThem._();
@@ -37,14 +39,18 @@ class AppThem {
       hintStyle: const TextStyle(color: AppColors.white70),
 
       errorStyle: const TextStyle(color: AppColors.error, fontSize: 10),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: AppColors.white60)
+      ),
 
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.white60),
       ),
 
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.pinkBase, width: 1.5),
       ),
 
@@ -54,7 +60,7 @@ class AppThem {
       ),
 
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.error, width: 1.5),
       ),
     ),
@@ -65,14 +71,15 @@ class AppThem {
 
         elevation: 0,
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
 
-        textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        textStyle:  TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.blackBase,
+        elevation: 0,
 
         side: const BorderSide(color: AppColors.gray),
 
@@ -94,12 +101,40 @@ class AppThem {
         return Colors.transparent;
       }),
     ),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: AppColors.blackBase),
 
-      bodyMedium: TextStyle(color: AppColors.gray),
+       // Default font for the whole app
+    fontFamily: GoogleFonts.roboto().fontFamily,
+     textTheme:  TextTheme(
+      // Roboto
+      titleLarge: TextStyle(
+        color: AppColors.blackBase,
+        fontSize: 22,
+        fontWeight: FontWeight.w400,
+      ),
 
-      bodySmall: TextStyle(color: AppColors.gray),
+      titleMedium: TextStyle(
+        color: AppColors.blackBase,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
+
+      bodyLarge: TextStyle(
+        color: AppColors.blackBase,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
+
+      bodyMedium: TextStyle(
+        color: AppColors.gray,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+
+      bodySmall: TextStyle(
+        color: AppColors.gray,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+      ),
 
       labelLarge: TextStyle(color: AppColors.blackBase),
     ),

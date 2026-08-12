@@ -9,10 +9,10 @@ class SuccessResponce<T> extends BaseResponce<T> {
   SuccessResponce(this.data);
 }
 
-class EroreResponce<T> extends BaseResponce<T> {
+class ErrorResponce<T> extends BaseResponce<T> {
   final String errorMessage;
   final Exception error;
-  EroreResponce(this.error ) : errorMessage = HandelErrorException().handelErrorexception(error);
+  ErrorResponce(this.error ) : errorMessage = HandelErrorException().handelErrorexception(error);
 }
 
 

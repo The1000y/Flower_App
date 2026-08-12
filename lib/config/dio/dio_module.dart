@@ -1,6 +1,7 @@
 
 
 import 'package:dio/dio.dart';
+import 'package:flower_app/config/dio/auth_interceptor.dart';
 import 'package:injectable/injectable.dart';
 
 @module
@@ -14,7 +15,7 @@ abstract class DioModule {
         receiveTimeout: const Duration(seconds: 10),
       ),
     );
-    dio.interceptors.add(LogInterceptor());
+    dio.interceptors.add(AuthInterceptors());
     return dio;
   }
 }
