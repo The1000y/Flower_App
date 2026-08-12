@@ -1,4 +1,3 @@
-import 'package:flower_app/core/shared/app_widgets/test_screen.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
@@ -7,7 +6,7 @@ import '../../constants/app_strings/app_strings.dart';
 
 class PersistenBottomNavBarDemo extends StatelessWidget {
    PersistenBottomNavBarDemo({super.key});
-  final Widget gomeScreen = TestScreen();
+  final Widget gomeScreen = Placeholder();
   final Widget categoriesScreen = Placeholder();
   final Widget cartScreen = Placeholder();
   final Widget profileScreen2 = Placeholder();
