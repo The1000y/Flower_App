@@ -1,4 +1,5 @@
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
 import 'package:flutter/material.dart';
 
  abstract class AppRoutes {
@@ -15,7 +16,7 @@ import 'package:flutter/material.dart';
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.verificationCode:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const VerificationView());
 
       case Routes.resetPassword:
         return MaterialPageRoute(builder: (_) => const Placeholder());
