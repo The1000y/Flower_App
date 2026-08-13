@@ -1,5 +1,4 @@
-
-abstract class AppStrings{
+abstract class AppStrings {
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
@@ -28,24 +27,28 @@ abstract class AppStrings{
   static const String termsLink = 'Terms&Conditions';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String passwordAppBarTitle = 'Password';
-  static const String forgetPasswordHeader = 'Forget password'; // Distinct from the "Forget password?" link
-  static const String forgetPasswordSubtitle = 'Please enter your email associated to your account';
+  static const String forgetPasswordHeader =
+      'Forget password'; // Distinct from the "Forget password?" link
+  static const String forgetPasswordSubtitle =
+      'Please enter your email associated \n   to your account';
   static const String confirmButton = 'Confirm';
   static const String emailVerificationTitle = 'Email verification';
-  static const String emailVerificationSubtitle = 'Please enter your code that send to your email address';
+  static const String emailVerificationSubtitle =
+      'Please enter your code that send to your email address';
   static const String invalidCodeError = 'Invalid code';
   static const String didntReceiveCode = 'Didn\'t receive code? ';
   static const String resendLink = 'Resend';
   static const String resetPasswordTitle = 'Reset password';
-  static const String resetPasswordSubtitle = 'Password must not be empty and must contain 6 characters with upper case letter and one number at least';
+  static const String resetPasswordSubtitle =
+      'Password must not be empty and must contain\n 6 characters with upper case letter and one\n number at least';
   static const String newPasswordLabel = 'New password';
-  static const String floweryAppbarTitle='Flowery';
-  static const String searchHint='Search';
+  static const String floweryAppbarTitle = 'Flowery';
+  static const String searchHint = 'Search';
   static const String deliverToPrefix = 'Deliver to ';
-  static const String categoriesLabel='Categories';
-  static const String bestsellerLabel='Best seller';
-  static const String ocassionLabel='Ocassion';
-  static const String viewAllLabel='View all';
+  static const String categoriesLabel = 'Categories';
+  static const String bestsellerLabel = 'Best seller';
+  static const String ocassionLabel = 'Ocassion';
+  static const String viewAllLabel = 'View all';
   static const String navHome = 'Home';
   static const String navCart = 'Cart';
   static const String navProfile = 'Profile';
@@ -106,7 +109,8 @@ abstract class AppStrings{
   static const String notificationRemember = 'Remember';
   static const String language = 'Language';
   static const String aboutUs = 'About us';
-  static const String termsAndConditionsAlt = 'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
+  static const String termsAndConditionsAlt =
+      'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
   static const String logout = 'Logout';
   static const String changeLanguageTitle = 'Change Language';
   static const String languageArabic = 'Arabic';
