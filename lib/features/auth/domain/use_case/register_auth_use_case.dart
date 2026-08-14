@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
-import '../entities/auth_entity.dart';
-import '../entities/register_params.dart';
-import '../repos/auth_repo.dart';
+import '../entities/register_entity/auth_entity.dart';
+import '../entities/register_entity/register_params.dart';
+import '../repo/auth_repo.dart';
 
 @injectable
 class RegisterAuthUseCase {
