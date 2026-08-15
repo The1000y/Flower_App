@@ -4,7 +4,10 @@ import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_outlined_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_viewModel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -15,6 +18,8 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   bool rememberMe = false;
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController passcontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +33,7 @@ class _LoginViewState extends State<LoginView> {
         child: Column(
           children: [
             CustomTextFormField(
+              controller: emailcontroller,
               label: AppStrings.emailLabel,
               hintText: AppStrings.emailHint,
               keyboardType: TextInputType.emailAddress,
@@ -35,6 +41,7 @@ class _LoginViewState extends State<LoginView> {
             ),
             const SizedBox(height: 16),
             CustomTextFormField(
+              controller: passcontroller,
               label: AppStrings.passwordLabel,
               hintText: AppStrings.passwordHint,
               obscureText: true,
@@ -45,9 +52,9 @@ class _LoginViewState extends State<LoginView> {
                 Checkbox(
                   value: rememberMe,
                   onChanged: (value) {
-                    setState(() {
-                      rememberMe = value!;
-                    });
+                    context.read<LoginViewModel>().handle(
+                      RememberMeChanged(value!),
+                    );
                   },
                 ),
 
@@ -65,7 +72,9 @@ class _LoginViewState extends State<LoginView> {
             SizedBox(height: 16),
             CustomButton(
               text: AppStrings.loginButton,
-              onPressed: () {},
+              onPressed: () {
+                context.read<LoginViewModel>().handle(LoginPressed());
+              },
               isEnabled: false,
               enabledColor: AppColors.pinkBase,
             ),

@@ -14,11 +14,22 @@ class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl(this.loginApi);
   @override
   Future<BaseResponce<LoginEntity>> login(RequestLogin req) async {
-    // TODO: implement login
+   try {
     final response = await loginApi.login(req);
 
     if (response.isSuccess == true && response.data != null) {
-      return SuccessResponce(response.data!);
+      return SuccessResponce(
+        response.data!.tologinEntity(),
+      );
     }
+
+    return ErrorResponce(
+      Exception(response.message ?? 'Login failed'),
+    );
+  } catch (e) {
+    return ErrorResponce(
+      e is Exception ? e : Exception(e.toString()),
+    );
+  }
   }
 }
