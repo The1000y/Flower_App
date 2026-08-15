@@ -94,7 +94,6 @@ class _LoginViewState extends State<LoginView> {
               padding: const EdgeInsets.all(24),
               child: Form(
                 key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -104,6 +103,7 @@ class _LoginViewState extends State<LoginView> {
                       hintText: AppStrings.emailHint,
                       keyboardType: TextInputType.emailAddress,
                       validator: AuthValidators.email,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       onChanged: (value) {
                         context.read<LoginViewModel>().handle(
                               EmailChanged(value),
@@ -117,6 +117,7 @@ class _LoginViewState extends State<LoginView> {
                       hintText: AppStrings.passwordHint,
                       obscureText: obscurePassword,
                       validator: AuthValidators.password,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       onChanged: (value) {
                         context.read<LoginViewModel>().handle(
                               PasswordChanged(value),
