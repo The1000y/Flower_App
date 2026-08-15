@@ -1,12 +1,21 @@
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
+import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
  abstract class AppRoutes {
  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       // Auth
       case Routes.login:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<LoginViewModel>(),
+            child: const LoginView(),
+          ),
+        );
 
       case Routes.signUp:
         return MaterialPageRoute(builder: (_) => const Placeholder());

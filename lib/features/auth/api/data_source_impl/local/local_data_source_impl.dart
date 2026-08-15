@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/local/dummy.dart';
 import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/request_login.dart';
@@ -19,7 +20,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       return ResponseLogin(
         isSuccess: false,
         errorCode: 401,
-        message: "Invalid email or password",
+        message: AppStrings.invalidCredentials,
         data: null,
       );
     } catch (e) {
@@ -28,7 +29,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       return ResponseLogin(
         isSuccess: false,
         errorCode: 500,
-        message: "Something went wrong",
+        message: AppStrings.somethingWentWrong,
         data: null,
       );
     }

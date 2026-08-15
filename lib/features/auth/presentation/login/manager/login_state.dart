@@ -15,6 +15,7 @@ class LoginState extends BaseState<LoginEntity> {
     super.data,
   });
 
+  @override
   LoginState copyWith({
     String? email,
     String? password,

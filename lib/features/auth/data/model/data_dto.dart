@@ -1,6 +1,5 @@
 import 'package:flower_app/features/auth/data/model/user_dto.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/login_entity.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'data_dto.g.dart';
 
@@ -35,7 +34,7 @@ class LoginDataDto {
       refreshToken: refreshToken ?? '',
       expiresIn: expiresIn ?? 0,
       driverStatus: driverStatus ?? '',
-      user: user!.toUserEntity(),
+      user: user?.toUserEntity(),
     );
   }
 }

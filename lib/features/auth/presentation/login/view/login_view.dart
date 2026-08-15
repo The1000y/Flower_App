@@ -1,3 +1,4 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
@@ -5,9 +6,11 @@ import 'package:flower_app/core/shared/app_widgets/custom_outlined_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
-import 'package:flower_app/features/auth/presentation/login/manager/login_viewModel.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_state.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -17,9 +20,40 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  bool rememberMe = false;
-  TextEditingController emailcontroller = TextEditingController();
-  TextEditingController passcontroller = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController emailcontroller = TextEditingController();
+  final TextEditingController passcontroller = TextEditingController();
+  bool obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _restoreRememberedEmail();
+  }
+
+  Future<void> _restoreRememberedEmail() async {
+    final saved = await context.read<LoginViewModel>().loadSavedEmail();
+    if (saved != null && saved.isNotEmpty && emailcontroller.text.isEmpty) {
+      emailcontroller.text = saved;
+    }
+  }
+
+  void _onLoginPressed() {
+    if (_formKey.currentState?.validate() != true) return;
+    context.read<LoginViewModel>().handle(LoginPressed());
+  }
+
+  void _onSuccessNavigate() {
+    Navigator.of(context).pushReplacementNamed(Routes.mainLayout);
+  }
+
+  @override
+  void dispose() {
+    emailcontroller.dispose();
+    passcontroller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,80 +64,130 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            CustomTextFormField(
-              controller: emailcontroller,
-              label: AppStrings.emailLabel,
-              hintText: AppStrings.emailHint,
-              keyboardType: TextInputType.emailAddress,
-              validator: AuthValidators.email,
-            ),
-            const SizedBox(height: 16),
-            CustomTextFormField(
-              controller: passcontroller,
-              label: AppStrings.passwordLabel,
-              hintText: AppStrings.passwordHint,
-              obscureText: true,
-              validator: AuthValidators.password,
-            ),
-            Row(
-              children: [
-                Checkbox(
-                  value: rememberMe,
-                  onChanged: (value) {
-                    context.read<LoginViewModel>().handle(
-                      RememberMeChanged(value!),
-                    );
-                  },
-                ),
-
-                Text(
-                  'Remember me',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                Spacer(),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(AppStrings.forgetPassword),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            CustomButton(
-              text: AppStrings.loginButton,
-              onPressed: () {
-                context.read<LoginViewModel>().handle(LoginPressed());
-              },
-              isEnabled: false,
-              enabledColor: AppColors.pinkBase,
-            ),
-            CustomOutlinedButton(
-              text: AppStrings.continueAsGuest,
-              onPressed: () {},
-            ),
-            RichText(
-              text: TextSpan(
-                style: Theme.of(context).textTheme.bodyMedium,
-                children: [
-                  const TextSpan(text: "Don't have an account? "),
-                  TextSpan(
-                    text: "Sign up",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.pinkBase,
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w500,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: BlocConsumer<LoginViewModel, LoginState>(
+            listener: (context, state) {
+              if (state.errorMessage.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.errorMessage)),
+                );
+              }
+              if (state.data != null) {
+                _onSuccessNavigate();
+              }
+            },
+            builder: (context, state) {
+              return Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CustomTextFormField(
+                      controller: emailcontroller,
+                      label: AppStrings.emailLabel,
+                      hintText: AppStrings.emailHint,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: AuthValidators.email,
+                      onChanged: (value) {
+                        context.read<LoginViewModel>().handle(
+                              EmailChanged(value),
+                            );
+                      },
                     ),
-                    /* recognizer: (){}
-                      ..onTap = () {
-                        Navigate to Sign Up
-                        print("recognizer");
-                      },*/
-                  ),
-                ],
-              ),
-            ),
-          ],
+                    const SizedBox(height: 16),
+                    CustomTextFormField(
+                      controller: passcontroller,
+                      label: AppStrings.passwordLabel,
+                      hintText: AppStrings.passwordHint,
+                      obscureText: obscurePassword,
+                      validator: AuthValidators.password,
+                      onChanged: (value) {
+                        context.read<LoginViewModel>().handle(
+                              PasswordChanged(value),
+                            );
+                      },
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() => obscurePassword = !obscurePassword);
+                        },
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: state.rememberMe,
+                          onChanged: (value) {
+                            context.read<LoginViewModel>().handle(
+                                  RememberMeChanged(value ?? false),
+                                );
+                          },
+                        ),
+                        Text(
+                          AppStrings.rememberMe,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(Routes.forgotPassword);
+                          },
+                          child: Text(AppStrings.forgetPassword),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    CustomButton(
+                      text: AppStrings.loginButton,
+                      onPressed: _onLoginPressed,
+                      isEnabled: !state.isLoading,
+                      isLoading: state.isLoading,
+                      enabledColor: AppColors.pinkBase,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomOutlinedButton(
+                      text: AppStrings.continueAsGuest,
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(Routes.mainLayout);
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    Text.rich(
+                      TextSpan(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: [
+                          const TextSpan(text: AppStrings.dontHaveAccount),
+                          TextSpan(
+                            text: AppStrings.signUp,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.signUp);
+                              },
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
+                              color: AppColors.pinkBase,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

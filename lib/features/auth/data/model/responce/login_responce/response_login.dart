@@ -1,7 +1,5 @@
 
 import 'package:flower_app/features/auth/data/model/data_dto.dart';
-import 'package:flower_app/features/auth/data/model/user_dto.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/login_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'response_login.g.dart';

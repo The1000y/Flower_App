@@ -2,7 +2,7 @@
 
 class Dummy {
   static String email = "bassiony555@gmail.com";
-  static String pass = "1234";
+  static String pass = "12345678";
   
  static Map<String,dynamic> dummyLoginResponse = {
   "isSuccess": true,
