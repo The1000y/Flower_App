@@ -33,54 +33,53 @@ class VerificationView extends StatelessWidget {
 
         body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
           listenWhen: (previous, current) {
-            return previous.otpState.data != current.otpState.data ||
-                previous.otpState.errorMessage !=
-                    current.otpState.errorMessage ||
-                previous.resendOtpState.data != current.resendOtpState.data ||
-                previous.resendOtpState.errorMessage !=
-                    current.resendOtpState.errorMessage;
+            return previous.otpState.isLoading != current.otpState.isLoading ||
+                previous.resendOtpState.isLoading !=
+                    current.resendOtpState.isLoading;
           },
           listener: (context, state) {
-            if (state.otpState.errorMessage.isNotEmpty) {
-              codeController.clear();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  duration: const Duration(seconds: 1),
-                  backgroundColor: AppColors.error,
-                  content: Text(state.otpState.errorMessage),
-                ),
-              );
-            }
-            if (state.otpState.data != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  duration: Duration(seconds: 1),
-                  backgroundColor: AppColors.success,
-                  content: Text("OTP verified successfully"),
-                ),
-              );
-            }
+            // Verify OTP
+            if (!state.otpState.isLoading) {
+              if (state.otpState.errorMessage.isNotEmpty) {
+                codeController.clear();
 
-            // Resend Error
-            if (state.resendOtpState.errorMessage.isNotEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  duration: const Duration(seconds: 1),
-                  backgroundColor: AppColors.error,
-                  content: Text(state.resendOtpState.errorMessage),
-                ),
-              );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 1),
+                    backgroundColor: AppColors.error,
+                    content: Text(state.otpState.errorMessage),
+                  ),
+                );
+              } else if (state.otpState.data != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    duration: Duration(seconds: 1),
+                    backgroundColor: AppColors.success,
+                    content: Text("OTP verified successfully"),
+                  ),
+                );
+              }
             }
-
-            // Resend Success
-            if (state.resendOtpState.data != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  duration: Duration(seconds: 1),
-                  backgroundColor: AppColors.success,
-                  content: Text("Code resent successfully"),
-                ),
-              );
+            
+            // Resend OTP
+            if (!state.resendOtpState.isLoading) {
+              if (state.resendOtpState.errorMessage.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 1),
+                    backgroundColor: AppColors.error,
+                    content: Text(state.resendOtpState.errorMessage),
+                  ),
+                );
+              } else if (state.resendOtpState.data != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    duration: Duration(seconds: 1),
+                    backgroundColor: AppColors.success,
+                    content: Text("Code resent successfully"),
+                  ),
+                );
+              }
             }
           },
           builder: (context, state) {
