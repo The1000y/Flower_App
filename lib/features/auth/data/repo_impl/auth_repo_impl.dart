@@ -34,10 +34,4 @@ class AuthRepoImpl implements AuthRepo {
       throw HandelErrorException().handelErrorexception(error as Exception);
     }
   }
-
-  @override
-  Future<bool> isLoggedIn() async {
-    final token = await _authLocalDataSource.getToken();
-    return token != null && token.isNotEmpty;
-  }
 }

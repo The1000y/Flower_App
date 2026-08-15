@@ -15,7 +15,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<RegisterResponse> register(RegisterRequest request) async {
    try {
-     return _authApiClient.register(request);
+     return await _authApiClient.register(request);
    }
    catch(error){
      throw HandelErrorException().handelErrorexception(error as Exception);

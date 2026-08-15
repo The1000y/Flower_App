@@ -33,7 +33,11 @@ class AuthViewModel extends Cubit<AuthState> {
 
       final result = await _registerAuthUseCase.execute(params);
 
-      emit(state.copyWith(isLoading: false, data: result));
+      if (result.isSuccess) {
+        emit(state.copyWith(isLoading: false, data: result));
+      } else {
+        emit(state.copyWith(isLoading: false, errorMessage: result.message));
+      }
     } catch (error) {
       emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
     }
