@@ -35,6 +35,12 @@ class AppThem {
       fillColor: AppColors.whiteBase,
 
       labelStyle: const TextStyle(color: AppColors.gray),
+      floatingLabelStyle: WidgetStateTextStyle.resolveWith((states) {
+        if (states.contains(WidgetState.error)) {
+          return const TextStyle(color: AppColors.error);
+        }
+        return const TextStyle(color: AppColors.gray);
+      }),
 
       hintStyle: TextStyle(
         color: AppColors.white70,
@@ -59,7 +65,7 @@ class AppThem {
       ),
 
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.error),
       ),
 
