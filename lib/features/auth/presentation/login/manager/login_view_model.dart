@@ -13,54 +13,98 @@ class LoginViewModel extends Cubit<LoginState> {
   final LoginUseCase loginUseCase;
   final SecureStorageService _storage;
 
-  LoginViewModel(this.loginUseCase, this._storage) : super(const LoginState());
+  LoginViewModel(
+    this.loginUseCase,
+    this._storage,
+  ) : super(const LoginState());
 
   Future<void> handle(LoginIntent intent) async {
     switch (intent) {
+      case LoadRememberedEmail():
+        await _loadRememberedEmail();
+
       case EmailChanged():
-        emit(state.copyWith(email: intent.email, errorMessage: ''));
+        emit(
+          state.copyWith(
+            email: intent.email,
+            errorMessage: '',
+          ),
+        );
 
       case PasswordChanged():
-        emit(state.copyWith(password: intent.password, errorMessage: ''));
+        emit(
+          state.copyWith(
+            password: intent.password,
+            errorMessage: '',
+          ),
+        );
 
       case RememberMeChanged():
-        await _onRememberMeChanged(intent.value);
+        emit(
+          state.copyWith(
+            rememberMe: intent.value,
+          ),
+        );
 
       case LoginPressed():
         await _login();
     }
   }
 
-  Future<String?> loadSavedEmail() async {
-    final saved = await _storage.getRememberedEmail();
-    if (saved != null && saved.isNotEmpty) {
-      emit(state.copyWith(email: saved, rememberMe: true));
-    }
-    return saved;
-  }
+  Future<void> _loadRememberedEmail() async {
+    final savedEmail = await _storage.getRememberedEmail();
 
-  Future<void> _onRememberMeChanged(bool value) async {
-    emit(state.copyWith(rememberMe: value));
-    if (value && state.email.isNotEmpty) {
-      await _storage.saveRememberedEmail(state.email);
-    } else if (!value) {
-      await _storage.deleteRememberedEmail();
+    if (savedEmail != null && savedEmail.isNotEmpty) {
+      emit(
+        state.copyWith(
+          email: savedEmail,
+          rememberMe: true,
+        ),
+      );
     }
   }
 
   Future<void> _login() async {
-    emit(state.copyWith(isLoading: true, errorMessage: ''));
+    emit(
+      state.copyWith(
+        isLoading: true,
+        errorMessage: '',
+        loginSuccess: false,
+      ),
+    );
 
     final result = await loginUseCase(
-      RequestLogin(email: state.email, password: state.password),
+      RequestLogin(
+        email: state.email,
+        password: state.password,
+      ),
     );
 
     switch (result) {
       case SuccessResponce<LoginEntity>(data: final login):
-        emit(state.copyWith(isLoading: false, data: login));
 
-      case ErrorResponce<LoginEntity>(errorMessage: final msg):
-        emit(state.copyWith(isLoading: false, errorMessage: msg));
+        if (state.rememberMe) {
+          await _storage.saveRememberedEmail(state.email);
+        } else {
+          await _storage.deleteRememberedEmail();
+        }
+
+        emit(
+          state.copyWith(
+            isLoading: false,
+            data: login,
+            loginSuccess: true,
+          ),
+        );
+
+      case ErrorResponce<LoginEntity>(errorMessage: final message):
+
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: message,
+          ),
+        );
     }
   }
 }

@@ -1,5 +1,7 @@
 sealed class LoginIntent {}
 
+class LoadRememberedEmail extends LoginIntent {}
+
 class LoginPressed extends LoginIntent {}
 
 class EmailChanged extends LoginIntent {

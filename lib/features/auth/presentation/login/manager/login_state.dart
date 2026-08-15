@@ -5,11 +5,13 @@ class LoginState extends BaseState<LoginEntity> {
   final String email;
   final String password;
   final bool rememberMe;
+  final bool loginSuccess;
 
   const LoginState({
     this.email = '',
     this.password = '',
     this.rememberMe = false,
+    this.loginSuccess = false,
     super.isLoading,
     super.errorMessage,
     super.data,
@@ -20,6 +22,7 @@ class LoginState extends BaseState<LoginEntity> {
     String? email,
     String? password,
     bool? rememberMe,
+    bool? loginSuccess,
     bool? isLoading,
     String? errorMessage,
     LoginEntity? data,
@@ -28,6 +31,7 @@ class LoginState extends BaseState<LoginEntity> {
       email: email ?? this.email,
       password: password ?? this.password,
       rememberMe: rememberMe ?? this.rememberMe,
+      loginSuccess: loginSuccess ?? this.loginSuccess,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
       data: data ?? this.data,

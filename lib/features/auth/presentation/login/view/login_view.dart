@@ -21,36 +21,33 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailcontroller = TextEditingController();
-  final TextEditingController passcontroller = TextEditingController();
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   bool obscurePassword = true;
 
   @override
   void initState() {
     super.initState();
-    _restoreRememberedEmail();
-  }
 
-  Future<void> _restoreRememberedEmail() async {
-    final saved = await context.read<LoginViewModel>().loadSavedEmail();
-    if (saved != null && saved.isNotEmpty && emailcontroller.text.isEmpty) {
-      emailcontroller.text = saved;
-    }
+    context.read<LoginViewModel>().handle(
+          LoadRememberedEmail(),
+        );
   }
 
   void _onLoginPressed() {
     if (_formKey.currentState?.validate() != true) return;
-    context.read<LoginViewModel>().handle(LoginPressed());
-  }
 
-  void _onSuccessNavigate() {
-    Navigator.of(context).pushReplacementNamed(Routes.mainLayout);
+    context.read<LoginViewModel>().handle(
+          LoginPressed(),
+        );
   }
 
   @override
   void dispose() {
-    emailcontroller.dispose();
-    passcontroller.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -64,27 +61,44 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: BlocConsumer<LoginViewModel, LoginState>(
-            listener: (context, state) {
-              if (state.errorMessage.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.errorMessage)),
-                );
-              }
-              if (state.data != null) {
-                _onSuccessNavigate();
-              }
-            },
-            builder: (context, state) {
-              return Form(
+        child: BlocConsumer<LoginViewModel, LoginState>(
+          listener: (context, state) {
+            if (state.errorMessage.isNotEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage),
+                ),
+              );
+            }
+
+            if (state.loginSuccess) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.mainLayout,
+              );
+            }
+          },
+          builder: (context, state) {
+            /// تحديث الإيميل لو جه من Secure Storage
+            if (emailController.text != state.email) {
+              emailController.text = state.email;
+
+              emailController.selection = TextSelection.fromPosition(
+                TextPosition(
+                  offset: emailController.text.length,
+                ),
+              );
+            }
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     CustomTextFormField(
-                      controller: emailcontroller,
+                      controller: emailController,
                       label: AppStrings.emailLabel,
                       hintText: AppStrings.emailHint,
                       keyboardType: TextInputType.emailAddress,
@@ -97,7 +111,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     const SizedBox(height: 16),
                     CustomTextFormField(
-                      controller: passcontroller,
+                      controller: passwordController,
                       label: AppStrings.passwordLabel,
                       hintText: AppStrings.passwordHint,
                       obscureText: obscurePassword,
@@ -114,10 +128,13 @@ class _LoginViewState extends State<LoginView> {
                               : Icons.visibility,
                         ),
                         onPressed: () {
-                          setState(() => obscurePassword = !obscurePassword);
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
                         },
                       ),
                     ),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         Checkbox(
@@ -135,10 +152,14 @@ class _LoginViewState extends State<LoginView> {
                         const Spacer(),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(Routes.forgotPassword);
+                            Navigator.pushNamed(
+                              context,
+                              Routes.forgotPassword,
+                            );
                           },
-                          child: Text(AppStrings.forgetPassword),
+                          child: Text(
+                            AppStrings.forgetPassword,
+                          ),
                         ),
                       ],
                     ),
@@ -146,16 +167,18 @@ class _LoginViewState extends State<LoginView> {
                     CustomButton(
                       text: AppStrings.loginButton,
                       onPressed: _onLoginPressed,
-                      isEnabled: !state.isLoading,
                       isLoading: state.isLoading,
+                      isEnabled: !state.isLoading,
                       enabledColor: AppColors.pinkBase,
                     ),
                     const SizedBox(height: 16),
                     CustomOutlinedButton(
                       text: AppStrings.continueAsGuest,
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(Routes.mainLayout);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.mainLayout,
+                        );
                       },
                     ),
                     const SizedBox(height: 24),
@@ -163,21 +186,26 @@ class _LoginViewState extends State<LoginView> {
                       TextSpan(
                         style: Theme.of(context).textTheme.bodyMedium,
                         children: [
-                          const TextSpan(text: AppStrings.dontHaveAccount),
+                          const TextSpan(
+                            text: AppStrings.dontHaveAccount,
+                          ),
                           TextSpan(
                             text: AppStrings.signUp,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.of(context)
-                                    .pushNamed(Routes.signUp);
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.signUp,
+                                );
                               },
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.pinkBase,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: AppColors.pinkBase,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                         ],
                       ),
@@ -185,9 +213,9 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
