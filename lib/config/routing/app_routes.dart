@@ -2,6 +2,7 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
+import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
         );
 
       case Routes.signUp:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const RegisterView());
 
       case Routes.forgotPassword:
         return MaterialPageRoute(builder: (_) => const Placeholder());
