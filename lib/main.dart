@@ -4,8 +4,6 @@ import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'features/auth/presentation/forget_password/view/forget_password.dart';
-import 'features/auth/presentation/forget_password/view/reset_password.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

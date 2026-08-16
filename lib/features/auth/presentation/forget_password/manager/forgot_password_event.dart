@@ -14,5 +14,17 @@ class ResetPasswordEvent extends ForgotPasswordEvent {
     required this.newPassword,
     required this.resetCode,
   });
+
   
+}
+
+class VerifyOtpEvent extends ForgotPasswordEvent {
+  final String email;
+  final String otpCode;
+  VerifyOtpEvent({required this.otpCode , required this.email});
+}
+
+class ResendtOtpEvent extends ForgotPasswordEvent {
+  final String email;
+  ResendtOtpEvent({required this.email});
 }
