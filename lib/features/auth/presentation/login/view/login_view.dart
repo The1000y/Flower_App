@@ -8,6 +8,7 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_state.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
+import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -170,47 +171,48 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            context.read<LoginViewModel>().handle(
-                                  RememberMeChanged(!state.rememberMe),
-                                );
-                          },
-                          borderRadius: BorderRadius.circular(8),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value: state.rememberMe,
-                                onChanged: (value) {
-                                  context.read<LoginViewModel>().handle(
-                                        RememberMeChanged(value ?? false),
-                                      );
-                                },
-                              ),
-                              Text(
-                                AppStrings.rememberMe,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.forgotPassword,
-                            );
-                          },
-                          child: Text(
-                            AppStrings.forgetPassword,
-                          ),
-                        ),
-                      ],
-                    ),
+                   Row(
+  children: [
+    Checkbox(
+      value: state.rememberMe,
+      onChanged: (value) {
+        context.read<LoginViewModel>().handle(
+          RememberMeChanged(value ?? false),
+        );
+      },
+    ),
+
+    InkWell(
+      onTap: () {
+        context.read<LoginViewModel>().handle(
+          RememberMeChanged(!state.rememberMe),
+        );
+      },
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Text(
+          AppStrings.rememberMe,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ),
+    ),
+
+    const Spacer(),
+
+    TextButton(
+      onPressed: () {
+        Navigator.pushNamed(
+          context,
+          Routes.forgotPassword,
+        );
+      },
+      child: Text(
+        AppStrings.forgetPassword,
+      ),
+    ),
+  ],
+),
                     const SizedBox(height: 16),
                     CustomButton(
                       text: AppStrings.loginButton,
@@ -218,14 +220,19 @@ class _LoginViewState extends State<LoginView> {
                       isLoading: state.isLoading,
                       isEnabled: !state.isLoading,
                       enabledColor: AppColors.pinkBase,
+                      
                     ),
                     const SizedBox(height: 16),
                     CustomOutlinedButton(
                       text: AppStrings.continueAsGuest,
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.mainLayout,
+                        Navigator.push(
+                          
+                                 context,
+                         MaterialPageRoute(
+                        builder: (_) => const HomeView(),)
+
+                          // Routes.mainLayout,
                         );
                       },
                     ),
