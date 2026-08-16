@@ -167,4 +167,5 @@ abstract class AppStrings{
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Enter a valid Egyptian phone number';
   static const String registererror='Failed register';
+  static const String registerSuccess='Register successful';
 }

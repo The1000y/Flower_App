@@ -12,8 +12,8 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
-    this.onChanged,
     this.autovalidateMode,
+    this.onChanged,
   });
 
   final String label;
@@ -24,18 +24,18 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final ValueChanged<String>? onChanged;
   final AutovalidateMode? autovalidateMode;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autovalidateMode: autovalidateMode,
+      onChanged: onChanged,
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
       obscureText: obscureText,
-      onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
@@ -45,6 +45,19 @@ class CustomTextFormField extends StatelessWidget {
         ),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(
+            width: 1.5.w,
+            color: Colors.green,
+          ),
+        ),
       ),
     );
   }

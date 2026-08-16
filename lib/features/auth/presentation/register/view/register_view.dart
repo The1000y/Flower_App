@@ -94,7 +94,7 @@ class _RegisterViewState extends State<RegisterView> {
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
-                content: Text(AppStrings.loginSuccess),
+                content: Text(AppStrings.registerSuccess),
                 backgroundColor: AppColors.success,
               ),
             );
