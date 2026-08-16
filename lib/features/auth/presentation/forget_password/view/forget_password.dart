@@ -32,21 +32,27 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       child: Scaffold(
         appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
         body: BlocConsumer<ForgotPasswordViewModel, ForgotPasswordState>(
+          listenWhen: (previous, current) {
+            return previous.forgotstate?.isLoading !=
+                current.forgotstate?.isLoading;
+          },
           listener: (context, state) {
-            if (state.forgotstate?.errorMessage.isNotEmpty ?? false) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.forgotstate!.errorMessage),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state.forgotstate?.data != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("otp send"),
-                  backgroundColor: Colors.green,
-                ),
-              );
+            if (!(state.forgotstate?.isLoading ?? false)) {
+              if (state.forgotstate?.errorMessage.isNotEmpty ?? false) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.forgotstate!.errorMessage),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              } else if (state.forgotstate?.data != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("OTP sent successfully"),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
               //Navigator
             }
           },
@@ -65,7 +71,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 20.h),
-                
+
                     CustomTextFormField(
                       controller: _emailController,
                       label: AppStrings.emailLabel,
@@ -78,11 +84,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       isLoading: state.forgotstate?.isLoading ?? false,
                       text: AppStrings.confirmButton,
                       onPressed: () {
-                        if (_formKey.currentState!.validate()){
+                        if (_formKey.currentState!.validate()) {
                           viewModel.doEvent(
-                            ForgetBassEvent(email: _emailController.text)
-                              
-                            
+                            ForgetBassEvent(email: _emailController.text),
                           );
                         }
                       },

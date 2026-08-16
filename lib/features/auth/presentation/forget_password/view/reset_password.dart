@@ -14,7 +14,12 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({super.key, required this.email, required this.otpcode});
+  const ResetPassword({
+    super.key,
+    required this.email,
+    required this.otpcode,
+  });
+
   final String email;
   final String otpcode;
 
@@ -26,6 +31,7 @@ ForgotPasswordViewModel viewModel = getIt.get<ForgotPasswordViewModel>();
 
 class _ResetPasswordState extends State<ResetPassword> {
   final _formKey = GlobalKey<FormState>();
+
   final _newpassword = TextEditingController();
   final _confirmPassword = TextEditingController();
 
@@ -34,34 +40,48 @@ class _ResetPasswordState extends State<ResetPassword> {
     return BlocProvider(
       create: (context) => viewModel,
       child: Scaffold(
-        appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
-
+        appBar: AppBar(
+          title: Text(AppStrings.passwordAppBarTitle),
+        ),
         body: BlocConsumer<ForgotPasswordViewModel, ForgotPasswordState>(
+          listenWhen: (previous, current) {
+            return previous.resetstate?.isLoading !=
+                current.resetstate?.isLoading;
+          },
           listener: (context, state) {
-            if (state.resetstate?.errorMessage.isNotEmpty ?? false) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.resetstate!.errorMessage),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state.resetstate?.data != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("sucsses new pass"),
-                  backgroundColor: Colors.green,
-                ),
-              );
+            if (!(state.resetstate?.isLoading ?? false)) {
+              if (state.resetstate?.errorMessage.isNotEmpty ?? false) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.resetstate!.errorMessage,
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              } else if (state.resetstate?.data != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Success, new password"),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+
+                // Navigator.push(...)
+              }
             }
           },
           builder: (context, state) {
             return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+              ),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     SizedBox(height: 50.h),
+
                     Center(
                       child: Text(
                         AppStrings.resetPasswordTitle,
@@ -71,11 +91,14 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                       ),
                     ),
+
                     SizedBox(height: 10.h),
+
                     Text(
                       AppStrings.resetPasswordSubtitle,
                       textAlign: TextAlign.center,
                     ),
+
                     SizedBox(height: 20.h),
 
                     CustomTextFormField(
@@ -86,7 +109,9 @@ class _ResetPasswordState extends State<ResetPassword> {
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                     ),
+
                     SizedBox(height: 20.h),
+
                     CustomTextFormField(
                       label: AppStrings.confirmPasswordLabel,
                       hintText: AppStrings.confirmPasswordHint,
@@ -95,13 +120,17 @@ class _ResetPasswordState extends State<ResetPassword> {
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                     ),
+
                     SizedBox(height: 30.h),
+
                     CustomButton(
-                      isLoading: state.forgotstate?.isLoading ?? false,
+                      isLoading:
+                          state.resetstate?.isLoading ?? false,
                       text: AppStrings.confirmButton,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          if (_newpassword.text == _confirmPassword.text) {
+                          if (_newpassword.text ==
+                              _confirmPassword.text) {
                             viewModel.doEvent(
                               ResetPasswordEvent(
                                 email: widget.email,
@@ -111,13 +140,18 @@ class _ResetPasswordState extends State<ResetPassword> {
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("No matching"),
-                              backgroundColor: Colors.red,),
+                              const SnackBar(
+                                content: Text(
+                                  "Passwords do not match",
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           }
                         }
                       },
-                      isEnabled: true,
+                      isEnabled:
+                          !(state.resetstate?.isLoading ?? false),
                       enabledColor: AppColors.pinkBase,
                     ),
                   ],
