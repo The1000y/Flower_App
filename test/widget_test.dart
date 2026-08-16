@@ -1,3 +1,5 @@
+import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
+import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,6 +17,7 @@ import 'package:flower_app/features/auth/domain/repo/auth_repo.dart';
 import 'package:flower_app/features/auth/domain/use_case/login_usecase.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
+import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 
 const _validEmail = 'bassiony555@gmail.com';
 const _validPassword = '12345678';
@@ -31,12 +34,24 @@ class _SuccessAuthRepo implements AuthRepo {
       ),
     );
   }
+
+  @override
+  Future<BaseResponce<RegisterEntity>> register(RegisterRequest request) {
+    // TODO: implement register
+    throw UnimplementedError();
+  }
 }
 
 class _ErrorAuthRepo implements AuthRepo {
   @override
   Future<BaseResponce<LoginEntity>> login(RequestLogin req) async {
     return ErrorResponce(Exception('login failed'));
+  }
+
+  @override
+  Future<BaseResponce<RegisterEntity>> register(RegisterRequest request) {
+    // TODO: implement register
+    throw UnimplementedError();
   }
 }
 
@@ -176,7 +191,7 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(find.byType(Placeholder), findsOneWidget);
+    expect(find.byType(HomeView), findsOneWidget);
   });
 
   testWidgets('shows error snackbar on failed login', (tester) async {

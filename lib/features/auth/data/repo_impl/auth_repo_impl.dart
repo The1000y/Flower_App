@@ -11,21 +11,21 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
-  final AuthLocalDataSource loginApi;
-  final SecureStorageService secureStorage;
+  final AuthLocalDataSource _authLocalDataSource;
+  final SecureStorageService _secureStorage;
 
-  AuthRepoImpl(this.loginApi, this.secureStorage, this._authLocalDataSource);
+  AuthRepoImpl(this._authLocalDataSource, this._secureStorage);
 
   @override
   Future<BaseResponce<LoginEntity>> login(RequestLogin req) async {
     try {
-      final response = await loginApi.login(req);
+      final response = await _authLocalDataSource.login(req);
 
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.tologinEntity();
 
-        await secureStorage.saveAccessToken(login.accessToken);
-        await secureStorage.saveRefreshToken(login.refreshToken);
+        await _secureStorage.saveAccessToken(login.accessToken);
+        await _secureStorage.saveRefreshToken(login.refreshToken);
 
         return SuccessResponce(login);
       }
@@ -37,9 +37,6 @@ class AuthRepoImpl implements AuthRepo {
       return ErrorResponce(e is Exception ? e : Exception(e.toString()));
     }
   }
-
-  // final AuthRemoteDataSource _authRemoteDataSource;
-  final AuthLocalDataSource _authLocalDataSource;
 
   @override
   Future<BaseResponce<RegisterEntity>> register(RegisterRequest request) async {
