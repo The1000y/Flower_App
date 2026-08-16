@@ -54,7 +54,9 @@ class LoginViewModel extends Cubit<LoginState> {
   Future<void> _loadRememberedEmail() async {
     final savedEmail = await _storage.getRememberedEmail();
 
-    if (savedEmail != null && savedEmail.isNotEmpty) {
+    if (savedEmail != null &&
+        savedEmail.isNotEmpty &&
+        state.email.isEmpty) {
       emit(
         state.copyWith(
           email: savedEmail,

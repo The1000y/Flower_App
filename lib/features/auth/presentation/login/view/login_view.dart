@@ -26,6 +26,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController passwordController = TextEditingController();
 
   bool obscurePassword = true;
+  bool _emailEditedByUser = false;
 
   @override
   void initState() {
@@ -37,7 +38,25 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _onLoginPressed() {
-    if (_formKey.currentState?.validate() != true) return;
+    final form = _formKey.currentState;
+
+    if (form == null || !form.validate()) {
+      final emailError = AuthValidators.email(emailController.text);
+      final passwordError = AuthValidators.password(passwordController.text);
+      final message = emailError ??
+          passwordError ??
+          AppStrings.invalidCredentials;
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      return;
+    }
 
     context.read<LoginViewModel>().handle(
           LoginPressed(),
@@ -64,23 +83,36 @@ class _LoginViewState extends State<LoginView> {
         child: BlocConsumer<LoginViewModel, LoginState>(
           listener: (context, state) {
             if (state.errorMessage.isNotEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage),
-                ),
-              );
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage),
+                    backgroundColor: AppColors.error,
+                  ),
+                );
             }
 
             if (state.loginSuccess) {
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.mainLayout,
-              );
+              final messenger = ScaffoldMessenger.of(context);
+              final navigator = Navigator.of(context);
+              messenger
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(AppStrings.loginSuccess),
+                    backgroundColor: AppColors.success,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              Future.delayed(const Duration(seconds: 2), () {
+                navigator.pushReplacementNamed(Routes.mainLayout);
+              });
             }
           },
           builder: (context, state) {
-            /// تحديث الإيميل لو جه من Secure Storage
-            if (emailController.text != state.email) {
+            /// تحديث الإيميل لو جه من Secure Storage (فقط قبل أن يكتب المستخدم)
+            if (!_emailEditedByUser && emailController.text != state.email) {
               emailController.text = state.email;
 
               emailController.selection = TextSelection.fromPosition(
@@ -105,6 +137,7 @@ class _LoginViewState extends State<LoginView> {
                       validator: AuthValidators.email,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       onChanged: (value) {
+                        _emailEditedByUser = true;
                         context.read<LoginViewModel>().handle(
                               EmailChanged(value),
                             );
@@ -139,17 +172,30 @@ class _LoginViewState extends State<LoginView> {
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        Checkbox(
-                          value: state.rememberMe,
-                          onChanged: (value) {
+                        InkWell(
+                          onTap: () {
                             context.read<LoginViewModel>().handle(
-                                  RememberMeChanged(value ?? false),
+                                  RememberMeChanged(!state.rememberMe),
                                 );
                           },
-                        ),
-                        Text(
-                          AppStrings.rememberMe,
-                          style: Theme.of(context).textTheme.bodySmall,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: state.rememberMe,
+                                onChanged: (value) {
+                                  context.read<LoginViewModel>().handle(
+                                        RememberMeChanged(value ?? false),
+                                      );
+                                },
+                              ),
+                              Text(
+                                AppStrings.rememberMe,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
                         ),
                         const Spacer(),
                         TextButton(

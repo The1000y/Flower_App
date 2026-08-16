@@ -143,6 +143,7 @@ abstract class AppStrings{
 
   // Auth error / validation messages
   static const String loginFailed = 'Login failed';
+  static const String loginSuccess = 'Login successful';
   static const String invalidCredentials = 'Invalid email or password';
   static const String somethingWentWrong = 'Something went wrong';
   static const String emailRequired = 'Email is required';
