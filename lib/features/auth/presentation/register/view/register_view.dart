@@ -58,6 +58,7 @@ class _RegisterViewState extends State<RegisterView> {
             fullName: fullName,
             email: _emailController.text.trim(),
             password: _passwordController.text,
+            confirmPassword: _confirmPasswordController.text,
             phoneNumber: _phoneController.text.trim(),
             gender: _isFemale ? 1 : 2, // 1 for Female, 2 for Male as per API
           ),
@@ -123,6 +124,7 @@ class _RegisterViewState extends State<RegisterView> {
                               hintText: AppStrings.firstNameHint,
                               controller: _firstNameController,
                               validator: AuthValidators.firstName,
+
                             ),
                           ),
                           SizedBox(width: 17.w),
