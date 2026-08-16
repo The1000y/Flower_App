@@ -34,7 +34,7 @@ class FlowerApp extends StatelessWidget {
       theme: AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
-     initialRoute: Routes.signUp,
+     
     );
   }
 }

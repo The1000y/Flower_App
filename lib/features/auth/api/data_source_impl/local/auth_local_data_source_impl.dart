@@ -1,16 +1,44 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/features/auth/api/data_source_impl/local/dummy.dart';
+import 'package:flower_app/features/auth/data/model/request/login_request/request_login.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
+import 'package:flower_app/features/auth/data/model/responce/login_responce/response_login.dart';
 import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../../core/constants/storage_keys.dart';
-
 import '../../../data/data_source/local_data_source/auth_local_data_source.dart';
 
 
 @Injectable(as: AuthLocalDataSource)
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
+
+
+  
+  Future<ResponseLogin> login(RequestLogin login) async {
+   
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      if (login.email == Dummy.email && login.password == Dummy.pass) {
+        return ResponseLogin.fromJson(Dummy.dummyLoginResponse);
+      }
+      return ResponseLogin(
+        isSuccess: false,
+        errorCode: 401,
+        message: AppStrings.invalidCredentials,
+        data: null,
+      );
+    } catch (e) {
+      log(e.toString());
+
+      return ResponseLogin(
+        isSuccess: false,
+        errorCode: 500,
+        message: AppStrings.somethingWentWrong,
+        data: null,
+      );
+    }
+  }
   @override
   Future<RegisterResponse> register(RegisterRequest request) async {
     // TODO: implement register
