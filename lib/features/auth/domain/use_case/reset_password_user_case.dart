@@ -1,6 +1,8 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_passsword_entity.dart';
 import 'package:flower_app/features/auth/domain/repo/auth_repo.dart';
+import 'package:injectable/injectable.dart';
+@injectable
 
 class ResetPasswordUserCase {
   AuthRepo authRepo;

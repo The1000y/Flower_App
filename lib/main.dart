@@ -1,12 +1,10 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
-import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
-
 import 'features/auth/presentation/forget_password/view/forget_password.dart';
-import 'features/auth/presentation/forget_password/view/verification_code_error.dart';
+import 'features/auth/presentation/forget_password/view/reset_password.dart';
 
 
 void main() {
@@ -35,7 +33,7 @@ class FlowerApp extends StatelessWidget {
       theme: AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
-      home: VerificationCodeError(),
+      home: ForgetPassword(),
     );
   }
 }
