@@ -6,15 +6,14 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: 
-      Center(
+      body: Center(
         child: Row(
           children: [
-            Text("comming soon"),
-            CircularProgressIndicator()
+            Text("comming soon", style: Theme.of(context).textTheme.titleLarge),
+            CircularProgressIndicator(),
           ],
         ),
-      )),
+      ),
     );
   }
 }

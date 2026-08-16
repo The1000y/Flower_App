@@ -33,9 +33,7 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     super.initState();
 
-    context.read<LoginViewModel>().handle(
-          LoadRememberedEmail(),
-        );
+    context.read<LoginViewModel>().handle(LoadRememberedEmail());
   }
 
   void _onLoginPressed() {
@@ -44,24 +42,18 @@ class _LoginViewState extends State<LoginView> {
     if (form == null || !form.validate()) {
       final emailError = AuthValidators.email(emailController.text);
       final passwordError = AuthValidators.password(passwordController.text);
-      final message = emailError ??
-          passwordError ??
-          AppStrings.invalidCredentials;
+      final message =
+          emailError ?? passwordError ?? AppStrings.invalidCredentials;
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: AppColors.error,
-          ),
+          SnackBar(content: Text(message), backgroundColor: AppColors.error),
         );
       return;
     }
 
-    context.read<LoginViewModel>().handle(
-          LoginPressed(),
-        );
+    context.read<LoginViewModel>().handle(LoginPressed());
   }
 
   @override
@@ -107,19 +99,19 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 );
               Future.delayed(const Duration(seconds: 2), () {
-                navigator.pushReplacementNamed(Routes.mainLayout);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeView()),
+                );
               });
             }
           },
           builder: (context, state) {
-            /// تحديث الإيميل لو جه من Secure Storage (فقط قبل أن يكتب المستخدم)
             if (!_emailEditedByUser && emailController.text != state.email) {
               emailController.text = state.email;
 
               emailController.selection = TextSelection.fromPosition(
-                TextPosition(
-                  offset: emailController.text.length,
-                ),
+                TextPosition(offset: emailController.text.length),
               );
             }
 
@@ -140,8 +132,8 @@ class _LoginViewState extends State<LoginView> {
                       onChanged: (value) {
                         _emailEditedByUser = true;
                         context.read<LoginViewModel>().handle(
-                              EmailChanged(value),
-                            );
+                          EmailChanged(value),
+                        );
                       },
                     ),
                     const SizedBox(height: 16),
@@ -154,8 +146,8 @@ class _LoginViewState extends State<LoginView> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       onChanged: (value) {
                         context.read<LoginViewModel>().handle(
-                              PasswordChanged(value),
-                            );
+                          PasswordChanged(value),
+                        );
                       },
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -171,48 +163,43 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                   Row(
-  children: [
-    Checkbox(
-      value: state.rememberMe,
-      onChanged: (value) {
-        context.read<LoginViewModel>().handle(
-          RememberMeChanged(value ?? false),
-        );
-      },
-    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: state.rememberMe,
+                          onChanged: (value) {
+                            context.read<LoginViewModel>().handle(
+                              RememberMeChanged(value ?? false),
+                            );
+                          },
+                        ),
 
-    InkWell(
-      onTap: () {
-        context.read<LoginViewModel>().handle(
-          RememberMeChanged(!state.rememberMe),
-        );
-      },
-      borderRadius: BorderRadius.circular(4),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(
-          AppStrings.rememberMe,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ),
-    ),
+                        InkWell(
+                          onTap: () {
+                            context.read<LoginViewModel>().handle(
+                              RememberMeChanged(!state.rememberMe),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(4),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(
+                              AppStrings.rememberMe,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ),
 
-    const Spacer(),
+                        const Spacer(),
 
-    TextButton(
-      onPressed: () {
-        Navigator.pushNamed(
-          context,
-          Routes.forgotPassword,
-        );
-      },
-      child: Text(
-        AppStrings.forgetPassword,
-      ),
-    ),
-  ],
-),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.forgotPassword);
+                          },
+                          child: Text(AppStrings.forgetPassword),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
                     CustomButton(
                       text: AppStrings.loginButton,
@@ -220,17 +207,14 @@ class _LoginViewState extends State<LoginView> {
                       isLoading: state.isLoading,
                       isEnabled: !state.isLoading,
                       enabledColor: AppColors.pinkBase,
-                      
                     ),
                     const SizedBox(height: 16),
                     CustomOutlinedButton(
                       text: AppStrings.continueAsGuest,
                       onPressed: () {
                         Navigator.push(
-                          
-                                 context,
-                         MaterialPageRoute(
-                        builder: (_) => const HomeView(),)
+                          context,
+                          MaterialPageRoute(builder: (_) => const HomeView()),
 
                           // Routes.mainLayout,
                         );
@@ -241,21 +225,14 @@ class _LoginViewState extends State<LoginView> {
                       TextSpan(
                         style: Theme.of(context).textTheme.bodyMedium,
                         children: [
-                          const TextSpan(
-                            text: AppStrings.dontHaveAccount,
-                          ),
+                          const TextSpan(text: AppStrings.dontHaveAccount),
                           TextSpan(
                             text: AppStrings.signUp,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.pushNamed(
-                                  context,
-                                  Routes.signUp,
-                                );
+                                Navigator.pushNamed(context, Routes.signUp);
                               },
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: AppColors.pinkBase,
                                   decoration: TextDecoration.underline,
