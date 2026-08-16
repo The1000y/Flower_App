@@ -37,4 +37,13 @@ class LoginState extends BaseState<LoginEntity> {
       data: data ?? this.data,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        email,
+        password,
+        rememberMe,
+        loginSuccess,
+      ];
 }
