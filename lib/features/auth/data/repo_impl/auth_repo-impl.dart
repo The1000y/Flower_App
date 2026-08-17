@@ -6,11 +6,9 @@ import 'package:flower_app/features/auth/data/model/responce/forget_responce/for
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/forget_password_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_passsword_entity.dart';
-import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
 import 'package:flower_app/features/auth/domain/repo/auth_repo.dart';
 import 'package:injectable/injectable.dart';
 
-import '../data_source/remote_data_source/remote_data_source.dart';
 
 @LazySingleton(as: AuthRepo)
 class AuthRepoimpl implements AuthRepo {
@@ -53,12 +51,5 @@ class AuthRepoimpl implements AuthRepo {
     }
   }
 
-  @override
-  Future<BaseResponce<VerifyOtpEntity>> verifyOtp({
-    required String email,
-    required String otp,
-  }) {
-    // TODO: implement verifyOtp
-    throw UnimplementedError();
-  }
+ 
 }
