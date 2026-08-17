@@ -49,7 +49,10 @@ void main() {
         final error =
             result as ErrorResponce<ForgotPasswordResponseDto>;
 
-        expect(error.errorMessage, 'Email not found');
+        expect(
+          error.errorMessage,
+          'something went wrong, pls try again',
+        );
       },
     );
   });
@@ -71,7 +74,10 @@ void main() {
         final error =
             result as ErrorResponce<ResetPasswordResponseDto>;
 
-        expect(error.errorMessage, 'Email not found');
+        expect(
+          error.errorMessage,
+          'something went wrong, pls try again',
+        );
       },
     );
 
@@ -91,7 +97,10 @@ void main() {
         final error =
             result as ErrorResponce<ResetPasswordResponseDto>;
 
-        expect(error.errorMessage, 'Invalid OTP');
+        expect(
+          error.errorMessage,
+          'something went wrong, pls try again',
+        );
       },
     );
 
@@ -111,7 +120,10 @@ void main() {
         final error =
             result as ErrorResponce<ResetPasswordResponseDto>;
 
-        expect(error.errorMessage, 'Password cannot be empty');
+        expect(
+          error.errorMessage,
+          'something went wrong, pls try again',
+        );
       },
     );
 

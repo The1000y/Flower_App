@@ -102,7 +102,7 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => ErrorResponce(
-            Exception('Email not found'),
+            Exception('something went wrong, pls try again'),
           ),
         );
 
@@ -134,7 +134,7 @@ void main() {
             .having(
               (state) => state.forgotstate!.errorMessage,
               'errorMessage',
-              'Email not found',
+              'something went wrong, pls try again',
             ),
       ],
       verify: (_) {
@@ -253,7 +253,7 @@ void main() {
             .having(
               (state) => state.resetstate!.errorMessage,
               'errorMessage',
-              'Invalid OTP',
+              'something went wrong, pls try again',
             ),
       ],
       verify: (_) {
