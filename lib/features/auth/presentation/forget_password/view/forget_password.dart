@@ -1,4 +1,5 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
@@ -26,7 +27,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
- @override
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => viewModel,
@@ -38,8 +39,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 current.forgotstate.isLoading;
           },
           listener: (context, state) {
-            if (!(state.forgotstate.isLoading  )) {
-              if (state.forgotstate.errorMessage.isNotEmpty  ) {
+            if (!(state.forgotstate.isLoading)) {
+              if (state.forgotstate.errorMessage.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.forgotstate.errorMessage),
@@ -82,12 +83,17 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     ),
                     SizedBox(height: 30.h),
                     CustomButton(
-                      isLoading: state.forgotstate.isLoading ,
+                      isLoading: state.forgotstate.isLoading,
                       text: AppStrings.confirmButton,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           viewModel.doEvent(
                             ForgetBassEvent(email: _emailController.text),
+                          );
+                          Navigator.pushNamed(
+                            context,
+                            Routes.verificationCode,
+                            arguments: {'email': _emailController.text},
                           );
                         }
                       },

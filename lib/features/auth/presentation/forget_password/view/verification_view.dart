@@ -1,3 +1,4 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/widgets/custom_pin_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,8 @@ import 'package:flower_app/features/auth/presentation/forget_password/manager/cu
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_state.dart';
 
 class VerificationView extends StatelessWidget {
-  const VerificationView({super.key});
+  const VerificationView({super.key, required this.email});
+  final String email;
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +59,14 @@ class VerificationView extends StatelessWidget {
                     content: Text("OTP verified successfully"),
                   ),
                 );
+                Navigator.pushNamed(
+                  context,
+                  Routes.resetPassword,
+                  arguments: {'email': email, 'otpcode': codeController.text},
+                );
               }
             }
-            
+
             // Resend OTP
             if (!state.resendOtpState.isLoading) {
               if (state.resendOtpState.errorMessage.isNotEmpty) {
@@ -104,7 +111,11 @@ class VerificationView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 32),
-                  CustomPinWidget(codeController: codeController, textTheme: textTheme , state: state,),
+                  CustomPinWidget(
+                    codeController: codeController,
+                    textTheme: textTheme,
+                    state: state,
+                  ),
                 ],
               ),
             );
@@ -114,5 +125,3 @@ class VerificationView extends StatelessWidget {
     );
   }
 }
-
-
