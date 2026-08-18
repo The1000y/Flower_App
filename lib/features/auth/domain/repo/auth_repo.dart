@@ -7,3 +7,5 @@ import '../entities/register_entity/register_entity.dart';
 abstract class AuthRepo {
   Future<BaseResponce<RegisterEntity>> register(RegisterRequest request);
 }
+
+

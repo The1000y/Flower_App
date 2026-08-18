@@ -12,6 +12,8 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.autovalidateMode,
+    this.onChanged,
   });
 
   final String label;
@@ -22,10 +24,14 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final AutovalidateMode? autovalidateMode;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: autovalidateMode,
+      onChanged: onChanged,
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,

@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class AuthInterceptors extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    print('REQUEST[${options.method}] => PATH: ${options.path}');
+    debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
 
     //add method that get token from secure storage
     
@@ -11,7 +12,7 @@ class AuthInterceptors extends Interceptor {
   }
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    print(
+    debugPrint(
       'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
     );
     //add method that delete token from secure storage

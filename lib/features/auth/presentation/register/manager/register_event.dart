@@ -1,6 +1,6 @@
-sealed class AuthEvent {}
+sealed class RegisterEvent {}
 
-class RegisterEvent extends AuthEvent {
+class RegisterSubmitted extends RegisterEvent {
   final String fullName;
   final String email;
   final String password;
@@ -8,7 +8,7 @@ class RegisterEvent extends AuthEvent {
   final String phoneNumber;
   final int gender;
 
-  RegisterEvent({
+  RegisterSubmitted({
     required this.fullName,
     required this.email,
     required this.password,
