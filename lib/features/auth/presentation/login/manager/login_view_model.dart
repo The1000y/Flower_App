@@ -1,21 +1,27 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/auth/api/service/secure_storage.dart';
-import 'package:flower_app/features/auth/data/model/request/login_request/request_login.dart';
+import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/login_entity.dart';
+import 'package:flower_app/features/auth/domain/use_case/delete_remembered_email_use_case.dart';
+import 'package:flower_app/features/auth/domain/use_case/load_remembered_email_use_case.dart';
 import 'package:flower_app/features/auth/domain/use_case/login_usecase.dart';
+import 'package:flower_app/features/auth/domain/use_case/save_remembered_email_use_case.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class LoginViewModel extends Cubit<LoginState> {
-  final LoginUseCase loginUseCase;
-  final SecureStorageService _storage;
+  final LoginUseCase _loginUseCase;
+  final LoadRememberedEmailUseCase _loadRememberedEmailUseCase;
+  final SaveRememberedEmailUseCase _saveRememberedEmailUseCase;
+  final DeleteRememberedEmailUseCase _deleteRememberedEmailUseCase;
 
   LoginViewModel(
-    this.loginUseCase,
-    this._storage,
+    this._loginUseCase,
+    this._loadRememberedEmailUseCase,
+    this._saveRememberedEmailUseCase,
+    this._deleteRememberedEmailUseCase,
   ) : super(const LoginState());
 
   Future<void> handle(LoginIntent intent) async {
@@ -46,13 +52,20 @@ class LoginViewModel extends Cubit<LoginState> {
           ),
         );
 
+      case ValidationFailed():
+        emit(
+          state.copyWith(
+            errorMessage: intent.message,
+          ),
+        );
+
       case LoginPressed():
         await _login();
     }
   }
 
   Future<void> _loadRememberedEmail() async {
-    final savedEmail = await _storage.getRememberedEmail();
+    final savedEmail = await _loadRememberedEmailUseCase();
 
     if (savedEmail != null &&
         savedEmail.isNotEmpty &&
@@ -75,8 +88,8 @@ class LoginViewModel extends Cubit<LoginState> {
       ),
     );
 
-    final result = await loginUseCase(
-      RequestLogin(
+    final result = await _loginUseCase(
+      LoginCredentials(
         email: state.email,
         password: state.password,
       ),
@@ -86,9 +99,9 @@ class LoginViewModel extends Cubit<LoginState> {
       case SuccessResponce<LoginEntity>(data: final login):
 
         if (state.rememberMe) {
-          await _storage.saveRememberedEmail(state.email);
+          await _saveRememberedEmailUseCase(state.email);
         } else {
-          await _storage.deleteRememberedEmail();
+          await _deleteRememberedEmailUseCase();
         }
 
         emit(

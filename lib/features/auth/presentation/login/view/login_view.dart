@@ -45,11 +45,7 @@ class _LoginViewState extends State<LoginView> {
       final message =
           emailError ?? passwordError ?? AppStrings.invalidCredentials;
 
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(message), backgroundColor: AppColors.error),
-        );
+      context.read<LoginViewModel>().handle(ValidationFailed(message));
       return;
     }
 
@@ -75,6 +71,13 @@ class _LoginViewState extends State<LoginView> {
       body: SafeArea(
         child: BlocConsumer<LoginViewModel, LoginState>(
           listener: (context, state) {
+            if (!_emailEditedByUser && emailController.text != state.email) {
+              emailController.text = state.email;
+              emailController.selection = TextSelection.fromPosition(
+                TextPosition(offset: emailController.text.length),
+              );
+            }
+
             if (state.errorMessage.isNotEmpty) {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
@@ -97,22 +100,15 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 );
               Future.delayed(const Duration(seconds: 2), () {
-                if (!mounted) return;
-                Navigator.push(
+                if (!context.mounted) return;
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeView()),
+                  MaterialPageRoute(builder: (context) => const HomeView()),
                 );
               });
             }
           },
           builder: (context, state) {
-            if (!_emailEditedByUser && emailController.text != state.email) {
-              emailController.text = state.email;
-
-              emailController.selection = TextSelection.fromPosition(
-                TextPosition(offset: emailController.text.length),
-              );
-            }
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24),

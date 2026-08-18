@@ -1,8 +1,13 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/auth/data/model/request/login_request/request_login.dart';
+import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/login_entity.dart';
 
-
 abstract class AuthRepo {
-  Future<BaseResponce<LoginEntity>> login(RequestLogin req);
+  Future<BaseResponce<LoginEntity>> login(LoginCredentials credentials);
+
+  Future<String?> getRememberedEmail();
+
+  Future<void> saveRememberedEmail(String email);
+
+  Future<void> deleteRememberedEmail();
 }

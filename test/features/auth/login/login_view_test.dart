@@ -2,9 +2,6 @@ import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_outlined_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
-import 'package:flower_app/features/auth/api/service/secure_storage.dart';
-import 'package:flower_app/features/auth/domain/use_case/login_usecase.dart';
-import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
@@ -12,7 +9,6 @@ import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/auth_test_helpers.dart';
@@ -26,10 +22,7 @@ Widget _app(FakeAuthRepo repo) {
           const Scaffold(body: Text('Forgot Password Screen')),
     },
     home: BlocProvider(
-      create: (_) => LoginViewModel(
-        LoginUseCase(repo),
-        SecureStorageService(const FlutterSecureStorage()),
-      ),
+      create: (_) => buildLoginViewModel(repo),
       child: const LoginView(),
     ),
   );

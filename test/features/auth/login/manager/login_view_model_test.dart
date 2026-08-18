@@ -1,8 +1,5 @@
-import 'package:flower_app/features/auth/api/service/secure_storage.dart';
-import 'package:flower_app/features/auth/domain/use_case/login_usecase.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/auth_test_helpers.dart';
@@ -10,10 +7,7 @@ import '../../../../helpers/auth_test_helpers.dart';
 class _Harness {
   _Harness({FakeAuthRepo? repo}) : repo = repo ?? FakeAuthRepo() {
     useInMemorySecureStorage();
-    viewModel = LoginViewModel(
-      LoginUseCase(this.repo),
-      SecureStorageService(const FlutterSecureStorage()),
-    );
+    viewModel = buildLoginViewModel(this.repo);
   }
 
   final FakeAuthRepo repo;
@@ -58,14 +52,20 @@ void main() {
       expect(harness.viewModel.state.rememberMe, isTrue);
     });
 
+    test('ValidationFailed sets errorMessage without loading login', () {
+      final harness = _Harness();
+      harness.viewModel.handle(ValidationFailed('bad input'));
+
+      expect(harness.viewModel.state.errorMessage, 'bad input');
+      expect(harness.viewModel.state.isLoading, isFalse);
+      expect(harness.viewModel.state.loginSuccess, isFalse);
+    });
+
     test(
         'LoadRememberedEmail restores saved email and sets rememberMe when email empty',
         () async {
       useInMemorySecureStorage({'remembered_email': 'saved@example.com'});
-      final viewModel = LoginViewModel(
-        LoginUseCase(FakeAuthRepo()),
-        SecureStorageService(const FlutterSecureStorage()),
-      );
+      final viewModel = buildLoginViewModel(FakeAuthRepo());
 
       await viewModel.handle(LoadRememberedEmail());
 
@@ -75,10 +75,7 @@ void main() {
 
     test('LoadRememberedEmail does not overwrite already typed email', () async {
       useInMemorySecureStorage({'remembered_email': 'old@example.com'});
-      final viewModel = LoginViewModel(
-        LoginUseCase(FakeAuthRepo()),
-        SecureStorageService(const FlutterSecureStorage()),
-      );
+      final viewModel = buildLoginViewModel(FakeAuthRepo());
 
       viewModel.handle(EmailChanged(validEmail));
       await viewModel.handle(LoadRememberedEmail());
@@ -111,10 +108,7 @@ void main() {
 
     test('login success with rememberMe saves email to storage', () async {
       useInMemorySecureStorage();
-      final viewModel = LoginViewModel(
-        LoginUseCase(FakeAuthRepo()),
-        SecureStorageService(const FlutterSecureStorage()),
-      );
+      final viewModel = buildLoginViewModel(FakeAuthRepo());
 
       viewModel.handle(EmailChanged(validEmail));
       viewModel.handle(PasswordChanged(validPassword));
@@ -127,10 +121,7 @@ void main() {
 
     test('login success without rememberMe deletes saved email', () async {
       useInMemorySecureStorage({'remembered_email': 'old@example.com'});
-      final viewModel = LoginViewModel(
-        LoginUseCase(FakeAuthRepo()),
-        SecureStorageService(const FlutterSecureStorage()),
-      );
+      final viewModel = buildLoginViewModel(FakeAuthRepo());
 
       viewModel.handle(EmailChanged(validEmail));
       viewModel.handle(PasswordChanged(validPassword));
@@ -154,11 +145,21 @@ void main() {
       expect(state.errorMessage, isNotEmpty);
     });
 
+    test('login passes LoginCredentials to the repo', () async {
+      final harness = _Harness();
+      harness.viewModel.handle(EmailChanged(validEmail));
+      harness.viewModel.handle(PasswordChanged(validPassword));
+
+      await harness.viewModel.handle(LoginPressed());
+
+      expect(harness.repo.lastRequest?.email, validEmail);
+      expect(harness.repo.lastRequest?.password, validPassword);
+    });
+
     test('login emits loading while in progress', () async {
       useInMemorySecureStorage();
-      final viewModel = LoginViewModel(
-        LoginUseCase(FakeAuthRepo(failDelay: const Duration(milliseconds: 50))),
-        SecureStorageService(const FlutterSecureStorage()),
+      final viewModel = buildLoginViewModel(
+        FakeAuthRepo(failDelay: const Duration(milliseconds: 50)),
       );
 
       viewModel.handle(EmailChanged(validEmail));

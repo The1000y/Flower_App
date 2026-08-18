@@ -3,27 +3,33 @@ import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/request_login.dart';
+import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/login_entity.dart';
 import 'package:flower_app/features/auth/domain/repo/auth_repo.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
-  final LocalDataSource loginApi;
-  final SecureStorageService secureStorage;
+  final LocalDataSource _loginApi;
+  final SecureStorageService _secureStorage;
 
-  AuthRepoImpl(this.loginApi, this.secureStorage);
+  AuthRepoImpl(this._loginApi, this._secureStorage);
 
   @override
-  Future<BaseResponce<LoginEntity>> login(RequestLogin req) async {
+  Future<BaseResponce<LoginEntity>> login(LoginCredentials credentials) async {
     try {
-      final response = await loginApi.login(req);
+      final response = await _loginApi.login(
+        RequestLogin(
+          email: credentials.email,
+          password: credentials.password,
+        ),
+      );
 
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.tologinEntity();
 
-        await secureStorage.saveAccessToken(login.accessToken);
-        await secureStorage.saveRefreshToken(login.refreshToken);
+        await _secureStorage.saveAccessToken(login.accessToken);
+        await _secureStorage.saveRefreshToken(login.refreshToken);
 
         return SuccessResponce(login);
       }
@@ -36,5 +42,20 @@ class AuthRepoImpl implements AuthRepo {
         e is Exception ? e : Exception(e.toString()),
       );
     }
+  }
+
+  @override
+  Future<String?> getRememberedEmail() {
+    return _secureStorage.getRememberedEmail();
+  }
+
+  @override
+  Future<void> saveRememberedEmail(String email) {
+    return _secureStorage.saveRememberedEmail(email);
+  }
+
+  @override
+  Future<void> deleteRememberedEmail() {
+    return _secureStorage.deleteRememberedEmail();
   }
 }
