@@ -27,7 +27,7 @@ void main() {
 
   provideDummy<BaseResponce<ForgetPasswordEntity>>(
     SuccessResponce(
-      ForgetPasswordEntity(isSuccess: '', message: ''),
+      ForgetPasswordEntity(isSuccess: true , message: ''),
     ),
   );
 
@@ -115,7 +115,7 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => SuccessResponce(
-            ForgetPasswordEntity(isSuccess: 'true', message: 'OTP sent'),
+            ForgetPasswordEntity(isSuccess: true, message: 'OTP sent'),
           ),
         );
         return forgetPasswordCubit;
