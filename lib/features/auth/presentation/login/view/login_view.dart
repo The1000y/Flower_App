@@ -9,6 +9,8 @@ import 'package:flower_app/features/auth/presentation/login/manager/login_event.
 import 'package:flower_app/features/auth/presentation/login/manager/login_state.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
+import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
+import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_wiget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,43 +165,8 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: state.rememberMe,
-                          onChanged: (value) {
-                            context.read<LoginViewModel>().handle(
-                              RememberMeChanged(value ?? false),
-                            );
-                          },
-                        ),
-
-                        InkWell(
-                          onTap: () {
-                            context.read<LoginViewModel>().handle(
-                              RememberMeChanged(!state.rememberMe),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(4),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                              AppStrings.rememberMe,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ),
-
-                        const Spacer(),
-
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, Routes.forgotPassword);
-                          },
-                          child: Text(AppStrings.forgetPassword),
-                        ),
-                      ],
-                    ),
+                    //rememberme
+                    const RememberCustom(),
                     const SizedBox(height: 16),
                     CustomButton(
                       text: AppStrings.loginButton,
@@ -221,28 +188,7 @@ class _LoginViewState extends State<LoginView> {
                       },
                     ),
                     const SizedBox(height: 24),
-                    Text.rich(
-                      TextSpan(
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        children: [
-                          const TextSpan(text: AppStrings.dontHaveAccount),
-                          TextSpan(
-                            text: AppStrings.signUp,
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushNamed(context, Routes.signUp);
-                              },
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: AppColors.pinkBase,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                    SignupWiget(),
                   ],
                 ),
               ),
