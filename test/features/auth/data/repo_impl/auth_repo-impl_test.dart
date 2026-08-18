@@ -107,7 +107,7 @@ void main() {
       when(mockLocalDataSource.forgotPassword(
         any,
       )).thenAnswer(
-        (_) async => SuccessResponce(responseDto),
+        (_) async => SuccessResponce<ForgotPasswordResponseDto>(responseDto),
       );
 
       final authRepoImpl = AuthRepoImpl(mockLocalDataSource);

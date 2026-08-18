@@ -3,10 +3,9 @@ import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
-import 'package:flower_app/features/auth/presentation/forget_password/manager/forgot_password_event.dart';
-import 'package:flower_app/features/auth/presentation/forget_password/manager/forgot_password_state.dart'
-    show ForgotPasswordState;
-import 'package:flower_app/features/auth/presentation/forget_password/manager/forgot_password_view_model.dart';
+import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_cubit.dart';
+import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_event.dart';
+import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -27,7 +26,7 @@ class ResetPassword extends StatefulWidget {
   State<ResetPassword> createState() => _ResetPasswordState();
 }
 
-ForgotPasswordViewModel viewModel = getIt.get<ForgotPasswordViewModel>();
+ForgetPasswordCubit viewModel = getIt.get<ForgetPasswordCubit>();
 
 class _ResetPasswordState extends State<ResetPassword> {
   final _formKey = GlobalKey<FormState>();
@@ -43,23 +42,23 @@ class _ResetPasswordState extends State<ResetPassword> {
         appBar: AppBar(
           title: Text(AppStrings.passwordAppBarTitle),
         ),
-        body: BlocConsumer<ForgotPasswordViewModel, ForgotPasswordState>(
+        body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
           listenWhen: (previous, current) {
-            return previous.resetstate?.isLoading !=
-                current.resetstate?.isLoading;
+            return previous.resetstate.isLoading !=
+                current.resetstate.isLoading;
           },
           listener: (context, state) {
-            if (!(state.resetstate?.isLoading ?? false)) {
-              if (state.resetstate?.errorMessage.isNotEmpty ?? false) {
+            if (!(state.resetstate.isLoading  )) {
+              if (state.resetstate.errorMessage.isNotEmpty  ) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      state.resetstate!.errorMessage,
+                      state.resetstate.errorMessage,
                     ),
                     backgroundColor: Colors.red,
                   ),
                 );
-              } else if (state.resetstate?.data != null) {
+              } else if (state.resetstate.data != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("Success, new password"),
@@ -125,7 +124,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                     CustomButton(
                       isLoading:
-                          state.resetstate?.isLoading ?? false,
+                          state.resetstate.isLoading  ,
                       text: AppStrings.confirmButton,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -151,7 +150,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         }
                       },
                       isEnabled:
-                          !(state.resetstate?.isLoading ?? false),
+                          !(state.resetstate.isLoading ),
                       enabledColor: AppColors.pinkBase,
                     ),
                   ],

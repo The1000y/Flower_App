@@ -3,9 +3,10 @@ import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/features/auth/presentation/forget_password/manager/forgot_password_event.dart';
-import 'package:flower_app/features/auth/presentation/forget_password/manager/forgot_password_state.dart';
-import 'package:flower_app/features/auth/presentation/forget_password/manager/forgot_password_view_model.dart';
+import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_cubit.dart';
+import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_event.dart';
+import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_state.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -19,7 +20,7 @@ class ForgetPassword extends StatefulWidget {
   State<ForgetPassword> createState() => _ForgetPasswordState();
 }
 
-ForgotPasswordViewModel viewModel = getIt.get<ForgotPasswordViewModel>();
+ForgetPasswordCubit viewModel = getIt.get<ForgetPasswordCubit>();
 
 class _ForgetPasswordState extends State<ForgetPassword> {
   final _formKey = GlobalKey<FormState>();
@@ -31,21 +32,21 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       create: (context) => viewModel,
       child: Scaffold(
         appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
-        body: BlocConsumer<ForgotPasswordViewModel, ForgotPasswordState>(
+        body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
           listenWhen: (previous, current) {
-            return previous.forgotstate?.isLoading !=
-                current.forgotstate?.isLoading;
+            return previous.forgotstate.isLoading !=
+                current.forgotstate.isLoading;
           },
           listener: (context, state) {
-            if (!(state.forgotstate?.isLoading ?? false)) {
-              if (state.forgotstate?.errorMessage.isNotEmpty ?? false) {
+            if (!(state.forgotstate.isLoading  )) {
+              if (state.forgotstate.errorMessage.isNotEmpty  ) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(state.forgotstate!.errorMessage),
+                    content: Text(state.forgotstate.errorMessage),
                     backgroundColor: Colors.red,
                   ),
                 );
-              } else if (state.forgotstate?.data != null) {
+              } else if (state.forgotstate.data != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("OTP sent successfully"),
@@ -81,7 +82,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     ),
                     SizedBox(height: 30.h),
                     CustomButton(
-                      isLoading: state.forgotstate?.isLoading ?? false,
+                      isLoading: state.forgotstate.isLoading ,
                       text: AppStrings.confirmButton,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -90,7 +91,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                           );
                         }
                       },
-                      isEnabled: !(state.forgotstate?.isLoading ?? false),
+                      isEnabled: !(state.forgotstate.isLoading),
                       enabledColor: AppColors.pinkBase,
                     ),
                   ],

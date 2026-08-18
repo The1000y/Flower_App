@@ -1,165 +1,271 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/forget_password_entity.dart';
-import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
+import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_passsword_entity.dart';
 import 'package:flower_app/features/auth/domain/use_case/forget_password_user_case.dart';
+import 'package:flower_app/features/auth/domain/use_case/reset_password_user_case.dart';
 import 'package:flower_app/features/auth/domain/use_case/verify_otp_user_case.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_cubit.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_event.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_state.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:bloc_test/bloc_test.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'forget_password_cubit_test.mocks.dart';
+class MockForgetPasswordUserCase extends Mock
+    implements ForgetPasswordUserCase {}
 
-@GenerateMocks([VerifyOtpUserCase, ForgetPasswordUserCase])
+class MockResetPasswordUserCase extends Mock
+    implements ResetPasswordUserCase {}
+
+class MockVerifyOtpUserCase extends Mock
+    implements VerifyOtpUserCase {}
+
 void main() {
-  late MockVerifyOtpUserCase mockVerifyOtpUserCase;
   late MockForgetPasswordUserCase mockForgetPasswordUserCase;
-  late ForgetPasswordCubit forgetPasswordCubit;
-
-  provideDummy<BaseResponce<VerifyOtpEntity>>(
-    SuccessResponce(
-      VerifyOtpEntity(expiresAtUtc: DateTime.now(), resetToken: ''),
-    ),
-  );
-
-  provideDummy<BaseResponce<ForgetPasswordEntity>>(
-    SuccessResponce(
-      ForgetPasswordEntity(isSuccess: true , message: ''),
-    ),
-  );
+  late MockResetPasswordUserCase mockResetPasswordUserCase;
+  late MockVerifyOtpUserCase mockVerifyOtpUserCase;
 
   setUp(() {
-    mockVerifyOtpUserCase = MockVerifyOtpUserCase();
     mockForgetPasswordUserCase = MockForgetPasswordUserCase();
-    forgetPasswordCubit = ForgetPasswordCubit(
-      mockVerifyOtpUserCase,
-      mockForgetPasswordUserCase,
-    );
+    mockResetPasswordUserCase = MockResetPasswordUserCase();
+    mockVerifyOtpUserCase = MockVerifyOtpUserCase();
   });
 
-  tearDown(() {
-    forgetPasswordCubit.close();
-  });
+  group('ForgetPasswordCubit', () {
+    test('initial state should be ForgetPasswordState with loading false', () {
+      final cubit = ForgetPasswordCubit(
+        mockVerifyOtpUserCase,
+        mockForgetPasswordUserCase,
+        mockResetPasswordUserCase,
+      );
 
-  group('ForgetPasswordCubit Tests', () {
+      expect(cubit.state, isA<ForgetPasswordState>());
+    });
+
     blocTest<ForgetPasswordCubit, ForgetPasswordState>(
-      'verifyOtp emits [loading, success] states when use case succeeds',
+      'should emit loading then success when forget password succeeds',
       build: () {
         when(
-          mockVerifyOtpUserCase.call(
-            email: anyNamed('email'),
-            otp: anyNamed('otp'),
-          ),
+          () => mockForgetPasswordUserCase.call(email: 'test@gmail.com'),
         ).thenAnswer(
           (_) async => SuccessResponce(
-            VerifyOtpEntity(
-              expiresAtUtc: DateTime.now(),
-              resetToken: 'token123',
+            ForgetPasswordEntity(
+              isSuccess: true,
+              message: 'Password reset email sent',
             ),
           ),
         );
-        return forgetPasswordCubit;
+
+        return ForgetPasswordCubit(
+          mockVerifyOtpUserCase,
+          mockForgetPasswordUserCase,
+          mockResetPasswordUserCase,
+        );
       },
-      act: (cubit) => cubit.doEvent(
-        VerifyOtpEvent(email: 'test@example.com', otpCode: '123456'),
-      ),
+      act: (cubit) {
+        cubit.doEvent(
+          ForgetBassEvent(
+            email: 'test@gmail.com',
+          ),
+        );
+      },
       expect: () => [
-        // loading state
         isA<ForgetPasswordState>()
-            .having((state) => state.otpState.isLoading, 'isLoading', true),
-        // success state
+            .having(
+              (state) => state.forgotstate.isLoading,
+              'isLoading',
+              true,
+            ),
         isA<ForgetPasswordState>()
-            .having((state) => state.otpState.isLoading, 'isLoading', false)
-            .having((state) => state.otpState.data, 'data', isNotNull),
+            .having(
+              (state) => state.forgotstate.isLoading,
+              'isLoading',
+              false,
+            )
+            .having(
+              (state) => state.forgotstate.data?.isSuccess,
+              'isSuccess',
+              true,
+            ),
       ],
+      verify: (_) {
+        verify(
+          () => mockForgetPasswordUserCase.call(email: 'test@gmail.com'),
+        ).called(1);
+      },
     );
 
     blocTest<ForgetPasswordCubit, ForgetPasswordState>(
-      'verifyOtp emits [loading, error] states when use case fails',
+      'should emit loading then error when forget password fails',
       build: () {
         when(
-          mockVerifyOtpUserCase.call(
-            email: anyNamed('email'),
-            otp: anyNamed('otp'),
+          () => mockForgetPasswordUserCase.call(email: 'wrong@gmail.com'),
+        ).thenAnswer(
+          (_) async => ErrorResponce(
+            Exception('something went wrong, pls try again'),
+          ),
+        );
+
+        return ForgetPasswordCubit(
+          mockVerifyOtpUserCase,
+          mockForgetPasswordUserCase,
+          mockResetPasswordUserCase,
+        );
+      },
+      act: (cubit) {
+        cubit.doEvent(
+          ForgetBassEvent(
+            email: 'wrong@gmail.com',
+          ),
+        );
+      },
+      expect: () => [
+        isA<ForgetPasswordState>()
+            .having(
+              (state) => state.forgotstate.isLoading,
+              'isLoading',
+              true,
+            ),
+        isA<ForgetPasswordState>()
+            .having(
+              (state) => state.forgotstate.isLoading,
+              'isLoading',
+              false,
+            )
+            .having(
+              (state) => state.forgotstate.errorMessage,
+              'errorMessage',
+              isNotEmpty,
+            ),
+      ],
+      verify: (_) {
+        verify(
+          () => mockForgetPasswordUserCase.call(email: 'wrong@gmail.com'),
+        ).called(1);
+      },
+    );
+
+    blocTest<ForgetPasswordCubit, ForgetPasswordState>(
+      'should emit loading then success when reset password succeeds',
+      build: () {
+        when(
+          () => mockResetPasswordUserCase.call(
+            email: 'test@gmail.com',
+            otp: '123456',
+            password: 'NewPassword@123',
+          ),
+        ).thenAnswer(
+          (_) async => SuccessResponce(
+            ResetPassswordEntity(
+              isSuccess: true,
+              message: 'Password reset successfully',
+            ),
+          ),
+        );
+
+        return ForgetPasswordCubit(
+          mockVerifyOtpUserCase,
+          mockForgetPasswordUserCase,
+          mockResetPasswordUserCase,
+        );
+      },
+      act: (cubit) {
+        cubit.doEvent(
+          ResetPasswordEvent(
+            email: 'test@gmail.com',
+            resetCode: '123456',
+            newPassword: 'NewPassword@123',
+          ),
+        );
+      },
+      expect: () => [
+        isA<ForgetPasswordState>()
+            .having(
+              (state) => state.resetstate.isLoading,
+              'isLoading',
+              true,
+            ),
+        isA<ForgetPasswordState>()
+            .having(
+              (state) => state.resetstate.isLoading,
+              'isLoading',
+              false,
+            )
+            .having(
+              (state) => state.resetstate.data?.isSuccess,
+              'isSuccess',
+              true,
+            ),
+      ],
+      verify: (_) {
+        verify(
+          () => mockResetPasswordUserCase.call(
+            email: 'test@gmail.com',
+            otp: '123456',
+            password: 'NewPassword@123',
+          ),
+        ).called(1);
+      },
+    );
+
+    blocTest<ForgetPasswordCubit, ForgetPasswordState>(
+      'should emit loading then error when reset password fails',
+      build: () {
+        when(
+          () => mockResetPasswordUserCase.call(
+            email: 'test@gmail.com',
+            otp: 'wrong-otp',
+            password: 'NewPassword@123',
           ),
         ).thenAnswer(
           (_) async => ErrorResponce(
             Exception('Invalid OTP'),
           ),
         );
-        return forgetPasswordCubit;
-      },
-      act: (cubit) => cubit.doEvent(
-        VerifyOtpEvent(email: 'test@example.com', otpCode: 'wrong'),
-      ),
-      expect: () => [
-        // loading state
-        isA<ForgetPasswordState>()
-            .having((state) => state.otpState.isLoading, 'isLoading', true),
-        // error state
-        isA<ForgetPasswordState>()
-            .having((state) => state.otpState.isLoading, 'isLoading', false)
-            .having((state) => state.otpState.errorMessage, 'errorMessage', isNotEmpty),
-      ],
-    );
 
-    blocTest<ForgetPasswordCubit, ForgetPasswordState>(
-      'resendOtp emits [loading, success] states when use case succeeds',
-      build: () {
-        when(
-          mockForgetPasswordUserCase.call(
-            email: anyNamed('email'),
-          ),
-        ).thenAnswer(
-          (_) async => SuccessResponce(
-            ForgetPasswordEntity(isSuccess: true, message: 'OTP sent'),
+        return ForgetPasswordCubit(
+          mockVerifyOtpUserCase,
+          mockForgetPasswordUserCase,
+          mockResetPasswordUserCase,
+        );
+      },
+      act: (cubit) {
+        cubit.doEvent(
+          ResetPasswordEvent(
+            email: 'test@gmail.com',
+            resetCode: 'wrong-otp',
+            newPassword: 'NewPassword@123',
           ),
         );
-        return forgetPasswordCubit;
       },
-      act: (cubit) => cubit.doEvent(
-        ResendtOtpEvent(email: 'test@example.com'),
-      ),
       expect: () => [
-        // loading state
         isA<ForgetPasswordState>()
-            .having((state) => state.resendOtpState.isLoading, 'isLoading', true),
-        // success state
+            .having(
+              (state) => state.resetstate.isLoading,
+              'isLoading',
+              true,
+            ),
         isA<ForgetPasswordState>()
-            .having((state) => state.resendOtpState.isLoading, 'isLoading', false)
-            .having((state) => state.resendOtpState.data, 'data', isNotNull),
+            .having(
+              (state) => state.resetstate.isLoading,
+              'isLoading',
+              false,
+            )
+            .having(
+              (state) => state.resetstate.errorMessage,
+              'errorMessage',
+              isNotEmpty,
+            ),
       ],
-    );
-
-    blocTest<ForgetPasswordCubit, ForgetPasswordState>(
-      'resendOtp emits [loading, error] states when use case fails',
-      build: () {
-        when(
-          mockForgetPasswordUserCase.call(
-            email: anyNamed('email'),
+      verify: (_) {
+        verify(
+          () => mockResetPasswordUserCase.call(
+            email: 'test@gmail.com',
+            otp: 'wrong-otp',
+            password: 'NewPassword@123',
           ),
-        ).thenAnswer(
-          (_) async => ErrorResponce(
-            Exception('Email not found'),
-          ),
-        );
-        return forgetPasswordCubit;
+        ).called(1);
       },
-      act: (cubit) => cubit.doEvent(
-        ResendtOtpEvent(email: 'notfound@example.com'),
-      ),
-      expect: () => [
-        // loading state
-        isA<ForgetPasswordState>()
-            .having((state) => state.resendOtpState.isLoading, 'isLoading', true),
-        // error state
-        isA<ForgetPasswordState>()
-            .having((state) => state.resendOtpState.isLoading, 'isLoading', false)
-            .having((state) => state.resendOtpState.errorMessage, 'errorMessage', isNotEmpty),
-      ],
     );
   });
 }
