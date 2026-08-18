@@ -1,4 +1,3 @@
-import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
@@ -11,7 +10,6 @@ import 'package:flower_app/features/auth/presentation/login/manager/login_view_m
 import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_wiget.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -89,9 +87,7 @@ class _LoginViewState extends State<LoginView> {
             }
 
             if (state.loginSuccess) {
-              final messenger = ScaffoldMessenger.of(context);
-              final navigator = Navigator.of(context);
-              messenger
+              ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
@@ -101,6 +97,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 );
               Future.delayed(const Duration(seconds: 2), () {
+                if (!mounted) return;
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomeView()),
