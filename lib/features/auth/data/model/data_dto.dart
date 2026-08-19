@@ -28,7 +28,7 @@ class LoginDataDto {
       _$LoginDataDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$LoginDataDtoToJson(this);
-  LoginEntity tologinEntity() {
+  LoginEntity toLoginEntity() {
     return LoginEntity(
       accessToken: accessToken ?? '',
       refreshToken: refreshToken ?? '',

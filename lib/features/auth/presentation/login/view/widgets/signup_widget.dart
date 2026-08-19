@@ -4,8 +4,8 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SignupWiget extends StatelessWidget {
-  const SignupWiget({super.key});
+class SignupWidget extends StatelessWidget {
+  const SignupWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

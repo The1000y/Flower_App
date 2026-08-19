@@ -23,10 +23,15 @@ class FakeAuthRepo implements AuthRepo {
   final Duration failDelay;
 
   LoginCredentials? lastRequest;
+  bool? lastRememberMe;
 
   @override
-  Future<BaseResponce<LoginEntity>> login(LoginCredentials credentials) async {
+  Future<BaseResponce<LoginEntity>> login(
+    LoginCredentials credentials, {
+    bool rememberMe = false,
+  }) async {
     lastRequest = credentials;
+    lastRememberMe = rememberMe;
     if (failDelay > Duration.zero) {
       await Future<void>.delayed(failDelay);
     }

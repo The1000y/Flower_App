@@ -16,11 +16,12 @@ void main() {
       final repo = FakeAuthRepo();
       final useCase = LoginUseCase(repo);
 
-      final result = await useCase(credentials);
+      final result = await useCase(credentials, rememberMe: true);
 
       expect(result, isA<SuccessResponce>());
       expect(repo.lastRequest?.email, validEmail);
       expect(repo.lastRequest?.password, validPassword);
+      expect(repo.lastRememberMe, isTrue);
     });
 
     test('forwards failure from repo', () async {

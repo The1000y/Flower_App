@@ -1,10 +1,9 @@
-
 import 'package:flower_app/features/auth/data/model/data_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'response_login.g.dart';
+part 'login_response.g.dart';
 @JsonSerializable()
-class ResponseLogin {
+class LoginResponse {
     @JsonKey(name: "isSuccess")
     bool? isSuccess;
     @JsonKey(name: "errorCode")
@@ -14,16 +13,15 @@ class ResponseLogin {
     @JsonKey(name: "data")
     LoginDataDto? data;
 
-    ResponseLogin({
+    LoginResponse({
         this.isSuccess,
         this.errorCode,
         this.message,
         this.data,
     });
 
-    factory ResponseLogin.fromJson(Map<String, dynamic> json) => _$ResponseLoginFromJson(json);
+    factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
 
-    Map<String, dynamic> toJson() => _$ResponseLoginToJson(this);
+    Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
 
-   
 }

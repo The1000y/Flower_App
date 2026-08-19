@@ -1,6 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/auth/api/data_source_impl/local/dummy.dart';
-import 'package:flower_app/features/auth/api/data_source_impl/local/local_data_source_impl.dart';
+import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
@@ -17,17 +16,28 @@ void main() {
     setUp(() {
       useInMemorySecureStorage();
       storage = SecureStorageService(const FlutterSecureStorage());
-      repo = AuthRepoImpl(LocalDataSourceImpl(), storage);
+      repo = AuthRepoImpl(RemoteDataSourceImpl(), storage);
     });
 
-    test('returns success and saves tokens for valid credentials', () async {
+    test('returns success and saves tokens when remember me is true', () async {
       final result = await repo.login(
         LoginCredentials(email: Dummy.email, password: Dummy.pass),
+        rememberMe: true,
       );
 
       expect(result, isA<SuccessResponce>());
       expect(await storage.getAccessToken(), isNotNull);
       expect(await storage.getRefreshToken(), isNotNull);
+    });
+
+    test('does not save tokens when remember me is false', () async {
+      final result = await repo.login(
+        LoginCredentials(email: Dummy.email, password: Dummy.pass),
+      );
+
+      expect(result, isA<SuccessResponce>());
+      expect(await storage.getAccessToken(), isNull);
+      expect(await storage.getRefreshToken(), isNull);
     });
 
     test('returns error for invalid credentials', () async {

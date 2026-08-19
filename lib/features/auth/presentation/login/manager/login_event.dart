@@ -22,8 +22,4 @@ class RememberMeChanged extends LoginIntent {
   RememberMeChanged(this.value);
 }
 
-class ValidationFailed extends LoginIntent {
-  final String message;
-
-  ValidationFailed(this.message);
-}
+class TogglePasswordVisibility extends LoginIntent {}

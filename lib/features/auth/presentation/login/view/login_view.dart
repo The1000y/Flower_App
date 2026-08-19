@@ -9,7 +9,7 @@ import 'package:flower_app/features/auth/presentation/login/manager/login_state.
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
-import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_wiget.dart';
+import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +26,6 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool obscurePassword = true;
   bool _emailEditedByUser = false;
 
   @override
@@ -40,12 +39,6 @@ class _LoginViewState extends State<LoginView> {
     final form = _formKey.currentState;
 
     if (form == null || !form.validate()) {
-      final emailError = AuthValidators.email(emailController.text);
-      final passwordError = AuthValidators.password(passwordController.text);
-      final message =
-          emailError ?? passwordError ?? AppStrings.invalidCredentials;
-
-      context.read<LoginViewModel>().handle(ValidationFailed(message));
       return;
     }
 
@@ -69,7 +62,7 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       body: SafeArea(
-        child: BlocConsumer<LoginViewModel, LoginState>(
+        child: BlocListener<LoginViewModel, LoginState>(
           listener: (context, state) {
             if (!_emailEditedByUser && emailController.text != state.email) {
               emailController.text = state.email;
@@ -108,85 +101,94 @@ class _LoginViewState extends State<LoginView> {
               });
             }
           },
-          builder: (context, state) {
-
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    CustomTextFormField(
-                      controller: emailController,
-                      label: AppStrings.emailLabel,
-                      hintText: AppStrings.emailHint,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: AuthValidators.email,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      onChanged: (value) {
-                        _emailEditedByUser = true;
-                        context.read<LoginViewModel>().handle(
-                          EmailChanged(value),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    CustomTextFormField(
-                      controller: passwordController,
-                      label: AppStrings.passwordLabel,
-                      hintText: AppStrings.passwordHint,
-                      obscureText: obscurePassword,
-                      validator: AuthValidators.password,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      onChanged: (value) {
-                        context.read<LoginViewModel>().handle(
-                          PasswordChanged(value),
-                        );
-                      },
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            obscurePassword = !obscurePassword;
-                          });
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CustomTextFormField(
+                    controller: emailController,
+                    label: AppStrings.emailLabel,
+                    hintText: AppStrings.emailHint,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: AuthValidators.email,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (value) {
+                      _emailEditedByUser = true;
+                      context.read<LoginViewModel>().handle(
+                        EmailChanged(value),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  BlocBuilder<LoginViewModel, LoginState>(
+                    buildWhen: (previous, current) =>
+                        previous.obscurePassword != current.obscurePassword,
+                    builder: (context, state) {
+                      return CustomTextFormField(
+                        controller: passwordController,
+                        label: AppStrings.passwordLabel,
+                        hintText: AppStrings.passwordHint,
+                        obscureText: state.obscurePassword,
+                        validator: AuthValidators.password,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        onChanged: (value) {
+                          context.read<LoginViewModel>().handle(
+                            PasswordChanged(value),
+                          );
                         },
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    //rememberme
-                    const RememberCustom(),
-                    const SizedBox(height: 16),
-                    CustomButton(
-                      text: AppStrings.loginButton,
-                      onPressed: _onLoginPressed,
-                      isLoading: state.isLoading,
-                      isEnabled: !state.isLoading,
-                      enabledColor: AppColors.pinkBase,
-                    ),
-                    const SizedBox(height: 16),
-                    CustomOutlinedButton(
-                      text: AppStrings.continueAsGuest,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const HomeView()),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            state.obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            context.read<LoginViewModel>().handle(
+                              TogglePasswordVisibility(),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  //rememberme
+                  const RememberCustom(),
+                  const SizedBox(height: 16),
+                  BlocBuilder<LoginViewModel, LoginState>(
+                    buildWhen: (previous, current) =>
+                        previous.isLoading != current.isLoading,
+                    builder: (context, state) {
+                      return CustomButton(
+                        text: AppStrings.loginButton,
+                        onPressed: _onLoginPressed,
+                        isLoading: state.isLoading,
+                        isEnabled: !state.isLoading,
+                        enabledColor: AppColors.pinkBase,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  CustomOutlinedButton(
+                    text: AppStrings.continueAsGuest,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HomeView()),
 
-                          // Routes.mainLayout,
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    SignupWiget(),
-                  ],
-                ),
+                        // Routes.mainLayout,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  SignupWidget(),
+                ],
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );

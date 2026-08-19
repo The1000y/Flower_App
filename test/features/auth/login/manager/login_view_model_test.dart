@@ -23,6 +23,7 @@ void main() {
       expect(harness.viewModel.state.rememberMe, isFalse);
       expect(harness.viewModel.state.loginSuccess, isFalse);
       expect(harness.viewModel.state.isLoading, isFalse);
+      expect(harness.viewModel.state.obscurePassword, isTrue);
     });
 
     test('EmailChanged updates email and clears error', () async {
@@ -52,13 +53,15 @@ void main() {
       expect(harness.viewModel.state.rememberMe, isTrue);
     });
 
-    test('ValidationFailed sets errorMessage without loading login', () {
+    test('TogglePasswordVisibility toggles obscurePassword', () {
       final harness = _Harness();
-      harness.viewModel.handle(ValidationFailed('bad input'));
+      harness.viewModel.handle(TogglePasswordVisibility());
 
-      expect(harness.viewModel.state.errorMessage, 'bad input');
-      expect(harness.viewModel.state.isLoading, isFalse);
-      expect(harness.viewModel.state.loginSuccess, isFalse);
+      expect(harness.viewModel.state.obscurePassword, isFalse);
+
+      harness.viewModel.handle(TogglePasswordVisibility());
+
+      expect(harness.viewModel.state.obscurePassword, isTrue);
     });
 
     test(
@@ -154,6 +157,17 @@ void main() {
 
       expect(harness.repo.lastRequest?.email, validEmail);
       expect(harness.repo.lastRequest?.password, validPassword);
+    });
+
+    test('login forwards rememberMe flag to the repo', () async {
+      final harness = _Harness();
+      harness.viewModel.handle(EmailChanged(validEmail));
+      harness.viewModel.handle(PasswordChanged(validPassword));
+      harness.viewModel.handle(RememberMeChanged(true));
+
+      await harness.viewModel.handle(LoginPressed());
+
+      expect(harness.repo.lastRememberMe, isTrue);
     });
 
     test('login emits loading while in progress', () async {

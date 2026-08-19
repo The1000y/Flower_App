@@ -52,10 +52,10 @@ class LoginViewModel extends Cubit<LoginState> {
           ),
         );
 
-      case ValidationFailed():
+      case TogglePasswordVisibility():
         emit(
           state.copyWith(
-            errorMessage: intent.message,
+            obscurePassword: !state.obscurePassword,
           ),
         );
 
@@ -93,6 +93,7 @@ class LoginViewModel extends Cubit<LoginState> {
         email: state.email,
         password: state.password,
       ),
+      rememberMe: state.rememberMe,
     );
 
     switch (result) {

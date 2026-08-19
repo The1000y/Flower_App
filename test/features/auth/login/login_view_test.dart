@@ -5,7 +5,7 @@ import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
-import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_wiget.dart';
+import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +46,7 @@ void main() {
       expect(_loginButton(), findsOneWidget);
       expect(find.text('Continue as guest'), findsOneWidget);
       expect(find.byType(RememberCustom), findsOneWidget);
-      expect(find.byType(SignupWiget), findsOneWidget);
+      expect(find.byType(SignupWidget), findsOneWidget);
     });
 
     testWidgets('shows validation errors when fields are empty', (tester) async {
@@ -55,8 +55,8 @@ void main() {
       await tester.tap(_loginButton());
       await tester.pump();
 
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Email is required'), findsNWidgets(2));
+      expect(find.byType(SnackBar), findsNothing);
+      expect(find.text('Email is required'), findsOneWidget);
       expect(find.text('Password is required'), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 5));
@@ -74,7 +74,7 @@ void main() {
       await tester.pump();
 
       expect(find.text('Email is required'), findsNothing);
-      expect(find.text('Enter a valid email'), findsNWidgets(2));
+      expect(find.text('Enter a valid email'), findsOneWidget);
       await tester.pump(const Duration(seconds: 5));
     });
 
@@ -292,11 +292,11 @@ void main() {
     testWidgets('sign up link navigates to sign up route', (tester) async {
       await _pumpLogin(tester, FakeAuthRepo());
 
-      await tester.ensureVisible(find.byType(SignupWiget));
+      await tester.ensureVisible(find.byType(SignupWidget));
       await tester.pump();
 
       final richFinder = find.descendant(
-        of: find.byType(SignupWiget),
+        of: find.byType(SignupWidget),
         matching: find.byType(RichText),
       );
       final glyphOffset = tester

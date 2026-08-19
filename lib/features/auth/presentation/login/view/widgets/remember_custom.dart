@@ -16,6 +16,8 @@ class RememberCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginViewModel, LoginState>(
+      buildWhen: (previous, current) =>
+          previous.rememberMe != current.rememberMe,
       builder: (context, state) {
         return Row(
           children: [
