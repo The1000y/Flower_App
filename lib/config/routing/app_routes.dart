@@ -1,8 +1,12 @@
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
+import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -10,7 +14,10 @@ abstract class AppRoutes {
       // Auth
       case Routes.login:
         return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<LoginViewModel>(),
+            child: const LoginView(),
+          ),
         );
 
       case Routes.signUp:

@@ -6,13 +6,13 @@ import 'package:flower_app/features/auth/data/model/request/forget_request/verif
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
-import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../api/data_source_impl/local/local_data_source_impl_test.mocks.dart';
+import '../../../../helpers/auth_test_helpers.dart';
 
 
 @GenerateMocks([LocalDataSource])
@@ -60,7 +60,7 @@ void main() {
         ),
       );
 
-      final authRepoImpl = AuthRepoImpl(mockLocalDataSource);
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       // Act
       final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
@@ -85,7 +85,7 @@ void main() {
         ),
       );
 
-      final authRepoImpl = AuthRepoImpl(mockLocalDataSource);
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       // Act
       final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
@@ -110,7 +110,7 @@ void main() {
         (_) async => SuccessResponce<ForgotPasswordResponseDto>(responseDto),
       );
 
-      final authRepoImpl = AuthRepoImpl(mockLocalDataSource);
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       final result = await authRepoImpl.forgetPassword(
         email: 'test@gmail.com',
@@ -127,7 +127,7 @@ void main() {
         (_) async => ErrorResponce(exception),
       );
 
-      final authRepoImpl = AuthRepoImpl(mockLocalDataSource);
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       final result = await authRepoImpl.forgetPassword(
         email: 'test@gmail.com',
@@ -151,7 +151,7 @@ void main() {
         (_) async => SuccessResponce(responseDto),
       );
 
-      final authRepoImpl = AuthRepoImpl(mockLocalDataSource);
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       final result = await authRepoImpl.resetPassword(
         email: 'test@gmail.com',
@@ -170,7 +170,7 @@ void main() {
         (_) async => ErrorResponce(exception),
       );
 
-      final authRepoImpl = AuthRepoImpl(mockLocalDataSource);
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       final result = await authRepoImpl.resetPassword(
         email: 'test@gmail.com',

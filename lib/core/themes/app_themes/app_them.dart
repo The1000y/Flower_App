@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppThem {
-  AppThem._();
+class AppTheme {
+  AppTheme._();
 
   static ThemeData lightThem = ThemeData(
     useMaterial3: true,
@@ -30,18 +30,28 @@ class AppThem {
       centerTitle: false,
     ),
     inputDecorationTheme: InputDecorationTheme(
-       floatingLabelBehavior: FloatingLabelBehavior.always,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
       filled: true,
       fillColor: AppColors.whiteBase,
 
       labelStyle: const TextStyle(color: AppColors.gray),
+      floatingLabelStyle: WidgetStateTextStyle.resolveWith((states) {
+        if (states.contains(WidgetState.error)) {
+          return const TextStyle(color: AppColors.error);
+        }
+        return const TextStyle(color: AppColors.gray);
+      }),
 
-      hintStyle: const TextStyle(color: AppColors.white70),
+      hintStyle: TextStyle(
+        color: AppColors.white70,
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w400,
+      ),
 
       errorStyle: const TextStyle(color: AppColors.error, fontSize: 10),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: AppColors.white60)
+        borderSide: BorderSide(color: AppColors.white60),
       ),
 
       enabledBorder: OutlineInputBorder(
@@ -55,7 +65,7 @@ class AppThem {
       ),
 
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.error),
       ),
 
@@ -71,35 +81,31 @@ class AppThem {
 
         elevation: 0,
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.r),
+        ),
 
-        textStyle:  TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+        textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
     ),
-   outlinedButtonTheme: OutlinedButtonThemeData(
-  style: OutlinedButton.styleFrom(
-    backgroundColor: AppColors.whiteBase,
-    foregroundColor: AppColors.gray,
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: AppColors.whiteBase,
+        foregroundColor: AppColors.gray,
 
-    elevation: 0,
+        elevation: 0,
 
-    minimumSize: Size(double.infinity, 50.h),
+        minimumSize: Size(double.infinity, 50.h),
 
-    side: const BorderSide(
-      color: AppColors.gray,
-      width: 1,
+        side: const BorderSide(color: AppColors.gray, width: 1),
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.r),
+        ),
+
+        textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+      ),
     ),
-
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30.r),
-    ),
-
-    textStyle: TextStyle(
-      fontSize: 16.sp,
-      fontWeight: FontWeight.w500,
-    ),
-  ),
-),
     checkboxTheme: CheckboxThemeData(
       side: const BorderSide(color: AppColors.gray),
 
@@ -114,9 +120,9 @@ class AppThem {
       }),
     ),
 
-       // Default font for the whole app
+    // Default font for the whole app
     fontFamily: GoogleFonts.roboto().fontFamily,
-     textTheme:  TextTheme(
+    textTheme: TextTheme(
       // Roboto
       titleLarge: TextStyle(
         color: AppColors.blackBase,
@@ -143,7 +149,7 @@ class AppThem {
       ),
 
       bodySmall: TextStyle(
-        color: AppColors.gray,
+        color: AppColors.blackBase,
         fontSize: 12,
         fontWeight: FontWeight.w400,
       ),
