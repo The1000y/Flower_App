@@ -1,4 +1,4 @@
-# HOME FEATURE — Git Branch & Project Structure Guide
+# COMMERCE FEATURE — Git Branch & Project Structure Guide
 
 ## Git Branch Naming Convention
 
@@ -10,36 +10,37 @@
 
 Use lowercase letters and `kebab-case`.
 
-For the Home feature:
+For the Commerce feature:
 
 ```text
-feature/home
+feature/commerce
 ```
 
 Examples:
 
 ```text
-feature/home
-feature/home-search
-feature/home-occasion
-feature/home-categories
-feature/home-best-seller
-feature/home-product-details
+feature/commerce
+feature/commerce-search
+feature/commerce-occasion
+feature/commerce-categories
+feature/commerce-best-seller
+feature/commerce-product-details
 
-bugfix/home-search
-bugfix/home-loading
-bugfix/home-product-details
+bugfix/commerce-search
+bugfix/commerce-loading
+bugfix/commerce-product-details
 
-hotfix/home-crash
+hotfix/commerce-crash
 
-refactor/home-repository
-refactor/home-cubit
+refactor/commerce-repository
+refactor/commerce-cubit
+refactor/commerce-data-source
 
-chore/home-dependencies
+chore/commerce-dependencies
 
-test/home
-test/home-use-cases
-test/home-repository
+test/commerce
+test/commerce-use-cases
+test/commerce-repository
 ```
 
 ---
@@ -48,41 +49,41 @@ test/home-repository
 
 | Type        | Description                                 |
 | ----------- | ------------------------------------------- |
-| `feature/`  | New Home feature development                |
-| `bugfix/`   | Fixing a non-critical Home bug              |
-| `hotfix/`   | Urgent Home production fix                  |
+| `feature/`  | New Commerce feature development            |
+| `bugfix/`   | Fixing a non-critical Commerce bug          |
+| `hotfix/`   | Urgent Commerce production fix              |
 | `refactor/` | Code improvements without changing behavior |
-| `chore/`    | Maintenance tasks related to Home           |
-| `docs/`     | Home documentation updates                  |
-| `test/`     | Adding or updating Home tests               |
+| `chore/`    | Maintenance tasks related to Commerce       |
+| `docs/`     | Commerce documentation updates              |
+| `test/`     | Adding or updating Commerce tests           |
 | `release/`  | Preparing a release version                 |
 
 ---
 
-# Home Feature Main Branch
+# Commerce Feature Main Branch
 
-The main branch for the Home feature is:
+The main branch for the Commerce feature is:
 
 ```text
-feature/home
+feature/commerce
 ```
 
-All Home development should be done on this branch unless the team decides to create a separate task branch.
+All Commerce development should be done on this branch unless the team decides to create a separate task branch.
 
 ---
 
-# Home Feature Structure
+# Commerce Feature Structure
 
 ```text
 features/
 │
 ├── auth/
 │
-└── home/
+└── commerce/
     │
     ├── api/
     │   ├── client/
-    │   │   └── home_api_client.dart
+    │   │   └── commerce_api_client.dart
     │   │
     │   └── data_source_impl/
     │       ├── local/
@@ -95,16 +96,16 @@ features/
     │   │
     │   ├── data_source/
     │   │   ├── local_data_source/
-    │   │   │   └── home_local_data_source.dart
+    │   │   │   └── commerce_local_data_source.dart
     │   │   │
     │   │   └── remote_data_source/
-    │   │       └── home_remote_data_source.dart
+    │   │       └── commerce_remote_data_source.dart
     │   │
     │   ├── model/
     │   │   │
     │   │   ├── request/
-    │   │   │   ├── home_request/
-    │   │   │   │   └── home_request_dto.dart
+    │   │   │   ├── commerce_request/
+    │   │   │   │   └── commerce_request_dto.dart
     │   │   │   │
     │   │   │   ├── search_request/
     │   │   │   │   └── search_request_dto.dart
@@ -122,8 +123,8 @@ features/
     │   │   │       └── product_details_request_dto.dart
     │   │   │
     │   │   └── responce/
-    │   │       ├── home_response/
-    │   │       │   └── home_response_dto.dart
+    │   │       ├── commerce_response/
+    │   │       │   └── commerce_response_dto.dart
     │   │       │
     │   │       ├── search_response/
     │   │       │   └── search_response_dto.dart
@@ -141,13 +142,13 @@ features/
     │   │           └── product_details_response_dto.dart
     │   │
     │   └── repo_impl/
-    │       └── home_repo_impl.dart
+    │       └── commerce_repo_impl.dart
     │
     ├── domain/
     │   │
     │   ├── entities/
-    │   │   ├── home/
-    │   │   │   └── home_entity.dart
+    │   │   ├── commerce/
+    │   │   │   └── commerce_entity.dart
     │   │   │
     │   │   ├── search/
     │   │   │   └── search_entity.dart
@@ -165,10 +166,10 @@ features/
     │   │       └── product_details_entity.dart
     │   │
     │   ├── repo/
-    │   │   └── home_repo.dart
+    │   │   └── commerce_repo.dart
     │   │
     │   └── use_case/
-    │       ├── get_home_data_use_case.dart
+    │       ├── get_commerce_data_use_case.dart
     │       ├── search_product_use_case.dart
     │       ├── get_occasions_use_case.dart
     │       ├── get_categories_use_case.dart
@@ -177,15 +178,15 @@ features/
     │
     └── presentation/
         │
-        ├── home/
+        ├── commerce/
         │   ├── manager/
         │   │   └── cubit/
-        │   │       ├── home_cubit.dart
-        │   │       ├── home_event.dart
-        │   │       └── home_state.dart
+        │   │       ├── commerce_cubit.dart
+        │   │       ├── commerce_event.dart
+        │   │       └── commerce_state.dart
         │   │
         │   └── view/
-        │       ├── home.dart
+        │       ├── commerce.dart
         │       └── widgets/
         │
         ├── search/
@@ -253,7 +254,7 @@ test/
 │
 └── features/
     │
-    └── home/
+    └── commerce/
         │
         ├── data/
         │   ├── data_source/
@@ -269,7 +270,7 @@ test/
 
 # Clean Architecture Layers
 
-The Home feature follows:
+The Commerce feature follows:
 
 ```text
 Presentation
@@ -350,23 +351,23 @@ Use lowercase letters with `snake_case`.
 Correct:
 
 ```text
-home_cubit.dart
-home_state.dart
-home_repo.dart
-home_repo_impl.dart
-home_entity.dart
-home_request_dto.dart
-home_response_dto.dart
-get_home_data_use_case.dart
+commerce_cubit.dart
+commerce_state.dart
+commerce_repo.dart
+commerce_repo_impl.dart
+commerce_entity.dart
+commerce_request_dto.dart
+commerce_response_dto.dart
+get_commerce_data_use_case.dart
 ```
 
 Incorrect:
 
 ```text
-HomeCubit.dart
-HomeState.dart
-HomeRepo.dart
-homeRepo.dart
+CommerceCubit.dart
+CommerceState.dart
+CommerceRepo.dart
+commerceRepo.dart
 ```
 
 ---
@@ -382,7 +383,7 @@ Request DTOs:
 Examples:
 
 ```text
-home_request_dto.dart
+commerce_request_dto.dart
 search_request_dto.dart
 occasion_request_dto.dart
 categories_request_dto.dart
@@ -399,7 +400,7 @@ Response DTOs:
 Examples:
 
 ```text
-home_response_dto.dart
+commerce_response_dto.dart
 search_response_dto.dart
 occasion_response_dto.dart
 categories_response_dto.dart
@@ -420,8 +421,8 @@ domain/entities/
 Each feature has its own folder.
 
 ```text
-home/
-└── home_entity.dart
+commerce/
+└── commerce_entity.dart
 
 search/
 └── search_entity.dart
@@ -454,7 +455,7 @@ Format:
 Examples:
 
 ```text
-get_home_data_use_case.dart
+get_commerce_data_use_case.dart
 search_product_use_case.dart
 get_occasions_use_case.dart
 get_categories_use_case.dart
@@ -469,13 +470,13 @@ get_product_details_use_case.dart
 Interface:
 
 ```text
-home_repo.dart
+commerce_repo.dart
 ```
 
 Implementation:
 
 ```text
-home_repo_impl.dart
+commerce_repo_impl.dart
 ```
 
 The interface belongs to:
@@ -497,7 +498,7 @@ data/repo_impl/
 Each presentation feature has its own Cubit:
 
 ```text
-home_cubit.dart
+commerce_cubit.dart
 search_cubit.dart
 occasion_cubit.dart
 categories_cubit.dart
@@ -508,7 +509,7 @@ product_details_cubit.dart
 Events:
 
 ```text
-home_event.dart
+commerce_event.dart
 search_event.dart
 occasion_event.dart
 categories_event.dart
@@ -519,7 +520,7 @@ product_details_event.dart
 States:
 
 ```text
-home_state.dart
+commerce_state.dart
 search_state.dart
 occasion_state.dart
 categories_state.dart
@@ -545,46 +546,46 @@ product_details_state.dart
 
 ---
 
-# Home Branch Examples
+# Commerce Branch Examples
 
-Main Home branch:
+Main Commerce branch:
 
 ```text
-feature/home
+feature/commerce
 ```
 
-Specific Home tasks:
+Specific Commerce tasks:
 
 ```text
-feature/home-search
-feature/home-occasion
-feature/home-categories
-feature/home-best-seller
-feature/home-product-details
+feature/commerce-search
+feature/commerce-occasion
+feature/commerce-categories
+feature/commerce-best-seller
+feature/commerce-product-details
 ```
 
 Bug fixes:
 
 ```text
-bugfix/home-search
-bugfix/home-loading
-bugfix/home-product-details
+bugfix/commerce-search
+bugfix/commerce-loading
+bugfix/commerce-product-details
 ```
 
 Refactoring:
 
 ```text
-refactor/home-repository
-refactor/home-cubit
-refactor/home-data-source
+refactor/commerce-repository
+refactor/commerce-cubit
+refactor/commerce-data-source
 ```
 
 Testing:
 
 ```text
-test/home
-test/home-use-cases
-test/home-repository
+test/commerce
+test/commerce-use-cases
+test/commerce-repository
 ```
 
 ---
@@ -600,24 +601,24 @@ Use:
 Examples:
 
 ```text
-feat: implement home api client
-feat: add home entities
-feat: implement home repository
-feat: add home use cases
-feat: implement home cubit
-feat: add home ui
+feat: implement commerce api client
+feat: add commerce entities
+feat: implement commerce repository
+feat: add commerce use cases
+feat: implement commerce cubit
+feat: add commerce ui
 
-test: add home entity tests
-test: add home repository tests
-test: add home use case tests
+test: add commerce entity tests
+test: add commerce repository tests
+test: add commerce use case tests
 
-fix: handle home api error
-fix: fix home loading state
+fix: handle commerce api error
+fix: fix commerce loading state
 
-refactor: improve home repository
-refactor: simplify home cubit
+refactor: improve commerce repository
+refactor: simplify commerce cubit
 
-chore: update home dependencies
+chore: update commerce dependencies
 ```
 
 ---
@@ -646,7 +647,7 @@ Before creating the PR:
 
 ---
 
-# Final Home Feature Flow
+# Commerce Feature Flow
 
 ```text
 UI
@@ -704,17 +705,17 @@ Backend API
 
 # Important
 
-Do not create additional layers or folders unless they are actually needed.
-
-The current Home feature should remain consistent with the existing Auth feature architecture.
-
 The `mapper` layer is intentionally not included.
+
+The Commerce feature should remain consistent with the existing Auth feature architecture.
+
+Do not create additional layers or folders unless they are actually needed.
 
 ---
 
-# Home Feature Target
+# Commerce Feature Target
 
-The final goal is to have a Home feature that is:
+The final goal is to have a Commerce feature that is:
 
 * Clean Architecture compliant
 * Easy to test
