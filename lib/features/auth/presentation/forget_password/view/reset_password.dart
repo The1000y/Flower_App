@@ -77,85 +77,87 @@ class _ResetPasswordState extends State<ResetPassword> {
               ),
               child: Form(
                 key: _formKey,
-                child: Column(
-                  children: [
-                    SizedBox(height: 50.h),
-
-                    Center(
-                      child: Text(
-                        AppStrings.resetPasswordTitle,
-                        style: TextStyle(
-                          color: AppColors.black100,
-                          fontSize: 20.sp,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 50.h),
+                  
+                      Center(
+                        child: Text(
+                          AppStrings.resetPasswordTitle,
+                          style: TextStyle(
+                            color: AppColors.black100,
+                            fontSize: 20.sp,
+                          ),
                         ),
                       ),
-                    ),
-
-                    SizedBox(height: 10.h),
-
-                    Text(
-                      AppStrings.resetPasswordSubtitle,
-                      textAlign: TextAlign.center,
-                    ),
-
-                    SizedBox(height: 20.h),
-
-                    CustomTextFormField(
-                      label: AppStrings.newPasswordLabel,
-                      hintText: AppStrings.passwordHint,
-                      controller: _newpassword,
-                      validator: AuthValidators.password,
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
-                    ),
-
-                    SizedBox(height: 20.h),
-
-                    CustomTextFormField(
-                      label: AppStrings.confirmPasswordLabel,
-                      hintText: AppStrings.confirmPasswordHint,
-                      controller: _confirmPassword,
-                      validator: AuthValidators.password,
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
-                    ),
-
-                    SizedBox(height: 30.h),
-
-                    CustomButton(
-                      isLoading:
-                          state.resetstate.isLoading  ,
-                      text: AppStrings.confirmButton,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (_newpassword.text ==
-                              _confirmPassword.text) {
-                            viewModel.doEvent(
-                              ResetPasswordEvent(
-                                email: widget.email,
-                                newPassword: _newpassword.text,
-                                resetCode: widget.otpcode,
-                              ),
-                            );
-
-                            
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Passwords do not match",
+                  
+                      SizedBox(height: 10.h),
+                  
+                      Text(
+                        AppStrings.resetPasswordSubtitle,
+                        textAlign: TextAlign.center,
+                      ),
+                  
+                      SizedBox(height: 20.h),
+                  
+                      CustomTextFormField(
+                        label: AppStrings.newPasswordLabel,
+                        hintText: AppStrings.passwordHint,
+                        controller: _newpassword,
+                        validator: AuthValidators.password,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
+                      ),
+                  
+                      SizedBox(height: 20.h),
+                  
+                      CustomTextFormField(
+                        label: AppStrings.confirmPasswordLabel,
+                        hintText: AppStrings.confirmPasswordHint,
+                        controller: _confirmPassword,
+                        validator: AuthValidators.password,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
+                      ),
+                  
+                      SizedBox(height: 30.h),
+                  
+                      CustomButton(
+                        isLoading:
+                            state.resetstate.isLoading  ,
+                        text: AppStrings.confirmButton,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            if (_newpassword.text ==
+                                _confirmPassword.text) {
+                              viewModel.doEvent(
+                                ResetPasswordEvent(
+                                  email: widget.email,
+                                  newPassword: _newpassword.text,
+                                  resetCode: widget.otpcode,
                                 ),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
+                              );
+                  
+                              
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Passwords do not match",
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
                           }
-                        }
-                      },
-                      isEnabled:
-                          !(state.resetstate.isLoading ),
-                      enabledColor: AppColors.pinkBase,
-                    ),
-                  ],
+                        },
+                        isEnabled:
+                            !(state.resetstate.isLoading ),
+                        enabledColor: AppColors.pinkBase,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
