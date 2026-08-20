@@ -27,7 +27,7 @@ class AuthRepoImpl implements AuthRepo {
       }
 
       return ErrorResponce(
-        Exception(response.message ?? AppStrings.signUp),
+        Exception(response.message ?? AppStrings.registerError),
       );
     } catch (error) {
       return ErrorResponce(

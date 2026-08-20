@@ -42,7 +42,7 @@ class FakeAuthRepo implements AuthRepo {
         ),
       );
     }
-    return ErrorResponce<RegisterEntity>(Exception(AppStrings.signUp));
+    return ErrorResponce<RegisterEntity>(Exception(AppStrings.registerError));
   }
 }
 

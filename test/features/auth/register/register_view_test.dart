@@ -141,7 +141,7 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.text(AppStrings.signUp), findsOneWidget);
+      expect(find.text(AppStrings.registerSuccess), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 2));
       await tester.pump(const Duration(milliseconds: 400));

@@ -169,4 +169,6 @@ abstract class AppStrings {
       'Last name must contain only letters';
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Enter a valid Egyptian phone number';
+  static const String registerError = 'Failed register';
+  static const String registerSuccess = 'Register successful';
 }
