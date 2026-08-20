@@ -28,7 +28,7 @@ abstract class AppStrings{
   static const String termsLink = 'Terms&Conditions';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String passwordAppBarTitle = 'Password';
-  static const String forgetPasswordHeader = 'Forget password'; // Distinct from the "Forget password?" link
+  static const String forgetPasswordHeader = 'Forget password';
   static const String forgetPasswordSubtitle = 'Please enter your email associated to your account';
   static const String confirmButton = 'Confirm';
   static const String emailVerificationTitle = 'Email verification';
@@ -106,7 +106,7 @@ abstract class AppStrings{
   static const String notificationRemember = 'Remember';
   static const String language = 'Language';
   static const String aboutUs = 'About us';
-  static const String termsAndConditionsAlt = 'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
+  static const String termsAndConditionsAlt = 'Terms & conditions';
   static const String logout = 'Logout';
   static const String changeLanguageTitle = 'Change Language';
   static const String languageArabic = 'Arabic';
@@ -166,6 +166,6 @@ abstract class AppStrings{
       'Last name must contain only letters';
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Enter a valid Egyptian phone number';
-  static const String registererror='Failed register';
+  static const String registerError = 'Failed register';
   static const String registerSuccess='Register successful';
 }

@@ -56,7 +56,7 @@ void main() {
     test('toRegisterEntity maps fields to the entity', () {
       final response = RegisterResponse.fromJson(json);
 
-      final entity = response.toregisterentity();
+      final entity = response.toRegisterEntity();
 
       expect(entity, isA<RegisterEntity>());
       expect(entity.isSuccess, isTrue);
@@ -68,7 +68,7 @@ void main() {
     test('toRegisterEntity falls back to defaults for null fields', () {
       final response = RegisterResponse();
 
-      final entity = response.toregisterentity();
+      final entity = response.toRegisterEntity();
 
       expect(entity.isSuccess, isFalse);
       expect(entity.errorCode, 0);

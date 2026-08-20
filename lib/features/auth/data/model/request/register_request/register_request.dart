@@ -1,6 +1,5 @@
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'dart:convert';
 
 part 'register_request.g.dart';
 
@@ -28,12 +27,29 @@ class RegisterRequest {
     this.confirmPassword,
   });
 
+  factory RegisterRequest.fromEntity(RegisterRequestEntity entity) {
+    return RegisterRequest(
+      fullName: entity.fullName,
+      email: entity.email,
+      phoneNumber: entity.phoneNumber,
+      gender: entity.gender,
+      password: entity.password,
+      confirmPassword: entity.confirmPassword,
+    );
+  }
+
   factory RegisterRequest.fromJson(Map<String, dynamic> json) => _$RegisterRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$RegisterRequestToJson(this);
-  RegisterRequestEntity toregisterentityrequest(){
-    return RegisterRequestEntity(fullName: fullName??"", email: email??"", phoneNumber: phoneNumber??"", gender: gender??0, password: password??"", confirmPassword: confirmPassword??"");
 
-
+  RegisterRequestEntity toRegisterRequestEntity() {
+    return RegisterRequestEntity(
+      fullName: fullName ?? "",
+      email: email ?? "",
+      phoneNumber: phoneNumber ?? "",
+      gender: gender ?? 0,
+      password: password ?? "",
+      confirmPassword: confirmPassword ?? "",
+    );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
+import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';
 import 'package:flower_app/features/auth/domain/use_case/register_auth_use_case.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_event.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_state.dart';
@@ -31,7 +31,14 @@ void main() {
   late RegisterViewModel viewModel;
 
   setUpAll(() {
-    registerFallbackValue(RegisterRequest());
+    registerFallbackValue(RegisterRequestEntity(
+      fullName: 'John Doe',
+      email: 'john@example.com',
+      phoneNumber: '01012345678',
+      gender: 1,
+      password: 'P@ssw0rd',
+      confirmPassword: 'P@ssw0rd',
+    ));
   });
 
   setUp(() {

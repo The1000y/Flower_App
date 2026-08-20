@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'dart:convert';
 
 import '../../../../domain/entities/register_entity/register_entity.dart';
 
@@ -25,14 +24,12 @@ class RegisterResponse {
   factory RegisterResponse.fromJson(Map<String, dynamic> json) => _$RegisterResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$RegisterResponseToJson(this);
-  RegisterEntity toregisterentity(
-      ){
+  RegisterEntity toRegisterEntity() {
     return RegisterEntity(
-      isSuccess: isSuccess??false,
-      errorCode: errorCode??0,
-      message: message??"entity null",
-      data: data??false,
+      isSuccess: isSuccess ?? false,
+      errorCode: errorCode ?? 0,
+      message: message ?? "entity null",
+      data: data ?? false,
     );
-
   }
 }

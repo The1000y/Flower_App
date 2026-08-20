@@ -80,7 +80,7 @@ void main() {
         confirmPassword: confirmPassword,
       );
 
-      final entity = request.toregisterentityrequest();
+      final entity = request.toRegisterRequestEntity();
 
       expect(entity, isA<RegisterRequestEntity>());
       expect(entity.fullName, fullName);
@@ -94,7 +94,7 @@ void main() {
     test('toRegisterEntityRequest falls back to defaults for null fields', () {
       final request = RegisterRequest();
 
-      final entity = request.toregisterentityrequest();
+      final entity = request.toRegisterRequestEntity();
 
       expect(entity.fullName, isEmpty);
       expect(entity.email, isEmpty);
@@ -102,6 +102,25 @@ void main() {
       expect(entity.gender, 0);
       expect(entity.password, isEmpty);
       expect(entity.confirmPassword, isEmpty);
+    });
+  test('fromEntity maps the entity fields to the DTO', () {
+      final entity = RegisterRequestEntity(
+        fullName: fullName,
+        email: email,
+        phoneNumber: phoneNumber,
+        gender: gender,
+        password: password,
+        confirmPassword: confirmPassword,
+      );
+
+      final request = RegisterRequest.fromEntity(entity);
+
+      expect(request.fullName, fullName);
+      expect(request.email, email);
+      expect(request.phoneNumber, phoneNumber);
+      expect(request.gender, gender);
+      expect(request.password, password);
+      expect(request.confirmPassword, confirmPassword);
     });
   });
 }

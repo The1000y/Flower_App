@@ -38,8 +38,23 @@ class _RegisterViewState extends State<RegisterView> {
   bool _confirmPasswordTouched = false;
   bool _phoneTouched = false;
 
+  late final TapGestureRecognizer _termsRecognizer;
+  late final TapGestureRecognizer _loginRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _termsRecognizer = TapGestureRecognizer()..onTap = () {};
+    _loginRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        Navigator.pushReplacementNamed(context, Routes.login);
+      };
+  }
+
   @override
   void dispose() {
+    _termsRecognizer.dispose();
+    _loginRecognizer.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
@@ -119,10 +134,7 @@ class _RegisterViewState extends State<RegisterView> {
             key: _formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 16.h,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -220,9 +232,7 @@ class _RegisterViewState extends State<RegisterView> {
                           obscureText: _obscureConfirmPassword,
                           onChanged: (_) {
                             if (!_confirmPasswordTouched) {
-                              setState(
-                                () => _confirmPasswordTouched = true,
-                              );
+                              setState(() => _confirmPasswordTouched = true);
                             }
                           },
                           validator: (value) {
@@ -322,8 +332,7 @@ class _RegisterViewState extends State<RegisterView> {
                             fontWeight: FontWeight.w600,
                             fontSize: 12.sp,
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {},
+                          recognizer: _termsRecognizer,
                         ),
                       ],
                     ),
@@ -351,13 +360,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.w500,
                                 ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  Routes.login,
-                                );
-                              },
+                            recognizer: _loginRecognizer,
                           ),
                         ],
                       ),

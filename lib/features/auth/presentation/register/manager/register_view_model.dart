@@ -1,9 +1,9 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
+import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
+import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';
+import 'package:flower_app/features/auth/domain/use_case/register_auth_use_case.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_event.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_state.dart';
-import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
-import 'package:flower_app/features/auth/domain/use_case/register_auth_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -24,7 +24,7 @@ class RegisterViewModel extends Cubit<RegisterState> {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
 
     try {
-      final request = RegisterRequest(
+      final request = RegisterRequestEntity(
         fullName: event.fullName,
         email: event.email,
         password: event.password,
