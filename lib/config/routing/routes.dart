@@ -1,6 +1,6 @@
 abstract class Routes {
   // Auth
-  static const String login = '/';
+  static const String login = '/login';
   static const String signUp = '/sign_up';
   static const String forgotPassword = '/forgot_password';
   static const String verificationCode = '/verification_code';
@@ -10,7 +10,7 @@ abstract class Routes {
   static const String mainLayout = '/main_layout';
 
   // Home
-  static const String home = '/home';
+  static const String home = '/';
   static const String bestSeller = '/best_seller';
   static const String productDetails = '/product_details';
   static const String occasion = '/occasion';
