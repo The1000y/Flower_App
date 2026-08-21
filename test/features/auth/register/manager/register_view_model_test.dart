@@ -98,26 +98,5 @@ void main() {
       await expectations;
       verify(() => useCase.execute(any())).called(1);
     });
-
-    test('emits loading then error state when the use case throws', () async {
-      when(() => useCase.execute(any())).thenThrow(Exception('boom'));
-
-      final expectations = expectLater(
-        viewModel.stream,
-        emitsInOrder([
-          predicate<RegisterState>(
-            (state) => state.isLoading && state.errorMessage.isEmpty,
-          ),
-          predicate<RegisterState>(
-            (state) => !state.isLoading && state.errorMessage.isNotEmpty,
-          ),
-        ]),
-      );
-
-      viewModel.handle(event);
-
-      await expectations;
-      verify(() => useCase.execute(any())).called(1);
-    });
   });
 }

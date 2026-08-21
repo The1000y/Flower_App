@@ -6,25 +6,25 @@ part 'register_request.g.dart';
 @JsonSerializable()
 class RegisterRequest {
   @JsonKey(name: "fullName")
-  final String? fullName;
+  final String fullName;
   @JsonKey(name: "email")
-  final String? email;
+  final String email;
   @JsonKey(name: "phoneNumber")
-  final String? phoneNumber;
+  final String phoneNumber;
   @JsonKey(name: "gender")
-  final int? gender;
+  final int gender;
   @JsonKey(name: "password")
-  final String? password;
+  final String password;
   @JsonKey(name: "confirmPassword")
-  final String? confirmPassword;
+  final String confirmPassword;
 
   RegisterRequest({
-    this.fullName,
-    this.email,
-    this.phoneNumber,
-    this.gender,
-    this.password,
-    this.confirmPassword,
+    required this.fullName,
+    required this.email,
+    required this.phoneNumber,
+    required this.gender,
+    required this.password,
+    required this.confirmPassword,
   });
 
   factory RegisterRequest.fromEntity(RegisterRequestEntity entity) {
@@ -44,12 +44,12 @@ class RegisterRequest {
 
   RegisterRequestEntity toRegisterRequestEntity() {
     return RegisterRequestEntity(
-      fullName: fullName ?? "",
-      email: email ?? "",
-      phoneNumber: phoneNumber ?? "",
-      gender: gender ?? 0,
-      password: password ?? "",
-      confirmPassword: confirmPassword ?? "",
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      gender: gender,
+      password: password,
+      confirmPassword: confirmPassword,
     );
   }
 }

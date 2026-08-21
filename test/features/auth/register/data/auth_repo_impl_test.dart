@@ -26,7 +26,16 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(entity);
-    registerFallbackValue(RegisterRequest());
+    registerFallbackValue(
+      RegisterRequest(
+        fullName: 'John Doe',
+        email: 'john@example.com',
+        phoneNumber: '01012345678',
+        gender: 1,
+        password: 'P@ssw0rd',
+        confirmPassword: 'P@ssw0rd',
+      ),
+    );
   });
 
   setUp(() {

@@ -44,26 +44,6 @@ void main() {
       expect(request.confirmPassword, confirmPassword);
     });
 
-    test('fromJson handles null values', () {
-      const emptyJson = <String, dynamic>{
-        'fullName': null,
-        'email': null,
-        'phoneNumber': null,
-        'gender': null,
-        'password': null,
-        'confirmPassword': null,
-      };
-
-      final request = RegisterRequest.fromJson(emptyJson);
-
-      expect(request.fullName, isNull);
-      expect(request.email, isNull);
-      expect(request.phoneNumber, isNull);
-      expect(request.gender, isNull);
-      expect(request.password, isNull);
-      expect(request.confirmPassword, isNull);
-    });
-
     test('toJson round-trips through fromJson', () {
       final request = RegisterRequest.fromJson(json);
 
@@ -89,19 +69,6 @@ void main() {
       expect(entity.gender, gender);
       expect(entity.password, password);
       expect(entity.confirmPassword, confirmPassword);
-    });
-
-    test('toRegisterEntityRequest falls back to defaults for null fields', () {
-      final request = RegisterRequest();
-
-      final entity = request.toRegisterRequestEntity();
-
-      expect(entity.fullName, isEmpty);
-      expect(entity.email, isEmpty);
-      expect(entity.phoneNumber, isEmpty);
-      expect(entity.gender, 0);
-      expect(entity.password, isEmpty);
-      expect(entity.confirmPassword, isEmpty);
     });
   test('fromEntity maps the entity fields to the DTO', () {
       final entity = RegisterRequestEntity(

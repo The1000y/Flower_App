@@ -23,26 +23,22 @@ class RegisterViewModel extends Cubit<RegisterState> {
   Future<void> _register(RegisterSubmitted event) async {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
 
-    try {
-      final request = RegisterRequestEntity(
-        fullName: event.fullName,
-        email: event.email,
-        password: event.password,
-        phoneNumber: event.phoneNumber,
-        gender: event.gender,
-        confirmPassword: event.confirmPassword,
-      );
+    final request = RegisterRequestEntity(
+      fullName: event.fullName,
+      email: event.email,
+      password: event.password,
+      phoneNumber: event.phoneNumber,
+      gender: event.gender,
+      confirmPassword: event.confirmPassword,
+    );
 
-      final result = await _registerAuthUseCase.execute(request);
+    final result = await _registerAuthUseCase.execute(request);
 
-      if (result is SuccessResponce<RegisterEntity>) {
+    switch (result) {
+      case SuccessResponce<RegisterEntity>():
         emit(state.copyWith(isLoading: false, data: result.data));
-      } else if (result is ErrorResponce<RegisterEntity>) {
-        emit(state.copyWith(
-            isLoading: false, errorMessage: result.errorMessage));
-      }
-    } catch (error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      case ErrorResponce<RegisterEntity>():
+        emit(state.copyWith(isLoading: false, errorMessage: result.errorMessage));
     }
   }
 }

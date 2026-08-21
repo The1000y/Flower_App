@@ -11,10 +11,6 @@ class RegisterAuthUseCase {
   RegisterAuthUseCase(this._authRepo);
 
   Future<BaseResponce<RegisterEntity>> execute(RegisterRequestEntity request) async {
-    final error = request.validate();
-    if (error != null) {
-      return ErrorResponce<RegisterEntity>(Exception(error));
-    }
     return await _authRepo.register(request);
   }
 }

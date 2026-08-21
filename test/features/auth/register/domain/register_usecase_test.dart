@@ -60,43 +60,5 @@ void main() {
       expect(result, isA<ErrorResponce<RegisterEntity>>());
       verify(() => authRepo.register(validEntity)).called(1);
     });
-
-    test(
-      'execute returns ErrorResponce without calling repo when invalid',
-      () async {
-        final invalidEntity = RegisterRequestEntity(
-          fullName: '',
-          email: 'not-an-email',
-          phoneNumber: '01012345678',
-          gender: 1,
-          password: 'P@ssw0rd',
-          confirmPassword: 'Different',
-        );
-
-        final result = await useCase.execute(invalidEntity);
-
-        expect(result, isA<ErrorResponce<RegisterEntity>>());
-        verifyNever(() => authRepo.register(any()));
-      },
-    );
-
-    test('execute surfaces a generic message for validation failures', () async {
-      final invalidEntity = RegisterRequestEntity(
-        fullName: '',
-        email: 'john@example.com',
-        phoneNumber: '01012345678',
-        gender: 1,
-        password: 'P@ssw0rd',
-        confirmPassword: 'P@ssw0rd',
-      );
-
-      final result = await useCase.execute(invalidEntity);
-
-      expect(result, isA<ErrorResponce<RegisterEntity>>());
-      expect(
-        (result as ErrorResponce<RegisterEntity>).errorMessage,
-        'something went wrong, pls try again',
-      );
-    });
   });
 }
