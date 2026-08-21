@@ -1,6 +1,4 @@
-import 'product_include_item_entity.dart';
-
-class ProductDetailsEntity {
+class ProductEntity {
   final int id;
   final String name;
   final String imageUrl;
@@ -9,13 +7,8 @@ class ProductDetailsEntity {
   final double? originalPrice;
   final double? discountPercentage;
   final String status;
-  final List<String> images;
-  final String description;
-  final List<ProductIncludeItemEntity> includes;
-  final int? categoryId;
-  final List<int> occasionIds;
 
-  ProductDetailsEntity({
+  ProductEntity({
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -24,11 +17,5 @@ class ProductDetailsEntity {
     this.originalPrice,
     this.discountPercentage,
     required this.status,
-    required this.images,
-    required this.description,
-    required this.includes,
-    this.categoryId,
-    required this.occasionIds,
   });
 }
-
