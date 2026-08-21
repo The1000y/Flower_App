@@ -6,6 +6,9 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_event.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_state.dart';
+import 'package:flower_app/features/auth/presentation/register/view/widgets/register_gender_selector.dart';
+import 'package:flower_app/features/auth/presentation/register/view/widgets/register_login_link.dart';
+import 'package:flower_app/features/auth/presentation/register/view/widgets/register_terms_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +29,7 @@ class _RegisterViewState extends State<RegisterView> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _phoneController = TextEditingController();
-  
+
   final ValueNotifier<bool> _isFemaleNotifier = ValueNotifier<bool>(true);
   final ValueNotifier<bool> _obscurePasswordNotifier = ValueNotifier<bool>(true);
   final ValueNotifier<bool> _obscureConfirmPasswordNotifier = ValueNotifier<bool>(true);
@@ -38,10 +41,7 @@ class _RegisterViewState extends State<RegisterView> {
   void initState() {
     super.initState();
     _termsRecognizer = TapGestureRecognizer()..onTap = () {};
-    _loginRecognizer = TapGestureRecognizer()
-      ..onTap = () {
-        Navigator.pop(context);
-      };
+    _loginRecognizer = TapGestureRecognizer()..onTap = () => Navigator.pop(context);
   }
 
   @override
@@ -65,8 +65,7 @@ class _RegisterViewState extends State<RegisterView> {
 
     context.read<RegisterViewModel>().handle(
       RegisterSubmitted(
-        fullName:
-            "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}",
+        fullName: "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}",
         email: _emailController.text.trim(),
         password: _passwordController.text,
         confirmPassword: _confirmPasswordController.text,
@@ -83,23 +82,12 @@ class _RegisterViewState extends State<RegisterView> {
         if (state.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            ..showSnackBar(SnackBar(content: Text(state.errorMessage), backgroundColor: AppColors.error));
         }
-
         if (state.data != null && state.data!.isSuccess) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(AppStrings.registerSuccess),
-                backgroundColor: AppColors.success,
-              ),
-            );
+            ..showSnackBar(SnackBar(content: Text(AppStrings.registerSuccess), backgroundColor: AppColors.success));
           Navigator.pop(context);
         }
       },
@@ -110,10 +98,7 @@ class _RegisterViewState extends State<RegisterView> {
             icon: const Icon(Icons.arrow_back_ios_new),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text(
-            AppStrings.signUp,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          title: Text(AppStrings.signUp, style: Theme.of(context).textTheme.titleLarge),
         ),
         body: Form(
           key: _formKey,
@@ -160,51 +145,34 @@ class _RegisterViewState extends State<RegisterView> {
                     Expanded(
                       child: ValueListenableBuilder<bool>(
                         valueListenable: _obscurePasswordNotifier,
-                        builder: (context, obscure, child) {
-                          return CustomTextFormField(
-                            label: AppStrings.passwordLabel,
-                            hintText: AppStrings.passwordHint,
-                            controller: _passwordController,
-                            obscureText: obscure,
-                            validator: AuthValidators.strongPassword,
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                obscure
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                              ),
-                              onPressed: () =>
-                                  _obscurePasswordNotifier.value = !obscure,
-                            ),
-                          );
-                        },
+                        builder: (context, obscure, child) => CustomTextFormField(
+                          label: AppStrings.passwordLabel,
+                          hintText: AppStrings.passwordHint,
+                          controller: _passwordController,
+                          obscureText: obscure,
+                          validator: AuthValidators.strongPassword,
+                          suffixIcon: IconButton(
+                            icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+                            onPressed: () => _obscurePasswordNotifier.value = !obscure,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(width: 17.w),
                     Expanded(
                       child: ValueListenableBuilder<bool>(
                         valueListenable: _obscureConfirmPasswordNotifier,
-                        builder: (context, obscure, child) {
-                          return CustomTextFormField(
-                            label: AppStrings.confirmPasswordLabel,
-                            hintText: AppStrings.confirmPasswordHint,
-                            controller: _confirmPasswordController,
-                            obscureText: obscure,
-                            validator: (value) => AuthValidators.confirmPassword(
-                              value,
-                              _passwordController.text,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                obscure
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                              ),
-                              onPressed: () =>
-                                  _obscureConfirmPasswordNotifier.value = !obscure,
-                            ),
-                          );
-                        },
+                        builder: (context, obscure, child) => CustomTextFormField(
+                          label: AppStrings.confirmPasswordLabel,
+                          hintText: AppStrings.confirmPasswordHint,
+                          controller: _confirmPasswordController,
+                          obscureText: obscure,
+                          validator: (value) => AuthValidators.confirmPassword(value, _passwordController.text),
+                          suffixIcon: IconButton(
+                            icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+                            onPressed: () => _obscureConfirmPasswordNotifier.value = !obscure,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -220,124 +188,24 @@ class _RegisterViewState extends State<RegisterView> {
                 SizedBox(height: 24.h),
                 RegisterGenderSelector(isFemaleNotifier: _isFemaleNotifier),
                 SizedBox(height: 16.h),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.blackBase,
-                        ),
-                    children: [
-                      const TextSpan(text: AppStrings.termsPrefix),
-                      TextSpan(
-                        text: AppStrings.termsLink,
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: AppColors.blackBase,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12.sp,
-                        ),
-                        recognizer: _termsRecognizer,
-                      ),
-                    ],
-                  ),
-                ),
+                RegisterTermsText(recognizer: _termsRecognizer),
                 SizedBox(height: 48.h),
                 BlocBuilder<RegisterViewModel, RegisterState>(
-                  builder: (context, state) {
-                    return CustomButton(
-                      text: AppStrings.signUp,
-                      isEnabled: !state.isLoading,
-                      isLoading: state.isLoading,
-                      enabledColor: AppColors.pinkBase,
-                      onPressed: () => _onSignUpPressed(context),
-                    );
-                  },
-                ),
-                SizedBox(height: 16.h),
-                Center(
-                  child: Text.rich(
-                    TextSpan(
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      children: [
-                        const TextSpan(text: AppStrings.alreadyHaveAccount),
-                        TextSpan(
-                          text: ' ${AppStrings.loginTitle}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.pinkBase,
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.w500,
-                              ),
-                          recognizer: _loginRecognizer,
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
+                  builder: (context, state) => CustomButton(
+                    text: AppStrings.signUp,
+                    isEnabled: !state.isLoading,
+                    isLoading: state.isLoading,
+                    enabledColor: AppColors.pinkBase,
+                    onPressed: () => _onSignUpPressed(context),
                   ),
                 ),
+                SizedBox(height: 16.h),
+                RegisterLoginLink(recognizer: _loginRecognizer),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class RegisterGenderSelector extends StatelessWidget {
-  final ValueNotifier<bool> isFemaleNotifier;
-
-  const RegisterGenderSelector({super.key, required this.isFemaleNotifier});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          AppStrings.genderTitle,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grayDark,
-              ),
-        ),
-        SizedBox(width: 44.w),
-        ValueListenableBuilder<bool>(
-          valueListenable: isFemaleNotifier,
-          builder: (context, isFemale, child) {
-            return RadioGroup<bool>(
-              groupValue: isFemale,
-              onChanged: (val) => isFemaleNotifier.value = val!,
-              child: Row(
-                children: [
-                  const Radio<bool>(
-                    value: true,
-                    activeColor: AppColors.pinkBase,
-                  ),
-                  Text(
-                    AppStrings.female,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.blackBase),
-                  ),
-                  SizedBox(width: 15.5.w),
-                  const Radio<bool>(
-                    value: false,
-                    activeColor: AppColors.pinkBase,
-                  ),
-                  Text(
-                    AppStrings.male,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.blackBase),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
     );
   }
 }
