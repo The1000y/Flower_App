@@ -1,4 +1,167 @@
+import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
+import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/best_seller_item_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/home_response/home_section_data_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
+import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/home/home_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
+
 @Injectable(as: CommerceRepo)
-class CommerceRepoImpl implements CommerceRepo {}
+class CommerceRepoImpl implements CommerceRepo {
+  final CommerceRemoteDataSource remoteDataSource;
+  final CommerceLocalDataSource localDataSource;
+
+  CommerceRepoImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
+  @override
+  Future<bool> checkSectionsUpdate() async {
+    final cached = await localDataSource.getCachedSections();
+
+    if (cached == null) {
+      return true;
+    }
+
+    final response = await remoteDataSource.getSections();
+
+    switch (response) {
+      case SuccessResponce<List<HomeSectionDto>>():
+        await localDataSource.saveLastCheckedAt(DateTime.now());
+
+        return !_areSectionsEqual(cached, response.data);
+      case ErrorResponce<List<HomeSectionDto>>():
+        throw ErrorResponce(Exception(response.errorMessage));
+    }
+  }
+
+  @override
+  Future<List<BestSellerEntity>> getBestSeller() async {
+    final response = await remoteDataSource.getBestSeller();
+
+    switch (response) {
+      case SuccessResponce<List<ItemDto>>():
+        return response.data.map((e) => e.toDomain()).toList();
+
+      case ErrorResponce<List<ItemDto>>():
+        throw ErrorResponce(Exception(response.errorMessage));
+    }
+  }
+
+  @override
+  Future<List<CategoryEntity>> getCategories() async {
+    final response = await remoteDataSource.getCategories();
+
+    switch (response) {
+      case SuccessResponce<List<CategoryDto>>():
+        return response.data.map((e) => e.toDomain()).toList();
+
+      case ErrorResponce<List<CategoryDto>>():
+        throw ErrorResponce(Exception(response.errorMessage));
+    }
+  }
+
+  @override
+  Future<List<OccasionEntity>> getOccasions() async {
+    final response = await remoteDataSource.getOccasions();
+
+    switch (response) {
+      case SuccessResponce<List<OccasionDto>>():
+        return response.data.map((e) => e.toDomain()).toList();
+
+      case ErrorResponce<List<OccasionDto>>():
+        throw ErrorResponce(Exception(response.errorMessage));
+    }
+  }
+
+  @override
+  Future<List<HomeEntity>> getSections() async {
+    final cached = await localDataSource.getCachedSections();
+
+    if (cached != null) {
+      return _prpareSection(cached.map((e) => e.toDomain()).toList());
+    }
+
+    final response = await remoteDataSource.getSections();
+    switch (response) {
+      case SuccessResponce<List<HomeSectionDto>>():
+        await localDataSource.saveSections(response.data);
+        await localDataSource.saveLastCheckedAt(DateTime.now());
+        return _prpareSection(response.data.map((e) => e.toDomain()).toList());
+
+      case ErrorResponce<List<HomeSectionDto>>():
+        throw ErrorResponce(Exception(response.errorMessage));
+    }
+  }
+
+  @override
+  Future<List<HomeEntity>> refreshSections() async {
+    final response = await remoteDataSource.getSections();
+    switch (response) {
+      case SuccessResponce<List<HomeSectionDto>>():
+        await localDataSource.saveSections(response.data);
+
+        await localDataSource.saveLastCheckedAt(DateTime.now());
+
+        return _prpareSection(response.data.map((e) => e.toDomain()).toList());
+
+      case ErrorResponce<List<HomeSectionDto>>():
+        throw ErrorResponce(Exception(response.errorMessage));
+    }
+  }
+
+  Future<List<HomeEntity>> _prpareSection(List<HomeEntity> section) async {
+    return section.where((s) => s.isActive).toList()
+      ..sort((a, b) => a.index.compareTo(b.index));
+  }
+
+  bool _areSectionsEqual(
+    List<HomeSectionDto> oldSections,
+    List<HomeSectionDto> newSections,
+  ) {
+    if (oldSections.length != newSections.length) {
+      return false;
+    }
+
+    for (int i = 0; i < oldSections.length; i++) {
+      final oldSection = oldSections[i];
+      final newSection = newSections[i];
+
+      if (oldSection.id != newSection.id) {
+        return false;
+      }
+
+      if (oldSection.type != newSection.type) {
+        return false;
+      }
+
+      if (oldSection.index != newSection.index) {
+        return false;
+      }
+
+      if (oldSection.isActive != newSection.isActive) {
+        return false;
+      }
+
+      if (oldSection.title != newSection.title) {
+        return false;
+      }
+
+      if (oldSection.occasionId != newSection.occasionId) {
+        return false;
+      }
+
+      if (oldSection.categoryId != newSection.categoryId) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}

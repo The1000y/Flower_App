@@ -1,4 +1,4 @@
-class ProductEntity {
+class BestSellerEntity {
   final int id;
   final String name;
   final String imageUrl;
@@ -8,7 +8,7 @@ class ProductEntity {
   final double? discountPercentage;
   final String status;
 
-  ProductEntity({
+  BestSellerEntity({
     required this.id,
     required this.name,
     required this.imageUrl,

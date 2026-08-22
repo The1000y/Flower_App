@@ -10,8 +10,10 @@ abstract class Routes {
   static const String mainLayout = '/main_layout';
 
   // Home
+
   static const String home = '/';
-  static const String bestSeller = '/best_seller';
+  static const String homeSection = '/home/sections';
+  static const String bestSeller = '/products/best-sellers';
   static const String productDetails = '/product_details';
   static const String occasion = '/occasion';
   static const String categories = '/categories';

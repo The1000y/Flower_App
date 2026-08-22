@@ -1,7 +1,7 @@
 import 'package:flower_app/features/commerce/domain/entities/home/home_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'home_section_dto.g.dart';
+part 'home_section_data_dto.g.dart';
 
 @JsonSerializable()
 class HomeSectionDto {

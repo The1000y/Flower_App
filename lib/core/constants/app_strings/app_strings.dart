@@ -167,4 +167,9 @@ abstract class AppStrings{
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Enter a valid Egyptian phone number';
 
+
+  //home
+    static const String sectionsKey = 'home_sections';
+  static const String lastCheckedKey = 'home_last_checked';
+
 }
