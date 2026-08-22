@@ -2,7 +2,7 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
-import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,8 +37,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Home
-      case Routes.home:
-        return MaterialPageRoute(builder: (_) =>  PersistenBottomNavBarDemo());
+      // case Routes.home:
+      //   return MaterialPageRoute(builder: (_) =>  PersistenBottomNavBarDemo());
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const Placeholder());
