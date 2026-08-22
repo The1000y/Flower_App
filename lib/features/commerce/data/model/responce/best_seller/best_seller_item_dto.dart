@@ -1,7 +1,7 @@
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/best_seller_response.dart';
 import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'bestsellers_item_dto.g.dart';
+part 'best_seller_item_dto.g.dart';
 
 @JsonSerializable()
 class BestSellerDataDto {

@@ -2,7 +2,7 @@
 import 'package:flower_app/features/commerce/data/model/responce/home_response/home_section_data_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'home_sections_response_dto.g.dart';
+part 'home_section_response.g.dart';
 @JsonSerializable()
 class HomeSectionsResponseDto {
     @JsonKey(name: "data")

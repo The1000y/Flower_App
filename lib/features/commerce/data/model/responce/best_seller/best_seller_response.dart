@@ -2,7 +2,7 @@ import 'package:flower_app/features/commerce/data/model/responce/best_seller/bes
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
-part 'bestsellers_response.g.dart';
+part 'best_seller_response.g.dart';
 
 BestsellersResponseDto bestsellersResponseDtoFromJson(String str) => BestsellersResponseDto.fromJson(json.decode(str));
 
