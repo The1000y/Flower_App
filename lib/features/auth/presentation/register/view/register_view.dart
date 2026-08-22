@@ -70,7 +70,7 @@ class _RegisterViewState extends State<RegisterView> {
         password: _passwordController.text,
         confirmPassword: _confirmPasswordController.text,
         phoneNumber: _phoneController.text.trim(),
-        gender: _isFemaleNotifier.value ? 1 : 2,
+        gender: _isFemaleNotifier.value ? 1 : 0,
       ),
     );
   }
