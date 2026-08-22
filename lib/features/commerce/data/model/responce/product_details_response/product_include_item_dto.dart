@@ -1,4 +1,3 @@
-import 'package:flower_app/features/commerce/domain/entities/product_details/product_details_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../../domain/entities/product_details/product_include_item_entity.dart';

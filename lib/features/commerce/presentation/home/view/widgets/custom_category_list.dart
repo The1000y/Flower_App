@@ -1,9 +1,13 @@
+import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_category_item.dart';
 import 'package:flutter/material.dart';
 
 class CustomCategoryList extends StatelessWidget {
+  final List<CategoryEntity> categories;
+
   const CustomCategoryList({
     super.key,
+    required this.categories,
   });
 
   @override
@@ -20,11 +24,11 @@ class CustomCategoryList extends StatelessWidget {
             );
           },
           scrollDirection: Axis.horizontal,
-          itemCount: 6,
+          itemCount: categories.length,
           itemBuilder: (context, index) {
-            return CustomCategoryWidget();
-                      
-        },),
+            return CustomCategoryWidget(category: categories[index]);
+          },
+        ),
       ),
     );
   }
