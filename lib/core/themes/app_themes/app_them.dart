@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppThem {
-  AppThem._();
+class AppTheme {
+  AppTheme._();
 
   static ThemeData lightThem = ThemeData(
     useMaterial3: true,

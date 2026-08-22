@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('RemoteDataSourceImpl.register', () {
-    const dataSource = RemoteDataSourceImpl();
+    final dataSource = RemoteDataSourceImpl();
 
     test('returns success for a valid request', () async {
       final response = await dataSource.register(

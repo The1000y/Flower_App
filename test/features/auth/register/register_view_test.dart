@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import '../../../helpers/register_test_helpers.dart';
+import '../../../helpers/auth_test_helpers.dart';
 
 Widget _app(FakeAuthRepo repo) {
   return ScreenUtilPlusInit(

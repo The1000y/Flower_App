@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/auth/api/service/secure_storage.dart';
+import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
 import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
@@ -10,6 +12,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockRemoteDataSource extends Mock implements RemoteDataSource {}
+
+class MockLocalDataSource extends Mock implements LocalDataSource {}
+
+class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 void main() {
   final entity = RegisterRequestEntity(
@@ -22,10 +28,11 @@ void main() {
   );
 
   late MockRemoteDataSource remoteDataSource;
+  late MockLocalDataSource localDataSource;
+  late MockSecureStorageService secureStorage;
   late AuthRepoImpl repo;
 
   setUpAll(() {
-    registerFallbackValue(entity);
     registerFallbackValue(
       RegisterRequest(
         fullName: 'John Doe',
@@ -40,7 +47,13 @@ void main() {
 
   setUp(() {
     remoteDataSource = MockRemoteDataSource();
-    repo = AuthRepoImpl(remoteDataSource);
+    localDataSource = MockLocalDataSource();
+    secureStorage = MockSecureStorageService();
+
+    repo = AuthRepoImpl(
+      localDataSource,
+      remoteDataSource,
+      secureStorage);
   });
 
   group('AuthRepoImpl.register', () {
