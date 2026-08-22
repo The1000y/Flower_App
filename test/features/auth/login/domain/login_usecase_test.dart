@@ -19,8 +19,8 @@ void main() {
       final result = await useCase(credentials, rememberMe: true);
 
       expect(result, isA<SuccessResponce>());
-      expect(repo.lastRequest?.email, validEmail);
-      expect(repo.lastRequest?.password, validPassword);
+      expect(repo.lastLoginRequest?.email, validEmail);
+      expect(repo.lastLoginRequest?.password, validPassword);
       expect(repo.lastRememberMe, isTrue);
     });
 

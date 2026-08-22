@@ -4,6 +4,8 @@ import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_pas
 import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/login_entity.dart';
+import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
+import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';
 
 abstract interface class AuthRepo {
   Future<BaseResponce<ForgetPasswordEntity>> forgetPassword({required String email});
@@ -14,4 +16,6 @@ abstract interface class AuthRepo {
   Future<String?> getRememberedEmail();
   Future<void> saveRememberedEmail(String email);
   Future<void> deleteRememberedEmail();
+
+  Future<BaseResponce<RegisterEntity>> register(RegisterRequestEntity request);
 }

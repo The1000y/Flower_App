@@ -1,4 +1,5 @@
-abstract class AppStrings {
+
+abstract class AppStrings{
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
@@ -27,14 +28,11 @@ abstract class AppStrings {
   static const String termsLink = 'Terms&Conditions';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String passwordAppBarTitle = 'Password';
-  static const String forgetPasswordHeader =
-      'Forget password'; // Distinct from the "Forget password?" link
-  static const String forgetPasswordSubtitle =
-      'Please enter your email associated \n   to your account';
+  static const String forgetPasswordHeader = 'Forget password'; // Distinct from the "Forget password?" link
+  static const String forgetPasswordSubtitle = 'Please enter your email associated to your account';
   static const String confirmButton = 'Confirm';
   static const String emailVerificationTitle = 'Email verification';
-  static const String emailVerificationSubtitle =
-      'Please enter your code that send to your email address';
+  static const String emailVerificationSubtitle = 'Please enter your code that send to your email address';
   static const String invalidCodeError = 'Invalid code';
   static const String didntReceiveCode = 'Didn\'t receive code? ';
   static const String resendLink = 'Resend';
@@ -169,4 +167,8 @@ abstract class AppStrings {
       'Last name must contain only letters';
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Enter a valid Egyptian phone number';
+  // Auth storage keys
+  // Auth error / validation messages
+  static const String registerError = 'Failed register';
+  static const String registerSuccess = 'Register successful';
 }
