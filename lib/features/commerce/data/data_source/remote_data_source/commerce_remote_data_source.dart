@@ -14,4 +14,9 @@ abstract interface class CommerceRemoteDataSource {
   );
 
   Future<BaseResponce<List<OccasionDto>>> getOccasions();
+
+  Future<BaseResponce<List<ItemDto>>> getSectionProducts({
+    int? occasionId,
+    int? categoryId,
+  });
 }

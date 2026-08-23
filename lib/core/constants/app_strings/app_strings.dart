@@ -171,5 +171,7 @@ abstract class AppStrings{
   //home
     static const String sectionsKey = 'home_sections';
   static const String lastCheckedKey = 'home_last_checked';
+  static const String homeUpdatedBanner = 'Home has been updated';
+  static const String refreshAction = 'Refresh';
 
 }

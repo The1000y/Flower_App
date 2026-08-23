@@ -14,6 +14,7 @@ abstract class Routes {
   static const String home = '/';
   static const String homeSection = '/home/sections';
   static const String bestSeller = '/products/best-sellers';
+  static const String products = '/products';
   static const String productDetails = '/product_details';
   static const String occasion = '/occasion';
   static const String categories = '/categories';

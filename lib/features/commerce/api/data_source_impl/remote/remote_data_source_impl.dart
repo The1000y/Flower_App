@@ -55,4 +55,23 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
       return ErrorResponce(Exception(response.message));
     }
   }
+
+  @override
+  Future<BaseResponce<List<ItemDto>>> getSectionProducts({
+    int? occasionId,
+    int? categoryId,
+  }) async {
+    final response = await homeApi.getProducts(
+      occasionId: occasionId,
+      categoryId: categoryId,
+    );
+    try {
+      if (response.isSuccess == true && response.data != null) {
+        return SuccessResponce(response.data!.items ?? []);
+      }
+      return ErrorResponce(Exception(response.message));
+    } catch (e) {
+      return ErrorResponce(Exception(response.message));
+    }
+  }
 }

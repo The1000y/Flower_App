@@ -1,15 +1,11 @@
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
-import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_event.dart';
-import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_state.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_best_seller_list.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_category_list.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_header.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_header_collection.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_location-data.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_occasion_list.dart';
+import 'package:flower_app/features/commerce/domain/entities/home/home_section_type.dart';
+import 'package:flower_app/features/commerce/presentation/home/manager/home_event.dart';
+import 'package:flower_app/features/commerce/presentation/home/manager/home_state.dart';
+import 'package:flower_app/features/commerce/presentation/home/manager/home_view_model.dart';
+import 'package:flower_app/features/commerce/presentation/home/view/widgets/home_section_factory.dart';
+import 'package:flower_app/features/commerce/presentation/home/view/widgets/home_update_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,94 +14,70 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeCubit homeCubit = getIt.get<HomeCubit>();
-    var textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      backgroundColor: AppColors.whiteBase,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: BlocProvider<HomeCubit>(
-            create: (context) => homeCubit..doEvent(GetCategoriesEvent()),
+    return BlocProvider<HomeViewModel>(
+      create: (_) => getIt<HomeViewModel>()..handle(LoadHome()),
+      child: Scaffold(
+        backgroundColor: AppColors.whiteBase,
+        body: SafeArea(
+          child: BlocListener<HomeViewModel, HomeState>(
+            listener: (context, state) {
+              if (state.refreshError.isNotEmpty) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.refreshError),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+              }
+            },
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: CustomHeaderHomeView(),
-                ),
-                SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: CustomLocationData(textTheme: textTheme),
-                ),
-                SizedBox(height: 16),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CustomHeaderOfCollection(
-                        textTheme: textTheme,
-                        collectionName: AppStrings.categoriesLabel,
-                        onTapViewAll: () {},
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    BlocBuilder<HomeCubit, HomeState>(
-                      builder: (context, state) {
-                        final categoriesState = state.categoriesState;
+                const HomeUpdateBanner(),
+                Expanded(
+                  child: BlocBuilder<HomeViewModel, HomeState>(
+                    builder: (context, state) {
+                      final sectionsState = state.sectionsState;
 
-                        if (categoriesState.isLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
+                      if (sectionsState.isLoading &&
+                          sectionsState.data == null) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                        if (categoriesState.errorMessage.isNotEmpty) {
-                          return Center(
-                            child: Text(categoriesState.errorMessage),
-                          );
-                        }
+                      if (sectionsState.errorMessage.isNotEmpty &&
+                          sectionsState.data == null) {
+                        return Center(
+                          child: Text(
+                            sectionsState.errorMessage,
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
 
-                        if (categoriesState.data != null) {
-                          return CustomCategoryList(
-                            categories: categoriesState.data!,
-                          );
-                        }
+                      final sections =
+                          (sectionsState.data ?? const []).activeSorted;
 
+                      if (sections.isEmpty) {
                         return const SizedBox.shrink();
-                      },
-                    ),
-                    SizedBox(height: 16),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CustomHeaderOfCollection(
-                        textTheme: textTheme,
-                        collectionName: AppStrings.bestsellerLabel,
-                        onTapViewAll: () {},
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    CustomBestSellerList(),
-                    SizedBox(height: 24),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CustomHeaderOfCollection(
-                        textTheme: textTheme,
-                        collectionName: AppStrings.ocassionLabel,
-                        onTapViewAll: () {},
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    CustomOccasionrList(),
-                  ],
+                      }
+
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final section in sections)
+                              HomeSectionFactory(
+                                section: section,
+                                state: state,
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

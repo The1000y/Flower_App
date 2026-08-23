@@ -1,12 +1,14 @@
+import 'package:flower_app/features/commerce/domain/entities/home/home_entity.dart';
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
+
 @injectable
-class CheckSectionsUpdate {
+class RefreshSections {
   final CommerceRepo repository;
 
-  CheckSectionsUpdate(this.repository);
+  RefreshSections(this.repository);
 
-  Future<bool> call() {
-    return repository.checkSectionsUpdate();
+  Future<List<HomeEntity>> call() {
+    return repository.refreshSections();
   }
 }

@@ -15,4 +15,9 @@ abstract interface class CommerceRepo {
   Future<bool> checkSectionsUpdate();
 
   Future<List<HomeEntity>> refreshSections();
+
+  Future<List<BestSellerEntity>> getSectionProducts({
+    int? occasionId,
+    int? categoryId,
+  });
 }

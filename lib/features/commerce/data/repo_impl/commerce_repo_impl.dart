@@ -15,6 +15,8 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
+  static const _updateCheckInterval = Duration(hours: 1);
+
   final CommerceRemoteDataSource remoteDataSource;
   final CommerceLocalDataSource localDataSource;
 
@@ -28,6 +30,13 @@ class CommerceRepoImpl implements CommerceRepo {
 
     if (cached == null) {
       return true;
+    }
+
+    final lastCheckedAt = await localDataSource.getLastCheckedAt();
+
+    if (lastCheckedAt != null &&
+        DateTime.now().difference(lastCheckedAt) < _updateCheckInterval) {
+      return false;
     }
 
     final response = await remoteDataSource.getSections();
@@ -113,6 +122,25 @@ class CommerceRepoImpl implements CommerceRepo {
         return _prpareSection(response.data.map((e) => e.toDomain()).toList());
 
       case ErrorResponce<List<HomeSectionDto>>():
+        throw ErrorResponce(Exception(response.errorMessage));
+    }
+  }
+
+  @override
+  Future<List<BestSellerEntity>> getSectionProducts({
+    int? occasionId,
+    int? categoryId,
+  }) async {
+    final response = await remoteDataSource.getSectionProducts(
+      occasionId: occasionId,
+      categoryId: categoryId,
+    );
+
+    switch (response) {
+      case SuccessResponce<List<ItemDto>>():
+        return response.data.map((e) => e.toDomain()).toList();
+
+      case ErrorResponce<List<ItemDto>>():
         throw ErrorResponce(Exception(response.errorMessage));
     }
   }
