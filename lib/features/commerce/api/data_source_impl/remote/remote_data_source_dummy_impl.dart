@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/config/utils/app_config.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/best_seller_item_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
@@ -9,7 +10,7 @@ import 'package:flower_app/features/commerce/data/model/responce/occasion_respon
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:injectable/injectable.dart';
 
-@LazySingleton(as: CommerceRemoteDataSource, env: ['dummy'])
+@LazySingleton(as: CommerceRemoteDataSource, env: [AppConfig.dummyEnv])
 class RemoteDataSourceDummyImpl implements CommerceRemoteDataSource {
   static const _basePath = 'assets/dummy';
   static const _networkDelay = Duration(milliseconds: 600);
