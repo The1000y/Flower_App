@@ -3,6 +3,8 @@ import 'package:flower_app/features/commerce/domain/entities/home/home_entity.da
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 
+import '../../../../config/base/base_responce.dart';
+
 abstract interface class CommerceRepo {
   Future<List<HomeEntity>> getSections();
 
@@ -20,4 +22,6 @@ abstract interface class CommerceRepo {
     int? occasionId,
     int? categoryId,
   });
+  Future<BaseResponce<List<OccasionEntity>>> getOccasions();
+
 }

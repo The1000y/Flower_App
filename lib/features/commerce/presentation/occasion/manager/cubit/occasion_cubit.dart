@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../domain/entities/occasion/occasion_entity.dart';
 import '../../../../domain/entities/products/product_entity.dart';
+import '../../../../domain/use_case/get_occasion_page_usecase.dart';
 import '../../../../domain/use_case/get_occasions_use_case.dart';
 import '../../../../domain/use_case/get_products_use_case.dart';
 import 'occasion_event.dart';
@@ -11,7 +12,7 @@ import 'occasion_state.dart';
 
 @injectable
 class OccasionCubit extends Cubit<OccasionState> {
-  final GetOccasionsUseCase _getOccasionsUseCase;
+  final GetOccasionsPageUseCase _getOccasionsUseCase;
   final GetProductsUseCase _getProductsUseCase;
 
   OccasionCubit(this._getOccasionsUseCase, this._getProductsUseCase)

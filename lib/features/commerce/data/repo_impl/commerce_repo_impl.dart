@@ -177,4 +177,16 @@ class CommerceRepoImpl implements CommerceRepo {
 
     return true;
   }
+  @override
+  Future<BaseResponce<List<OccasionEntity>>> getOccasions() async {
+    try {
+      final response = await remoteDataSource.getOccasions();
+      if (response.isSuccess) {
+        return SuccessResponce(response.toDomain());
+      }
+      return ErrorResponce(Exception(response.message));
+    } catch (error) {
+      return ErrorResponce(error is Exception ? error : Exception(error.toString()));
+    }
+  }
 }
