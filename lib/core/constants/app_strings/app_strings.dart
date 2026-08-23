@@ -37,15 +37,16 @@ abstract class AppStrings{
   static const String didntReceiveCode = 'Didn\'t receive code? ';
   static const String resendLink = 'Resend';
   static const String resetPasswordTitle = 'Reset password';
-  static const String resetPasswordSubtitle = 'Password must not be empty and must contain 6 characters with upper case letter and one number at least';
+  static const String resetPasswordSubtitle =
+      'Password must not be empty and must contain\n 6 characters with upper case letter and one\n number at least';
   static const String newPasswordLabel = 'New password';
-  static const String floweryAppbarTitle='Flowery';
-  static const String searchHint='Search';
+  static const String floweryAppbarTitle = 'Flowery';
+  static const String searchHint = 'Search';
   static const String deliverToPrefix = 'Deliver to ';
-  static const String categoriesLabel='Categories';
-  static const String bestsellerLabel='Best seller';
-  static const String ocassionLabel='Ocassion';
-  static const String viewAllLabel='View all';
+  static const String categoriesLabel = 'Categories';
+  static const String bestsellerLabel = 'Best seller';
+  static const String ocassionLabel = 'Ocassion';
+  static const String viewAllLabel = 'View all';
   static const String navHome = 'Home';
   static const String navCart = 'Cart';
   static const String navProfile = 'Profile';
@@ -106,7 +107,8 @@ abstract class AppStrings{
   static const String notificationRemember = 'Remember';
   static const String language = 'Language';
   static const String aboutUs = 'About us';
-  static const String termsAndConditionsAlt = 'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
+  static const String termsAndConditionsAlt =
+      'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
   static const String logout = 'Logout';
   static const String changeLanguageTitle = 'Change Language';
   static const String languageArabic = 'Arabic';
@@ -135,7 +137,6 @@ abstract class AppStrings{
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
-
   // Auth storage keys
   static const String refreshToken = 'refresh_token';
   static const String accessToken = 'access_token';
@@ -166,6 +167,10 @@ abstract class AppStrings{
       'Last name must contain only letters';
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Enter a valid Egyptian phone number';
+  // Auth storage keys
+  // Auth error / validation messages
+  static const String registerError = 'Failed register';
+  static const String registerSuccess = 'Register successful';
 
 
   //home

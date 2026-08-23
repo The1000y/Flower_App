@@ -17,7 +17,7 @@ void main() {
     setUp(() {
       useInMemorySecureStorage();
       storage = SecureStorageService(const FlutterSecureStorage());
-      repo = AuthRepoImpl(RemoteDataSourceImpl(), storage);
+      repo = buildLoginRepo(RemoteDataSourceImpl(), storage);
     });
 
     test('returns success and saves tokens when remember me is true', () async {

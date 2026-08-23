@@ -155,8 +155,8 @@ void main() {
 
       await harness.viewModel.handle(LoginPressed());
 
-      expect(harness.repo.lastRequest?.email, validEmail);
-      expect(harness.repo.lastRequest?.password, validPassword);
+      expect(harness.repo.lastLoginRequest?.email, validEmail);
+      expect(harness.repo.lastLoginRequest?.password, validPassword);
     });
 
     test('login forwards rememberMe flag to the repo', () async {

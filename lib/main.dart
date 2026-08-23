@@ -6,6 +6,7 @@ import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 // import 'core/shared/app_widgets/bottom_navigation_bar.dart';
+import 'core/shared/app_widgets/bottom_navigation_bar.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
