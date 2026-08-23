@@ -7,8 +7,6 @@ import 'package:flower_app/features/commerce/domain/entities/products/product_en
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
 
-import '../model/request/products_request/products_request_dto.dart';
-
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
   CommerceLocalDataSource commerceLocalDataSource;
@@ -24,22 +22,20 @@ class CommerceRepoImpl implements CommerceRepo {
             .toList();
         return SuccessResponce<List<CategoryEntity>>(categoryEntityList);
       case ErrorResponce<List<CategoriesResponseDto>>():
-        return ErrorResponce(response.error);
+        return ErrorResponce<List<CategoryEntity>>(response.error);
     }
   }
 
   @override
-  Future<BaseResponce<ProductEntity>> getProducts() async {
+  Future<BaseResponce<List<ProductEntity>>> getProducts() async {
     final BaseResponce<ProductsResponseDto> response =
         await commerceLocalDataSource.getProducts();
 
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
-        final ProductEntity productEntity =
-            (response.data as dynamic).toDomain() as ProductEntity;
-        return SuccessResponce<ProductEntity>(productEntity);
+        return SuccessResponce<List<ProductEntity>>(response.data.products);
       case ErrorResponce<ProductsResponseDto>():
-        return ErrorResponce(response.error);
+        return ErrorResponce<List<ProductEntity>>(response.error);
     }
   }
 }

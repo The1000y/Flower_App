@@ -5,5 +5,5 @@ import 'package:flower_app/features/commerce/domain/entities/products/product_en
 abstract interface class CommerceRepo {
   Future<BaseResponce<List<CategoryEntity>>> getCategories();
 
-  Future<BaseResponce<ProductEntity>> getProducts();
+  Future<BaseResponce<List<ProductEntity>>> getProducts();
 }

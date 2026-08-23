@@ -7,7 +7,10 @@ import '../../../../../../core/themes/app_colors/app_color.dart';
 import 'buildSortItemfFilter.dart';
 
 class FilterView extends StatefulWidget {
-  const FilterView({super.key});
+  const FilterView({super.key, this.selectedSort, required this.onChanged});
+
+  final SortType? selectedSort;
+  final ValueChanged<SortType?> onChanged;
 
   @override
   State<FilterView> createState() => _FilterViewState();
@@ -15,6 +18,12 @@ class FilterView extends StatefulWidget {
 
 class _FilterViewState extends State<FilterView> {
   SortType? selectedSort;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedSort = widget.selectedSort;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +48,8 @@ class _FilterViewState extends State<FilterView> {
           value: SortType.recommended,
           groupValue: selectedSort,
           onChanged: (value) {
-            setState(() {
-              selectedSort = value;
-            });
+            setState(() => selectedSort = value);
+            widget.onChanged(value);
           },
         ),
 
@@ -50,9 +58,8 @@ class _FilterViewState extends State<FilterView> {
           value: SortType.newest,
           groupValue: selectedSort,
           onChanged: (value) {
-            setState(() {
-              selectedSort = value;
-            });
+            setState(() => selectedSort = value);
+            widget.onChanged(value);
           },
         ),
 
@@ -61,9 +68,8 @@ class _FilterViewState extends State<FilterView> {
           value: SortType.priceLowToHigh,
           groupValue: selectedSort,
           onChanged: (value) {
-            setState(() {
-              selectedSort = value;
-            });
+            setState(() => selectedSort = value);
+            widget.onChanged(value);
           },
         ),
 
@@ -72,9 +78,8 @@ class _FilterViewState extends State<FilterView> {
           value: SortType.priceHighToLow,
           groupValue: selectedSort,
           onChanged: (value) {
-            setState(() {
-              selectedSort = value;
-            });
+            setState(() => selectedSort = value);
+            widget.onChanged(value);
           },
         ),
       ],

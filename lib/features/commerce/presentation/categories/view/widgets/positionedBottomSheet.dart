@@ -1,12 +1,19 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/widgets/filterView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../../../core/themes/app_colors/app_color.dart';
+import 'buildSortItemfFilter.dart';
 
 class Positionedbottomsheet extends StatelessWidget {
-  const Positionedbottomsheet({super.key});
+  const Positionedbottomsheet({
+    super.key,
+    required this.selectedSort,
+    required this.onChanged,
+  });
+
+  final SortType? selectedSort;
+  final ValueChanged<SortType?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +27,9 @@ class Positionedbottomsheet extends StatelessWidget {
             showModalBottomSheet(
               context: context,
               builder: (context) {
-                return Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    
-
-                    FilterView(),
-                  ],
+                return FilterView(
+                  selectedSort: selectedSort,
+                  onChanged: onChanged,
                 );
               },
             );
