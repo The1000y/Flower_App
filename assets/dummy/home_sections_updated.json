@@ -1,0 +1,52 @@
+{
+  "data": [
+    {
+      "id": 2,
+      "type": "BestSeller",
+      "index": 0,
+      "isActive": true,
+      "title": "Trending now",
+      "occasionId": null,
+      "categoryId": null
+    },
+    {
+      "id": 1,
+      "type": "Categories",
+      "index": 1,
+      "isActive": true,
+      "title": "Shop by category",
+      "occasionId": null,
+      "categoryId": null
+    },
+    {
+      "id": 3,
+      "type": "Occasions",
+      "index": 2,
+      "isActive": false,
+      "title": "Occasion",
+      "occasionId": null,
+      "categoryId": null
+    },
+    {
+      "id": 4,
+      "type": "ProductsCarousel",
+      "index": 3,
+      "isActive": true,
+      "title": "Anniversary specials",
+      "occasionId": 2,
+      "categoryId": 3
+    },
+    {
+      "id": 6,
+      "type": "MysterySection",
+      "index": 4,
+      "isActive": true,
+      "title": "Coming soon",
+      "occasionId": null,
+      "categoryId": null
+    }
+  ],
+  "isSuccess": true,
+  "message": "",
+  "errorCode": "None"
+}

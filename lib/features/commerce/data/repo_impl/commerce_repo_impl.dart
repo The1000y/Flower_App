@@ -15,15 +15,18 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
-  static const _updateCheckInterval = Duration(hours: 1);
+  static const _defaultUpdateCheckInterval = Duration(hours: 1);
 
   final CommerceRemoteDataSource remoteDataSource;
   final CommerceLocalDataSource localDataSource;
+  final Duration updateCheckInterval;
 
   CommerceRepoImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    @ignoreParam this.updateCheckInterval = _defaultUpdateCheckInterval,
   });
+
   @override
   Future<bool> checkSectionsUpdate() async {
     final cached = await localDataSource.getCachedSections();
@@ -35,7 +38,7 @@ class CommerceRepoImpl implements CommerceRepo {
     final lastCheckedAt = await localDataSource.getLastCheckedAt();
 
     if (lastCheckedAt != null &&
-        DateTime.now().difference(lastCheckedAt) < _updateCheckInterval) {
+        DateTime.now().difference(lastCheckedAt) < updateCheckInterval) {
       return false;
     }
 

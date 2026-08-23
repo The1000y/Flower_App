@@ -1,0 +1,43 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "type": "Categories",
+      "index": 0,
+      "isActive": true,
+      "title": "Categories",
+      "occasionId": null,
+      "categoryId": null
+    },
+    {
+      "id": 2,
+      "type": "BestSeller",
+      "index": 1,
+      "isActive": true,
+      "title": "Best seller",
+      "occasionId": null,
+      "categoryId": null
+    },
+    {
+      "id": 3,
+      "type": "Occasions",
+      "index": 2,
+      "isActive": true,
+      "title": "Occasion",
+      "occasionId": null,
+      "categoryId": null
+    },
+    {
+      "id": 4,
+      "type": "ProductsCarousel",
+      "index": 3,
+      "isActive": true,
+      "title": "Wedding picks",
+      "occasionId": 1,
+      "categoryId": null
+    }
+  ],
+  "isSuccess": true,
+  "message": "",
+  "errorCode": "None"
+}

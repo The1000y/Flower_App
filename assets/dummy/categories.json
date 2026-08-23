@@ -1,0 +1,13 @@
+{
+  "data": [
+    { "id": 1, "name": "Roses", "iconUrl": "https://picsum.photos/seed/roses/136/128" },
+    { "id": 2, "name": "Tulips", "iconUrl": "https://picsum.photos/seed/tulips/136/128" },
+    { "id": 3, "name": "Lilies", "iconUrl": "https://picsum.photos/seed/lilies/136/128" },
+    { "id": 4, "name": "Orchids", "iconUrl": "https://picsum.photos/seed/orchids/136/128" },
+    { "id": 5, "name": "Jasmine", "iconUrl": "https://picsum.photos/seed/jasmine/136/128" },
+    { "id": 6, "name": "Sunflowers", "iconUrl": "https://picsum.photos/seed/sunflowers/136/128" }
+  ],
+  "isSuccess": true,
+  "message": "",
+  "errorCode": "None"
+}

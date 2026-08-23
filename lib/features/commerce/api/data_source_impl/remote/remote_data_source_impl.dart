@@ -7,7 +7,7 @@ import 'package:flower_app/features/commerce/data/model/responce/home_response/h
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
 import 'package:injectable/injectable.dart';
 
-@LazySingleton(as: CommerceRemoteDataSource)
+@LazySingleton(as: CommerceRemoteDataSource, env: [Environment.prod])
 class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   final HomeApi homeApi;
   // final dummmyData dummy;

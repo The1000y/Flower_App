@@ -1,0 +1,21 @@
+{
+  "data": {
+    "items": [
+      { "id": 201, "name": "Royal Wedding Set", "imageUrl": "https://picsum.photos/seed/weddingset/640/400", "currency": "EGP", "price": 1200.0, "originalPrice": 1500, "discountPercentage": 20, "status": "available" },
+      { "id": 202, "name": "Bridal White Roses", "imageUrl": "https://picsum.photos/seed/bridal/640/400", "currency": "EGP", "price": 850.0, "originalPrice": null, "discountPercentage": null, "status": "available" },
+      { "id": 203, "name": "Golden Celebration Box", "imageUrl": "https://picsum.photos/seed/goldbox/640/400", "currency": "EGP", "price": 990.0, "originalPrice": 1150, "discountPercentage": 14, "status": "available" },
+      { "id": 204, "name": "Ivory Peony Crown", "imageUrl": "https://picsum.photos/seed/peony/640/400", "currency": "EGP", "price": 430.0, "originalPrice": null, "discountPercentage": null, "status": "low stock" }
+    ],
+    "pagination": {
+      "page": 1,
+      "pageSize": 10,
+      "totalCount": 4,
+      "totalPages": 1,
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    }
+  },
+  "isSuccess": true,
+  "message": "",
+  "errorCode": "None"
+}

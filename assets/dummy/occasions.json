@@ -1,0 +1,12 @@
+{
+  "data": [
+    { "id": 1, "name": "Wedding", "imageUrl": "https://picsum.photos/seed/wedding/240/240" },
+    { "id": 2, "name": "Anniversary", "imageUrl": "https://picsum.photos/seed/anniversary/240/240" },
+    { "id": 3, "name": "Birthday", "imageUrl": "https://picsum.photos/seed/birthday/240/240" },
+    { "id": 4, "name": "Graduation", "imageUrl": "https://picsum.photos/seed/graduation/240/240" },
+    { "id": 5, "name": "New Baby", "imageUrl": "https://picsum.photos/seed/newbaby/240/240" }
+  ],
+  "isSuccess": true,
+  "message": "",
+  "errorCode": "None"
+}

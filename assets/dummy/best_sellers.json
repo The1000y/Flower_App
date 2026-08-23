@@ -1,0 +1,12 @@
+{
+  "data": [
+    { "id": 101, "name": "Blush Rose Bouquet", "imageUrl": "https://picsum.photos/seed/bouquet1/640/400", "currency": "EGP", "price": 450.0, "originalPrice": 600, "discountPercentage": 25, "status": "available" },
+    { "id": 102, "name": "White Lily Arrangement", "imageUrl": "https://picsum.photos/seed/bouquet2/640/400", "currency": "EGP", "price": 520.0, "originalPrice": null, "discountPercentage": null, "status": "available" },
+    { "id": 103, "name": "Spring Tulip Mix", "imageUrl": "https://picsum.photos/seed/bouquet3/640/400", "currency": "EGP", "price": 380.0, "originalPrice": 450, "discountPercentage": 15, "status": "low stock" },
+    { "id": 104, "name": "Purple Orchid Pot", "imageUrl": "https://picsum.photos/seed/bouquet4/640/400", "currency": "EGP", "price": 640.0, "originalPrice": null, "discountPercentage": null, "status": "available" },
+    { "id": 105, "name": "Sunflower Bundle", "imageUrl": "https://picsum.photos/seed/bouquet5/640/400", "currency": "EGP", "price": 290.0, "originalPrice": 350, "discountPercentage": 17, "status": "available" }
+  ],
+  "isSuccess": true,
+  "message": "",
+  "errorCode": "None"
+}
