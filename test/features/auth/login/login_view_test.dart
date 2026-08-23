@@ -2,7 +2,6 @@ import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_outlined_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
-import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
@@ -15,11 +14,17 @@ import '../../../helpers/auth_test_helpers.dart';
 
 Widget _app(FakeAuthRepo repo) {
   return MaterialApp(
-    routes: {
-      Routes.mainLayout: (_) => const Scaffold(body: Placeholder()),
-      Routes.signUp: (_) => const Scaffold(body: Text('Sign Up Screen')),
-      Routes.forgotPassword: (_) =>
-          const Scaffold(body: Text('Forgot Password Screen')),
+    onGenerateRoute: (settings) => switch (settings.name) {
+      Routes.mainLayout => MaterialPageRoute(
+          builder: (_) => const Scaffold(body: Text('Main Layout Screen')),
+        ),
+      Routes.signUp => MaterialPageRoute(
+          builder: (_) => const Scaffold(body: Text('Sign Up Screen')),
+        ),
+      Routes.forgotPassword => MaterialPageRoute(
+          builder: (_) => const Scaffold(body: Text('Forgot Password Screen')),
+        ),
+      _ => null,
     },
     home: BlocProvider(
       create: (_) => buildLoginViewModel(repo),
@@ -199,7 +204,7 @@ void main() {
       await tester.pump(const Duration(seconds: 2));
       await tester.pump(const Duration(milliseconds: 400));
 
-      expect(find.byType(HomeView), findsOneWidget);
+      expect(find.text('Main Layout Screen'), findsOneWidget);
     });
 
     testWidgets('shows error snackbar on failed login', (tester) async {
@@ -286,7 +291,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(HomeView), findsOneWidget);
+      expect(find.text('Main Layout Screen'), findsOneWidget);
     });
 
     testWidgets('sign up link navigates to sign up route', (tester) async {

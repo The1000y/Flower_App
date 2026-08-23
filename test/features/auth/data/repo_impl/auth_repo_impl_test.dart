@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../api/data_source_impl/local/local_data_source_impl_test.mocks.dart';
+import 'auth_repo_impl_test.mocks.dart';
 import '../../../../helpers/auth_test_helpers.dart';
 
 
@@ -34,6 +34,28 @@ void main() {
         isSuccess: true,
         message: "Operation completed successfully.",
         data: Datadto(expiresAtUtc: DateTime.now(), resetToken: 'token123'),
+      ),
+    ),
+  );
+
+  provideDummy<BaseResponce<ForgotPasswordResponseDto>>(
+    SuccessResponce<ForgotPasswordResponseDto>(
+      ForgotPasswordResponseDto(
+        data: '',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
+      ),
+    ),
+  );
+
+  provideDummy<BaseResponce<ResetPasswordResponseDto>>(
+    SuccessResponce<ResetPasswordResponseDto>(
+      ResetPasswordResponseDto(
+        data: '',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
       ),
     ),
   );

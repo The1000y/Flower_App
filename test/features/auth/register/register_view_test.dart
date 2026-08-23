@@ -15,19 +15,19 @@ Widget _app(FakeAuthRepo repo) {
     minTextAdapt: true,
     splitScreenMode: true,
     child: MaterialApp(
-      initialRoute: '/register_test',
+      initialRoute: Routes.login,
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case '/register_test':
+          case Routes.login:
+            return MaterialPageRoute(
+              builder: (_) => const Center(child: Text('Login Screen')),
+            );
+          case Routes.signUp:
             return MaterialPageRoute(
               builder: (_) => BlocProvider(
                 create: (_) => buildRegisterViewModel(repo),
                 child: const RegisterView(),
               ),
-            );
-          case Routes.login:
-            return MaterialPageRoute(
-              builder: (_) => const Scaffold(body: Text('Login Screen')),
             );
           default:
             return MaterialPageRoute(
@@ -41,6 +41,9 @@ Widget _app(FakeAuthRepo repo) {
 
 Future<void> _pumpRegister(WidgetTester tester, FakeAuthRepo repo) async {
   await tester.pumpWidget(_app(repo));
+  await tester.pump();
+  tester.state<NavigatorState>(find.byType(Navigator)).pushNamed(Routes.signUp);
+  await tester.pump();
   await tester.pump();
 }
 
@@ -61,13 +64,13 @@ Future<void> _fillValidFields(WidgetTester tester) async {
   );
   await tester.enterText(
     find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
-    validPassword,
+    validRegisterPassword,
   );
   await tester.enterText(
     find
         .widgetWithText(CustomTextFormField, AppStrings.confirmPasswordLabel)
         .first,
-    validPassword,
+    validRegisterPassword,
   );
   await tester.enterText(
     find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),

@@ -179,4 +179,6 @@ abstract class AppStrings{
   static const String homeUpdatedBanner = 'Home has been updated';
   static const String refreshAction = 'Refresh';
 
+  // main layout
+  static const String comingSoon = 'is coming soon';
 }
