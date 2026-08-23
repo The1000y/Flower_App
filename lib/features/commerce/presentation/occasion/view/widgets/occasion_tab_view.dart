@@ -1,40 +1,48 @@
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import '../../manager/cubit/occasion_cubit.dart';
+import '../../manager/cubit/occasion_state.dart';
 
 class OccasionTabView extends StatelessWidget {
-  final String occasion;
-
-  const OccasionTabView({super.key, required this.occasion});
-
-  List<ProductModel> get filteredProducts {
-    if (occasion == AppOccasions.all.first) return occasionProducts;
-    return occasionProducts
-        .where((product) => product.occasion == occasion)
-        .toList();
-  }
+  const OccasionTabView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final products = filteredProducts;
-    return GridView.builder(
-      padding: EdgeInsets.all(16.w),
-      itemCount: products.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12.w,
-        mainAxisSpacing: 12.h,
-        mainAxisExtent: 280.h,
-      ),
-      itemBuilder: (context, index) {
-        final product = products[index];
-        return ProductCard(
-          image: product.image,
-          name: product.name,
-          price: product.price,
-          oldPrice: product.oldPrice,
-          discount: product.discount,
+    return BlocBuilder<OccasionCubit, OccasionState>(
+      buildWhen: (previous, current) =>
+      previous.products != current.products ||
+          previous.isLoadingProducts != current.isLoadingProducts ||
+          previous.productsError != current.productsError,
+      builder: (context, state) {
+        if (state.isLoadingProducts) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.productsError.isNotEmpty) {
+          return Center(child: Text(state.productsError));
+        }
+
+        return GridView.builder(
+          padding: EdgeInsets.all(16.w),
+          itemCount: state.products.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12.w,
+            mainAxisSpacing: 12.h,
+            mainAxisExtent: 280.h,
+          ),
+          itemBuilder: (context, index) {
+            final product = state.products[index];
+            return ProductCard(
+              image: product.imageUrl,
+              name: product.name,
+              price: product.price,
+              oldPrice: product.originalPrice,
+              discount: product.discountPercentage?.toInt(),
+            );
+          },
         );
       },
     );

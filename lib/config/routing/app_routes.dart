@@ -1,4 +1,5 @@
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flutter/material.dart';
 
  abstract class AppRoutes {
@@ -35,7 +36,7 @@ import 'package:flutter/material.dart';
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.occasion:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const OccasionView());
 
       case Routes.categories:
         return MaterialPageRoute(builder: (_) => const Placeholder());

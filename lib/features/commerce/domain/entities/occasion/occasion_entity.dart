@@ -1,4 +1,6 @@
-class OccasionEntity {
+import 'package:equatable/equatable.dart';
+
+class OccasionEntity extends Equatable {
   final int id;
   final String name;
   final String imageUrl;
@@ -8,4 +10,6 @@ class OccasionEntity {
     required this.name,
     required this.imageUrl,
   });
+  @override
+  List<Object> get props => [id,name,imageUrl];
 }
