@@ -19,8 +19,8 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   Future<BaseResponce<List<ItemDto>>> getBestSeller() async {
     final response = await homeApi.getBestSeller();
     try {
-      if (response.isSuccess==true&&response.data!=null) {
-        return SuccessResponce(response.data!.items??[]);
+      if (response.isSuccess == true && response.data != null) {
+        return SuccessResponce(response.data!.items ?? []);
       }
       return ErrorResponce(Exception(response.message));
     } catch (e) {
@@ -78,8 +78,29 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   }
 
   @override
-  Future<OccasionsResponseDto> getOccasions() {
-    // TODO: implement getOccasions
-    throw UnimplementedError();
+  Future<OccasionsResponseDto> getOccasions() async {
+    await Future.delayed(const Duration(seconds: 1));
+    return OccasionsResponseDto(
+      data: [
+        OccasionDto(
+          id: 1,
+          name: 'Wedding',
+          imageUrl: 'https://cdn.flowery-app.com/occasions/wedding.jpg',
+        ),
+        OccasionDto(
+          id: 2,
+          name: 'Graduation',
+          imageUrl: 'https://cdn.flowery-app.com/occasions/graduation.jpg',
+        ),
+        OccasionDto(
+          id: 3,
+          name: 'Birthday',
+          imageUrl: 'https://cdn.flowery-app.com/occasions/birthday.jpg',
+        ),
+      ],
+      isSuccess: true,
+      message: '',
+      errorCode: 'None',
+    );
   }
 }
