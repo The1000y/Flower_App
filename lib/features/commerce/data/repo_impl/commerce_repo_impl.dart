@@ -2,8 +2,6 @@ import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
-import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
-
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/best_seller_item_dto.dart';
@@ -206,7 +204,7 @@ class CommerceRepoImpl implements CommerceRepo {
   @override
   Future<BaseResponce<List<OccasionEntity>>> getOccasions() async {
     try {
-      final response = await _remoteDataSource.getOccasions();
+      final response = await remoteDataSource.getOccasions();
       if (response.isSuccess) {
         return SuccessResponce(response.toDomain());
       }
@@ -217,9 +215,9 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<List<ProductEntity>>> getProducts(int occasionId) async {
+  Future<BaseResponce<List<OccasionEntity>>> getProducts(int occasionId) async {
     try {
-      final response = await _remoteDataSource.getProducts(occasionId);
+      final response = await remoteDataSource.getProducts(occasionId);
       if (response.isSuccess) {
         return SuccessResponce(response.products);
       }

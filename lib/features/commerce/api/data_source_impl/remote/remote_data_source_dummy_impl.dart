@@ -36,7 +36,7 @@ class RemoteDataSourceDummyImpl implements CommerceRemoteDataSource {
       });
 
   @override
-  Future<BaseResponce<List<OccasionDto>>> getOccasions() =>
+  Future<BaseResponce<List<OccasionDto>>> getOccasionsHome() =>
       _loadList('$_basePath/occasions.json', (json) {
         final list = json['data'] as List<dynamic>? ?? [];
 
