@@ -7,6 +7,7 @@ import 'package:flower_app/features/commerce/data/model/responce/best_seller/bes
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/home_section_data_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasions_response_dto.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:injectable/injectable.dart';
 
@@ -79,5 +80,11 @@ class RemoteDataSourceDummyImpl implements CommerceRemoteDataSource {
     } catch (error) {
       return ErrorResponce(Exception('Failed to load dummy data: $path'));
     }
+  }
+
+  @override
+  Future<OccasionsResponseDto> getOccasions() {
+    // TODO: implement getOccasions
+    throw UnimplementedError();
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/home_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/home_section_type.dart';
+import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 import 'package:flower_app/features/commerce/domain/use_case/check_section_update_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_best_seller_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_categories_use_case.dart';
@@ -20,7 +21,7 @@ class HomeViewModel extends Cubit<HomeState> {
   final GetHomeSections _getHomeSections;
   final GetCategories _getCategories;
   final GetBestSeller _getBestSeller;
-  final GetOccasions _getOccasions;
+  final GetOccasionsUseCase _getOccasions;
   final GetSectionProducts _getSectionProducts;
   final CheckSectionsUpdate _checkSectionsUpdate;
   final RefreshSections _refreshSections;
@@ -172,23 +173,28 @@ class HomeViewModel extends Cubit<HomeState> {
   Future<void> _loadOccasions() async {
     emit(state.copyWith(occasionsState: const BaseState(isLoading: true)));
 
-    try {
-      final occasions = await _getOccasions.call();
+    final result = await _getOccasions.call();
 
-      emit(state.copyWith(occasionsState: BaseState(data: occasions)));
-    } on ErrorResponce catch (error) {
-      emit(
-        state.copyWith(
-          occasionsState: BaseState(errorMessage: error.errorMessage),
-        ),
-      );
+    switch (result) {
+      case SuccessResponce<List<OccasionEntity>>():
+        emit(
+          state.copyWith(
+            occasionsState: BaseState(data: result.data),
+          ),
+        );
+      case ErrorResponce<List<OccasionEntity>>():
+        emit(
+          state.copyWith(
+            occasionsState: BaseState(errorMessage: result.errorMessage),
+          ),
+        );
     }
   }
 
   Future<void> _loadSectionProducts(HomeEntity section) async {
     final loadingState = {
       ...state.sectionProductsState,
-      section.id: const BaseState<List<BestSellerEntity>>(isLoading: true),
+      section.id: const BaseState<List<ProductEntity>>(isLoading: true),
     };
 
     emit(state.copyWith(sectionProductsState: loadingState));
@@ -203,7 +209,7 @@ class HomeViewModel extends Cubit<HomeState> {
         state.copyWith(
           sectionProductsState: {
             ...state.sectionProductsState,
-            section.id: BaseState<List<BestSellerEntity>>(data: products),
+            section.id: BaseState<List<ProductEntity>>(data: products),
           },
         ),
       );
@@ -212,7 +218,7 @@ class HomeViewModel extends Cubit<HomeState> {
         state.copyWith(
           sectionProductsState: {
             ...state.sectionProductsState,
-            section.id: BaseState<List<BestSellerEntity>>(
+            section.id: BaseState<List<ProductEntity>>(
               errorMessage: error.errorMessage,
             ),
           },

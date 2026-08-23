@@ -172,7 +172,7 @@ class _LoginViewState extends State<LoginView> {
                   CustomOutlinedButton(
                     text: AppStrings.continueAsGuest,
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.mainLayout);
+                      Navigator.pushReplacementNamed(context, Routes.mainLayout);
                     },
                   ),
                   const SizedBox(height: 24),

@@ -4,16 +4,21 @@ import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class GetOccasions {
+class GetOccasionsUseCase {
   final CommerceRepo repository;
 
-  GetOccasions(this.repository);
+  GetOccasionsUseCase(this.repository);
 
-  Future<List<OccasionEntity>> call() {
-    return repository.getOccasionsHome();
-  }
-
-  Future<BaseResponce<List<OccasionEntity>>> execute() {
-    return repository.getOccasions();
+  Future<BaseResponce<List<OccasionEntity>>> call() async {
+    try {
+      final occasions = await repository.getOccasionsHome();
+      return SuccessResponce(occasions);
+    } on ErrorResponce catch (error) {
+      return ErrorResponce(error.error);
+    } catch (error) {
+      return ErrorResponce(
+        error is Exception ? error : Exception(error.toString()),
+      );
+    }
   }
 }

@@ -29,7 +29,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   Future<void> _loadOccasions() async {
     emit(state.copyWith(isLoadingOccasions: true, occasionsError: ''));
 
-    final result = await _getOccasionsUseCase.execute();
+    final result = await _getOccasionsUseCase.call();
 
     switch (result) {
       case SuccessResponce<List<OccasionEntity>>():
@@ -38,20 +38,24 @@ class OccasionCubit extends Cubit<OccasionState> {
           handle(LoadProductsForOccasion(result.data.first.id));
         }
       case ErrorResponce<List<OccasionEntity>>():
-        emit(state.copyWith(isLoadingOccasions: false, occasionsError: result.errorMessage));
+        emit(state.copyWith(
+            isLoadingOccasions: false,
+            occasionsError: result.errorMessage));
     }
   }
 
   Future<void> _loadProducts(int occasionId) async {
     emit(state.copyWith(isLoadingProducts: true, productsError: ''));
 
-    final result = await _getProductsUseCase.execute(occasionId);
+    final result = await _getProductsUseCase.call(occasionId);
 
     switch (result) {
       case SuccessResponce<List<ProductEntity>>():
         emit(state.copyWith(isLoadingProducts: false, products: result.data));
       case ErrorResponce<List<ProductEntity>>():
-        emit(state.copyWith(isLoadingProducts: false, productsError: result.errorMessage));
+        emit(state.copyWith(
+            isLoadingProducts: false,
+            productsError: result.errorMessage));
     }
   }
 }

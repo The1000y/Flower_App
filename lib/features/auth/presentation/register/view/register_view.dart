@@ -87,8 +87,14 @@ class _RegisterViewState extends State<RegisterView> {
         if (state.data != null && state.data!.isSuccess) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(AppStrings.registerSuccess), backgroundColor: AppColors.success));
-          Navigator.pop(context);
+            ..showSnackBar(SnackBar(
+              content: Text(AppStrings.registerSuccess),
+              backgroundColor: AppColors.success,
+              duration: const Duration(seconds: 2),
+            ));
+          Future.delayed(const Duration(seconds: 2), () {
+            if (context.mounted) Navigator.pop(context);
+          });
         }
       },
       child: Scaffold(

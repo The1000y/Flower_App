@@ -32,10 +32,6 @@ class BestsellersResponseDto {
 }
 
 @JsonSerializable()
-
-
-
-@JsonSerializable()
 class Pagination {
     @JsonKey(name: "page")
     int? page;

@@ -1,23 +1,33 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 
 class AuthInterceptors extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
+  final SecureStorageService _secureStorage;
 
-    //add method that get token from secure storage
-    
-    super.onRequest(options, handler);
-  }
+  AuthInterceptors(this._secureStorage);
+
+  static const String _bearerPrefix = 'Bearer ';
+
   @override
-  Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    debugPrint(
-      'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
-    );
-    //add method that delete token from secure storage
-    super.onError(err, handler);
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    final token = await _secureStorage.getAccessToken();
+
+    if (token != null && token.isNotEmpty) {
+      options.headers['Authorization'] = '$_bearerPrefix$token';
+    }
+
+    handler.next(options);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 401) {
+      await _secureStorage.clear();
+    }
+
+    handler.next(err);
   }
 }
-
-

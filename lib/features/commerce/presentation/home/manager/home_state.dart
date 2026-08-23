@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/home_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
@@ -8,9 +8,9 @@ import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_e
 class HomeState extends Equatable {
   final BaseState<List<HomeEntity>> sectionsState;
   final BaseState<List<CategoryEntity>> categoriesState;
-  final BaseState<List<BestSellerEntity>> bestSellersState;
+  final BaseState<List<ProductEntity>> bestSellersState;
   final BaseState<List<OccasionEntity>> occasionsState;
-  final Map<int, BaseState<List<BestSellerEntity>>> sectionProductsState;
+  final Map<int, BaseState<List<ProductEntity>>> sectionProductsState;
   final bool hasSectionsUpdate;
   final bool isRefreshing;
   final String refreshError;
@@ -26,15 +26,15 @@ class HomeState extends Equatable {
     this.refreshError = '',
   });
 
-  BaseState<List<BestSellerEntity>> productsFor(HomeEntity section) =>
+  BaseState<List<ProductEntity>> productsFor(HomeEntity section) =>
       sectionProductsState[section.id] ?? const BaseState();
 
   HomeState copyWith({
     BaseState<List<HomeEntity>>? sectionsState,
     BaseState<List<CategoryEntity>>? categoriesState,
-    BaseState<List<BestSellerEntity>>? bestSellersState,
+    BaseState<List<ProductEntity>>? bestSellersState,
     BaseState<List<OccasionEntity>>? occasionsState,
-    Map<int, BaseState<List<BestSellerEntity>>>? sectionProductsState,
+    Map<int, BaseState<List<ProductEntity>>>? sectionProductsState,
     bool? hasSectionsUpdate,
     bool? isRefreshing,
     String? refreshError,

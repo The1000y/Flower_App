@@ -1,5 +1,5 @@
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/home_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/home_section_type.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/home_sections/product_list.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class BestSellerSection extends StatelessWidget {
   final HomeEntity section;
-  final BaseState<List<BestSellerEntity>> bestSellersState;
+  final BaseState<List<ProductEntity>> bestSellersState;
 
   const BestSellerSection({
     super.key,
@@ -25,7 +25,7 @@ class BestSellerSection extends StatelessWidget {
         if (section.displayTitle != null)
           SectionHeader(title: section.displayTitle!),
         const SizedBox(height: 16),
-        SectionContentView<BestSellerEntity>(
+        SectionContentView<ProductEntity>(
           sectionState: bestSellersState,
           builder: (context, products) => ProductList(products: products),
         ),

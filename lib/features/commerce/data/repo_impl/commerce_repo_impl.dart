@@ -1,20 +1,16 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
-import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/best_seller_item_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/home_section_data_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
-import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/home_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
-
 
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
@@ -58,7 +54,7 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<List<BestSellerEntity>> getBestSeller() async {
+  Future<List<ProductEntity>> getBestSeller() async {
     final response = await remoteDataSource.getBestSeller();
 
     switch (response) {
@@ -133,7 +129,7 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<List<BestSellerEntity>> getSectionProducts({
+  Future<List<ProductEntity>> getSectionProducts({
     int? occasionId,
     int? categoryId,
   }) async {
@@ -151,7 +147,7 @@ class CommerceRepoImpl implements CommerceRepo {
     }
   }
 
-  Future<List<HomeEntity>> _prpareSection(List<HomeEntity> section) async {
+  List<HomeEntity> _prpareSection(List<HomeEntity> section) {
     return section.where((s) => s.isActive).toList()
       ..sort((a, b) => a.index.compareTo(b.index));
   }
@@ -168,62 +164,17 @@ class CommerceRepoImpl implements CommerceRepo {
       final oldSection = oldSections[i];
       final newSection = newSections[i];
 
-      if (oldSection.id != newSection.id) {
-        return false;
-      }
-
-      if (oldSection.type != newSection.type) {
-        return false;
-      }
-
-      if (oldSection.index != newSection.index) {
-        return false;
-      }
-
-      if (oldSection.isActive != newSection.isActive) {
-        return false;
-      }
-
-      if (oldSection.title != newSection.title) {
-        return false;
-      }
-
-      if (oldSection.occasionId != newSection.occasionId) {
-        return false;
-      }
-
-      if (oldSection.categoryId != newSection.categoryId) {
+      if (oldSection.id != newSection.id ||
+          oldSection.type != newSection.type ||
+          oldSection.index != newSection.index ||
+          oldSection.isActive != newSection.isActive ||
+          oldSection.title != newSection.title ||
+          oldSection.occasionId != newSection.occasionId ||
+          oldSection.categoryId != newSection.categoryId) {
         return false;
       }
     }
 
     return true;
-  }
-
-  
-  @override
-  Future<BaseResponce<List<OccasionEntity>>> getOccasions() async {
-    try {
-      final response = await remoteDataSource.getOccasions();
-      if (response.isSuccess) {
-        return SuccessResponce(response.toDomain());
-      }
-      return ErrorResponce(Exception(response.message));
-    } catch (error) {
-      return ErrorResponce(error is Exception ? error : Exception(error.toString()));
-    }
-  }
-
-  @override
-  Future<BaseResponce<List<OccasionEntity>>> getProducts(int occasionId) async {
-    try {
-      final response = await remoteDataSource.getProducts(occasionId);
-      if (response.isSuccess) {
-        return SuccessResponce(response.products);
-      }
-      return ErrorResponce(Exception(response.message));
-    } catch (error) {
-      return ErrorResponce(error is Exception ? error : Exception(error.toString()));
-    }
   }
 }

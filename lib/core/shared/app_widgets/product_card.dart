@@ -38,7 +38,7 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// Product Image
-          Container(
+          SizedBox(
             height: 150.h,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
@@ -62,7 +62,7 @@ class ProductCard extends StatelessWidget {
 
           /// Product Name
           Text(
-            "   ${name}",
+            "   $name",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),

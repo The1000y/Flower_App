@@ -1,5 +1,5 @@
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/best_seller_response.dart';
-import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'best_seller_item_dto.g.dart';
 
@@ -53,8 +53,8 @@ class ItemDto {
 
   Map<String, dynamic> toJson() => _$ItemDtoToJson(this);
 
-  BestSellerEntity toDomain() {
-    return BestSellerEntity(
+  ProductEntity toDomain() {
+    return ProductEntity(
       id: id ?? 0,
       name: name ?? '',
       imageUrl: imageUrl ?? '',

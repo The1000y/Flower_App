@@ -1,10 +1,10 @@
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
-import 'package:flower_app/features/commerce/domain/entities/bestSeller/product_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductList extends StatelessWidget {
-  final List<BestSellerEntity> products;
+  final List<ProductEntity> products;
 
   const ProductList({super.key, required this.products});
 

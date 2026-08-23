@@ -62,10 +62,9 @@ class AuthRepoImpl implements AuthRepo {
       final response = await _remoteDataSource.login(LoginRequest(email: credentials.email, password: credentials.password));
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.toLoginEntity();
-        if (rememberMe) {
-          await _secureStorage.saveAccessToken(login.accessToken);
-          await _secureStorage.saveRefreshToken(login.refreshToken);
-        }
+        // Tokens are always persisted so every commerce API request is authorized.
+        await _secureStorage.saveAccessToken(login.accessToken);
+        await _secureStorage.saveRefreshToken(login.refreshToken);
         return SuccessResponce(login);
       }
       return ErrorResponce(Exception(response.message ?? AppStrings.loginFailed));
