@@ -7,9 +7,9 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_state.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
-import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
+import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
