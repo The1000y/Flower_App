@@ -25,104 +25,127 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        width: 320.w,
-        padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: Colors.grey.shade400),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(10.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.grey.shade400),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Product Image
+          Container(
+            height: 150.h,
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
               child: Image.network(
                 image,
                 width: double.infinity,
-                height: 200.h,
+                height: 150.h,
                 fit: BoxFit.cover,
                 errorBuilder: (_, error, stackTrace) {
-                  log(
-                    'Error loading image++++++++++++++++++++++++++++++++++++++++++++++++++++: $error',
-                  );
-                  (error);
-                  return Center(
-                    child: const Icon(Icons.image_not_supported, size: 100),
+                  log('Error loading image: $error');
+
+                  return const Center(
+                    child: Icon(Icons.image_not_supported, size: 60),
                   );
                 },
               ),
             ),
+          ),
 
-            SizedBox(height: 12.h),
+          SizedBox(height: 8.h),
 
-            Text(
-              name,
-              style: TextStyle(fontSize: 23.sp, fontWeight: FontWeight.w500),
-            ),
+          /// Product Name
+          Text(
+            "   ${name}",
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),
+          ),
 
-            SizedBox(height: 8.h),
+          SizedBox(height: 6.h),
 
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'EGP ${price.toInt()}',
-                  style: TextStyle(
-                    fontSize: 27.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-
-                if (oldPrice != null) ...[
-                  SizedBox(width: 12.w),
-
-                  Text(
-                    'EGP ${oldPrice!.toInt()}',
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      color:AppColors.gray,
-                      decoration: TextDecoration.lineThrough,
+          /// Price
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (oldPrice != null || discount != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //   SizedBox(width: 10.w),
+                    Text(
+                      'EGP ${price.toInt()}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 15.w),
+                    if (oldPrice != null)
+                      Flexible(
+                        child: Text(
+                          '${oldPrice!.toInt()}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: AppColors.black100,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ),
 
-                if (discount != null) ...[
-                  SizedBox(width: 10.w),
+                    if (oldPrice != null && discount != null)
+                      SizedBox(width: 10.w),
 
-                  Text(
-                    '$discount%',
-                    style: TextStyle(fontSize: 20.sp, color: Colors.green),
-                  ),
-                ],
-              ],
-            ),
-
-            SizedBox(height: 12.h),
-
-            SizedBox(
-              width: 292.w,
-              height: 58.h,
-              child: ElevatedButton.icon(
-                onPressed: onAddToCart,
-                icon: Icon(
-                  Icons.shopping_cart_outlined,
-                  color: AppColors.whiteBase,
-                  size: 28.sp,
+                    if (discount != null)
+                      Text(
+                        '$discount%',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                  ],
                 ),
-                label: Text(
-                 AppStrings.addToCart,
-                  style: TextStyle(fontSize: 22.sp, color: Colors.white),
-                ),
-              
+            ],
+          ),
+
+          SizedBox(height: 8.h),
+
+          /// Add To Cart Button
+          SizedBox(
+            width: double.infinity,
+            height: 45.h,
+            child: ElevatedButton.icon(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(AppColors.pinkBase),
+              ),
+              onPressed: onAddToCart,
+              icon: Icon(
+                Icons.shopping_cart_outlined,
+                color: AppColors.whiteBase,
+                size: 20.sp,
+              ),
+              label: Text(
+                AppStrings.addToCart,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 15.sp, color: Colors.white),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

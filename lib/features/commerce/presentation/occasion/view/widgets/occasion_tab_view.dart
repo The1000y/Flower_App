@@ -29,8 +29,8 @@ class OccasionTabView extends StatelessWidget {
           itemCount: state.products.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 12.w,
-            mainAxisSpacing: 12.h,
+            crossAxisSpacing: 16.w,
+            mainAxisSpacing: 17.h,
             mainAxisExtent: 280.h,
           ),
           itemBuilder: (context, index) {

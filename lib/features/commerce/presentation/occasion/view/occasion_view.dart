@@ -31,42 +31,52 @@ class _OccasionScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.whiteBase,
       appBar: AppBar(
+        backgroundColor: AppColors.whiteBase,
         elevation: 0,
         toolbarHeight: 80.h,
-        titleSpacing: 0,
-        leadingWidth: 48.w,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new,
-            size: 24.w,
-            color: AppColors.blackBase,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-
+        automaticallyImplyLeading: false,
+        titleSpacing: 16.w,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              AppStrings.occasionTitle,
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                fontSize: 20.sp,
-                color: AppColors.blackBase,
-                height: 1,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
+                    size: 24.w,
+                    color: AppColors.blackBase,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  AppStrings.occasionTitle,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20.sp,
+                    color: AppColors.blackBase,
+                    height: 1,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 8.h),
-            Text(
-              AppStrings.bloomSubtitle,
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                fontSize: 13.sp,
-                color: AppColors.gray,
-                height: 1,
+            SizedBox(height: 4.h),
+
+            Padding(
+              padding: EdgeInsets.only(left: 32.w),
+              child: Text(
+                AppStrings.bloomSubtitle,
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13.sp,
+                  color: AppColors.gray,
+                  height: 1,
+                ),
               ),
             ),
           ],
@@ -92,8 +102,7 @@ class _OccasionScaffold extends StatelessWidget {
             length: state.occasions.length,
             child: Column(
               children: [
-                SizedBox(height: 16.h),
-                OccasionTabBar(occasions: state.occasions),
+                 OccasionTabBar(occasions: state.occasions),
                 const Expanded(child: OccasionTabView()),
               ],
             ),

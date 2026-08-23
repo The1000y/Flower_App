@@ -1,5 +1,6 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../domain/entities/occasion/occasion_entity.dart';
 import '../../manager/cubit/occasion_cubit.dart';
@@ -13,20 +14,24 @@ class OccasionTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TabBar(
-      isScrollable: true,
-      tabAlignment: TabAlignment.start,
-      labelColor: AppColors.pinkBase,
-      unselectedLabelColor: AppColors.gray,
-      indicatorColor: AppColors.pinkBase,
-      indicatorWeight: 2,
-      dividerColor: Colors.transparent,
-      onTap: (index) {
-        context.read<OccasionCubit>().handle(
-          LoadProductsForOccasion(occasions[index].id),
-        );
-      },
-      tabs: occasions.map((occasion) => Tab(text: occasion.name)).toList(),
+    return SizedBox(
+      height: 37.h,
+      child: TabBar(
+        isScrollable: true,
+        tabAlignment: TabAlignment.start,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        labelColor: AppColors.pinkBase,
+        unselectedLabelColor: AppColors.gray,
+        indicatorColor: AppColors.pinkBase,
+        indicatorWeight: 2,
+        dividerColor: Colors.transparent,
+        onTap: (index) {
+          context.read<OccasionCubit>().handle(
+            LoadProductsForOccasion(occasions[index].id),
+          );
+        },
+        tabs: occasions.map((occasion) => Tab(text: occasion.name)).toList(),
+      ),
     );
   }
 }
