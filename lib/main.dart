@@ -14,7 +14,12 @@ void main() {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: FlowerApp(),
+      builder: (context, child) {
+        if (MediaQuery.of(context).size.width == 0) {
+          return const SizedBox.shrink();
+        }
+        return const FlowerApp();
+      },
     ),
   );
 }
