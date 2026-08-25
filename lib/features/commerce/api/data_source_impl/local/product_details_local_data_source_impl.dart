@@ -1,3 +1,4 @@
+import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/product_details_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/model/responce/product_details_response/product_details_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/product_details_response/product_details_response_dto.dart';
@@ -7,9 +8,9 @@ import 'package:injectable/injectable.dart';
 @Injectable(as: ProductDetailsLocalDataSource)
 class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource {
   @override
-  Future<ProductDetailsResponseDto> getProductDetails(int productId) async {
+  Future<BaseResponce<ProductDetailsResponseDto>> getProductDetails(int productId) async {
     // Dummy local data
-    return ProductDetailsResponseDto(
+    final data = ProductDetailsResponseDto(
       isSuccess: true,
       message: 'Success',
       errorCode: '0',
@@ -34,5 +35,6 @@ class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource
         occasionIds: [1, 2],
       ),
     );
+    return SuccessResponce<ProductDetailsResponseDto>(data);
   }
 }
