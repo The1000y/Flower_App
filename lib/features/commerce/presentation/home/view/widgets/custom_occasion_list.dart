@@ -1,27 +1,24 @@
+import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_occasion_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class CustomOccasionrList extends StatelessWidget {
-  const CustomOccasionrList({
-    super.key,
-  });
+  final List<OccasionEntity> occasionList;
+  const CustomOccasionrList({super.key, required this.occasionList});
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: const Offset(16, 0),
-      child: SizedBox(
-        height: 240,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.zero,
-          itemCount: 10,
-          separatorBuilder: (context, index) =>
-              const SizedBox(width: 16),
-          itemBuilder: (context, index) {
-            return  OccasionCard();
-          },
-        ),
+    return SizedBox(
+      height: 200,
+      child: ListView.separated(
+        scrollCacheExtent: ScrollCacheExtent.pixels(500), scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.only(left: 16, right: 16),
+        itemCount: occasionList.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          return OccasionCard(occasion: occasionList[index]);
+        },
       ),
     );
   }
