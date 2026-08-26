@@ -6,10 +6,10 @@ import '../repo/commerce_repo.dart';
 
 @injectable
 class GetOccasionsUseCase {
-  final CommerceRepo _commerceRepo;
-  GetOccasionsUseCase(this._commerceRepo);
+  final CommerceRepo repository;
+  GetOccasionsUseCase(this.repository);
 
-  Future<BaseResponce<List<OccasionEntity>>> execute() {
-    return _commerceRepo.getOccasions();
+  Future<List<OccasionEntity>> execute() {
+    return repository.getOccasions();
   }
 }

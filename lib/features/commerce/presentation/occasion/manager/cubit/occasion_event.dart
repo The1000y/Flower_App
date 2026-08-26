@@ -6,3 +6,5 @@ class LoadProductsForOccasion extends OccasionEvent {
   final int occasionId;
   LoadProductsForOccasion(this.occasionId);
 }
+
+class LoadMoreProducts extends OccasionEvent {}

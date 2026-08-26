@@ -1,11 +1,7 @@
-import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/commerce/domain/use_case/get_occasions_use_case.dart';
+import 'package:flower_app/features/commerce/domain/use_case/get_products_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../domain/entities/occasion/occasion_entity.dart';
-import '../../../../domain/entities/products/product_entity.dart';
-import '../../../../domain/use_case/get_occasions_use_case.dart';
-import '../../../../domain/use_case/get_products_use_case.dart';
 import 'occasion_event.dart';
 import 'occasion_state.dart';
 
@@ -23,35 +19,48 @@ class OccasionCubit extends Cubit<OccasionState> {
         _loadOccasions();
       case LoadProductsForOccasion():
         _loadProducts(event.occasionId);
+      case LoadMoreProducts():
+        _loadMore();
     }
   }
 
   Future<void> _loadOccasions() async {
     emit(state.copyWith(isLoadingOccasions: true, occasionsError: ''));
-
-    final result = await _getOccasionsUseCase.execute();
-
-    switch (result) {
-      case SuccessResponce<List<OccasionEntity>>():
-        emit(state.copyWith(isLoadingOccasions: false, occasions: result.data));
-        if (result.data.isNotEmpty) {
-          handle(LoadProductsForOccasion(result.data.first.id));
-        }
-      case ErrorResponce<List<OccasionEntity>>():
-        emit(state.copyWith(isLoadingOccasions: false, occasionsError: result.errorMessage));
+    try {
+      final occasions = await _getOccasionsUseCase.execute();
+      emit(state.copyWith(isLoadingOccasions: false, occasions: occasions));
+      if (occasions.isNotEmpty) {
+        handle(LoadProductsForOccasion(occasions.first.id));
+      }
+    } catch (error) {
+      emit(state.copyWith(isLoadingOccasions: false, occasionsError: error.toString()));
     }
   }
 
-  Future<void> _loadProducts(int occasionId) async {
-    emit(state.copyWith(isLoadingProducts: true, productsError: ''));
+  Future<void> _loadProducts(int occasionId, {int page = 1}) async {
+    if (page == 1) {
+      emit(state.copyWith(isLoadingProducts: true, productsError: '', products: []));
+    } else {
+      emit(state.copyWith(isLoadingMore: true));
+    }
 
-    final result = await _getProductsUseCase.execute(occasionId);
+    try {
+      final result = await _getProductsUseCase.execute(occasionId, page: page);
+      emit(state.copyWith(
+        isLoadingProducts: false,
+        isLoadingMore: false,
+        products: page == 1 ? result.items : [...state.products, ...result.items],
+        pagination: result.pagination,
+        currentOccasionId: occasionId,
+      ));
+    } catch (error) {
+      emit(state.copyWith(isLoadingProducts: false, isLoadingMore: false, productsError: error.toString()));
+    }
+  }
 
-    switch (result) {
-      case SuccessResponce<List<ProductEntity>>():
-        emit(state.copyWith(isLoadingProducts: false, products: result.data));
-      case ErrorResponce<List<ProductEntity>>():
-        emit(state.copyWith(isLoadingProducts: false, productsError: result.errorMessage));
+  void _loadMore() {
+    if (state.pagination?.hasNextPage == true && !state.isLoadingMore) {
+      _loadProducts(state.currentOccasionId, page: state.pagination!.page + 1);
     }
   }
 }

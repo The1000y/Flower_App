@@ -1,3 +1,5 @@
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
+
 class PaginationEntity {
   final int page;
   final int pageSize;
@@ -13,5 +15,9 @@ class PaginationEntity {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-  });
-}
+  });}
+class PaginatedProducts {
+final List<ProductEntity> items;
+final PaginationEntity pagination;
+
+PaginatedProducts({required this.items, required this.pagination});}

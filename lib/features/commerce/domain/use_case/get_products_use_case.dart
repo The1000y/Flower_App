@@ -1,15 +1,14 @@
-import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
 
-import '../entities/products/product_entity.dart';
-import '../repo/commerce_repo.dart';
+import '../entities/products/pagination_entity.dart';
 
 @injectable
 class GetProductsUseCase {
   final CommerceRepo _commerceRepo;
   GetProductsUseCase(this._commerceRepo);
 
-  Future<BaseResponce<List<ProductEntity>>> execute(int occasionId) {
-    return _commerceRepo.getProducts(occasionId);
+  Future<PaginatedProducts> execute(int occasionId, {int page = 1}) {
+    return _commerceRepo.getProducts(occasionId, page: page);
   }
 }
