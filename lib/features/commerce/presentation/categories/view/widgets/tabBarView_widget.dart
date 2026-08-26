@@ -48,8 +48,9 @@ class TabbarviewWidget extends StatelessWidget {
     final name = product.name.toLowerCase();
     final normalized = value.toLowerCase();
     if (normalized.contains('bouquet')) return name.contains('bouquet');
-    if (normalized.contains('vase'))
+    if (normalized.contains('vase')) {
       return name.contains('vase') || name.contains('pot');
+    }
     if (normalized.contains('box')) return name.contains('box');
     if (normalized.contains('jewel')) return name.contains('jewel');
     if (normalized.contains('gift')) return name.contains('gift');

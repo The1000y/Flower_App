@@ -4,6 +4,7 @@ import 'package:flower_app/features/commerce/data/model/responce/best_seller/ite
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/section_entity.dart';
@@ -77,24 +78,12 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<List<ProductEntity>>> getProducts() async {
-    final response = await localDataSource.getBestSellers();
+    final response = await localDataSource.getProducts();
     switch (response) {
-      case SuccessResponce<List<ItemDto>>():
-        final data = response.data.map((e) {
-          return ProductEntity(
-            id: e.id ?? 0,
-            name: e.name ?? '',
-            imageUrl: e.imageUrl ?? '',
-            currency: e.currency ?? '',
-            price: (e.price ?? 0).toDouble(),
-            originalPrice: (e.originalPrice ?? 0).toDouble(),
-            discountPercentage: (e.discountPercentage ?? 0).toDouble(),
-            status: e.status ?? '',
-          );
-        }).toList();
-        return SuccessResponce<List<ProductEntity>>(data);
+      case SuccessResponce<ProductsResponseDto>():
+        return SuccessResponce<List<ProductEntity>>(response.data.products);
 
-      case ErrorResponce<List<ItemDto>>():
+      case ErrorResponce<ProductsResponseDto>():
         throw ErrorResponce(Exception(response.errorMessage));
     }
   }
