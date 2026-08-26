@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.flower_app"
-    compileSdk = 37
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

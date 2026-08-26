@@ -4,6 +4,7 @@ import 'package:flower_app/features/commerce/domain/use_case/get_best_seller_use
 import 'package:flower_app/features/commerce/domain/use_case/get_categories_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_home_sections_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_occasions_use_case.dart';
+import 'package:flower_app/features/commerce/presentation/bestseller/manager/cubit/bestseller_cubit.dart';
 import 'package:mockito/annotations.dart';
 
 @GenerateMocks([
@@ -13,5 +14,6 @@ import 'package:mockito/annotations.dart';
   GetBestSellerUseCase,
   GetHomeSectionsUseCase,
   GetOccasionsUseCase,
+  BestsellerCubit,
 ])
 class Mocks {}
