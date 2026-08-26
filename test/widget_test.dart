@@ -1,30 +1,44 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:flower_app/main.dart';
+import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/config/base/base_state.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const FlowerApp());
+  group('BaseState', () {
+    test('defaults are not loading, no error and no data', () {
+      // Arrange & Act
+      const state = BaseState<String>();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // Assert
+      expect(state.isLoading, isFalse);
+      expect(state.errorMessage, isEmpty);
+      expect(state.data, isNull);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('states with identical values are equal', () {
+      // Arrange
+      const stateA = BaseState<int>(isLoading: true);
+      const stateB = BaseState<int>(isLoading: true);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // Assert
+      expect(stateA, equals(stateB));
+    });
+  });
+
+  group('BaseResponce', () {
+    test('SuccessResponce carries its data', () {
+      // Arrange & Act
+      final response = SuccessResponce<List<String>>(['a', 'b']);
+
+      // Assert
+      expect(response.data, equals(['a', 'b']));
+    });
+
+    test('ErrorResponce maps a generic exception to an error message', () {
+      // Arrange & Act
+      final response = ErrorResponce<int>(Exception('boom'));
+
+      // Assert
+      expect(response.errorMessage, isNotEmpty);
+    });
   });
 }

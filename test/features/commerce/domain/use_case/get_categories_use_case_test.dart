@@ -14,7 +14,7 @@ void main() {
 
   setUp(() {
     mockCommerceRepo = MockCommerceRepo();
-    getCategoriesUseCase = GetCategoriesUseCase(mockCommerceRepo);
+    getCategoriesUseCase = GetCategoriesUseCase(commerceRepo: mockCommerceRepo);
   });
 
   group('GetCategoriesUseCase', () {

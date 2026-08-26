@@ -1,16 +1,15 @@
+import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
+import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../config/base/base_responce.dart';
-import '../entities/categories/categories_entity.dart';
-import '../repo/commerce_repo.dart';
 @injectable
-
 class GetCategoriesUseCase {
   CommerceRepo commerceRepo;
-  GetCategoriesUseCase(this.commerceRepo);
+
+  GetCategoriesUseCase({required this.commerceRepo});
+
   Future<BaseResponce<List<CategoryEntity>>> call() async {
-    BaseResponce<List<CategoryEntity>> response = await commerceRepo
-        .getCategories();
-    return response;
+    return await commerceRepo.getCategories();
   }
 }

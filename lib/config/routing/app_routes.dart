@@ -1,4 +1,5 @@
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
  abstract class AppRoutes {
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
       // Auth
       case Routes.login:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
+            
       case Routes.signUp:
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
@@ -26,7 +27,7 @@ import 'package:flutter/material.dart';
 
       // Home
       case Routes.home:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) =>  PersistenBottomNavBarDemo());
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const Placeholder());

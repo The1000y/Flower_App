@@ -21,7 +21,6 @@ void main() {
     test(
       'should return SuccessResponce when repository returns SuccessResponce',
       () async {
-        // Arrange
         final products = <ProductEntity>[
           ProductEntity(
             id: 1,
@@ -41,12 +40,9 @@ void main() {
           () => mockCommerceRepo.getProducts(),
         ).thenAnswer((_) async => response);
 
-        // Act
         final result = await getProductUseCase();
 
-        // Assert
         expect(result, same(response));
-
         expect(result, isA<SuccessResponce<List<ProductEntity>>>());
 
         final success = result as SuccessResponce<List<ProductEntity>>;
@@ -65,7 +61,6 @@ void main() {
     test(
       'should return ErrorResponce when repository returns ErrorResponce',
       () async {
-        // Arrange
         final exception = Exception('Failed to get products');
 
         final response = ErrorResponce<List<ProductEntity>>(
@@ -76,12 +71,9 @@ void main() {
           () => mockCommerceRepo.getProducts(),
         ).thenAnswer((_) async => response);
 
-        // Act
         final result = await getProductUseCase();
 
-        // Assert
         expect(result, same(response));
-
         expect(result, isA<ErrorResponce<List<ProductEntity>>>());
 
         final error = result as ErrorResponce<List<ProductEntity>>;
