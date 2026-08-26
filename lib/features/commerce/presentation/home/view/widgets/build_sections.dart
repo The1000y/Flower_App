@@ -1,3 +1,4 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/section_entity.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
@@ -49,41 +50,45 @@ import 'package:flutter_bloc/flutter_bloc.dart';
         );
 
       case "BestSeller":
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: CustomHeaderOfCollection(
-                textTheme: textTheme,
-                collectionName: AppStrings.bestsellerLabel,
-                onTapViewAll: () {},
+        return Builder(
+          builder: (context) => Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: CustomHeaderOfCollection(
+                  textTheme: textTheme,
+                  collectionName: AppStrings.bestsellerLabel,
+                  onTapViewAll: () {
+                    Navigator.pushNamed(context, Routes.bestSeller);
+                  },
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                final bestSellerState = state.bestSellerState;
+              SizedBox(height: 16),
+              BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  final bestSellerState = state.bestSellerState;
 
-                if (bestSellerState.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                  if (bestSellerState.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (bestSellerState.errorMessage.isNotEmpty) {
-                  return Center(child: Text(bestSellerState.errorMessage));
-                }
+                  if (bestSellerState.errorMessage.isNotEmpty) {
+                    return Center(child: Text(bestSellerState.errorMessage));
+                  }
 
-                if (bestSellerState.data != null) {
-                  return CustomBestSellerList(
-                    bestSellerlist: bestSellerState.data!,
-                  );
-                }
+                  if (bestSellerState.data != null) {
+                    return CustomBestSellerList(
+                      bestSellerlist: bestSellerState.data!,
+                    );
+                  }
 
-                return const SizedBox.shrink();
-              },
-            ),
-            // SizedBox(height: 24),
-            SizedBox(height: 16),
-          ],
+                  return const SizedBox.shrink();
+                },
+              ),
+              // SizedBox(height: 24),
+              SizedBox(height: 16),
+            ],
+          ),
         );
 
       case "Occasions":

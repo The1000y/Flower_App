@@ -627,7 +627,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 2,
         type: 'BestSeller',
-        index: 2,
+        index: 1,
         isActive: true,
         title: 'Best seller',
         occasionId: null,
@@ -636,7 +636,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 3,
         type: 'Occasions',
-        index: 1,
+        index: 2,
         isActive: true,
         title: 'Occasion',
         occasionId: null,

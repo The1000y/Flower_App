@@ -9,32 +9,73 @@ import 'package:injectable/injectable.dart';
 class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource {
   @override
   Future<BaseResponce<ProductDetailsResponseDto>> getProductDetails(int productId) async {
-    // Dummy local data
-    final data = ProductDetailsResponseDto(
+    // Determine details based on productId to avoid static content
+    final Map<int, ProductDetailsDto> products = {
+      1: ProductDetailsDto(
+        id: 1,
+        name: "Luxury Red Rose Bouquet",
+        imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
+        currency: "SAR",
+        price: 150,
+        originalPrice: 200,
+        discountPercentage: 25,
+        status: "In stock",
+        images: [
+          "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
+          "https://images.unsplash.com/photo-1561181286-d397369328d0",
+        ],
+        description: "A premium arrangement of 24 deep red roses, symbolizing love and elegance.",
+        includes: [
+          ProductIncludeItemDto(name: 'Red roses', quantity: 24),
+          ProductIncludeItemDto(name: 'Black wrap', quantity: 1),
+        ],
+        occasionIds: [1, 3],
+      ),
+      2: ProductDetailsDto(
+        id: 2,
+        name: "White Lily Arrangement",
+        imageUrl: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9",
+        currency: "SAR",
+        price: 120,
+        originalPrice: 150,
+        discountPercentage: 20,
+        status: "In stock",
+        images: [
+          "https://images.unsplash.com/photo-1526047932273-341f2a7631f9",
+          "https://images.unsplash.com/photo-1519225421980-715cb0215aed",
+        ],
+        description: "Fresh white lilies paired with green foliage for a clean, sophisticated look.",
+        includes: [
+          ProductIncludeItemDto(name: 'White lilies', quantity: 6),
+          ProductIncludeItemDto(name: 'Glass vase', quantity: 1),
+        ],
+        occasionIds: [3, 4],
+      ),
+      // Default / Fallback for other IDs
+    };
+
+    final productData = products[productId] ??
+        ProductDetailsDto(
+          id: productId,
+          name: "Bestseller Item $productId",
+          imageUrl: "https://images.unsplash.com/photo-1561181286-d397369328d0",
+          currency: "SAR",
+          price: 100 + productId,
+          status: "In stock",
+          images: ["https://images.unsplash.com/photo-1561181286-d397369328d0"],
+          description: "This is a detailed description for bestseller item number $productId.",
+          includes: [
+            ProductIncludeItemDto(name: 'Fresh Flowers', quantity: 12),
+          ],
+          occasionIds: [1],
+        );
+
+    final response = ProductDetailsResponseDto(
       isSuccess: true,
       message: 'Success',
       errorCode: '0',
-      data: ProductDetailsDto(
-        id: productId,
-        name: '15 Pink Rose Bouquet',
-        imageUrl:
-            'https://images.unsplash.com/photo-1561181286-d397369328d0?q=80&w=1000&auto=format&fit=crop',
-        currency: 'EGP',
-        price: 1500,
-        status: 'In stock',
-        images: [
-          'https://images.unsplash.com/photo-1561181286-d397369328d0?q=80&w=1000&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop',
-        ],
-        description:
-            'Lorem ipsum dolor sit amet consectetur. Id sit morbi ornare morbi duis rhoncus orci massa.',
-        includes: [
-          ProductIncludeItemDto(name: 'Pink roses', quantity: 15),
-          ProductIncludeItemDto(name: 'White wrap', quantity: 1),
-        ],
-        occasionIds: [1, 2],
-      ),
+      data: productData,
     );
-    return SuccessResponce<ProductDetailsResponseDto>(data);
+    return SuccessResponce<ProductDetailsResponseDto>(response);
   }
 }
