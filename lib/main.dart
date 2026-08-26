@@ -31,7 +31,7 @@ class FlowerApp extends StatelessWidget {
       theme: AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
-      home: PersistenBottomNavBarDemo(),
+      home: BestSeller();
     );
   }
 }

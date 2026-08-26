@@ -1,7 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/repo/best_seller_repo.dart';
-import 'package:flower_app/features/commerce/domain/use_case/get_best_seller_use_case.dart';
+import 'package:flower_app/features/commerce/domain/use_case/get_best_seller_page_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';

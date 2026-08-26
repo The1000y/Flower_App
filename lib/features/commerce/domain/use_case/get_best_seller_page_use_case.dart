@@ -4,7 +4,7 @@ import '../entities/products/product_entity.dart';
 import '../repo/best_seller_repo.dart';
 
 @injectable
-class GetBestSellerUseCase {
+class GetBestSellerPageUseCase {
   final BestSellerRepo _repository;
 
   GetBestSellerUseCase(this._repository);
