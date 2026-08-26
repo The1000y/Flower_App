@@ -13,6 +13,7 @@ class CustomCategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         InkWell(
           onTap: () {},
