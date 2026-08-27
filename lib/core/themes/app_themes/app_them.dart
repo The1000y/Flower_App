@@ -30,7 +30,7 @@ class AppThem {
       centerTitle: false,
     ),
     inputDecorationTheme: InputDecorationTheme(
-       floatingLabelBehavior: FloatingLabelBehavior.always,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
       filled: true,
       fillColor: AppColors.whiteBase,
 
@@ -40,8 +40,8 @@ class AppThem {
 
       errorStyle: const TextStyle(color: AppColors.error, fontSize: 10),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: AppColors.white60)
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(color: AppColors.white60)
       ),
 
       enabledBorder: OutlineInputBorder(
@@ -76,30 +76,30 @@ class AppThem {
         textStyle:  TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
     ),
-   outlinedButtonTheme: OutlinedButtonThemeData(
-  style: OutlinedButton.styleFrom(
-    backgroundColor: AppColors.whiteBase,
-    foregroundColor: AppColors.gray,
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: AppColors.whiteBase,
+        foregroundColor: AppColors.gray,
 
-    elevation: 0,
+        elevation: 0,
 
-    minimumSize: Size(double.infinity, 50.h),
+        minimumSize: Size(double.infinity, 50.h),
 
-    side: const BorderSide(
-      color: AppColors.gray,
-      width: 1,
+        side: const BorderSide(
+          color: AppColors.gray,
+          width: 1,
+        ),
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.r),
+        ),
+
+        textStyle: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     ),
-
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30.r),
-    ),
-
-    textStyle: TextStyle(
-      fontSize: 16.sp,
-      fontWeight: FontWeight.w500,
-    ),
-  ),
-),
     checkboxTheme: CheckboxThemeData(
       side: const BorderSide(color: AppColors.gray),
 
@@ -114,9 +114,9 @@ class AppThem {
       }),
     ),
 
-       // Default font for the whole app
+    // Default font for the whole app
     fontFamily: GoogleFonts.roboto().fontFamily,
-     textTheme:  TextTheme(
+    textTheme:  TextTheme(
       // Roboto
       titleLarge: TextStyle(
         color: AppColors.blackBase,
@@ -128,6 +128,14 @@ class AppThem {
         color: AppColors.blackBase,
         fontSize: 16,
         fontWeight: FontWeight.w500,
+      ),
+
+      titleSmall: TextStyle(
+        fontFamily: 'Inter',
+        color: AppColors.blackBase,
+        fontSize: 20.sp,
+        fontWeight: FontWeight.w500,
+        height: 1,
       ),
 
       bodyLarge: TextStyle(
@@ -149,6 +157,14 @@ class AppThem {
       ),
 
       labelLarge: TextStyle(color: AppColors.blackBase),
+
+      labelMedium: TextStyle(
+        fontFamily: 'Inter',
+        color: AppColors.gray,
+        fontSize: 13.sp,
+        fontWeight: FontWeight.w500,
+        height: 1,
+      ),
     ),
   );
 }

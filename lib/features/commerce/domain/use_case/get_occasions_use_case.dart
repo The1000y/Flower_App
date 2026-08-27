@@ -9,7 +9,7 @@ class GetOccasionsUseCase {
   final CommerceRepo repository;
   GetOccasionsUseCase(this.repository);
 
-  Future<List<OccasionEntity>> execute() {
+  Future<BaseResponce<List<OccasionEntity>>> execute() {
     return repository.getOccasions();
   }
 }

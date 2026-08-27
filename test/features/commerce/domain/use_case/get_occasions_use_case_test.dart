@@ -1,3 +1,4 @@
+import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_occasions_use_case.dart';
@@ -15,16 +16,27 @@ void main() {
     getOccasionsUseCase = GetOccasionsUseCase(mockCommerceRepo);
   });
 
-  test('should call getOccasions on repository and return list of occasions', () async {
-    // Arrange
+  test('should call getOccasions on repository and return SuccessResponce with list of occasions', () async {
     final tOccasions = [OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url')];
-    when(() => mockCommerceRepo.getOccasions()).thenAnswer((_) async => tOccasions);
+    when(() => mockCommerceRepo.getOccasions())
+        .thenAnswer((_) async => SuccessResponce<List<OccasionEntity>>(tOccasions));
 
-    // Act
     final result = await getOccasionsUseCase.execute();
 
-    // Assert
-    expect(result, tOccasions);
+    expect(result, isA<SuccessResponce<List<OccasionEntity>>>());
+    expect((result as SuccessResponce<List<OccasionEntity>>).data, tOccasions);
+    verify(() => mockCommerceRepo.getOccasions()).called(1);
+    verifyNoMoreInteractions(mockCommerceRepo);
+  });
+
+  test('should propagate ErrorResponce when repository fails', () async {
+    final exception = Exception('Failed to get occasions');
+    when(() => mockCommerceRepo.getOccasions())
+        .thenAnswer((_) async => ErrorResponce<List<OccasionEntity>>(exception));
+
+    final result = await getOccasionsUseCase.execute();
+
+    expect(result, isA<ErrorResponce<List<OccasionEntity>>>());
     verify(() => mockCommerceRepo.getOccasions()).called(1);
     verifyNoMoreInteractions(mockCommerceRepo);
   });

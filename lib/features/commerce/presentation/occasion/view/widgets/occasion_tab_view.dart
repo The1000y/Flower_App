@@ -4,45 +4,93 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../manager/cubit/occasion_cubit.dart';
+import '../../manager/cubit/occasion_event.dart';
 import '../../manager/cubit/occasion_state.dart';
 
-class OccasionTabView extends StatelessWidget {
+class OccasionTabView extends StatefulWidget {
   const OccasionTabView({super.key});
+
+  @override
+  State<OccasionTabView> createState() => _OccasionTabViewState();
+}
+
+class _OccasionTabViewState extends State<OccasionTabView> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final threshold = _scrollController.position.maxScrollExtent - 200.h;
+    if (_scrollController.position.pixels >= threshold) {
+      context.read<OccasionCubit>().handle(LoadMoreProducts());
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OccasionCubit, OccasionState>(
       buildWhen: (previous, current) =>
-      previous.products != current.products ||
-          previous.isLoadingProducts != current.isLoadingProducts ||
-          previous.productsError != current.productsError,
+      previous.productsState != current.productsState ||
+          previous.isLoadingMore != current.isLoadingMore,
       builder: (context, state) {
-        if (state.isLoadingProducts) {
+        final productsState = state.productsState;
+
+        if (productsState.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (state.productsError.isNotEmpty) {
-          return Center(child: Text(state.productsError));
+        if (productsState.errorMessage.isNotEmpty) {
+          return Center(child: Text(productsState.errorMessage));
         }
 
-        return GridView.builder(
-          padding: EdgeInsets.all(16.w),
-          itemCount: state.products.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16.w,
-            mainAxisSpacing: 17.h,
-            mainAxisExtent: 280.h,
-          ),
-          itemBuilder: (context, index) {
-            final product = state.products[index];
-            return ProductCard(
-              image: product.imageUrl,
-              name: product.name,
-              price: product.price,
-              oldPrice: product.originalPrice,
-              discount: product.discountPercentage?.toInt(),
-            );
-          },
+        final products = productsState.data ?? const [];
+
+        return CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.all(16.w),
+              sliver: SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.w,
+                  mainAxisSpacing: 17.h,
+                  mainAxisExtent: 280.h,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    final product = products[index];
+                    return ProductCard(
+                      image: product.imageUrl,
+                      name: product.name,
+                      price: product.price,
+                      oldPrice: product.originalPrice,
+                      discount: product.discountPercentage?.toInt(),
+                    );
+                  },
+                  childCount: products.length,
+                ),
+              ),
+            ),
+            if (state.isLoadingMore)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+              ),
+          ],
         );
       },
     );

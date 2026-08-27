@@ -28,6 +28,8 @@ class _OccasionScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       backgroundColor: AppColors.whiteBase,
       appBar: AppBar(
@@ -43,24 +45,20 @@ class _OccasionScaffold extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Icon(
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(
                     Icons.arrow_back_ios_new,
-                    size: 24.w,
                     color: AppColors.blackBase,
                   ),
+                  iconSize: 24.w,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
                 SizedBox(width: 8.w),
                 Text(
                   AppStrings.occasionTitle,
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20.sp,
-                    color: AppColors.blackBase,
-                    height: 1,
-                  ),
+                  style: textTheme.titleSmall,
                 ),
               ],
             ),
@@ -70,13 +68,7 @@ class _OccasionScaffold extends StatelessWidget {
               padding: EdgeInsets.only(left: 32.w),
               child: Text(
                 AppStrings.bloomSubtitle,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13.sp,
-                  color: AppColors.gray,
-                  height: 1,
-                ),
+                style: textTheme.labelMedium,
               ),
             ),
           ],
@@ -84,25 +76,29 @@ class _OccasionScaffold extends StatelessWidget {
       ),
       body: BlocBuilder<OccasionCubit, OccasionState>(
         buildWhen: (previous, current) =>
-            previous.occasions != current.occasions ||
-            previous.isLoadingOccasions != current.isLoadingOccasions ||
-            previous.occasionsError != current.occasionsError,
+        previous.occasionsState != current.occasionsState,
         builder: (context, state) {
-          if (state.isLoadingOccasions) {
+          final occasionsState = state.occasionsState;
+
+          if (occasionsState.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state.occasionsError.isNotEmpty) {
-            return Center(child: Text(state.occasionsError));
+          if (occasionsState.errorMessage.isNotEmpty) {
+            return Center(child: Text(occasionsState.errorMessage));
           }
-          if (state.occasions.isEmpty) {
-            return const SizedBox.shrink();
+
+          final occasions = occasionsState.data ?? const [];
+          if (occasions.isEmpty) {
+            return const Center(
+              child: Text('No occasions available right now.'),
+            );
           }
 
           return DefaultTabController(
-            length: state.occasions.length,
+            length: occasions.length,
             child: Column(
               children: [
-                 OccasionTabBar(occasions: state.occasions),
+                OccasionTabBar(occasions: occasions),
                 const Expanded(child: OccasionTabView()),
               ],
             ),
