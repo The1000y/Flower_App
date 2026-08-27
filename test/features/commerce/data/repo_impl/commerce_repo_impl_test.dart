@@ -25,7 +25,7 @@ void main() {
   group('getOccasions', () {
     test(
       'should return SuccessResponce<List<OccasionEntity>> when remote data source succeeds',
-          () async {
+      () async {
         final occasionDto = OccasionDto(
           id: 1,
           name: 'Birthday',
@@ -33,7 +33,7 @@ void main() {
         );
 
         when(() => mockRemoteDataSource.getOccasions()).thenAnswer(
-              (_) async => SuccessResponce<List<OccasionDto>>([occasionDto]),
+          (_) async => SuccessResponce<List<OccasionDto>>([occasionDto]),
         );
 
         final result = await commerceRepo.getOccasions();
@@ -51,7 +51,7 @@ void main() {
     test('should return ErrorResponce when remote data source fails', () async {
       final exception = Exception('Failed to get occasions');
       when(() => mockRemoteDataSource.getOccasions()).thenAnswer(
-            (_) async => ErrorResponce<List<OccasionDto>>(exception),
+        (_) async => ErrorResponce<List<OccasionDto>>(exception),
       );
 
       final result = await commerceRepo.getOccasions();
@@ -64,7 +64,7 @@ void main() {
   group('getProducts', () {
     test(
       'should return SuccessResponce<PaginatedProducts> when remote data source succeeds',
-          () async {
+      () async {
         final productDto = ProductDto(
           id: 1,
           name: 'Red Rose',
@@ -96,7 +96,7 @@ void main() {
         );
 
         when(() => mockRemoteDataSource.getProducts(1, page: 1)).thenAnswer(
-              (_) async => SuccessResponce<ProductsResponseDto>(responseDto),
+          (_) async => SuccessResponce<ProductsResponseDto>(responseDto),
         );
 
         final result = await commerceRepo.getOccasionsProducts(1, page: 1);
@@ -115,7 +115,7 @@ void main() {
     test('should return ErrorResponce when remote data source fails', () async {
       final exception = Exception('Failed to get products');
       when(() => mockRemoteDataSource.getProducts(1, page: 1)).thenAnswer(
-            (_) async => ErrorResponce<ProductsResponseDto>(exception),
+        (_) async => ErrorResponce<ProductsResponseDto>(exception),
       );
 
       final result = await commerceRepo.getOccasionsProducts(1, page: 1);

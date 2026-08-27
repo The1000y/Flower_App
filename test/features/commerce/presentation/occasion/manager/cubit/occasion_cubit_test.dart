@@ -172,12 +172,12 @@ void main() {
 
     test(
       'discards a stale response when the occasion changes before it resolves',
-          () async {
+      () async {
         final completer = Completer<BaseResponce<PaginatedProducts>>();
         when(() => mockGetProductsUseCase.execute(1, page: 1))
             .thenAnswer((_) => completer.future);
         when(() => mockGetProductsUseCase.execute(2, page: 1)).thenAnswer(
-              (_) async => SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
+          (_) async => SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
         );
 
         occasionCubit.handle(LoadProductsForOccasion(1));
@@ -209,7 +209,7 @@ void main() {
       ),
       build: () {
         when(() => mockGetProductsUseCase.execute(1, page: 2)).thenAnswer(
-              (_) async => SuccessResponce<PaginatedProducts>(
+          (_) async => SuccessResponce<PaginatedProducts>(
             PaginatedProducts(items: [tProduct], pagination: tPaginationPage2NoNext),
           ),
         );
