@@ -7,9 +7,10 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/commerce_fixtures.dart';
-import '../../../../mocks/mocks.mocks.dart';
-import '../../../../mocks/test_dummies.dart';
+import '../../../fixtures/commerce_fixtures.dart';
+import '../../../mocks/mocks.mocks.dart';
+import '../../../mocks/test_dummies.dart';
+
 
 void main() {
   registerCommerceTestDummies();

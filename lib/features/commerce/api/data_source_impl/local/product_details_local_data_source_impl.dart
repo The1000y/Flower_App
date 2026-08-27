@@ -60,7 +60,7 @@ class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource
           name: "Bestseller Item $productId",
           imageUrl: "https://images.unsplash.com/photo-1561181286-d397369328d0",
           currency: "SAR",
-          price: 100 + productId,
+          price: 100 ,
           status: "In stock",
           images: ["https://images.unsplash.com/photo-1561181286-d397369328d0"],
           description: "This is a detailed description for bestseller item number $productId.",
