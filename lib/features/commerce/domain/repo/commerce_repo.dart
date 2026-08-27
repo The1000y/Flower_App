@@ -5,5 +5,5 @@ import '../entities/products/product_entity.dart';
 
 abstract interface class CommerceRepo {
   Future<BaseResponce<List<OccasionEntity>>> getOccasions();
-  Future<BaseResponce<PaginatedProducts>> getProducts(int occasionId, {int page = 1});
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1});
 }

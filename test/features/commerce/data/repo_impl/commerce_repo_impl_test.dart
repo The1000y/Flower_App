@@ -99,7 +99,7 @@ void main() {
               (_) async => SuccessResponce<ProductsResponseDto>(responseDto),
         );
 
-        final result = await commerceRepo.getProducts(1, page: 1);
+        final result = await commerceRepo.getOccasionsProducts(1, page: 1);
 
         expect(result, isA<SuccessResponce<PaginatedProducts>>());
         final data = (result as SuccessResponce<PaginatedProducts>).data;
@@ -118,7 +118,7 @@ void main() {
             (_) async => ErrorResponce<ProductsResponseDto>(exception),
       );
 
-      final result = await commerceRepo.getProducts(1, page: 1);
+      final result = await commerceRepo.getOccasionsProducts(1, page: 1);
 
       expect(result, isA<ErrorResponce<PaginatedProducts>>());
       verify(() => mockRemoteDataSource.getProducts(1, page: 1)).called(1);

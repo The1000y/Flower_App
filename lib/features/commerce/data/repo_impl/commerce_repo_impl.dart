@@ -26,7 +26,7 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<PaginatedProducts>> getProducts(int occasionId, {int page = 1}) async {
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1}) async {
     final response = await remoteDataSource.getProducts(occasionId, page: page);
 
     switch (response) {

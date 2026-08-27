@@ -10,6 +10,6 @@ class GetProductsUseCase {
   GetProductsUseCase(this._commerceRepo);
 
   Future<BaseResponce<PaginatedProducts>> execute(int occasionId, {int page = 1}) {
-    return _commerceRepo.getProducts(occasionId, page: page);
+    return _commerceRepo.getOccasionsProducts(occasionId, page: page);
   }
 }

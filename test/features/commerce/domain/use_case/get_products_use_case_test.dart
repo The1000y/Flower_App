@@ -29,26 +29,26 @@ void main() {
   );
 
   test('should call getProducts on repository with occasionId and page and return SuccessResponce', () async {
-    when(() => mockCommerceRepo.getProducts(1, page: 1))
+    when(() => mockCommerceRepo.getOccasionsProducts(1, page: 1))
         .thenAnswer((_) async => SuccessResponce<PaginatedProducts>(tPaginatedProducts));
 
     final result = await getProductsUseCase.execute(1, page: 1);
 
     expect(result, isA<SuccessResponce<PaginatedProducts>>());
     expect((result as SuccessResponce<PaginatedProducts>).data, tPaginatedProducts);
-    verify(() => mockCommerceRepo.getProducts(1, page: 1)).called(1);
+    verify(() => mockCommerceRepo.getOccasionsProducts(1, page: 1)).called(1);
     verifyNoMoreInteractions(mockCommerceRepo);
   });
 
   test('should propagate ErrorResponce when repository fails', () async {
     final exception = Exception('Failed to get products');
-    when(() => mockCommerceRepo.getProducts(1, page: 1))
+    when(() => mockCommerceRepo.getOccasionsProducts(1, page: 1))
         .thenAnswer((_) async => ErrorResponce<PaginatedProducts>(exception));
 
     final result = await getProductsUseCase.execute(1, page: 1);
 
     expect(result, isA<ErrorResponce<PaginatedProducts>>());
-    verify(() => mockCommerceRepo.getProducts(1, page: 1)).called(1);
+    verify(() => mockCommerceRepo.getOccasionsProducts(1, page: 1)).called(1);
     verifyNoMoreInteractions(mockCommerceRepo);
   });
 }
