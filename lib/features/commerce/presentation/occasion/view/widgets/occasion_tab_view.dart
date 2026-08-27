@@ -25,9 +25,13 @@ class _OccasionTabViewState extends State<OccasionTabView> {
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
+    final cubit = context.read<OccasionCubit>();
+    final state = cubit.state;
+    if (state.isLoadingMore || state.productsState.isLoading) return;
+    if (state.pagination?.hasNextPage != true) return;
     final threshold = _scrollController.position.maxScrollExtent - 200.h;
     if (_scrollController.position.pixels >= threshold) {
-      context.read<OccasionCubit>().handle(LoadMoreProducts());
+      cubit.handle(LoadMoreProducts());
     }
   }
 

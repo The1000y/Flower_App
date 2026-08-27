@@ -23,7 +23,7 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
           .toList();
       return SuccessResponce(dtoList);
     } catch (e) {
-      return ErrorResponce(Exception(e.toString()));
+      return ErrorResponce(e is Exception ? e : Exception(e.toString()));
     }
   }
 
@@ -63,7 +63,7 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
 
       return SuccessResponce(dto);
     } catch (e) {
-      return ErrorResponce(Exception(e.toString()));
+      return ErrorResponce(e is Exception ? e : Exception(e.toString()));
     }
   }
 }

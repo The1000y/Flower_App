@@ -40,8 +40,8 @@ class AppThem {
 
       errorStyle: const TextStyle(color: AppColors.error, fontSize: 10),
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: AppColors.white60)
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: AppColors.white60),
       ),
 
       enabledBorder: OutlineInputBorder(
@@ -71,9 +71,11 @@ class AppThem {
 
         elevation: 0,
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.r),
+        ),
 
-        textStyle:  TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+        textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -85,19 +87,13 @@ class AppThem {
 
         minimumSize: Size(double.infinity, 50.h),
 
-        side: const BorderSide(
-          color: AppColors.gray,
-          width: 1,
-        ),
+        side: const BorderSide(color: AppColors.gray, width: 1),
 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.r),
         ),
 
-        textStyle: TextStyle(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w500,
-        ),
+        textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
       ),
     ),
     checkboxTheme: CheckboxThemeData(
@@ -116,7 +112,7 @@ class AppThem {
 
     // Default font for the whole app
     fontFamily: GoogleFonts.roboto().fontFamily,
-    textTheme:  TextTheme(
+    textTheme: TextTheme(
       // Roboto
       titleLarge: TextStyle(
         color: AppColors.blackBase,
