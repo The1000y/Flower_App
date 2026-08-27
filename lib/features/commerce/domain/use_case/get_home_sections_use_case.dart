@@ -10,6 +10,18 @@ class GetHomeSectionsUseCase {
   GetHomeSectionsUseCase(this.commerceRepo);
 
   Future<BaseResponce<List<SectionEntity>>> call() async {
-    return await commerceRepo.getSection();
+    final result = await commerceRepo.getSection();
+    switch (result) {
+      case SuccessResponce<List<SectionEntity>>():
+        List<SectionEntity> sortList = result.data;
+        sortList.sort((a, b) => a.index.compareTo(b.index));
+        final activeSections = sortList
+            .where((element) => element.isActive == true)
+            .toList();
+        return SuccessResponce<List<SectionEntity>>(activeSections);
+
+      case ErrorResponce<List<SectionEntity>>():
+        throw ErrorResponce(Exception(result.errorMessage));
+    }
   }
 }

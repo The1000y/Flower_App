@@ -1,8 +1,13 @@
 import 'package:equatable/equatable.dart';
+enum SectionType {
+  bestSeller,
+  category,
+  occasion,
+}
 
 class SectionEntity extends Equatable {
   final int id;
-  final String type;
+  final SectionType type;
   final int index;
   final bool isActive;
   final String title;

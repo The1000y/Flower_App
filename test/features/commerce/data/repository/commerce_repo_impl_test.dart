@@ -72,7 +72,7 @@ void main() {
       () async {
         // Arrange
         when(mockLocalDataSource.getBestSellers()).thenAnswer(
-          (_) async => SuccessResponce<List<ItemDto>>(
+          (_) async => SuccessResponce<List<ProductDto>>(
             CommerceFixtures.tBestSellerDtos,
           ),
         );
@@ -94,7 +94,7 @@ void main() {
     test('throws ErrorResponce when data source returns an error', () async {
       // Arrange
       when(mockLocalDataSource.getBestSellers()).thenAnswer(
-        (_) async => ErrorResponce<List<ItemDto>>(Exception('db error')),
+        (_) async => ErrorResponce<List<ProductDto>>(Exception('db error')),
       );
 
       // Act & Assert

@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class GetBestSellerUseCase {
-  CommerceRepo commerceRepo;
+ final CommerceRepo commerceRepo;
 
   GetBestSellerUseCase({required this.commerceRepo});
   Future<BaseResponce<List<BestSellerEntity>>> call() async {

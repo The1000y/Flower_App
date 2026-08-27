@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 
 class OccasionCard extends StatelessWidget {
@@ -19,24 +19,16 @@ class OccasionCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              occasion.imageUrl,
+            child: CachedNetworkImage(
+              imageUrl: occasion.imageUrl,
               width: 131,
               height: 151,
-              // cacheWidth: 150,
-              // cacheHeight: 200,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset(
-                  AppImages.error,
-                  fit: BoxFit.cover,
-                  width: 131,
-                  height: 151,
-                  // cacheWidth: 150,
-                  // cacheHeight: 200,
-                );
-              },
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
+          
           ),
           const SizedBox(height: 8),
           Text(

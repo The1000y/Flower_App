@@ -45,6 +45,7 @@ dependencies:
   persistent_bottom_nav_bar_v2: ^6.3.2
   flutter_secure_storage: ^11.0.0
   google_fonts: ^8.2.0
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

@@ -35,13 +35,13 @@ class CommerceRepoImpl implements CommerceRepo {
   Future<BaseResponce<List<BestSellerEntity>>> getBestSeller() async {
     final response = await localDataSource.getBestSellers();
     switch (response) {
-      case SuccessResponce<List<ItemDto>>():
+      case SuccessResponce<List<ProductDto>>():
         final data = response.data.map((element) {
           return element.toDomain();
         }).toList();
         return SuccessResponce<List<BestSellerEntity>>(data);
 
-      case ErrorResponce<List<ItemDto>>():
+      case ErrorResponce<List<ProductDto>>():
         throw ErrorResponce(Exception(response.errorMessage));
     }
   }

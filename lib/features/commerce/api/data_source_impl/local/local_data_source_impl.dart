@@ -42,10 +42,10 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
   }
 
   @override
-  Future<BaseResponce<List<ItemDto>>> getBestSellers() async {
+  Future<BaseResponce<List<ProductDto>>> getBestSellers() async {
     await Future.delayed(const Duration(seconds: 3));
-    List<ItemDto> itemDummyList = [
-      ItemDto(
+    List<ProductDto> itemDummyList = [
+      ProductDto(
         id: 1,
         name: "Luxury Red Rose Bouquet",
         imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
@@ -55,7 +55,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 25,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 2,
         name: "White Lily Arrangement",
         imageUrl:
@@ -66,7 +66,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 20,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 3,
         name: "Pink Flower Bouquet",
         imageUrl:
@@ -77,7 +77,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 18,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 4,
         name: "Elegant Orchid Vase",
         imageUrl:
@@ -88,7 +88,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 17,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 5,
         name: "Mixed Color Flowers",
         imageUrl:
@@ -99,7 +99,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 25,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 6,
         name: "Wedding Flower Set",
         imageUrl:
@@ -110,7 +110,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 23,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 7,
         name: "Small Tulip Bouquet",
         imageUrl:
@@ -121,7 +121,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 20,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 8,
         name: "Premium Flower Box",
         imageUrl:
@@ -132,7 +132,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 25,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 9,
         name: "Garden Fresh Flowers",
         imageUrl:
@@ -143,7 +143,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 21,
         status: "available",
       ),
-      ItemDto(
+      ProductDto(
         id: 10,
         name: "Golden Rose Collection",
         imageUrl:
@@ -157,9 +157,9 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     ];
 
     try {
-      return SuccessResponce<List<ItemDto>>(itemDummyList);
+      return SuccessResponce<List<ProductDto>>(itemDummyList);
     } on Exception catch (e) {
-      return ErrorResponce<List<ItemDto>>(e);
+      return ErrorResponce<List<ProductDto>>(e);
     }
   }
 
@@ -169,7 +169,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 1,
         type: 'Categories',
-        index: 0,
+        index: 1,
         isActive: true,
         title: 'Categories',
         occasionId: null,
@@ -178,7 +178,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 2,
         type: 'BestSeller',
-        index: 2,
+        index: 0,
         isActive: true,
         title: 'Best seller',
         occasionId: null,
@@ -187,21 +187,21 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 3,
         type: 'Occasions',
-        index: 1,
+        index: 2,
         isActive: true,
         title: 'Occasion',
         occasionId: null,
         categoryId: null,
       ),
-      SectionDto(
-        id: 4,
-        type: 'ProductsCarousel',
-        index: 3,
-        isActive: true,
-        title: 'Wedding picks',
-        occasionId: 1,
-        categoryId: null,
-      ),
+      // SectionDto(
+      //   id: 4,
+      //   type: 'ProductsCarousel',
+      //   index: 3,
+      //   isActive: true,
+      //   title: 'Wedding picks',
+      //   occasionId: 1,
+      //   categoryId: null,
+      // ),
     ];
 
     try {

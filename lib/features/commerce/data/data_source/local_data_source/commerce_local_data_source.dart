@@ -6,7 +6,7 @@ import 'package:flower_app/features/commerce/data/model/responce/occasion_respon
 
 abstract interface class CommerceLocalDataSource {
   Future<BaseResponce<List<CategoryDto>>> getCategories();
-  Future<BaseResponce<List<ItemDto>>> getBestSellers();
+  Future<BaseResponce<List<ProductDto>>> getBestSellers();
   Future<BaseResponce<List<SectionDto>>> getSections();
   Future<BaseResponce<List<OccasionDto>>> getOccasion();
 }

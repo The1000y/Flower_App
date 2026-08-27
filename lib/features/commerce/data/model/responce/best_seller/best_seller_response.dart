@@ -38,7 +38,7 @@ class BestSellerResponse {
 @JsonSerializable()
 class Data {
     @JsonKey(name: "items")
-    List<ItemDto>? items;
+    List<ProductDto>? items;
     @JsonKey(name: "pagination")
     Pagination? pagination;
 

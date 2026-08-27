@@ -56,8 +56,8 @@ class CommerceFixtures {
     ),
   ];
 
-  static final List<ItemDto> tBestSellerDtos = [
-    ItemDto(
+  static final List<ProductDto> tBestSellerDtos = [
+    ProductDto(
       id: 1,
       name: 'Luxury Red Rose Bouquet',
       imageUrl: 'https://images.unsplash.com/photo-1563241527',
@@ -77,29 +77,22 @@ class CommerceFixtures {
   /// inactive section that must be dropped.
   static final List<SectionEntity> tUnsortedSections = [
     const SectionEntity(
-      id: 4,
-      type: 'ProductsCarousel',
-      index: 3,
-      isActive: true,
-      title: 'Wedding picks',
-    ),
-    const SectionEntity(
       id: 5,
-      type: 'HiddenSection',
+      type: SectionType.category,
       index: 9,
       isActive: false,
       title: 'Should be filtered out',
     ),
     const SectionEntity(
       id: 1,
-      type: 'Categories',
+      type: SectionType.category,
       index: 1,
       isActive: true,
       title: 'Categories',
     ),
     const SectionEntity(
       id: 2,
-      type: 'BestSeller',
+      type: SectionType.bestSeller,
       index: 0,
       isActive: true,
       title: 'Best seller',
@@ -110,24 +103,17 @@ class CommerceFixtures {
   static const List<SectionEntity> tActiveSortedSections = [
     SectionEntity(
       id: 2,
-      type: 'BestSeller',
+      type: SectionType.bestSeller,
       index: 0,
       isActive: true,
       title: 'Best seller',
     ),
     SectionEntity(
       id: 1,
-      type: 'Categories',
+      type: SectionType.category,
       index: 1,
       isActive: true,
       title: 'Categories',
-    ),
-    SectionEntity(
-      id: 4,
-      type: 'ProductsCarousel',
-      index: 3,
-      isActive: true,
-      title: 'Wedding picks',
     ),
   ];
 

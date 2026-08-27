@@ -17,8 +17,8 @@ void registerCommerceTestDummies() {
   provideDummy<BaseResponce<List<CategoryDto>>>(
     SuccessResponce<List<CategoryDto>>(const []),
   );
-  provideDummy<BaseResponce<List<ItemDto>>>(
-    SuccessResponce<List<ItemDto>>(const []),
+  provideDummy<BaseResponce<List<ProductDto>>>(
+    SuccessResponce<List<ProductDto>>(const []),
   );
   provideDummy<BaseResponce<List<SectionDto>>>(
     SuccessResponce<List<SectionDto>>(const []),

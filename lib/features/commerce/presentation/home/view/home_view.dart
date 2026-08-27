@@ -35,6 +35,9 @@ class _HomeViewState extends State<HomeView> {
           child: BlocProvider.value(
             value: homeCubit,
             child: BlocBuilder<HomeCubit, HomeState>(
+              buildWhen: (previous, current) {
+                return previous.sectionsState != current.sectionsState;
+              },
               builder: (context, state) {
                 final sectionsState = state.sectionsState;
 
@@ -47,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
                 if (sectionsState.errorMessage.isNotEmpty) {
                   return Scaffold(
                     body: Center(
-                      child: Text('Error: ${sectionsState.errorMessage}'),
+                      child: Text(sectionsState.errorMessage),
                     ),
                   );
                 }
