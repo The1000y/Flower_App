@@ -19,6 +19,7 @@ class VerificationView extends StatelessWidget {
     return BlocProvider<ForgetPasswordCubit>(
       create: (context) => getIt.get<ForgetPasswordCubit>(),
       child: Scaffold(
+        backgroundColor: AppColors.whiteBase,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(

@@ -36,6 +36,18 @@ class AppThem {
 
       labelStyle: const TextStyle(color: AppColors.gray),
 
+      floatingLabelStyle: TextStyle(
+        color: WidgetStateColor.resolveWith((Set<WidgetState> states) {
+          if (states.contains(WidgetState.error)) {
+            return AppColors.error;
+          }
+          if (states.contains(WidgetState.focused)) {
+            return AppColors.pinkBase;
+          }
+          return AppColors.gray;
+        }),
+      ),
+
       hintStyle: const TextStyle(color: AppColors.white70),
 
       errorStyle: const TextStyle(color: AppColors.error, fontSize: 10),

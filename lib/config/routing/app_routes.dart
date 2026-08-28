@@ -6,6 +6,8 @@ import 'package:flower_app/features/auth/presentation/forget_password/view/verif
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
+import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
+import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
@@ -27,7 +29,10 @@ abstract class AppRoutes {
 
       case Routes.signUp:
         return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
+          builder: (_) =>  BlocProvider(
+            create: (_) => getIt<RegisterViewModel>(),
+            child: const RegisterView(),
+          ),
         );
 
       case Routes.forgotPassword:

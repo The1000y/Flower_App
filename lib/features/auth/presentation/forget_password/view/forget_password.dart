@@ -32,6 +32,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     return BlocProvider(
       create: (context) => viewModel,
       child: Scaffold(
+        backgroundColor: AppColors.whiteBase,
         appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
         body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
           listenWhen: (previous, current) {

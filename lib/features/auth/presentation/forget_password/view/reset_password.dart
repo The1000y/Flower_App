@@ -39,6 +39,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     return BlocProvider(
       create: (context) => viewModel,
       child: Scaffold(
+        backgroundColor: AppColors.whiteBase,
         appBar: AppBar(
           title: Text(AppStrings.passwordAppBarTitle),
         ),
