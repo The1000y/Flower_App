@@ -7,11 +7,13 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_state.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
-import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../../config/routing/routes.dart';
+import '../../../../commerce/presentation/home/view/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -94,10 +96,8 @@ class _LoginViewState extends State<LoginView> {
                 );
               Future.delayed(const Duration(seconds: 2), () {
                 if (!context.mounted) return;
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeView()),
-                );
+
+                Navigator.pushReplacementNamed(context, Routes.home);
               });
             }
           },
@@ -175,12 +175,11 @@ class _LoginViewState extends State<LoginView> {
                   CustomOutlinedButton(
                     text: AppStrings.continueAsGuest,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const HomeView()),
+                      Navigator.pushReplacementNamed(context, Routes.home);
+
 
                         // Routes.mainLayout,
-                      );
+
                     },
                   ),
                   const SizedBox(height: 24),

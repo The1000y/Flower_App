@@ -2,7 +2,6 @@ import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_outlined_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
-import 'package:flower_app/features/auth/presentation/login/view/home_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/remember_custom.dart';
 import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
@@ -16,10 +15,11 @@ import '../../../helpers/auth_test_helpers.dart';
 Widget _app(FakeAuthRepo repo) {
   return MaterialApp(
     routes: {
+      Routes.home: (_) => const Scaffold(body: Text('Mock Home Screen')),
       Routes.mainLayout: (_) => const Scaffold(body: Placeholder()),
       Routes.signUp: (_) => const Scaffold(body: Text('Sign Up Screen')),
       Routes.forgotPassword: (_) =>
-          const Scaffold(body: Text('Forgot Password Screen')),
+      const Scaffold(body: Text('Forgot Password Screen')),
     },
     home: BlocProvider(
       create: (_) => buildLoginViewModel(repo),
@@ -126,40 +126,40 @@ void main() {
     });
 
     testWidgets('password field hides and shows text with toggle',
-        (tester) async {
-      await _pumpLogin(tester, FakeAuthRepo());
+            (tester) async {
+          await _pumpLogin(tester, FakeAuthRepo());
 
-      final passwordField = tester.widget<CustomTextFormField>(
-        find.widgetWithText(CustomTextFormField, 'Password'),
-      );
-      expect(passwordField.obscureText, isTrue);
+          final passwordField = tester.widget<CustomTextFormField>(
+            find.widgetWithText(CustomTextFormField, 'Password'),
+          );
+          expect(passwordField.obscureText, isTrue);
 
-      await tester.tap(find.byIcon(Icons.visibility_off));
-      await tester.pump();
+          await tester.tap(find.byIcon(Icons.visibility_off));
+          await tester.pump();
 
-      final afterToggle = tester.widget<CustomTextFormField>(
-        find.widgetWithText(CustomTextFormField, 'Password'),
-      );
-      expect(afterToggle.obscureText, isFalse);
-    });
+          final afterToggle = tester.widget<CustomTextFormField>(
+            find.widgetWithText(CustomTextFormField, 'Password'),
+          );
+          expect(afterToggle.obscureText, isFalse);
+        });
 
     testWidgets('restore does not overwrite email the user just typed',
-        (tester) async {
-      useInMemorySecureStorage({'remembered_email': 'old@example.com'});
-      await tester.pumpWidget(_app(FakeAuthRepo()));
+            (tester) async {
+          useInMemorySecureStorage({'remembered_email': 'old@example.com'});
+          await tester.pumpWidget(_app(FakeAuthRepo()));
 
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Email'),
-        validEmail,
-      );
-      await tester.pump(const Duration(milliseconds: 300));
-      await tester.pump();
+          await tester.enterText(
+            find.widgetWithText(TextFormField, 'Email'),
+            validEmail,
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          await tester.pump();
 
-      final emailField = tester.widget<TextFormField>(
-        find.widgetWithText(TextFormField, 'Email'),
-      );
-      expect(emailField.controller!.text, validEmail);
-    });
+          final emailField = tester.widget<TextFormField>(
+            find.widgetWithText(TextFormField, 'Email'),
+          );
+          expect(emailField.controller!.text, validEmail);
+        });
 
     testWidgets('pre-fills remembered email on startup', (tester) async {
       useInMemorySecureStorage({'remembered_email': 'saved@example.com'});
@@ -177,30 +177,30 @@ void main() {
     });
 
     testWidgets('shows success snackbar and navigates on valid login',
-        (tester) async {
-      await _pumpLogin(tester, FakeAuthRepo());
+            (tester) async {
+          await _pumpLogin(tester, FakeAuthRepo());
 
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Email'),
-        validEmail,
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Password'),
-        validPassword,
-      );
-      await tester.pump();
+          await tester.enterText(
+            find.widgetWithText(TextFormField, 'Email'),
+            validEmail,
+          );
+          await tester.enterText(
+            find.widgetWithText(TextFormField, 'Password'),
+            validPassword,
+          );
+          await tester.pump();
 
-      await tester.tap(_loginButton());
-      await tester.pump();
-      await tester.pump();
+          await tester.tap(_loginButton());
+          await tester.pump();
+          await tester.pump();
 
-      expect(find.text('Login successful'), findsOneWidget);
+          expect(find.text('Login successful'), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 2));
-      await tester.pump(const Duration(milliseconds: 400));
+          await tester.pump(const Duration(seconds: 2));
+          await tester.pump(const Duration(milliseconds: 400));
 
-      expect(find.byType(HomeView), findsOneWidget);
-    });
+          expect(find.text('Mock Home Screen'), findsOneWidget);
+        });
 
     testWidgets('shows error snackbar on failed login', (tester) async {
       await _pumpLogin(tester, FakeAuthRepo(shouldSucceed: false));
@@ -229,53 +229,53 @@ void main() {
     });
 
     testWidgets('saves remembered email after successful login with remember me',
-        (tester) async {
-      await _pumpLogin(tester, FakeAuthRepo());
+            (tester) async {
+          await _pumpLogin(tester, FakeAuthRepo());
 
-      await tester.tap(find.byType(Checkbox));
-      await tester.pump();
+          await tester.tap(find.byType(Checkbox));
+          await tester.pump();
 
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Email'),
-        validEmail,
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Password'),
-        validPassword,
-      );
-      await tester.pump();
+          await tester.enterText(
+            find.widgetWithText(TextFormField, 'Email'),
+            validEmail,
+          );
+          await tester.enterText(
+            find.widgetWithText(TextFormField, 'Password'),
+            validPassword,
+          );
+          await tester.pump();
 
-      await tester.tap(_loginButton());
-      await tester.pump();
-      await tester.pump();
+          await tester.tap(_loginButton());
+          await tester.pump();
+          await tester.pump();
 
-      expect(await readStorageValue('remembered_email'), validEmail);
-      await tester.pump(const Duration(seconds: 5));
-    });
+          expect(await readStorageValue('remembered_email'), validEmail);
+          await tester.pump(const Duration(seconds: 5));
+        });
 
     testWidgets('deletes remembered email after login without remember me',
-        (tester) async {
-      useInMemorySecureStorage({'remembered_email': validEmail});
-      await tester.pumpWidget(_app(FakeAuthRepo()));
-      await tester.pump();
-      await tester.pump();
+            (tester) async {
+          useInMemorySecureStorage({'remembered_email': validEmail});
+          await tester.pumpWidget(_app(FakeAuthRepo()));
+          await tester.pump();
+          await tester.pump();
 
-      await tester.tap(find.byType(Checkbox));
-      await tester.pump();
+          await tester.tap(find.byType(Checkbox));
+          await tester.pump();
 
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Password'),
-        validPassword,
-      );
-      await tester.pump();
+          await tester.enterText(
+            find.widgetWithText(TextFormField, 'Password'),
+            validPassword,
+          );
+          await tester.pump();
 
-      await tester.tap(_loginButton());
-      await tester.pump();
-      await tester.pump();
+          await tester.tap(_loginButton());
+          await tester.pump();
+          await tester.pump();
 
-      expect(await readStorageValue('remembered_email'), isNull);
-      await tester.pump(const Duration(seconds: 5));
-    });
+          expect(await readStorageValue('remembered_email'), isNull);
+          await tester.pump(const Duration(seconds: 5));
+        });
 
     testWidgets('continue as guest navigates to home', (tester) async {
       await _pumpLogin(tester, FakeAuthRepo());
@@ -286,7 +286,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(HomeView), findsOneWidget);
+      expect(find.text('Mock Home Screen'), findsOneWidget);
     });
 
     testWidgets('sign up link navigates to sign up route', (tester) async {
@@ -302,9 +302,9 @@ void main() {
       final glyphOffset = tester
           .renderObject<RenderParagraph>(richFinder)
           .getOffsetForCaret(
-            const TextPosition(offset: 26),
-            Rect.zero,
-          );
+        const TextPosition(offset: 26),
+        Rect.zero,
+      );
       final topLeft = tester.getTopLeft(richFinder);
       await tester.tapAt(topLeft + glyphOffset + const Offset(0, 10));
       await tester.pump();
@@ -314,13 +314,13 @@ void main() {
     });
 
     testWidgets('forgot password navigates to forgot password route',
-        (tester) async {
-      await _pumpLogin(tester, FakeAuthRepo());
+            (tester) async {
+          await _pumpLogin(tester, FakeAuthRepo());
 
-      await tester.tap(find.text('Forget password?'));
-      await tester.pumpAndSettle();
+          await tester.tap(find.text('Forget password?'));
+          await tester.pumpAndSettle();
 
-      expect(find.text('Forgot Password Screen'), findsOneWidget);
-    });
+          expect(find.text('Forgot Password Screen'), findsOneWidget);
+        });
   });
 }

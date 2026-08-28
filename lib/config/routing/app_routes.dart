@@ -5,6 +5,11 @@ import 'package:flower_app/features/auth/presentation/forget_password/view/reset
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
+import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
+import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
+import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
+import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
+import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -56,24 +61,18 @@ abstract class AppRoutes {
 
       // Home
       case Routes.home:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) =>  PersistenBottomNavBarDemo());
 
       case Routes.bestSeller:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const BestsellerView());
 
       case Routes.productDetails:
+        final productId = settings.arguments as int? ?? 0;
         return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+            builder: (_) => ProductDetails(productId: productId));
 
       case Routes.occasion:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(settings: settings,builder: (_) => const OccasionView());
 
       case Routes.categories:
         return MaterialPageRoute(

@@ -1,18 +1,14 @@
-
 import 'package:flower_app/config/errors/hadel_error_exception.dart';
 
 sealed class BaseResponce<T> {}
-
-
 class SuccessResponce<T> extends BaseResponce<T> {
   final T data;
   SuccessResponce(this.data);
 }
-
 class ErrorResponce<T> extends BaseResponce<T> {
   final String errorMessage;
   final Exception error;
-  ErrorResponce(this.error ) : errorMessage = HandelErrorException().handelErrorexception(error);
+  ErrorResponce(this.error) : errorMessage = HandelErrorException().handelErrorexception(error);
 }
 
 
