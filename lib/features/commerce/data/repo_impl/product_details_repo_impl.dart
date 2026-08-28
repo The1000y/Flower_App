@@ -16,7 +16,7 @@ class ProductDetailsRepoImpl implements ProductDetailsRepo {
     final response = await _localDataSource.getProductDetails(productId);
     switch (response) {
       case SuccessResponce<ProductDetailsResponseDto>():
-        return SuccessResponce<ProductDetailsEntity>(response.data.toDomain());
+        return SuccessResponce<ProductDetailsEntity>(response.data.data.toDomain());
       case ErrorResponce<ProductDetailsResponseDto>():
         return ErrorResponce<ProductDetailsEntity>(response.error);
     }

@@ -135,5 +135,5 @@ abstract class AppStrings{
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
-
+  static const String occasionTitle = 'Occasion';
 }

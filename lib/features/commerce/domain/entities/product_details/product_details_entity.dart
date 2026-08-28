@@ -12,7 +12,7 @@ class ProductDetailsEntity {
   final List<String> images;
   final String description;
   final List<ProductIncludeItemEntity> includes;
-  final int? categoryId;
+  final int categoryId;
   final List<int> occasionIds;
 
   ProductDetailsEntity({
@@ -27,8 +27,7 @@ class ProductDetailsEntity {
     required this.images,
     required this.description,
     required this.includes,
-    this.categoryId,
+    this.categoryId = 0,
     required this.occasionIds,
   });
 }
-

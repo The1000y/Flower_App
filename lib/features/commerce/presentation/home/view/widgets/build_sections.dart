@@ -92,14 +92,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
         );
 
       case "Occasions":
-        return Column(
+        return Builder(
+            builder: (context) => Column(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CustomHeaderOfCollection(
                 textTheme: textTheme,
                 collectionName: AppStrings.ocassionLabel,
-                onTapViewAll: () {},
+                onTapViewAll: () {
+                  Navigator.pushNamed(context, Routes.occasion);
+                },
               ),
             ),
             SizedBox(height: 16),
@@ -120,7 +123,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
             ),
             SizedBox(height: 16),
           ],
-        );
+        ));
 
       default:
         return const SizedBox.shrink();

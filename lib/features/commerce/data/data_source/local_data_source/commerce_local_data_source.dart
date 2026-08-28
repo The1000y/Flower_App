@@ -8,7 +8,8 @@ import 'package:flower_app/features/commerce/data/model/responce/products_respon
 abstract interface class CommerceLocalDataSource {
   Future<BaseResponce<List<CategoryDto>>> getCategories();
   Future<BaseResponce<ProductsResponseDto>> getProducts();
+  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1});
   Future<BaseResponce<List<ItemDto>>> getBestSellers();
   Future<BaseResponce<List<SectionDto>>> getSections();
-  Future<BaseResponce<List<OccasionDto>>> getOccasion();
+  Future<BaseResponce<List<OccasionDto>>> getOccasions();
 }

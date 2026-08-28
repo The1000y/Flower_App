@@ -1,4 +1,7 @@
-class PaginationEntity {
+import 'package:equatable/equatable.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
+
+class PaginationEntity extends Equatable {
   final int page;
   final int pageSize;
   final int totalCount;
@@ -14,4 +17,24 @@ class PaginationEntity {
     required this.hasNextPage,
     required this.hasPreviousPage,
   });
+
+  @override
+  List<Object> get props => [
+    page,
+    pageSize,
+    totalCount,
+    totalPages,
+    hasNextPage,
+    hasPreviousPage,
+  ];
+}
+
+class PaginatedProducts extends Equatable {
+  final List<ProductEntity> items;
+  final PaginationEntity pagination;
+
+  PaginatedProducts({required this.items,
+    required this.pagination});
+  @override
+  List<Object> get props => [items, pagination];
 }

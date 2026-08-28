@@ -696,4 +696,12 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       return ErrorResponce<List<OccasionDto>>(e);
     }
   }
+
+  @override
+  Future<BaseResponce<List<OccasionDto>>> getOccasions() => getOccasion();
+
+  @override
+  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1}) async {
+    return getProducts();
+  }
 }

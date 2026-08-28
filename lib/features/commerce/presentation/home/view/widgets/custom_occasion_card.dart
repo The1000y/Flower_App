@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 
+import '../../../../../../config/routing/routes.dart';
+
 class OccasionCard extends StatelessWidget {
   final OccasionEntity occasion;
   const OccasionCard({super.key, required this.occasion});
@@ -12,7 +14,13 @@ class OccasionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return SizedBox(
+    return GestureDetector(
+onTap: () {
+Navigator.pushNamed(
+context,
+Routes.occasion,
+arguments: occasion.name,);},
+child: SizedBox(
       width: 145,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,6 +53,6 @@ class OccasionCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

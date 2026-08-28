@@ -5,10 +5,14 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class GetOccasionsUseCase {
-  CommerceRepo commerceRepo;
+  final CommerceRepo commerceRepo;
   GetOccasionsUseCase(this.commerceRepo);
 
   Future<BaseResponce<List<OccasionEntity>>> call() async {
-    return await commerceRepo.getOccasion();
+    return await commerceRepo.getOccasions();
+  }
+
+  Future<BaseResponce<List<OccasionEntity>>> execute() async {
+    return await call();
   }
 }

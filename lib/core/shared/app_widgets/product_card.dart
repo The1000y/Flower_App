@@ -62,7 +62,7 @@ class ProductCard extends StatelessWidget {
 
           /// Product Name
           Text(
-            "   ${name}",
+            name,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),

@@ -2,6 +2,7 @@ import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
+import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ import 'package:flutter/material.dart';
             builder: (_) => ProductDetails(productId: productId));
 
       case Routes.occasion:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(settings: settings,builder: (_) => const OccasionView());
 
       case Routes.categories:
         return MaterialPageRoute(builder: (_) => const Placeholder());
