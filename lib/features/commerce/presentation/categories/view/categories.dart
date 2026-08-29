@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../../config/di/di.dart';
+import '../../../../../config/routing/routes.dart';
 import '../../../../../core/shared/app_widgets/custom_text_form_field.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
@@ -35,24 +36,7 @@ class _CategoriesContent extends StatefulWidget {
 }
 
 class _CategoriesContentState extends State<_CategoriesContent> {
-  final searchController = TextEditingController();
   SortType? selectedSort;
-
-  @override
-  void initState() {
-    super.initState();
-    searchController.addListener(_onSearchChanged);
-  }
-
-  void _onSearchChanged() => setState(() {});
-
-  @override
-  void dispose() {
-    searchController
-      ..removeListener(_onSearchChanged)
-      ..dispose();
-    super.dispose();
-  }
 
   void _reload() {
     context.read<CategoriesCubit>()
@@ -118,11 +102,16 @@ class _CategoriesContentState extends State<_CategoriesContent> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: CustomTextFormField(
-                          label: '',
-                          hintText: 'Search',
-                          controller: searchController,
-                          prefixIcon: const Icon(Icons.search),
+                        child: GestureDetector(
+                          onTap: () =>
+                              Navigator.pushNamed(context, Routes.search),
+                          child: AbsorbPointer(
+                            child: CustomTextFormField(
+                              label: '',
+                              hintText: 'Search',
+                              prefixIcon: const Icon(Icons.search),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(width: 8.w),
@@ -153,7 +142,6 @@ class _CategoriesContentState extends State<_CategoriesContent> {
                         TabbarviewWidget(
                           category: category.name,
                           products: products,
-                          searchQuery: searchController.text,
                           sortType: selectedSort,
                         ),
                     ],
