@@ -1,6 +1,8 @@
 import 'package:flower_app/features/commerce/data/model/responce/home_response/home_section_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../../domain/entities/home/section_entity.dart';
+
 part 'home_sections_response_dto.g.dart';
 
 @JsonSerializable()
@@ -24,7 +26,7 @@ class HomeSectionsResponseDto {
     required this.errorCode,
   });
 
-  List<HomeEntity> toDomain() {
+  List<SectionEntity> toDomain() {
     return data.map((item) => item.toDomain()).toList();
   }
 

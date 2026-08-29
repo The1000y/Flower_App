@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../../domain/entities/home/section_entity.dart';
+
 part 'home_section_dto.g.dart';
 
 @JsonSerializable()
@@ -35,13 +37,13 @@ class HomeSectionDto {
     this.categoryId,
   });
 
-  HomeEntity toDomain() {
-    return HomeEntity(
+  SectionEntity toDomain() {
+    return SectionEntity(
       id: id,
       type: type,
       index: index,
       isActive: isActive,
-      title: title,
+      title: title ?? '',
       occasionId: occasionId,
       categoryId: categoryId,
     );
