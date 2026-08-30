@@ -2,13 +2,13 @@ import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../domain/use_case/get_best_seller_use_case.dart';
+import '../../../../domain/use_case/get_best_seller_page_use_case.dart';
 import 'best_seller_event.dart';
 import 'best_seller_state.dart';
 
 @injectable
 class BestSellerCubit extends Cubit<BestSellerState> {
-  final GetBestSellerUseCase _getBestSellerUseCase;
+  final GetBestSellerPageUseCase _getBestSellerUseCase;
 
   BestSellerCubit(this._getBestSellerUseCase) : super(const BestSellerState());
 
