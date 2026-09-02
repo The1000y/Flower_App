@@ -57,7 +57,7 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<List<OccasionEntity>>> getOccasions() async {
-    final response = await remoteDataSource.getOccasions();
+    final response = await localDataSource.getOccasions();
     switch (response) {
       case SuccessResponce<List<OccasionDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());

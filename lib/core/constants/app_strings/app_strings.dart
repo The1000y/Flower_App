@@ -172,4 +172,7 @@ abstract class AppStrings{
   // Auth error / validation messages
   static const String registerError = 'Failed register';
   static const String registerSuccess = 'Register successful';
+  static const String titleAddress = 'Title';
+  static const String labelAddress = 'Enter Title Address';
+  static const String loadingAddress = 'Loading...';
 }

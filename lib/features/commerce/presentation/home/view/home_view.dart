@@ -31,38 +31,32 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       backgroundColor: AppColors.whiteBase,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: BlocProvider.value(
-            value: homeCubit,
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                final sectionsState = state.sectionsState;
+        child: BlocProvider.value(
+          value: homeCubit,
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              final sectionsState = state.sectionsState;
 
-                if (sectionsState.isLoading) {
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
-                }
+              if (sectionsState.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                if (sectionsState.errorMessage.isNotEmpty) {
-                  return Scaffold(
-                    body: Center(
-                      child: Text('Error: ${sectionsState.errorMessage}'),
-                    ),
-                  );
-                }
-                final sections = sectionsState.data ?? [];
+              if (sectionsState.errorMessage.isNotEmpty) {
+                return Center(
+                  child: Text('Error: ${sectionsState.errorMessage}'),
+                );
+              }
+              final sections = sectionsState.data ?? [];
 
-                return Column(
+              return SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // HEADER
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: CustomHeaderHomeView(),
                     ),
                     SizedBox(height: 16),
-                    // LOCATION
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: CustomLocationData(textTheme: textTheme),
@@ -75,13 +69,12 @@ class _HomeViewState extends State<HomeView> {
                       }),
                     ),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
 }
-
