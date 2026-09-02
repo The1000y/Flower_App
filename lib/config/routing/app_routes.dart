@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/addresses/presentation/saved_address/view/saved_address_view.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
@@ -107,7 +108,7 @@ abstract class AppRoutes {
 
       case Routes.savedAddresses:
         return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
+          builder: (_) => const SavedAddressView(),
         );
 
       case Routes.addAddress:

@@ -1,3 +1,4 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,11 @@ class CustomLocationData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return InkWell(
+      onTap:(){
+        Navigator.pushNamed(context, Routes.savedAddresses);
+      },
+        child:Row(
       children: [
         Icon(Icons.location_on_outlined, color: AppColors.black100),
         Text(
@@ -25,6 +30,7 @@ class CustomLocationData extends StatelessWidget {
           size: 24,
         ),
       ],
+        ),
     );
   }
 }
