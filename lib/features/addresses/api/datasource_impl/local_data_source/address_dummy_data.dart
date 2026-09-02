@@ -1,9 +1,6 @@
-// features/addresses/api/data_source_impl/local/address_dummy_data.dart
 
-import '../../../domain/entities/address_entity.dart';
 
 abstract class AddressDummyData {
-  // His required map - DO NOT TOUCH
   static Map<String, dynamic> addressDummyData = {
     "id": "dummy-id-123",
     "recipientName": "elalfy",
@@ -20,9 +17,8 @@ abstract class AddressDummyData {
     "createdAt": "2024-01-15T10:30:00Z",
   };
 
-  // Your new robust list for the Cart & Saved Addresses
   static List<Map<String, dynamic>> savedAddressesList = [
-    addressDummyData, // Include his address so it shows up in your list
+    addressDummyData,
     {
       "id": "dummy-id-456",
       "recipientName": "Mona Ahmed",
