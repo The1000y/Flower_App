@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   retrofit: ^4.9.0
-  json_annotation: ^4.9.0
+  json_annotation: ^4.12.0
   dio: ^5.11.0
   injectable: ^3.0.0
   equatable: ^2.0.7
@@ -46,6 +46,11 @@ dependencies:
   flutter_secure_storage: ^11.0.0
   google_fonts: ^8.2.0
   pinput: ^6.0.2
+  permission_handler: ^13.0.1
+  geolocator: ^14.0.3
+  google_maps_flutter: ^2.18.0
+  cached_network_image: ^4.0.0
+  geocoding: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -82,7 +87,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    # - images/a_dot_ham.jpeg
+    - assets/jsons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

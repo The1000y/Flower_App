@@ -11,7 +11,6 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: CommerceLocalDataSource)
 class LocalDataSourceImpl implements CommerceLocalDataSource {
-  @override
   Future<BaseResponce<List<CategoryDto>>> getCategories() async {
     await Future.delayed(const Duration(seconds: 2));
 
@@ -60,7 +59,6 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-  @override
   Future<BaseResponce<ProductsResponseDto>> getProducts() async {
     final products = [
       ProductDto(
@@ -75,8 +73,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 2,
-        imageUrl:
-            'https://loremflickr.com/600/600/pink,rose,bouquet?lock=102',
+        imageUrl: 'https://loremflickr.com/600/600/pink,rose,bouquet?lock=102',
         name: 'Pink Roses Bouquet',
         price: 550,
         originalPrice: 700,
@@ -86,8 +83,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 3,
-        imageUrl:
-            'https://loremflickr.com/600/600/white,rose,bouquet?lock=103',
+        imageUrl: 'https://loremflickr.com/600/600/white,rose,bouquet?lock=103',
         name: 'White Roses Bouquet',
         price: 500,
         originalPrice: 650,
@@ -97,8 +93,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 4,
-        imageUrl:
-            'https://loremflickr.com/600/600/tulip,bouquet?lock=104',
+        imageUrl: 'https://loremflickr.com/600/600/tulip,bouquet?lock=104',
         name: 'Pink Tulips Bouquet',
         price: 650,
         originalPrice: 800,
@@ -108,8 +103,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 5,
-        imageUrl:
-            'https://loremflickr.com/600/600/sunflower,bouquet?lock=105',
+        imageUrl: 'https://loremflickr.com/600/600/sunflower,bouquet?lock=105',
         name: 'Sunflower Bouquet',
         price: 700,
         originalPrice: 900,
@@ -119,8 +113,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 6,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,bouquet?lock=106',
+        imageUrl: 'https://loremflickr.com/600/600/flower,bouquet?lock=106',
         name: 'Spring Flower Bouquet',
         price: 750,
         originalPrice: 950,
@@ -132,8 +125,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       // VASES
       ProductDto(
         id: 7,
-        imageUrl:
-            'https://loremflickr.com/600/600/glass,vase?lock=201',
+        imageUrl: 'https://loremflickr.com/600/600/glass,vase?lock=201',
         name: 'Classic Glass Vase',
         price: 450,
         originalPrice: 550,
@@ -143,8 +135,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 8,
-        imageUrl:
-            'https://loremflickr.com/600/600/ceramic,vase?lock=202',
+        imageUrl: 'https://loremflickr.com/600/600/ceramic,vase?lock=202',
         name: 'White Ceramic Vase',
         price: 600,
         originalPrice: 750,
@@ -154,8 +145,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 9,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,vase?lock=203',
+        imageUrl: 'https://loremflickr.com/600/600/flower,vase?lock=203',
         name: 'Elegant Flower Vase',
         price: 700,
         originalPrice: 850,
@@ -165,8 +155,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 10,
-        imageUrl:
-            'https://loremflickr.com/600/600/blue,vase?lock=204',
+        imageUrl: 'https://loremflickr.com/600/600/blue,vase?lock=204',
         name: 'Blue Ceramic Vase',
         price: 550,
         originalPrice: 700,
@@ -176,8 +165,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 11,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,pot?lock=205',
+        imageUrl: 'https://loremflickr.com/600/600/flower,pot?lock=205',
         name: 'Modern Flower Pot',
         price: 500,
         originalPrice: 650,
@@ -187,8 +175,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 12,
-        imageUrl:
-            'https://loremflickr.com/600/600/decorative,vase?lock=206',
+        imageUrl: 'https://loremflickr.com/600/600/decorative,vase?lock=206',
         name: 'Decorative Vase',
         price: 800,
         originalPrice: 1000,
@@ -200,8 +187,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       // BOXES
       ProductDto(
         id: 13,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,gift,box?lock=301',
+        imageUrl: 'https://loremflickr.com/600/600/flower,gift,box?lock=301',
         name: 'Luxury Flower Box',
         price: 900,
         originalPrice: 1100,
@@ -211,8 +197,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 14,
-        imageUrl:
-            'https://loremflickr.com/600/600/rose,gift,box?lock=302',
+        imageUrl: 'https://loremflickr.com/600/600/rose,gift,box?lock=302',
         name: 'Red Rose Box',
         price: 1000,
         originalPrice: 1250,
@@ -222,8 +207,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 15,
-        imageUrl:
-            'https://loremflickr.com/600/600/pink,flower,box?lock=303',
+        imageUrl: 'https://loremflickr.com/600/600/pink,flower,box?lock=303',
         name: 'Pink Flower Box',
         price: 850,
         originalPrice: 1000,
@@ -233,8 +217,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 16,
-        imageUrl:
-            'https://loremflickr.com/600/600/flowers,giftbox?lock=304',
+        imageUrl: 'https://loremflickr.com/600/600/flowers,giftbox?lock=304',
         name: 'Birthday Flower Box',
         price: 950,
         originalPrice: 1200,
@@ -244,8 +227,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 17,
-        imageUrl:
-            'https://loremflickr.com/600/600/red,roses,box?lock=305',
+        imageUrl: 'https://loremflickr.com/600/600/red,roses,box?lock=305',
         name: 'Romantic Rose Box',
         price: 1200,
         originalPrice: 1450,
@@ -255,8 +237,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 18,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,box?lock=306',
+        imageUrl: 'https://loremflickr.com/600/600/flower,box?lock=306',
         name: 'Elegant Flower Box',
         price: 1100,
         originalPrice: 1300,
@@ -268,8 +249,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       // JEWELRY
       ProductDto(
         id: 19,
-        imageUrl:
-            'https://loremflickr.com/600/600/floral,jewelry?lock=401',
+        imageUrl: 'https://loremflickr.com/600/600/floral,jewelry?lock=401',
         name: 'Flower Necklace',
         price: 1500,
         originalPrice: 1800,
@@ -279,8 +259,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 20,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,necklace?lock=402',
+        imageUrl: 'https://loremflickr.com/600/600/flower,necklace?lock=402',
         name: 'Floral Necklace',
         price: 1800,
         originalPrice: 2200,
@@ -290,8 +269,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 21,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,ring?lock=403',
+        imageUrl: 'https://loremflickr.com/600/600/flower,ring?lock=403',
         name: 'Flower Ring',
         price: 1200,
         originalPrice: 1500,
@@ -301,8 +279,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 22,
-        imageUrl:
-            'https://loremflickr.com/600/600/floral,bracelet?lock=404',
+        imageUrl: 'https://loremflickr.com/600/600/floral,bracelet?lock=404',
         name: 'Floral Bracelet',
         price: 1350,
         originalPrice: 1600,
@@ -312,8 +289,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 23,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,earrings?lock=405',
+        imageUrl: 'https://loremflickr.com/600/600/flower,earrings?lock=405',
         name: 'Flower Earrings',
         price: 950,
         originalPrice: 1200,
@@ -323,8 +299,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 24,
-        imageUrl:
-            'https://loremflickr.com/600/600/floral,jewellery?lock=406',
+        imageUrl: 'https://loremflickr.com/600/600/floral,jewellery?lock=406',
         name: 'Elegant Jewelry Set',
         price: 2200,
         originalPrice: 2700,
@@ -336,8 +311,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       // GIFT
       ProductDto(
         id: 25,
-        imageUrl:
-            'https://loremflickr.com/600/600/gift,flowers?lock=501',
+        imageUrl: 'https://loremflickr.com/600/600/gift,flowers?lock=501',
         name: 'Flower Gift Set',
         price: 850,
         originalPrice: 1050,
@@ -347,8 +321,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 26,
-        imageUrl:
-            'https://loremflickr.com/600/600/gift,box,flowers?lock=502',
+        imageUrl: 'https://loremflickr.com/600/600/gift,box,flowers?lock=502',
         name: 'Luxury Gift Set',
         price: 1200,
         originalPrice: 1500,
@@ -358,8 +331,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 27,
-        imageUrl:
-            'https://loremflickr.com/600/600/gift,rose?lock=503',
+        imageUrl: 'https://loremflickr.com/600/600/gift,rose?lock=503',
         name: 'Rose Gift Set',
         price: 950,
         originalPrice: 1200,
@@ -404,8 +376,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       // CARD
       ProductDto(
         id: 31,
-        imageUrl:
-            'https://loremflickr.com/600/600/greeting,card?lock=601',
+        imageUrl: 'https://loremflickr.com/600/600/greeting,card?lock=601',
         name: 'Happy Birthday Card',
         price: 100,
         originalPrice: 150,
@@ -415,8 +386,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 32,
-        imageUrl:
-            'https://loremflickr.com/600/600/love,card?lock=602',
+        imageUrl: 'https://loremflickr.com/600/600/love,card?lock=602',
         name: 'Love Greeting Card',
         price: 120,
         originalPrice: 180,
@@ -426,8 +396,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 33,
-        imageUrl:
-            'https://loremflickr.com/600/600/thank,you,card?lock=603',
+        imageUrl: 'https://loremflickr.com/600/600/thank,you,card?lock=603',
         name: 'Thank You Card',
         price: 90,
         originalPrice: 130,
@@ -437,8 +406,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 34,
-        imageUrl:
-            'https://loremflickr.com/600/600/floral,card?lock=604',
+        imageUrl: 'https://loremflickr.com/600/600/floral,card?lock=604',
         name: 'Floral Greeting Card',
         price: 110,
         originalPrice: 160,
@@ -448,8 +416,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 35,
-        imageUrl:
-            'https://loremflickr.com/600/600/wedding,card?lock=605',
+        imageUrl: 'https://loremflickr.com/600/600/wedding,card?lock=605',
         name: 'Wedding Card',
         price: 150,
         originalPrice: 200,
@@ -459,8 +426,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       ),
       ProductDto(
         id: 36,
-        imageUrl:
-            'https://loremflickr.com/600/600/flower,card?lock=606',
+        imageUrl: 'https://loremflickr.com/600/600/flower,card?lock=606',
         name: 'Flower Message Card',
         price: 130,
         originalPrice: 180,
@@ -490,7 +456,6 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     return SuccessResponce<ProductsResponseDto>(response);
   }
 
-  @override
   Future<BaseResponce<List<ItemDto>>> getBestSellers() async {
     await Future.delayed(const Duration(seconds: 3));
     List<ItemDto> itemDummyList = [
@@ -612,13 +577,12 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-  @override
   Future<BaseResponce<List<SectionDto>>> getSections() async {
     List<SectionDto> sectionDummyList = [
       SectionDto(
         id: 1,
         type: 'Categories',
-        index: 0,
+        index: 1,
         isActive: true,
         title: 'Categories',
         occasionId: null,
@@ -627,7 +591,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 2,
         type: 'BestSeller',
-        index: 1,
+        index: 0,
         isActive: true,
         title: 'Best seller',
         occasionId: null,
@@ -660,8 +624,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-  @override
-  Future<BaseResponce<List<OccasionDto>>> getOccasion() async {
+  Future<BaseResponce<List<OccasionDto>>> getOccasions() async {
     Future.delayed(const Duration(seconds: 5));
     List<OccasionDto> occasionDummyList = [
       OccasionDto(
@@ -697,11 +660,12 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-  @override
-  Future<BaseResponce<List<OccasionDto>>> getOccasions() => getOccasion();
+ 
 
-  @override
-  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1}) async {
+  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(
+    int occasionId, {
+    int page = 1,
+  }) async {
     return getProducts();
   }
 }

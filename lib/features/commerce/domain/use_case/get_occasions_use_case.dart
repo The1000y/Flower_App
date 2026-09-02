@@ -12,6 +12,7 @@ class GetOccasionsUseCase {
     return await commerceRepo.getOccasions();
   }
 
+
   Future<BaseResponce<List<OccasionEntity>>> execute() async {
     return await call();
   }

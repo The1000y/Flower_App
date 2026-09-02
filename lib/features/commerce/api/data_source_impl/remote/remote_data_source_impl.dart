@@ -1,7 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/categories_response_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasions_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/pagination_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:injectable/injectable.dart';

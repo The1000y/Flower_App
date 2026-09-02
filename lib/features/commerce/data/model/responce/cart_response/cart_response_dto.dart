@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
-import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 
 import 'cart_item_response_dto.dart';
 

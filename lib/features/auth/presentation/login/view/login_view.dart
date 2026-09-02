@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../config/routing/routes.dart';
-import '../../../../commerce/presentation/home/view/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
