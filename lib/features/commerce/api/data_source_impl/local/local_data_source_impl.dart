@@ -1,6 +1,10 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_item_response_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -703,5 +707,100 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
   @override
   Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1}) async {
     return getProducts();
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> addCartItem(AddCartItemRequestDto request) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final dummyCartItem = CartItemResponseDto(
+      id: 'cart_item_${request.productId}',
+      productId: request.productId,
+      productName: 'Red Roses Bouquet',
+      productImageUrl: 'https://loremflickr.com/600/600/rose,bouquet?lock=101',
+      unitPrice: 600.0,
+      quantity: request.quantity,
+      lineSubtotal: 600.0 * request.quantity,
+      inStock: true,
+      availableStock: 10,
+      priceChanged: false,
+    );
+
+    final dummyCartData = CartDataDto(
+      items: [dummyCartItem],
+      subtotal: 600.0 * request.quantity,
+      deliveryFee: 50.0,
+      total: (600.0 * request.quantity) + 50.0,
+      hasChanges: false,
+    );
+
+    final response = CartResponseDto(
+      data: dummyCartData,
+      isSuccess: true,
+      message: 'Item added to cart successfully',
+      messageLocalized: 'تمت إضافة المنتج إلى السلة بنجاح',
+      statusCode: '200',
+    );
+
+    return SuccessResponce<CartResponseDto>(response);
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> updateCartItem(int productId, UpdateCartItemRequestDto request) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final dummyCartItem = CartItemResponseDto(
+      id: 'cart_item_$productId',
+      productId: productId,
+      productName: 'Red Roses Bouquet',
+      productImageUrl: 'https://loremflickr.com/600/600/rose,bouquet?lock=101',
+      unitPrice: 600.0,
+      quantity: request.quantity,
+      lineSubtotal: 600.0 * request.quantity,
+      inStock: true,
+      availableStock: 10,
+      priceChanged: false,
+    );
+
+    final dummyCartData = CartDataDto(
+      items: [dummyCartItem],
+      subtotal: 600.0 * request.quantity,
+      deliveryFee: 50.0,
+      total: (600.0 * request.quantity) + 50.0,
+      hasChanges: false,
+    );
+
+    final response = CartResponseDto(
+      data: dummyCartData,
+      isSuccess: true,
+      message: 'Cart item updated successfully',
+      messageLocalized: 'تم تحديث عنصر السلة بنجاح',
+      statusCode: '200',
+    );
+
+    return SuccessResponce<CartResponseDto>(response);
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> removeCartItem(int productId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final dummyCartData = CartDataDto(
+      items: [],
+      subtotal: 0.0,
+      deliveryFee: 0.0,
+      total: 0.0,
+      hasChanges: false,
+    );
+
+    final response = CartResponseDto(
+      data: dummyCartData,
+      isSuccess: true,
+      message: 'Item removed from cart successfully',
+      messageLocalized: 'تم إزالة المنتج من السلة بنجاح',
+      statusCode: '200',
+    );
+
+    return SuccessResponce<CartResponseDto>(response);
   }
 }

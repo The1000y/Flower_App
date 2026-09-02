@@ -1,12 +1,16 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/section_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
@@ -87,6 +91,41 @@ class CommerceRepoImpl implements CommerceRepo {
           pagination: response.data.pagination,
         ));
       case ErrorResponce<ProductsResponseDto>():
+        return ErrorResponce(response.error);
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> addCartItem(int productId, {int quantity = 1}) async {
+    final request = AddCartItemRequestDto(productId: productId, quantity: quantity);
+    final response = await localDataSource.addCartItem(request);
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
+      case ErrorResponce<CartResponseDto>():
+        return ErrorResponce(response.error);
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> updateCartItem(int productId, int quantity) async {
+    final request = UpdateCartItemRequestDto(quantity: quantity);
+    final response = await localDataSource.updateCartItem(productId, request);
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
+      case ErrorResponce<CartResponseDto>():
+        return ErrorResponce(response.error);
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> removeCartItem(int productId) async {
+    final response = await localDataSource.removeCartItem(productId);
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
+      case ErrorResponce<CartResponseDto>():
         return ErrorResponce(response.error);
     }
   }
