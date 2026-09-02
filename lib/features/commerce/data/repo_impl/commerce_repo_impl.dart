@@ -1,6 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -27,7 +27,7 @@ class CommerceRepoImpl implements CommerceRepo {
         );
 
       case ErrorResponce<List<CategoryDto>>():
-        throw ErrorResponce(Exception(response.errorMessage));
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
@@ -42,7 +42,7 @@ class CommerceRepoImpl implements CommerceRepo {
         return SuccessResponce<List<BestSellerEntity>>(data);
 
       case ErrorResponce<List<ProductDto>>():
-        throw ErrorResponce(Exception(response.errorMessage));
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
@@ -56,7 +56,7 @@ class CommerceRepoImpl implements CommerceRepo {
             .toList();
         return SuccessResponce<List<SectionEntity>>(result);
       case ErrorResponce<List<SectionDto>>():
-        throw ErrorResponce(Exception(resopnce.errorMessage));
+        return ErrorResponce(Exception(resopnce.errorMessage));
     }
   }
 
@@ -70,7 +70,7 @@ class CommerceRepoImpl implements CommerceRepo {
           response.data.map((element) => element.toDomain()).toList(),
         );
       case ErrorResponce<List<OccasionDto>>():
-        throw ErrorResponce(Exception(response.errorMessage));
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 }

@@ -7,12 +7,13 @@ import '../../constants/app_strings/app_strings.dart';
 
 class PersistenBottomNavBarDemo extends StatelessWidget {
    PersistenBottomNavBarDemo({super.key});
-  final Widget homeScreen = HomeView();
+  final Widget homeScreen = const HomeView();
   final Widget categoriesScreen = Placeholder();
   final Widget cartScreen = Placeholder();
   final Widget profileScreen2 = Placeholder();
   @override
   Widget build(BuildContext context) {
+    print("Persistent build");
     return PersistentTabView(
       tabs: [
         PersistentTabConfig(

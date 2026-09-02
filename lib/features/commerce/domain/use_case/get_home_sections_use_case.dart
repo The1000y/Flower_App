@@ -21,7 +21,7 @@ class GetHomeSectionsUseCase {
         return SuccessResponce<List<SectionEntity>>(activeSections);
 
       case ErrorResponce<List<SectionEntity>>():
-        throw ErrorResponce(Exception(result.errorMessage));
+        return ErrorResponce(Exception(result.errorMessage));
     }
   }
 }

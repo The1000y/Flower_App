@@ -139,14 +139,14 @@ void main() {
 
     group('GetSectionEvent', () {
       blocTest<HomeCubit, HomeState>(
-        'emits sorted active sections then loads their data '
-        '(best sellers first, then categories)',
+        'emits sections then lazily loads each section\u2019s data '
+        'in order (best sellers first, then categories)',
         build: buildCubit,
         act: (cubit) => cubit.doEvent(GetSectionEvent()),
         setUp: () {
           when(mockGetSectionsUseCase.call()).thenAnswer(
             (_) async =>
-                SuccessResponce(CommerceFixtures.tUnsortedSections),
+                SuccessResponce(CommerceFixtures.tActiveSortedSections),
           );
           when(mockGetBestSellerUseCase.call()).thenAnswer(
             (_) async => SuccessResponce(CommerceFixtures.tBestSellers),
@@ -157,28 +157,22 @@ void main() {
           );
         },
         expect: () => [
-          // Loading state.
+          // Initial state.
           const HomeState(),
-          // Sections sorted by index and filtered by isActive.
-          HomeState(
-            sectionsState: BaseState(
-              data: CommerceFixtures.tActiveSortedSections,
-            ),
+          // Sections loaded (already sorted & active via the use case).
+          const HomeState(
+            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
           ),
-          // Nested load triggered by the active "BestSeller" section.
-          HomeState(
-            sectionsState: BaseState(
-              data: CommerceFixtures.tActiveSortedSections,
-            ),
+          // Best sellers loaded for the active best-seller section.
+          const HomeState(
             bestSellerState: BaseState(data: CommerceFixtures.tBestSellers),
+            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
           ),
-          // Nested load triggered by the active "Categories" section.
-          HomeState(
-            sectionsState: BaseState(
-              data: CommerceFixtures.tActiveSortedSections,
-            ),
-            bestSellerState: BaseState(data: CommerceFixtures.tBestSellers),
+          // Categories loaded for the active category section.
+          const HomeState(
             categoriesState: BaseState(data: CommerceFixtures.tCategories),
+            bestSellerState: BaseState(data: CommerceFixtures.tBestSellers),
+            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
           ),
         ],
         verify: (_) {

@@ -9,50 +9,36 @@ import 'package:flower_app/features/commerce/presentation/home/view/widgets/cust
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  late HomeCubit homeCubit;
-  @override
-  void initState() {
-    super.initState();
-    homeCubit = getIt.get<HomeCubit>();
-    homeCubit.doEvent(GetSectionEvent());
-  }
-
   @override
   Widget build(BuildContext context) {
+    print("Home build");
     var textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      backgroundColor: AppColors.whiteBase,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: BlocProvider.value(
-            value: homeCubit,
+    return BlocProvider(
+      create: (context) =>
+          getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
+      child: Scaffold(
+        backgroundColor: AppColors.whiteBase,
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: BlocBuilder<HomeCubit, HomeState>(
-              buildWhen: (previous, current) {
-                return previous.sectionsState != current.sectionsState;
-              },
+              // buildWhen: (previous, current) {
+              //   return previous.sectionsState != current.sectionsState;
+              // },
               builder: (context, state) {
                 final sectionsState = state.sectionsState;
 
                 if (sectionsState.isLoading) {
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
+                  return  Center(child: CircularProgressIndicator());
+               
                 }
 
                 if (sectionsState.errorMessage.isNotEmpty) {
-                  return Scaffold(
-                    body: Center(
-                      child: Text(sectionsState.errorMessage),
-                    ),
-                  );
+                  return  Center(child: Text(sectionsState.errorMessage));
+                  
                 }
                 final sections = sectionsState.data ?? [];
 
@@ -74,7 +60,10 @@ class _HomeViewState extends State<HomeView> {
                     Column(
                       children: List.generate(sections.length, (index) {
                         final section = sections[index];
-                        return BuildSections().buildSection(section, textTheme: textTheme);
+                        return BuildSections().buildSection(
+                          section,
+                          textTheme: textTheme,
+                        );
                       }),
                     ),
                   ],
@@ -87,4 +76,3 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
-

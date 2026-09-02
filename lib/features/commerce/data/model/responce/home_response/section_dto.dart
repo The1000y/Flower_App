@@ -41,9 +41,9 @@ class SectionDto {
     @JsonKey(name: "title")
     String? title;
     @JsonKey(name: "occasionId")
-    dynamic occasionId;
+    int? occasionId;
     @JsonKey(name: "categoryId")
-    dynamic categoryId;
+    int? categoryId;
 
     SectionDto({
         this.id,

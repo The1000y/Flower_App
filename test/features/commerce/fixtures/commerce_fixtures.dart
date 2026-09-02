@@ -1,4 +1,4 @@
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';

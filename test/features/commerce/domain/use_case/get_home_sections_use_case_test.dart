@@ -21,7 +21,8 @@ void main() {
 
   group('GetHomeSectionsUseCase', () {
     test(
-      'returns SuccessResponce with home sections when repository call succeeds',
+      'returns SuccessResponce with active sections sorted by index '
+      'when repository call succeeds',
       () async {
         // Arrange
         final tSuccess =
@@ -35,7 +36,7 @@ void main() {
         expect(result, isA<SuccessResponce<List<SectionEntity>>>());
         expect(
           (result as SuccessResponce<List<SectionEntity>>).data,
-          equals(CommerceFixtures.tUnsortedSections),
+          equals(CommerceFixtures.tActiveSortedSections),
         );
         verify(mockCommerceRepo.getSection()).called(1);
         verifyNoMoreInteractions(mockCommerceRepo);
