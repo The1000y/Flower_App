@@ -2,9 +2,11 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-void main() {
+void main()async   {
+
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
   runApp(
