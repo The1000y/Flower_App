@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import '../../../../../../config/routing/routes.dart';
 import '../../manager/cubit/occasion_cubit.dart';
 import '../../manager/cubit/occasion_event.dart';
 import '../../manager/cubit/occasion_state.dart';
@@ -46,7 +47,7 @@ class _OccasionTabViewState extends State<OccasionTabView> {
   Widget build(BuildContext context) {
     return BlocBuilder<OccasionCubit, OccasionState>(
       buildWhen: (previous, current) =>
-      previous.productsState != current.productsState ||
+          previous.productsState != current.productsState ||
           previous.isLoadingMore != current.isLoadingMore,
       builder: (context, state) {
         final productsState = state.productsState;
@@ -72,19 +73,25 @@ class _OccasionTabViewState extends State<OccasionTabView> {
                   mainAxisSpacing: 17.h,
                   mainAxisExtent: 280.h,
                 ),
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                    final product = products[index];
-                    return ProductCard(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final product = products[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.productDetails,
+                        arguments: product.id,
+                      );
+                    },
+                    child: ProductCard(
                       image: product.imageUrl,
                       name: product.name,
                       price: product.price,
                       oldPrice: product.originalPrice,
                       discount: product.discountPercentage?.toInt(),
-                    );
-                  },
-                  childCount: products.length,
-                ),
+                    ),
+                  );
+                }, childCount: products.length),
               ),
             ),
             if (state.isLoadingMore)

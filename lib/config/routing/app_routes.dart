@@ -1,5 +1,9 @@
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
+import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
+import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
+import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flutter/material.dart';
 
  abstract class AppRoutes {
@@ -27,16 +31,18 @@ import 'package:flutter/material.dart';
 
       // Home
       case Routes.home:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) =>  PersistenBottomNavBarDemo());
 
       case Routes.bestSeller:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const BestsellerView());
 
       case Routes.productDetails:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        final productId = settings.arguments as int? ?? 0;
+        return MaterialPageRoute(
+            builder: (_) => ProductDetails(productId: productId));
 
       case Routes.occasion:
-        return MaterialPageRoute(builder: (_) => const OccasionView());
+        return MaterialPageRoute(settings: settings,builder: (_) => const OccasionView());
 
       case Routes.categories:
         return MaterialPageRoute(builder: (_) => const Placeholder());

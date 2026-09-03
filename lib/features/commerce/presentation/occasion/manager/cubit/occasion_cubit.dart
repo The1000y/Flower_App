@@ -20,7 +20,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   void handle(OccasionEvent event) {
     switch (event) {
       case LoadOccasions():
-        _loadOccasions();
+        _loadOccasions(event.initialOccasionName);
       case LoadProductsForOccasion():
         _loadProducts(event.occasionId);
       case LoadMoreProducts():
@@ -28,7 +28,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     }
   }
 
-  Future<void> _loadOccasions() async {
+  Future<void> _loadOccasions(String? initialOccasionName) async {
     emit(state.copyWith(
       occasionsState: state.occasionsState.copyWith(isLoading: true, errorMessage: ''),
     ));
@@ -41,7 +41,17 @@ class OccasionCubit extends Cubit<OccasionState> {
           occasionsState: state.occasionsState.copyWith(isLoading: false, data: response.data),
         ));
         if (response.data.isNotEmpty) {
-          handle(LoadProductsForOccasion(response.data.first.id));
+          int idToLoad = response.data.first.id;
+          if (initialOccasionName != null) {
+            try {
+              final matchedOccasion = response.data.firstWhere(
+                      (e) => e.name.toLowerCase() == initialOccasionName.toLowerCase()
+              );
+              idToLoad = matchedOccasion.id;
+            } catch (e) {}
+          }
+
+          handle(LoadProductsForOccasion(idToLoad));
         }
       case ErrorResponce():
         emit(state.copyWith(
@@ -52,9 +62,6 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   Future<void> _loadProducts(int occasionId, {int page = 1}) async {
     if (page == 1) {
-      // Reset pagination and switch the active occasion immediately, so a
-      // load-more triggered during this load can't read the previous
-      // occasion's stale pagination/hasNextPage.
       emit(state.copyWith(
         productsState: state.productsState.copyWith(isLoading: true, errorMessage: '', data: []),
         pagination: null,
@@ -66,8 +73,6 @@ class OccasionCubit extends Cubit<OccasionState> {
 
     final response = await _getProductsUseCase.execute(occasionId, page: page);
 
-    // The user may have switched occasions while this request was in
-    // flight — drop the response instead of appending it to the wrong list.
     if (state.currentOccasionId != occasionId) return;
 
     switch (response) {
