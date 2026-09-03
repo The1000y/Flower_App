@@ -396,10 +396,10 @@ packages:
     dependency: transitive
     description:
       name: go_router
-      sha256: d7a3576cb312649eaa51f2356450aed686085fb58fcdebda5b359aa951eef7ea
+      sha256: "55973bf1b27790489f8710ea615fe939f911ddcc5986fe97305e4fc19fa29ee9"
       url: "https://pub.dev"
     source: hosted
-    version: "17.5.0"
+    version: "17.4.0"
   google_fonts:
     dependency: "direct main"
     description:
@@ -600,14 +600,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  mockito:
-    dependency: "direct dev"
-    description:
-      name: mockito
-      sha256: eff30d002f0c8bf073b6f929df4483b543133fcafce056870163587b03f1d422
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.6.4"
   mocktail:
     dependency: "direct dev"
     description:
@@ -708,10 +700,10 @@ packages:
     dependency: "direct main"
     description:
       name: persistent_bottom_nav_bar_v2
-      sha256: "3272bc839414280d7cdb0879ea2a0d459ab24fe4eefdf1ae468435bda49a5298"
+      sha256: f81677c2988d2d373dce0a67e02adfacc2ce8f7dbddb3340676418b440ce7537
       url: "https://pub.dev"
     source: hosted
-    version: "6.4.0"
+    version: "6.3.2"
   platform:
     dependency: transitive
     description:
@@ -788,18 +780,18 @@ packages:
     dependency: "direct main"
     description:
       name: retrofit
-      sha256: d700c1e7599bc6327cbe19ec7a2c87b595f6063ce888e8015f30cab655972331
+      sha256: "0f629ed26b2c48c66fe54bd548313c6fdf7955be18bff37e08a46dd3f97f8eaf"
       url: "https://pub.dev"
     source: hosted
-    version: "4.10.0"
+    version: "4.9.2"
   retrofit_generator:
     dependency: "direct dev"
     description:
       name: retrofit_generator
-      sha256: b130dd5a2325ed2bd55dc31a83fe54dd76a87d1a35f1f7d302c8b74b5dbb3d04
+      sha256: e836270d06083ff3e90a0428732c750ed4a7ef2e99ff26d1af9865a3aa20968a
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.9"
+    version: "10.2.8"
   shelf:
     dependency: transitive
     description:
@@ -918,7 +910,7 @@ packages:
     source: hosted
     version: "1.2.2"
   test:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: test
       sha256: "8d9ceddbab833f180fbefed08afa76d7c03513dfdba87ffcec2718b02bbcbf20"
@@ -961,10 +953,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "5f37239c4851efcef929cea7824e76df7f2f0970aef85d66bbc430afa40e72f0"
+      sha256: "0016aef94fc66495ac78af5859181e3f3bf2026bd8eecc72b9565601e19ab360"
       url: "https://pub.dev"
     source: hosted
-    version: "15.3.0"
+    version: "15.2.0"
   watcher:
     dependency: transitive
     description:
