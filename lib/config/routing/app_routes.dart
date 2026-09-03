@@ -15,6 +15,8 @@ import 'package:flower_app/features/commerce/presentation/product_details/view/p
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../features/commerce/presentation/cart/view/cart.dart';
+
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -92,7 +94,7 @@ abstract class AppRoutes {
       // Cart & Checkout
       case Routes.cart:
         return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
+          builder: (_) => const Card_view(),
         );
 
       case Routes.checkout:

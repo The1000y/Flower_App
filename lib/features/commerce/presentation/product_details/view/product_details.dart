@@ -2,6 +2,8 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_event.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_state.dart';
@@ -11,7 +13,11 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductDetails extends StatefulWidget {
   final int productId;
-  const ProductDetails({super.key, required this.productId});
+
+  const ProductDetails({
+    super.key,
+    required this.productId,
+  });
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -24,15 +30,26 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return BlocProvider(
-      create: (context) => getIt<ProductDetailsCubit>()
-        ..doEvent(GetProductDetailsEvent(widget.productId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<ProductDetailsCubit>()
+            ..doEvent(
+              GetProductDetailsEvent(widget.productId),
+            ),
+        ),
+        BlocProvider(
+          create: (context) => getIt<CartCubit>(),
+        ),
+      ],
       child: Scaffold(
         backgroundColor: Colors.white,
         body: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
 
             if (state.errorMessage.isNotEmpty) {
@@ -53,8 +70,11 @@ class _ProductDetailsState extends State<ProductDetails> {
             }
 
             final product = state.data;
+
             if (product == null) {
-              return const Center(child: Text('Product not found'));
+              return const Center(
+                child: Text('Product not found'),
+              );
             }
 
             return SafeArea(
@@ -88,12 +108,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       errorBuilder:
                                           (context, error, stackTrace) =>
                                               const Center(
-                                                  child: Icon(Icons.image,
-                                                      size: 50)),
+                                        child: Icon(
+                                          Icons.image,
+                                          size: 50,
+                                        ),
+                                      ),
                                     );
                                   },
                                 ),
                               ),
+
+                              // Back Button
                               Positioned(
                                 top: 44.h,
                                 left: 16.w,
@@ -103,26 +128,35 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(Icons.arrow_back_ios_new,
-                                        size: 20),
+                                    icon: const Icon(
+                                      Icons.arrow_back_ios_new,
+                                      size: 20,
+                                    ),
                                     color: AppColors.blackBase,
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
                                   ),
                                 ),
                               ),
+
+                              // Image Indicators
                               Positioned(
                                 bottom: 20.h,
                                 left: 0,
                                 right: 0,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
                                   children: List.generate(
                                     product.images.length,
                                     (index) => AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 4.w),
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 4.w,
+                                      ),
                                       width: 8.w,
                                       height: 8.h,
                                       decoration: BoxDecoration(
@@ -137,9 +171,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                             ],
                           ),
+
+                          // Product Information
                           Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 16.w, vertical: 20.h),
+                              horizontal: 16.w,
+                              vertical: 20.h,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -149,7 +187,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   children: [
                                     Text(
                                       '${product.currency} ${product.price.toInt()}',
-                                      style: textTheme.titleLarge?.copyWith(
+                                      style:
+                                          textTheme.titleLarge?.copyWith(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24.sp,
                                         color: AppColors.blackBase,
@@ -174,14 +213,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     ),
                                   ],
                                 ),
+
                                 SizedBox(height: 4.h),
+
                                 Text(
                                   AppStrings.taxNotice,
                                   style: textTheme.bodySmall?.copyWith(
                                     color: AppColors.black30,
                                   ),
                                 ),
+
                                 SizedBox(height: 16.h),
+
                                 Text(
                                   product.name,
                                   style: textTheme.titleMedium?.copyWith(
@@ -190,7 +233,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     color: AppColors.blackBase,
                                   ),
                                 ),
+
                                 SizedBox(height: 24.h),
+
                                 Text(
                                   AppStrings.description,
                                   style: textTheme.titleMedium?.copyWith(
@@ -199,7 +244,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     color: AppColors.blackBase,
                                   ),
                                 ),
+
                                 SizedBox(height: 8.h),
+
                                 Text(
                                   product.description,
                                   style: textTheme.bodyMedium?.copyWith(
@@ -207,7 +254,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     height: 1.4,
                                   ),
                                 ),
+
                                 SizedBox(height: 24.h),
+
                                 Text(
                                   AppStrings.bouquetInclude,
                                   style: textTheme.titleMedium?.copyWith(
@@ -216,10 +265,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     color: AppColors.blackBase,
                                   ),
                                 ),
+
                                 SizedBox(height: 8.h),
-                                ...product.includes.map((item) =>
-                                    _buildIncludeItem(context,
-                                        '${item.name}:${item.quantity}')),
+
+                                ...product.includes.map(
+                                  (item) => _buildIncludeItem(
+                                    context,
+                                    '${item.name}:${item.quantity}',
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -227,12 +281,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                     ),
                   ),
+
+                  // Add To Cart Button
                   Padding(
                     padding: EdgeInsets.all(16.w),
                     child: CustomButton(
                       text: AppStrings.addToCart,
                       onPressed: () {
-                        // TODO: Implement add to cart logic
+                        context.read<CartCubit>().doEvent(
+                              AddToCartEvent(
+                                productId: product.id,
+                                quantity: 1,
+                              ),
+                            );
                       },
                       isEnabled: true,
                       enabledColor: AppColors.pinkBase,
@@ -247,7 +308,10 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget _buildIncludeItem(BuildContext context, String text) {
+  Widget _buildIncludeItem(
+    BuildContext context,
+    String text,
+  ) {
     return Padding(
       padding: EdgeInsets.only(bottom: 4.h),
       child: Text(

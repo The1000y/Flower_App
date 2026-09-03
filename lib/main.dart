@@ -6,6 +6,8 @@ import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'features/commerce/presentation/cart/view/widgets/cart_item.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
@@ -29,10 +31,11 @@ class FlowerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.login,
+      initialRoute: Routes.home,
       theme: AppThem.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
+      
     );
   }
 }
