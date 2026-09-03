@@ -32,7 +32,7 @@ void main() {
       label: 'Work',
       isDefault: true,
       storeId: 'store-456',
-      isServiceable: true,
+     isServiceable: true,
     );
 
     test('should create AddressDto from JSON correctly', () {
