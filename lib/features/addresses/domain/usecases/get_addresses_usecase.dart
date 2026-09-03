@@ -5,7 +5,7 @@ import '../repo/saved_address_repository.dart';
 
 @injectable
 class GetAddressesUseCase {
-  final SavedAddressRepo _repo; // Changed here
+  final SavedAddressRepo _repo;
   GetAddressesUseCase(this._repo);
 
   Future<BaseResponce<List<AddressEntity>>> execute() {

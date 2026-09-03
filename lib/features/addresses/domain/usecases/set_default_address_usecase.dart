@@ -5,7 +5,7 @@ import '../repo/saved_address_repository.dart';
 
 @injectable
 class SetDefaultAddressUseCase {
-  final SavedAddressRepo _repo; // Changed here
+  final SavedAddressRepo _repo;
   SetDefaultAddressUseCase(this._repo);
 
   Future<BaseResponce<AddressEntity>> execute(String id) {
