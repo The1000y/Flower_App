@@ -19,25 +19,5 @@ abstract interface class CommerceRepo {
   Future<BaseResponce<List<OccasionEntity>>> getOccasions();
 
   Future<BaseResponce<List<ProductEntity>>> getProducts();
-
-  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
-    int occasionId, {
-    int page = 1,
-  });
-
-  Future<BaseResponce<CartEntity>> getCart();
-
-  Future<BaseResponce<CartEntity>> addToCart(
-    AddCartItemRequestDto request,
-  );
-
-  Future<BaseResponce<CartEntity>> updateCartItemQuantity(
-    String cartItemId,
-    UpdateCartItemRequestDto request,
-  );
-
-  Future<BaseResponce<CartEntity>> removeCartItem(
-    String cartItemId,
-  );
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1});
 }
-
