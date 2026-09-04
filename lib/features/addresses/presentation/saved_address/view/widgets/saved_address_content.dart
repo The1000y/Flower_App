@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import '../../../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../../../core/themes/app_colors/app_color.dart';
 import '../../../../domain/entities/address_entity.dart';
 import '../../manger/saved_address_state.dart';
@@ -29,7 +30,7 @@ class SavedAddressContent extends StatelessWidget {
         if (state is SavedAddressLoaded && state.addresses.isEmpty) {
           return Center(
             child: Text(
-              'No saved addresses yet',
+              AppStrings.savedAddressEmpty,
               style: TextStyle(color: AppColors.gray, fontSize: 14.sp),
             ),
           );

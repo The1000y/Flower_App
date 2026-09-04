@@ -1,3 +1,4 @@
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -33,7 +34,7 @@ class SavedAddressView extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios_new, size: 20),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            title: const Text('Saved address'),
+            title: const Text(AppStrings.savedAddressTitle),
           ),
           body: SafeArea(
             child: Padding(
@@ -42,12 +43,11 @@ class SavedAddressView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Expanded(
-                    // Delegating all state listening to a specific content widget
                     child: SavedAddressContent(),
                   ),
                   SizedBox(height: 12.h),
                   CustomButton(
-                    text: 'Add new address',
+                    text: AppStrings.addNewAddress,
                     isEnabled: true,
                     enabledColor: AppColors.pinkBase,
                     onPressed: () => _goToAddAddress(context),
