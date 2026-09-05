@@ -1,18 +1,23 @@
+import 'package:equatable/equatable.dart';
+import 'package:flower_app/config/base/base_state.dart';
 
 import '../../../domain/entities/address_entity.dart';
 
-sealed class SavedAddressState {}
+class SavedAddressState extends Equatable {
+  final BaseState<List<AddressEntity>> addressesState;
 
-class SavedAddressInitial extends SavedAddressState {}
+  const SavedAddressState({
+    this.addressesState = const BaseState<List<AddressEntity>>(data: []),
+  });
 
-class SavedAddressLoading extends SavedAddressState {}
+  SavedAddressState copyWith({
+    BaseState<List<AddressEntity>>? addressesState,
+  }) {
+    return SavedAddressState(
+      addressesState: addressesState ?? this.addressesState,
+    );
+  }
 
-class SavedAddressLoaded extends SavedAddressState {
-  final List<AddressEntity> addresses;
-  SavedAddressLoaded(this.addresses);
-}
-
-class SavedAddressError extends SavedAddressState {
-  final String message;
-  SavedAddressError(this.message);
+  @override
+  List<Object?> get props => [addressesState];
 }
