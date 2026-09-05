@@ -31,6 +31,13 @@ void main() {
     when(mockCubit.close()).thenAnswer((_) async {});
   });
 
+  void setPhoneSurface(WidgetTester tester) {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+  }
+
   Widget createWidgetUnderTest() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
@@ -46,6 +53,7 @@ void main() {
       when(mockCubit.state).thenReturn(const BestsellerState(isLoading: true));
 
       // Act
+      setPhoneSurface(tester);
       await tester.pumpWidget(createWidgetUnderTest());
 
       // Assert
@@ -58,6 +66,7 @@ void main() {
       when(mockCubit.state).thenReturn(BestsellerState(isLoading: false, data: tData));
 
       // Act
+      setPhoneSurface(tester);
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
@@ -72,6 +81,7 @@ void main() {
       when(mockCubit.state).thenReturn(const BestsellerState(isLoading: false, errorMessage: tError));
 
       // Act
+      setPhoneSurface(tester);
       await tester.pumpWidget(createWidgetUnderTest());
 
       // Assert

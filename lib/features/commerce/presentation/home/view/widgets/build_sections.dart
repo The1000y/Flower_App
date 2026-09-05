@@ -8,13 +8,15 @@ import 'package:flower_app/features/commerce/presentation/home/view/widgets/cust
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_header_collection.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_occasion_list.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
- class BuildSections {
-  Widget buildSection(SectionEntity section, {required TextTheme textTheme}) {
+class BuildSections {
+  Widget buildSection(
+    SectionEntity section, {
+    required TextTheme textTheme,
+  }) {
     switch (section.type) {
-      case "Categories":
+      case SectionType.category:
         return Column(
           children: [
             Padding(
@@ -25,31 +27,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
                 onTapViewAll: () {},
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             BlocBuilder<HomeCubit, HomeState>(
+              buildWhen: (previous, current) {
+                return previous.categoriesState != current.categoriesState;
+              },
               builder: (context, state) {
                 final categoriesState = state.categoriesState;
 
                 if (categoriesState.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
 
                 if (categoriesState.errorMessage.isNotEmpty) {
-                  return Center(child: Text(categoriesState.errorMessage));
+                  return Center(
+                    child: Text(categoriesState.errorMessage),
+                  );
                 }
 
                 if (categoriesState.data != null) {
-                  return CustomCategoryList(categories: categoriesState.data!);
+                  return CustomCategoryList(
+                    categories: categoriesState.data!,
+                  );
                 }
 
                 return const SizedBox.shrink();
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         );
 
-      case "BestSeller":
+      case SectionType.bestSeller:
         return Builder(
           builder: (context) => Column(
             children: [
@@ -63,17 +74,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
                   },
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               BlocBuilder<HomeCubit, HomeState>(
+                buildWhen: (previous, current) {
+                  return previous.bestSellerState != current.bestSellerState;
+                },
                 builder: (context, state) {
                   final bestSellerState = state.bestSellerState;
 
                   if (bestSellerState.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
 
                   if (bestSellerState.errorMessage.isNotEmpty) {
-                    return Center(child: Text(bestSellerState.errorMessage));
+                    return Center(
+                      child: Text(bestSellerState.errorMessage),
+                    );
                   }
 
                   if (bestSellerState.data != null) {
@@ -85,48 +103,58 @@ import 'package:flutter_bloc/flutter_bloc.dart';
                   return const SizedBox.shrink();
                 },
               ),
-              // SizedBox(height: 24),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
         );
 
-      case "Occasions":
+      case SectionType.occasion:
         return Builder(
-            builder: (context) => Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: CustomHeaderOfCollection(
-                textTheme: textTheme,
-                collectionName: AppStrings.ocassionLabel,
-                onTapViewAll: () {
-                  Navigator.pushNamed(context, Routes.occasion);
+          builder: (context) => Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: CustomHeaderOfCollection(
+                  textTheme: textTheme,
+                  collectionName: AppStrings.ocassionLabel,
+                  onTapViewAll: () {
+                    Navigator.pushNamed(context, Routes.occasion);
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              BlocBuilder<HomeCubit, HomeState>(
+                buildWhen: (previous, current) {
+                  return previous.occasionState != current.occasionState;
+                },
+                builder: (context, state) {
+                  final occasionsState = state.occasionState;
+
+                  if (occasionsState.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (occasionsState.errorMessage.isNotEmpty) {
+                    return Center(
+                      child: Text(occasionsState.errorMessage),
+                    );
+                  }
+
+                  if (occasionsState.data != null) {
+                    return CustomOccasionrList(
+                      occasionList: occasionsState.data!,
+                    );
+                  }
+
+                  return const SizedBox.shrink();
                 },
               ),
-            ),
-            SizedBox(height: 16),
-            BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                final occasionsState = state.occasionState;
-                if(occasionsState.isLoading){
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if(occasionsState.errorMessage.isNotEmpty){
-                  return Center(child: Text(occasionsState.errorMessage));
-                }
-                if(occasionsState.data != null){
-                  return CustomOccasionrList(occasionList: occasionsState.data!);
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-            SizedBox(height: 16),
-          ],
-        ));
-
-      default:
-        return const SizedBox.shrink();
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flutter/material.dart';
