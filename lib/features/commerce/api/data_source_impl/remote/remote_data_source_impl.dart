@@ -1,5 +1,8 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/categories_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasions_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/pagination_dto.dart';
@@ -71,5 +74,29 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   @override
   Future<BaseResponce<List<CategoriesResponseDto>>> getCategories() async {
     return SuccessResponce([]);
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> addToCart(AddCartItemRequestDto request) {
+    // TODO: implement addToCart
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> getCart() {
+    // TODO: implement getCart
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> removeCartItem(String cartItemId) {
+    // TODO: implement removeCartItem
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> updateCartItemQuantity(UpdateCartItemRequestDto request) {
+    // TODO: implement updateCartItemQuantity
+    throw UnimplementedError();
   }
 }
