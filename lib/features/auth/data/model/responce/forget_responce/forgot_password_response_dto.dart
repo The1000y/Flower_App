@@ -5,11 +5,11 @@ part 'forgot_password_response_dto.g.dart';
 @JsonSerializable()
 class ForgotPasswordResponseDto {
   @JsonKey(name: 'data')
-  final String data;
+  final bool data;
   @JsonKey(name: 'message')
   final String message;
   @JsonKey(name: 'errorCode')
-  final String errorCode;
+  final int errorCode;
   @JsonKey(name: 'isSuccess')
   final bool isSuccess;
 
