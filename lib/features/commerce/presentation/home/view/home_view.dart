@@ -8,11 +8,12 @@ import 'package:flower_app/features/commerce/presentation/home/view/widgets/cust
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_location-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  const HomeView({super.key, required this.controller});
+  final PersistentTabController controller;
 
-  @override
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -59,7 +60,7 @@ class HomeView extends StatelessWidget {
                     Column(
                       children: List.generate(sections.length, (index) {
                         final section = sections[index];
-                        return BuildSections().buildSection(
+                        return BuildSections(context , controller).buildSection(
                           section,
                           textTheme: textTheme,
                         );

@@ -1,11 +1,12 @@
 import 'dart:developer';
-
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductCard extends StatelessWidget {
+  final int id;
   final String image;
   final String name;
   final double price;
@@ -21,6 +22,7 @@ class ProductCard extends StatelessWidget {
     this.oldPrice,
     this.discount,
     this.onAddToCart,
+    required this.id,
   });
 
   @override
@@ -38,22 +40,32 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// Product Image
-          Container(
-            height: 150.h,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: Image.network(
-                image,
-                width: double.infinity,
-                height: 150.h,
-                fit: BoxFit.cover,
-                errorBuilder: (_, error, stackTrace) {
-                  log('Error loading image: $error');
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                Routes.productDetails,
+                arguments:  id, // Replace with the actual product ID
+               
+              );
+            },
+            child: Container(
+              height: 150.h,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Image.network(
+                  image,
+                  width: double.infinity,
+                  height: 150.h,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, error, stackTrace) {
+                    log('Error loading image: $error');
 
-                  return const Center(
-                    child: Icon(Icons.image_not_supported, size: 60),
-                  );
-                },
+                    return const Center(
+                      child: Icon(Icons.image_not_supported, size: 60),
+                    );
+                  },
+                ),
               ),
             ),
           ),

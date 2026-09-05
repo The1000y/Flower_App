@@ -75,6 +75,7 @@ class TabbarviewWidget extends StatelessWidget {
         final product = categoryProducts[index];
 
         return ProductCard(
+          id: product.id,
           image: product.imageUrl,
           name: product.name,
           price: product.price,

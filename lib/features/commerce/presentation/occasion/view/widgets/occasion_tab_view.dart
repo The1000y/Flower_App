@@ -84,6 +84,7 @@ class _OccasionTabViewState extends State<OccasionTabView> {
                       );
                     },
                     child: ProductCard(
+                      id: product.id,
                       image: product.imageUrl,
                       name: product.name,
                       price: product.price,

@@ -642,15 +642,15 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         occasionId: null,
         categoryId: null,
       ),
-      SectionDto(
-        id: 4,
-        type: 'ProductsCarousel',
-        index: 3,
-        isActive: true,
-        title: 'Wedding picks',
-        occasionId: 1,
-        categoryId: null,
-      ),
+      // SectionDto(
+      //   id: 4,
+      //   type: 'ProductsCarousel',
+      //   index: 3,
+      //   isActive: true,
+      //   title: 'Wedding picks',
+      //   occasionId: 1,
+      //   categoryId: null,
+      // ),
     ];
 
     try {
