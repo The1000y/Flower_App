@@ -20,7 +20,7 @@ class SearchRepoImpl implements SearchRepo {
           }).toList(),
         );
       case ErrorResponce<List<ProductEntity>>():
-        return ErrorResponce(Exception(response.errorMessage));
+        return ErrorResponce(response.error);
     }
   }
 }

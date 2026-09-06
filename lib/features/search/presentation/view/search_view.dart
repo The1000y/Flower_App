@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
@@ -23,72 +22,62 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
-  late SearchCubit _cubit;
-
-  @override
-  void initState() {
-    super.initState();
-    _cubit = getIt<SearchCubit>();
-  }
 
   @override
   void dispose() {
     _debounce?.cancel();
     _searchController.dispose();
-    _cubit.close();
     super.dispose();
   }
 
   void _onQueryChanged(String value) {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () {
-      _cubit.doEvent(SearchProductsEvent(value));
+      if (!mounted) return;
+      context.read<SearchCubit>().doEvent(SearchProductsEvent(value));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _cubit,
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.blackBase),
-            onPressed: () => Navigator.pop(context),
-          ),
-          titleSpacing: 0,
-          title: Text(
-            'Search',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.sp,
-                ),
-          ),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.blackBase),
+          onPressed: () => Navigator.pop(context),
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              child: CustomTextFormField(
-                label: '',
-                hintText: 'Search for any product',
-                controller: _searchController,
-                prefixIcon: const Icon(Icons.search),
-                onChanged: _onQueryChanged,
+        titleSpacing: 0,
+        title: Text(
+          'Search',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.sp,
               ),
-            ),
-            Expanded(
-              child: BlocBuilder<SearchCubit, SearchState>(
-                builder: (context, state) {
-                  return _buildBody(context, state);
-                },
-              ),
-            ),
-          ],
         ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            child: CustomTextFormField(
+              label: '',
+              hintText: 'Search for any product',
+              controller: _searchController,
+              prefixIcon: const Icon(Icons.search),
+              onChanged: _onQueryChanged,
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<SearchCubit, SearchState>(
+              builder: (context, state) {
+                return _buildBody(context, state);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -118,7 +107,7 @@ class _SearchViewState extends State<SearchView> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () =>
-                  _cubit.doEvent(SearchProductsEvent(state.query)),
+                  context.read<SearchCubit>().doEvent(SearchProductsEvent(state.query)),
               child: const Text('Retry'),
             ),
           ],

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../../config/di/di.dart';
 import '../../../../../config/routing/routes.dart';
-import '../../../../../core/shared/app_widgets/custom_text_form_field.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import '../manager/cubit/categories_cubit.dart';
@@ -102,15 +101,14 @@ class _CategoriesContentState extends State<_CategoriesContent> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: GestureDetector(
+                        child: TextField(
+                          readOnly: true,
                           onTap: () =>
                               Navigator.pushNamed(context, Routes.search),
-                          child: AbsorbPointer(
-                            child: CustomTextFormField(
-                              label: '',
-                              hintText: 'Search',
-                              prefixIcon: const Icon(Icons.search),
-                            ),
+                          decoration: const InputDecoration(
+                            labelText: '',
+                            hintText: 'Search',
+                            prefixIcon: Icon(Icons.search),
                           ),
                         ),
                       ),

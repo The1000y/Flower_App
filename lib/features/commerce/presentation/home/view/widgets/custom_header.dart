@@ -20,21 +20,17 @@ class CustomHeaderHomeView extends StatelessWidget {
         ),
         SizedBox(width: 17),
         Expanded(
-          child: GestureDetector(
+          child: TextField(
+            readOnly: true,
             onTap: () => Navigator.pushNamed(context, Routes.search),
-            child: AbsorbPointer(
-              child: TextField(
-                readOnly: true,
-                onTapOutside: (event) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                decoration: InputDecoration(
-                  hintText: AppStrings.searchHint,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: AppColors.white70,
-                  ),
-                ),
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            decoration: InputDecoration(
+              hintText: AppStrings.searchHint,
+              prefixIcon: Icon(
+                Icons.search,
+                color: AppColors.white70,
               ),
             ),
           ),

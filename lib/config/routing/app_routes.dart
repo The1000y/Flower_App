@@ -12,6 +12,7 @@ import 'package:flower_app/features/commerce/presentation/bestseller/view/bestse
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
+import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,7 +88,10 @@ abstract class AppRoutes {
 
       case Routes.search:
         return MaterialPageRoute(
-          builder: (_) => const SearchView(),
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<SearchCubit>(),
+            child: const SearchView(),
+          ),
         );
 
       // Cart & Checkout
