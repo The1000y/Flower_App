@@ -10,9 +10,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({super.key, required this.controller});
-  final PersistentTabController controller;
+class HomeView extends StatefulWidget {
+  const HomeView({super.key,required this.controller});
+final PersistentTabController controller;
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  late HomeCubit homeCubit;
+  @override
+  void initState() {
+    super.initState();
+    homeCubit = getIt.get<HomeCubit>();
+    homeCubit.doEvent(GetSectionEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +46,17 @@ class HomeView extends StatelessWidget {
 
                 if (sectionsState.isLoading) {
                   return  Center(child: CircularProgressIndicator());
-               
+
                 }
 
                 if (sectionsState.errorMessage.isNotEmpty) {
                   return  Center(child: Text(sectionsState.errorMessage));
-                  
+
                 }
                 final sections = sectionsState.data ?? [];
 
-                return Column(
+              return SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // HEADER
@@ -60,14 +74,14 @@ class HomeView extends StatelessWidget {
                     Column(
                       children: List.generate(sections.length, (index) {
                         final section = sections[index];
-                        return BuildSections(context , controller).buildSection(
+                        return BuildSections(context , widget.controller).buildSection(
                           section,
                           textTheme: textTheme,
                         );
                       }),
                     ),
                   ],
-                );
+                ));
               },
             ),
           ),
@@ -76,3 +90,4 @@ class HomeView extends StatelessWidget {
     );
   }
 }
+

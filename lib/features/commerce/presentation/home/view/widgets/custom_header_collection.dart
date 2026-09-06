@@ -31,6 +31,7 @@ class CustomHeaderOfCollection extends StatelessWidget {
           child: Text(
             AppStrings.viewAllLabel,
             style: textTheme.bodySmall?.copyWith(
+              color: AppColors.pinkBase,
               decoration: TextDecoration.underline,
               decorationColor: AppColors.pinkBase,
               decorationThickness: 1.5,

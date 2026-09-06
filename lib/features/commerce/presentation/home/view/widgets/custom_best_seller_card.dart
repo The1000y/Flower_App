@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -30,14 +30,12 @@ class BestSellerCard extends StatelessWidget {
                 width: 131,
                 height: 151,
                 fit: BoxFit.cover,
-                errorWidget: (context, url, error) => Image.asset(
-                  AppImages.error,
-                  fit: BoxFit.cover,
-                  width: 131,
-                  height: 151,
-                ),
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
+
             const SizedBox(height: 8),
             Text(
               bestSellerEntity.name,
@@ -48,7 +46,9 @@ class BestSellerCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               "${bestSellerEntity.price} ${bestSellerEntity.currency}",
-              style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

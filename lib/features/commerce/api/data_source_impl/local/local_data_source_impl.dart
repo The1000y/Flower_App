@@ -1,6 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart' as best_seller;
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -8,6 +7,8 @@ import 'package:flower_app/features/commerce/data/model/responce/products_respon
 import 'package:flower_app/features/commerce/data/model/responce/products_response/product_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../data/model/responce/best_seller/product_Dto.dart' as best_seller;
 
 @Injectable(as: CommerceLocalDataSource)
 class LocalDataSourceImpl implements CommerceLocalDataSource {
@@ -618,7 +619,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 1,
         type: 'Categories',
-        index: 0,
+        index: 1,
         isActive: true,
         title: 'Categories',
         occasionId: null,
@@ -627,7 +628,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       SectionDto(
         id: 2,
         type: 'BestSeller',
-        index: 1,
+        index: 0,
         isActive: true,
         title: 'Best seller',
         occasionId: null,
@@ -697,9 +698,12 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
- 
-  @override
-  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1}) async {
+
+
+  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(
+    int occasionId, {
+    int page = 1,
+  }) async {
     return getProducts();
   }
 }

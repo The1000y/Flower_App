@@ -173,4 +173,7 @@ abstract class AppStrings{
   static const String registerSuccess = 'Register successful';
   static const String  occasionTitle = 'Occasion';
 
+  static const String titleAddress = 'Title';
+  static const String labelAddress = 'Enter Title Address';
+  static const String loadingAddress = 'Loading...';
 }

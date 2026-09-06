@@ -17,6 +17,7 @@ abstract class Routes {
   static const String categories = '/categories';
   static const String search = '/search';
 
+
   // Cart & Checkout
   static const String cart = '/cart';
   static const String checkout = '/checkout';

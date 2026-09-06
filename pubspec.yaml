@@ -11,7 +11,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # build by specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
@@ -46,25 +46,34 @@ dependencies:
   flutter_secure_storage: ^11.0.0
   google_fonts: ^8.2.0
   pinput: ^6.0.2
-
-
-  cached_network_image: ^3.4.1
+  permission_handler: ^13.0.1
+  geolocator: ^14.0.3
+  google_maps_flutter: ^2.18.0
+  cached_network_image: ^4.0.0
+  geocoding: ^4.0.0
+  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_secure_storage_platform_interface: ^2.0.3
-  mocktail: ^1.0.4
-  mockito: ^5.5.0
-  bloc_test: ^9.1.5
   retrofit_generator: ^10.0.1
-  test: ^1.28.0
   build_runner: ^2.6.0
   json_serializable: ^6.10.0
   injectable_generator: 3.0.2
+  bloc_test: ^9.1.7
+  mockito: ^5.5.0
+  mocktail: ^1.0.5
+  test: ^1.31.0
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
   flutter_lints: ^6.0.0
-
-
+  flutter_native_splash: ^2.4.8
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -80,8 +89,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    # - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+    - assets/jsons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -108,3 +116,23 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+# --- APP ICON CONFIGURATION ---
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#F9ECF0"
+  adaptive_icon_foreground: "assets/splash_logo.png"
+
+# --- SPLASH SCREEN CONFIGURATION ---
+flutter_native_splash:
+  color: "#F9ECF0" # This fills the background of the splash screen
+  image: "assets/splash_logo.png" # Your transparent logo
+  android: true
+  ios: true
+
+  # Optional: Keeps the splash screen looking crisp and not stretched
+  android_12:
+    image: "assets/splash_logo.png"
+    icon_background_color: "#F9ECF0"

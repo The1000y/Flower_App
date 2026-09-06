@@ -1,8 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
 
 import '../../../../../../config/routing/routes.dart';
@@ -33,14 +32,10 @@ class OccasionCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 placeholder: (context, url) =>
                     const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Image.asset(
-                  AppImages.error,
-                  fit: BoxFit.cover,
-                  width: 131,
-                  height: 151,
-                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
+
             const SizedBox(height: 8),
             Text(
               occasion.name,

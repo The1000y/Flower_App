@@ -6,6 +6,8 @@ import 'package:flower_app/features/auth/presentation/forget_password/view/verif
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
+import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
+import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
@@ -13,6 +15,7 @@ import 'package:flower_app/features/commerce/presentation/product_details/view/p
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../features/addresses/presentation/view/address_view.dart';
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
 
@@ -55,7 +58,9 @@ abstract class AppRoutes {
 
       // Main Layout
       case Routes.mainLayout:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       // Home
       case Routes.home:
@@ -79,63 +84,100 @@ abstract class AppRoutes {
       case Routes.categories:
         return MaterialPageRoute(builder: (_) => const CategoriesView());
 
+
+
       case Routes.search:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       // Cart & Checkout
       case Routes.cart:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.checkout:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.shippingAddress:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.savedAddresses:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.addAddress:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const AddressView(),
+        );
 
       // Orders
       case Routes.myOrders:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.orderDetails:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       // Notifications
       case Routes.notifications:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       // Profile
       case Routes.profile:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.editProfile:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.changeLanguage:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.changePassword:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       // Tracking
       case Routes.orderSuccess:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.trackOrder:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.orderMap:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
 
       default:
         return MaterialPageRoute(
-          builder: (_) =>
-              const Scaffold(body: Center(child: Text('Route Not Found'))),
+          builder: (_) => const Scaffold(
+            body: Center(
+              child: Text('Route Not Found'),
+            ),
+          ),
         );
     }
   }

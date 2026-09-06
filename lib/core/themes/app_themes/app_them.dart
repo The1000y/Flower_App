@@ -9,13 +9,15 @@ class AppTheme {
   static ThemeData lightThem = ThemeData(
     useMaterial3: true,
     scaffoldBackgroundColor: AppColors.whiteBase,
-    colorScheme: const ColorScheme.light(
+    colorScheme: ColorScheme.light(
       primary: AppColors.pinkBase,
       onPrimary: AppColors.white10,
       secondary: AppColors.pink60,
       onSecondary: AppColors.white10,
+
       error: AppColors.error,
       onError: AppColors.white10,
+
       surface: AppColors.white10,
       onSurface: AppColors.blackBase,
     ),
@@ -48,13 +50,19 @@ class AppTheme {
           );
         }
 
-        if (states.contains(WidgetState.focused)) {
-          return TextStyle(
-            color: AppColors.pinkBase,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w500,
-          );
-        }
+      floatingLabelStyle: TextStyle(
+        color: WidgetStateColor.resolveWith((Set<WidgetState> states) {
+          if (states.contains(WidgetState.error)) {
+            return AppColors.error;
+          }
+          if (states.contains(WidgetState.focused)) {
+            return AppColors.pinkBase;
+          }
+          return AppColors.gray;
+        }),
+      );
+
+      hintStyle: const TextStyle(color: AppColors.white70);
 
         return TextStyle(
           color: AppColors.gray,
@@ -75,7 +83,7 @@ class AppTheme {
 
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.white60),
+        borderSide: BorderSide(color: AppColors.white60),
       ),
 
       enabledBorder: OutlineInputBorder(
@@ -89,7 +97,7 @@ class AppTheme {
       ),
 
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(4),
         borderSide: const BorderSide(color: AppColors.error),
       ),
 
@@ -103,10 +111,13 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.pinkBase,
         foregroundColor: AppColors.white10,
+
         elevation: 0,
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.r),
         ),
+
         textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
     ),
@@ -115,27 +126,35 @@ class AppTheme {
       style: OutlinedButton.styleFrom(
         backgroundColor: AppColors.whiteBase,
         foregroundColor: AppColors.gray,
+
         elevation: 0,
+
         minimumSize: Size(double.infinity, 50.h),
+
         side: const BorderSide(color: AppColors.gray, width: 1),
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.r),
         ),
+
         textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
       ),
     ),
-
     checkboxTheme: CheckboxThemeData(
       side: const BorderSide(color: AppColors.gray),
+
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return AppColors.pinkBase;
         }
+
         return Colors.transparent;
       }),
     ),
 
+    // Default font for the whole app
     fontFamily: GoogleFonts.roboto().fontFamily,
     textTheme: TextTheme(
       // Roboto
@@ -144,6 +163,7 @@ class AppTheme {
         fontSize: 22.sp,
         fontWeight: FontWeight.w400,
       ),
+
       titleMedium: TextStyle(
         color: AppColors.blackBase,
         fontSize: 16.sp,
@@ -163,20 +183,27 @@ class AppTheme {
         fontSize: 16.sp,
         fontWeight: FontWeight.w400,
       ),
+
       bodyMedium: TextStyle(
         color: AppColors.gray,
         fontSize: 14.sp,
         fontWeight: FontWeight.w400,
       ),
+
       bodySmall: TextStyle(
-        color: AppColors.blackBase,
-        fontSize: 12.sp,
+        color: AppColors.gray,
+        fontSize: 12,
         fontWeight: FontWeight.w400,
       ),
-      labelLarge: TextStyle(
-        color: AppColors.blackBase,
-        fontSize: 16.sp,
+
+      labelLarge: TextStyle(color: AppColors.blackBase),
+
+      labelMedium: TextStyle(
+        fontFamily: 'Inter',
+        color: AppColors.gray,
+        fontSize: 13.sp,
         fontWeight: FontWeight.w500,
+        height: 1,
       ),
     ),
   );
