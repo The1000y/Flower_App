@@ -45,8 +45,7 @@ class ProductCard extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 Routes.productDetails,
-                arguments:  id, // Replace with the actual product ID
-               
+                arguments: id,
               );
             },
             child: Container(
