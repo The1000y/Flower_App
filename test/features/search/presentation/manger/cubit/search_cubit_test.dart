@@ -121,4 +121,35 @@ void main() {
       verify(mockSearchProductsUseCase.call('rose')).called(1);
     },
   );
+
+  blocTest<SearchCubit, SearchState>(
+    'emits error message when SearchProductsUseCase throws an exception',
+    build: () {
+      when(mockSearchProductsUseCase.call('rose'))
+          .thenThrow(Exception('boom'));
+      return cubit;
+    },
+    act: (cubit) => cubit.doEvent(SearchProductsEvent('rose')),
+    expect: () => [
+      const SearchState(
+        query: 'rose',
+        resultState: BaseState<List<ProductEntity>>(
+          isLoading: true,
+          errorMessage: '',
+          data: null,
+        ),
+      ),
+      const SearchState(
+        query: 'rose',
+        resultState: BaseState<List<ProductEntity>>(
+          isLoading: false,
+          errorMessage: 'something went wrong, pls try again',
+          data: null,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(mockSearchProductsUseCase.call('rose')).called(1);
+    },
+  );
 }

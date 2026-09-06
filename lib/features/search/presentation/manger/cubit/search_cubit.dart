@@ -1,4 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/config/errors/hadel_error_exception.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/search/domain/usecases/search_products_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,8 +39,23 @@ class SearchCubit extends Cubit<SearchState> {
       return;
     }
 
-    final BaseResponce<List<ProductEntity>> response =
-        await _searchProductsUseCase.call(trimmed);
+    BaseResponce<List<ProductEntity>> response;
+    try {
+      response = await _searchProductsUseCase.call(trimmed);
+    } catch (e) {
+      emit(
+        state.copyWith(
+          resultState: state.resultState.copyWith(
+            isLoading: false,
+            data: null,
+            errorMessage: HandelErrorException().handelErrorexception(
+              e is Exception ? e : Exception(e.toString()),
+            ),
+          ),
+        ),
+      );
+      return;
+    }
     switch (response) {
       case SuccessResponce<List<ProductEntity>>():
         emit(
