@@ -36,7 +36,7 @@ void main() {
 
   group('getOccasions', () {
     test(
-      'should return SuccessResponce<List<OccasionEntity>> when remote data source succeeds',
+      'should return SuccessResponce<List<OccasionEntity>> when local data source succeeds',
       () async {
         final occasionDto = OccasionDto(
           id: 1,
@@ -44,7 +44,7 @@ void main() {
           imageUrl: 'https://example.com/birthday.png',
         );
 
-        when(() => mockRemoteDataSource.getOccasions()).thenAnswer(
+        when(() => mockLocalDataSource.getOccasions()).thenAnswer(
           (_) async => SuccessResponce<List<OccasionDto>>([occasionDto]),
         );
 
@@ -56,20 +56,20 @@ void main() {
         expect(data.first.id, 1);
         expect(data.first.name, 'Birthday');
         expect(data.first.imageUrl, 'https://example.com/birthday.png');
-        verify(() => mockRemoteDataSource.getOccasions()).called(1);
+        verify(() => mockLocalDataSource.getOccasions()).called(1);
       },
     );
 
-    test('should return ErrorResponce when remote data source fails', () async {
+    test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get occasions');
-      when(() => mockRemoteDataSource.getOccasions()).thenAnswer(
+      when(() => mockLocalDataSource.getOccasions()).thenAnswer(
         (_) async => ErrorResponce<List<OccasionDto>>(exception),
       );
 
       final result = await commerceRepo.getOccasions();
 
       expect(result, isA<ErrorResponce<List<OccasionEntity>>>());
-      verify(() => mockRemoteDataSource.getOccasions()).called(1);
+      verify(() => mockLocalDataSource.getOccasions()).called(1);
     });
   });
 
