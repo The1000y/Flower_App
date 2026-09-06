@@ -8,7 +8,7 @@ class AppTheme {
 
   static ThemeData lightThem = ThemeData(
     useMaterial3: true,
-    scaffoldBackgroundColor: AppColors.lightPink,
+    scaffoldBackgroundColor: AppColors.whiteBase,
     colorScheme: const ColorScheme.light(
       primary: AppColors.pinkBase,
       onPrimary: AppColors.white10,
