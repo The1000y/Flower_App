@@ -118,38 +118,40 @@ class HomeCubit extends Cubit<HomeState> {
         sectionsState: BaseState(isLoading: true),
         bestSellerState: null,
         categoriesState: null,
+        occasionState: null,
       ),
     );
     final result = await _getSectionUseCase.call();
 
     switch (result) {
       case SuccessResponce<List<SectionEntity>>():
-        List<SectionEntity> sections = result.data;
-        sections.sort(
-          (SectionEntity a, SectionEntity b) => a.index.compareTo(b.index),
-        );
-        final activeSections = sections
-            .where((element) => element.isActive == true)
-            .toList();
+        final sections = result.data;  
+      
+        // sections.sort(
+        //   (SectionEntity a, SectionEntity b) => a.index.compareTo(b.index),
+        // );
+        // final activeSections = sections
+        //     .where((element) => element.isActive == true)
+        //     .toList();
 
         emit(
           state.copyWith(
-            sectionsState: BaseState(data: activeSections, isLoading: false),
+            sectionsState: BaseState(data: sections, isLoading: false),
             bestSellerState: null,
             categoriesState: null,
           ),
         );
-        for (final section in activeSections) {
+        for (final section in sections) {
           switch (section.type) {
-            case "Categories":
+            case SectionType.category:
               await _fetchCategories();
               break;
 
-            case "BestSeller":
+            case SectionType.bestSeller:
               await _fetchBestSeller();
               break;
 
-            case "Occasions":
+            case SectionType.occasion:
               await _fetchOccasions();
               break;
           }

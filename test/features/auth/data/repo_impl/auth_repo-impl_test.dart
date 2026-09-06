@@ -38,6 +38,28 @@ void main() {
     ),
   );
 
+  provideDummy<BaseResponce<ForgotPasswordResponseDto>>(
+    SuccessResponce<ForgotPasswordResponseDto>(
+      ForgotPasswordResponseDto(
+        data: 'dummy',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
+      ),
+    ),
+  );
+
+  provideDummy<BaseResponce<ResetPasswordResponseDto>>(
+    SuccessResponce<ResetPasswordResponseDto>(
+      ResetPasswordResponseDto(
+        data: 'dummy',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
+      ),
+    ),
+  );
+
   group('AuthRepoImpl - VerifyOtp Tests', () {
     test('verifyOtp should return SuccessResponce when data source succeeds',
         () async {

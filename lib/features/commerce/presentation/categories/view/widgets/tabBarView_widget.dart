@@ -1,4 +1,3 @@
-import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class TabbarviewWidget extends StatelessWidget {
     final result = products.where((product) {
       final matchesCategory =
           category.toLowerCase() == 'all' ||
-              _matchesCategory(product, category);
+          _matchesCategory(product, category);
       final matchesSearch =
           query.isEmpty || product.name.toLowerCase().contains(query);
       return matchesCategory && matchesSearch;
@@ -75,22 +74,13 @@ class TabbarviewWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         final product = categoryProducts[index];
 
-
-        return GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              Routes.productDetails,
-              arguments: product.id,
-            );
-          },
-          child: ProductCard(
-            image: product.imageUrl,
-            name: product.name,
-            price: product.price,
-            oldPrice: product.originalPrice,
-            discount: product.discountPercentage?.round(),
-          ),
+        return ProductCard(
+          id: product.id,
+          image: product.imageUrl,
+          name: product.name,
+          price: product.price,
+          oldPrice: product.originalPrice,
+          discount: product.discountPercentage?.round(),
         );
       },
     );
