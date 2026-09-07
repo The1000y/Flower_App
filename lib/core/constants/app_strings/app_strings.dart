@@ -139,7 +139,6 @@ abstract class AppStrings {
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
-  static const String occasionTitle = 'Occasion';
   // Auth storage keys
   static const String refreshToken = 'refresh_token';
   static const String accessToken = 'access_token';
@@ -176,4 +175,6 @@ abstract class AppStrings {
   static const String registerSuccess = 'Register successful';
   static const String retry = 'Retry';
   static const String noResult = 'No results found';
+   static const String  occasionTitle = 'Occasion';
+
 }

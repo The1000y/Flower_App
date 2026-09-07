@@ -174,13 +174,17 @@ class BestsellerProductCard extends StatelessWidget {
                   SizedBox(height: 4.h),
                   Row(
                     children: [
-                      Text(
-                        '${item.currency} ${item.price}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.blackBase,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14.sp,
-                            ),
+                      Flexible(
+                        child: Text(
+                          '${item.currency} ${item.price}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: AppColors.blackBase,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.sp,
+                              ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       if (item.originalPrice > 0) ...[
                         SizedBox(width: 4.w),
