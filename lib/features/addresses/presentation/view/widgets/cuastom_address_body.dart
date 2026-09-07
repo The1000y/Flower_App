@@ -280,7 +280,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                     width: 159,
                     child: DropdownButtonFormField<String>(
                       isExpanded: true,
-                      value: state.selectedGovernorate,
+                      initialValue: state.selectedGovernorate,
                       hint: Text(
                         AppStrings.cityLabel,
                         overflow: TextOverflow.ellipsis,
@@ -317,7 +317,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       isExpanded: true,
-                      value:
+                      initialValue:
                           (filteredCities.any(
                             (city) => city.id == state.selectedCity,
                           ))

@@ -1,3 +1,4 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
@@ -11,8 +12,6 @@ import 'package:flower_app/features/auth/presentation/login/view/widgets/remembe
 import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../../config/routing/routes.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -56,7 +55,6 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.whiteBase,
       appBar: AppBar(
         title: Text(
           AppStrings.loginTitle,
@@ -96,7 +94,6 @@ class _LoginViewState extends State<LoginView> {
                 );
               Future.delayed(const Duration(seconds: 2), () {
                 if (!context.mounted) return;
-
                 Navigator.pushReplacementNamed(context, Routes.home);
               });
             }
@@ -175,11 +172,7 @@ class _LoginViewState extends State<LoginView> {
                   CustomOutlinedButton(
                     text: AppStrings.continueAsGuest,
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, Routes.home);
-
-
-                        // Routes.mainLayout,
-
+                      Navigator.pushNamed(context, Routes.home);
                     },
                   ),
                   const SizedBox(height: 24),

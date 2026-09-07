@@ -1,11 +1,11 @@
 import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
-import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_event.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_state.dart';
+import 'package:flower_app/features/auth/presentation/register/view/widgets/register_custom_text_form_field.dart';
 import 'package:flower_app/features/auth/presentation/register/view/widgets/register_gender_selector.dart';
 import 'package:flower_app/features/auth/presentation/register/view/widgets/register_login_link.dart';
 import 'package:flower_app/features/auth/presentation/register/view/widgets/register_terms_text.dart';
@@ -31,11 +31,11 @@ class _RegisterViewState extends State<RegisterView> {
   final _phoneController = TextEditingController();
 
   final ValueNotifier<bool> _isFemaleNotifier = ValueNotifier<bool>(true);
-  final ValueNotifier<bool> _obscurePasswordNotifier = ValueNotifier<bool>(true);
-  final ValueNotifier<bool> _obscureConfirmPasswordNotifier = ValueNotifier<bool>(true);
 
   late final TapGestureRecognizer _termsRecognizer;
   late final TapGestureRecognizer _loginRecognizer;
+
+  bool _isSubmitted = false;
 
   @override
   void initState() {
@@ -55,12 +55,12 @@ class _RegisterViewState extends State<RegisterView> {
     _confirmPasswordController.dispose();
     _phoneController.dispose();
     _isFemaleNotifier.dispose();
-    _obscurePasswordNotifier.dispose();
-    _obscureConfirmPasswordNotifier.dispose();
     super.dispose();
   }
 
   void _onSignUpPressed(BuildContext context) {
+    setState(() => _isSubmitted = true);
+
     if (!_formKey.currentState!.validate()) return;
 
     context.read<RegisterViewModel>().handle(
@@ -102,7 +102,6 @@ class _RegisterViewState extends State<RegisterView> {
         ),
         body: Form(
           key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             child: Column(
@@ -112,78 +111,70 @@ class _RegisterViewState extends State<RegisterView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: CustomTextFormField(
+                      child: RegisterCustomTextFormField(
                         label: AppStrings.firstNameLabel,
                         hintText: AppStrings.firstNameHint,
                         controller: _firstNameController,
                         validator: AuthValidators.firstName,
+                        forceShowErrors: _isSubmitted,
                       ),
                     ),
                     SizedBox(width: 17.w),
                     Expanded(
-                      child: CustomTextFormField(
+                      child: RegisterCustomTextFormField(
                         label: AppStrings.lastNameLabel,
                         hintText: AppStrings.lastNameHint,
                         controller: _lastNameController,
                         validator: AuthValidators.lastName,
+                        forceShowErrors: _isSubmitted,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 24.h),
-                CustomTextFormField(
+                RegisterCustomTextFormField(
                   label: AppStrings.emailLabel,
                   hintText: AppStrings.emailHint,
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   validator: AuthValidators.email,
+                  forceShowErrors: _isSubmitted,
                 ),
                 SizedBox(height: 24.h),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: ValueListenableBuilder<bool>(
-                        valueListenable: _obscurePasswordNotifier,
-                        builder: (context, obscure, child) => CustomTextFormField(
-                          label: AppStrings.passwordLabel,
-                          hintText: AppStrings.passwordHint,
-                          controller: _passwordController,
-                          obscureText: obscure,
-                          validator: AuthValidators.strongPassword,
-                          suffixIcon: IconButton(
-                            icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined),
-                            onPressed: () => _obscurePasswordNotifier.value = !obscure,
-                          ),
-                        ),
+                      child: RegisterCustomTextFormField(
+                        label: AppStrings.passwordLabel,
+                        hintText: AppStrings.passwordHint,
+                        controller: _passwordController,
+                        isPassword: true,
+                        validator: AuthValidators.strongPassword,
+                        forceShowErrors: _isSubmitted,
                       ),
                     ),
                     SizedBox(width: 17.w),
                     Expanded(
-                      child: ValueListenableBuilder<bool>(
-                        valueListenable: _obscureConfirmPasswordNotifier,
-                        builder: (context, obscure, child) => CustomTextFormField(
-                          label: AppStrings.confirmPasswordLabel,
-                          hintText: AppStrings.confirmPasswordHint,
-                          controller: _confirmPasswordController,
-                          obscureText: obscure,
-                          validator: (value) => AuthValidators.confirmPassword(value, _passwordController.text),
-                          suffixIcon: IconButton(
-                            icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined),
-                            onPressed: () => _obscureConfirmPasswordNotifier.value = !obscure,
-                          ),
-                        ),
+                      child: RegisterCustomTextFormField(
+                        label: AppStrings.confirmPasswordLabel,
+                        hintText: AppStrings.confirmPasswordHint,
+                        controller: _confirmPasswordController,
+                        isPassword: true,
+                        forceShowErrors: _isSubmitted,
+                        validator: (value) => AuthValidators.confirmPassword(value, _passwordController.text),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 24.h),
-                CustomTextFormField(
+                RegisterCustomTextFormField(
                   label: AppStrings.phoneNumberLabel,
                   hintText: AppStrings.phoneNumberHint,
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   validator: AuthValidators.phone,
+                  forceShowErrors: _isSubmitted,
                 ),
                 SizedBox(height: 24.h),
                 RegisterGenderSelector(isFemaleNotifier: _isFemaleNotifier),

@@ -1,4 +1,5 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
@@ -39,7 +40,6 @@ class _ResetPasswordState extends State<ResetPassword> {
     return BlocProvider(
       create: (context) => viewModel,
       child: Scaffold(
-        backgroundColor: AppColors.whiteBase,
         appBar: AppBar(
           title: Text(AppStrings.passwordAppBarTitle),
         ),
@@ -67,7 +67,11 @@ class _ResetPasswordState extends State<ResetPassword> {
                   ),
                 );
 
-                // Navigator.push(...)
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.login,
+                  (route) => false,
+                );
               }
             }
           },
