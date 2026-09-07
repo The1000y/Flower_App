@@ -2,6 +2,7 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/commerce/presentation/categories/navigation/categories_navigation.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_event.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_state.dart';
@@ -25,8 +26,9 @@ class _ProductDetailsState extends State<ProductDetails> {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocProvider(
-      create: (context) => getIt<ProductDetailsCubit>()
-        ..doEvent(GetProductDetailsEvent(widget.productId)),
+      create: (context) =>
+          getIt<ProductDetailsCubit>()
+            ..doEvent(GetProductDetailsEvent(widget.productId)),
       child: Scaffold(
         backgroundColor: Colors.white,
         body: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
@@ -88,8 +90,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       errorBuilder:
                                           (context, error, stackTrace) =>
                                               const Center(
-                                                  child: Icon(Icons.image,
-                                                      size: 50)),
+                                                child: Icon(
+                                                  Icons.image,
+                                                  size: 50,
+                                                ),
+                                              ),
                                     );
                                   },
                                 ),
@@ -103,10 +108,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(Icons.arrow_back_ios_new,
-                                        size: 20),
+                                    icon: const Icon(
+                                      Icons.arrow_back_ios_new,
+                                      size: 20,
+                                    ),
                                     color: AppColors.blackBase,
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () {
+                                      CategoriesNavigation.selectedIndex.value =
+                                          0;
+                                      Navigator.pop(context);
+                                    },
                                   ),
                                 ),
                               ),
@@ -119,10 +130,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   children: List.generate(
                                     product.images.length,
                                     (index) => AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 4.w),
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 4.w,
+                                      ),
                                       width: 8.w,
                                       height: 8.h,
                                       decoration: BoxDecoration(
@@ -139,7 +152,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 16.w, vertical: 20.h),
+                              horizontal: 16.w,
+                              vertical: 20.h,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -217,9 +232,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   ),
                                 ),
                                 SizedBox(height: 8.h),
-                                ...product.includes.map((item) =>
-                                    _buildIncludeItem(context,
-                                        '${item.name}:${item.quantity}')),
+                                ...product.includes.map(
+                                  (item) => _buildIncludeItem(
+                                    context,
+                                    '${item.name}:${item.quantity}',
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -252,9 +270,9 @@ class _ProductDetailsState extends State<ProductDetails> {
       padding: EdgeInsets.only(bottom: 4.h),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.blackBase,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: AppColors.blackBase),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class BestSellerCard extends StatelessWidget {
@@ -24,20 +25,16 @@ class BestSellerCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                bestSellerEntity.imageUrl,
-                // cacheWidth: 150,
-                // cacheHeight: 200,
+              child: CachedNetworkImage(
+                imageUrl: bestSellerEntity.imageUrl,
                 width: 131,
                 height: 151,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Image.asset(
+                errorWidget: (context, url, error) => Image.asset(
                   AppImages.error,
                   fit: BoxFit.cover,
                   width: 131,
                   height: 151,
-                  // cacheWidth: 150,
-                  // cacheHeight: 200,
                 ),
               ),
             ),

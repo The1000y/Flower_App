@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/core/shared/app_widgets/product_card.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/manager/cubit/occasion_cubit.dart';

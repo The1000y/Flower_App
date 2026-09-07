@@ -1,6 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart' as best_seller;
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -491,10 +491,10 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
   }
 
   @override
-  Future<BaseResponce<List<ItemDto>>> getBestSellers() async {
+  Future<BaseResponce<List<best_seller.ProductDto>>> getBestSellers() async {
     await Future.delayed(const Duration(seconds: 3));
-    List<ItemDto> itemDummyList = [
-      ItemDto(
+    List<best_seller.ProductDto> itemDummyList = [
+      best_seller.ProductDto(
         id: 1,
         name: "Luxury Red Rose Bouquet",
         imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
@@ -504,7 +504,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 25,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 2,
         name: "White Lily Arrangement",
         imageUrl:
@@ -515,7 +515,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 20,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 3,
         name: "Pink Flower Bouquet",
         imageUrl:
@@ -526,7 +526,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 18,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 4,
         name: "Elegant Orchid Vase",
         imageUrl:
@@ -537,7 +537,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 17,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 5,
         name: "Mixed Color Flowers",
         imageUrl:
@@ -548,7 +548,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 25,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 6,
         name: "Wedding Flower Set",
         imageUrl:
@@ -559,7 +559,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 23,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 7,
         name: "Small Tulip Bouquet",
         imageUrl:
@@ -570,7 +570,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 20,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 8,
         name: "Premium Flower Box",
         imageUrl:
@@ -581,7 +581,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 25,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 9,
         name: "Garden Fresh Flowers",
         imageUrl:
@@ -592,7 +592,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         discountPercentage: 21,
         status: "available",
       ),
-      ItemDto(
+      best_seller.ProductDto(
         id: 10,
         name: "Golden Rose Collection",
         imageUrl:
@@ -606,9 +606,9 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     ];
 
     try {
-      return SuccessResponce<List<ItemDto>>(itemDummyList);
+      return SuccessResponce<List<best_seller.ProductDto>>(itemDummyList);
     } on Exception catch (e) {
-      return ErrorResponce<List<ItemDto>>(e);
+      return ErrorResponce<List<best_seller.ProductDto>>(e);
     }
   }
 
@@ -642,15 +642,15 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
         occasionId: null,
         categoryId: null,
       ),
-      SectionDto(
-        id: 4,
-        type: 'ProductsCarousel',
-        index: 3,
-        isActive: true,
-        title: 'Wedding picks',
-        occasionId: 1,
-        categoryId: null,
-      ),
+      // SectionDto(
+      //   id: 4,
+      //   type: 'ProductsCarousel',
+      //   index: 3,
+      //   isActive: true,
+      //   title: 'Wedding picks',
+      //   occasionId: 1,
+      //   categoryId: null,
+      // ),
     ];
 
     try {
@@ -661,7 +661,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
   }
 
   @override
-  Future<BaseResponce<List<OccasionDto>>> getOccasion() async {
+  Future<BaseResponce<List<OccasionDto>>> getOccasions() async {
     Future.delayed(const Duration(seconds: 5));
     List<OccasionDto> occasionDummyList = [
       OccasionDto(
@@ -697,9 +697,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-  @override
-  Future<BaseResponce<List<OccasionDto>>> getOccasions() => getOccasion();
-
+ 
   @override
   Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1}) async {
     return getProducts();
