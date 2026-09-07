@@ -1,3 +1,4 @@
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -107,7 +108,7 @@ class _CategoriesContentState extends State<_CategoriesContent> {
                               Navigator.pushNamed(context, Routes.search),
                           decoration: const InputDecoration(
                             labelText: '',
-                            hintText: 'Search',
+                            hintText: AppStrings.searchHint,
                             prefixIcon: Icon(Icons.search),
                           ),
                         ),

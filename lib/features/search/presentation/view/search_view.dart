@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -108,7 +109,7 @@ class _SearchViewState extends State<SearchView> {
             ElevatedButton(
               onPressed: () =>
                   context.read<SearchCubit>().doEvent(SearchProductsEvent(state.query)),
-              child: const Text('Retry'),
+              child: const Text(AppStrings.retry),
             ),
           ],
         ),
@@ -119,7 +120,7 @@ class _SearchViewState extends State<SearchView> {
     if (products.isEmpty) {
       return Center(
         child: Text(
-          'No results found',
+          AppStrings.noResult,
           style: TextStyle(color: AppColors.black30, fontSize: 16.sp),
         ),
       );
