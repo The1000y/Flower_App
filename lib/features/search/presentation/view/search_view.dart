@@ -147,7 +147,7 @@ class _SearchViewState extends State<SearchView> {
             name: product.name,
             price: product.price,
             oldPrice: product.originalPrice,
-            discount: product.discountPercentage?.round(),
+            discount: product.discountPercentage?.round(), id: product.id,
           ),
         );
       },
