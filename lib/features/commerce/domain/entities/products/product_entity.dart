@@ -10,7 +10,7 @@ class ProductEntity extends Equatable {
   final double? discountPercentage;
   final String status;
 
-  ProductEntity({
+ const ProductEntity({
     required this.id,
     required this.name,
     required this.imageUrl,

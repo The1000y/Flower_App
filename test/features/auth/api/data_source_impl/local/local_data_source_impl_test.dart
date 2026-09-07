@@ -18,6 +18,42 @@ import 'local_data_source_impl_test.mocks.dart';
 
 @GenerateMocks([LocalDataSource])
 void main() {
+  provideDummy<BaseResponce<VerifyOtpResponse>>(
+    SuccessResponce<VerifyOtpResponse>(
+      VerifyOtpResponse(
+        errorCode: 0,
+        isSuccess: true,
+        message: 'Operation completed successfully.',
+        data: Datadto(
+          expiresAtUtc: DateTime.now(),
+          resetToken: 'token123',
+        ),
+      ),
+    ),
+  );
+
+  provideDummy<BaseResponce<ForgotPasswordResponseDto>>(
+    SuccessResponce<ForgotPasswordResponseDto>(
+      ForgotPasswordResponseDto(
+        data: 'dummy',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
+      ),
+    ),
+  );
+
+  provideDummy<BaseResponce<ResetPasswordResponseDto>>(
+    SuccessResponce<ResetPasswordResponseDto>(
+      ResetPasswordResponseDto(
+        data: 'dummy',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
+      ),
+    ),
+  );
+
   late MockLocalDataSource mockLocalDataSource;
   late AuthRepoImpl authRepoImpl;
 

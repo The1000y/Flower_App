@@ -1,6 +1,4 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_occasions_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_products_use_case.dart';

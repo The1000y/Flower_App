@@ -61,13 +61,13 @@ Future<void> _fillValidFields(WidgetTester tester) async {
   );
   await tester.enterText(
     find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
-    validPassword,
+    validRegisterPassword,
   );
   await tester.enterText(
     find
         .widgetWithText(CustomTextFormField, AppStrings.confirmPasswordLabel)
         .first,
-    validPassword,
+    validRegisterPassword,
   );
   await tester.enterText(
     find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),
