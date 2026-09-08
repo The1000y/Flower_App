@@ -1,4 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/profile/data/model/request/change_password_request/change_password_request.dart';
+import 'package:flower_app/features/profile/data/model/response/change_password_response/change_password_response.dart';
 import 'package:flower_app/features/profile/domain/use_case/change_password_use_case.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_event.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_state.dart';
@@ -18,6 +20,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
         _updatePassword(
           currentPassword: event.currentPassword,
           newPassword: event.newPassword,
+          confirmPassword: event.confirmPassword,
         );
         break;
     }
@@ -26,6 +29,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
   void _updatePassword({
     required String currentPassword,
     required String newPassword,
+    required String confirmPassword,
   }) async {
     emit(
       state.copyWith(
@@ -37,13 +41,16 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
       ),
     );
 
-    final response = await _changePasswordUseCase.call(
+    final request = ChangePasswordRequest(
       currentPassword: currentPassword,
       newPassword: newPassword,
+      confirmNewPassword: confirmPassword,
     );
 
+    final response = await _changePasswordUseCase.call(request);
+
     switch (response) {
-      case SuccessResponce<bool>():
+      case SuccessResponce<ChangePasswordResponse>():
         emit(
           state.copyWith(
             changePasswordState: state.changePasswordState.copyWith(
@@ -55,7 +62,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
         );
         break;
 
-      case ErrorResponce<bool>():
+      case ErrorResponce<ChangePasswordResponse>():
         emit(
           state.copyWith(
             changePasswordState: state.changePasswordState.copyWith(
