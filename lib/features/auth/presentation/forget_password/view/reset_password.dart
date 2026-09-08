@@ -86,7 +86,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   child: Column(
                     children: [
                       SizedBox(height: 50.h),
-                  
+
                       Center(
                         child: Text(
                           AppStrings.resetPasswordTitle,
@@ -96,16 +96,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ),
                         ),
                       ),
-                  
+
                       SizedBox(height: 10.h),
-                  
+
                       Text(
                         AppStrings.resetPasswordSubtitle,
                         textAlign: TextAlign.center,
                       ),
-                  
+
                       SizedBox(height: 20.h),
-                  
+
                       CustomTextFormField(
                         label: AppStrings.newPasswordLabel,
                         hintText: AppStrings.passwordHint,
@@ -114,9 +114,9 @@ class _ResetPasswordState extends State<ResetPassword> {
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,
                       ),
-                  
+
                       SizedBox(height: 20.h),
-                  
+
                       CustomTextFormField(
                         label: AppStrings.confirmPasswordLabel,
                         hintText: AppStrings.confirmPasswordHint,
@@ -125,9 +125,9 @@ class _ResetPasswordState extends State<ResetPassword> {
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,
                       ),
-                  
+
                       SizedBox(height: 30.h),
-                  
+
                       CustomButton(
                         isLoading:
                             state.resetstate.isLoading  ,
@@ -143,8 +143,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   resetCode: widget.otpcode,
                                 ),
                               );
-                  
-                              
+
+
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

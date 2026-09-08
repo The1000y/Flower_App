@@ -12,6 +12,7 @@ import 'package:flower_app/features/commerce/presentation/occasion/view/occasion
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
+import 'package:flower_app/features/profile/presentation/view/change_password_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -128,7 +129,7 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.changePassword:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const ChangePasswordView());
 
       // Tracking
       case Routes.orderSuccess:
