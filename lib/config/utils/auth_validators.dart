@@ -42,6 +42,13 @@ class AuthValidators {
     }
     return null;
   }
+  static String? addressFields(String? value , String errorMessage) {
+    if (value == null || value.trim().isEmpty) return errorMessage;
+    if (value.trim().length < 3) {
+      return errorMessage;
+    }
+    return null;
+  }
 
   static String? firstName(String? value) {
     if (value == null || value.trim().isEmpty) return AppStrings.firstNameRequired;

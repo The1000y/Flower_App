@@ -15,19 +15,25 @@ class SavedAddressContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SavedAddressViewModel, SavedAddressState>(
+      listenWhen: (previous, current) =>
+      previous.addressesState.errorMessage != current.addressesState.errorMessage,
       listener: (context, state) {
-        if (state is SavedAddressError) {
+        if (state.addressesState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+            SnackBar(content: Text(state.addressesState.errorMessage)),
           );
         }
       },
       builder: (context, state) {
-        if (state is SavedAddressInitial || (state is SavedAddressLoading && state is! SavedAddressLoaded)) {
+        final addressesState = state.addressesState;
+
+        if (addressesState.isLoading && addressesState.data == null) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (state is SavedAddressLoaded && state.addresses.isEmpty) {
+        final addresses = addressesState.data ?? const <AddressEntity>[];
+
+        if (addresses.isEmpty) {
           return Center(
             child: Text(
               AppStrings.savedAddressEmpty,
@@ -36,8 +42,6 @@ class SavedAddressContent extends StatelessWidget {
           );
         }
 
-
-        final addresses = state is SavedAddressLoaded ? state.addresses : <AddressEntity>[];
         return SavedAddressAnimatedList(addresses: addresses);
       },
     );

@@ -13,6 +13,7 @@ class AddressEntity extends Equatable {
   final bool isDefault;
   final String? storeId;
   final bool isServiceable;
+  final DateTime createdAt;
 
   AddressEntity({
     required this.id,
@@ -27,6 +28,7 @@ class AddressEntity extends Equatable {
     required this.isDefault,
     this.storeId,
     required this.isServiceable,
+    required this.createdAt,
   });
 
   @override
@@ -43,5 +45,6 @@ class AddressEntity extends Equatable {
     isDefault,
     storeId,
     isServiceable,
+    createdAt,
   ];
 }

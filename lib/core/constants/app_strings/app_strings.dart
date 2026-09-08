@@ -137,7 +137,6 @@ abstract class AppStrings{
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
-  static const String occasionTitle = 'Occasion';
   // Auth storage keys
   static const String refreshToken = 'refresh_token';
   static const String accessToken = 'access_token';
@@ -173,4 +172,8 @@ abstract class AppStrings{
   static const String registerError = 'Failed register';
   static const String registerSuccess = 'Register successful';
   static const String savedAddressEmpty = 'No saved addresses yet';
+static const String titleAddress = 'Title';
+  static const String labelAddress = 'Enter Title Address';
+  static const String loadingAddress = 'Loading...';
+  static const String occasionTitle = 'Occasion';
 }

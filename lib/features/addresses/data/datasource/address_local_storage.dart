@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../api/datasource_impl/local_data_source/address_dummy_data.dart';
-import '../model/ response/address_dto.dart';
+import '../../api/data_source_impl/local/address_dummy_data.dart';
+import '../model/responce/address_dto.dart';
 
 
 @lazySingleton

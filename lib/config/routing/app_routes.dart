@@ -1,5 +1,7 @@
+import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/addresses/presentation/saved_address/view/saved_address_view.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
@@ -7,14 +9,16 @@ import 'package:flower_app/features/auth/presentation/forget_password/view/verif
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
-import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
-import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
+import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
+import 'package:flower_app/features/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../features/auth/presentation/register/manager/register_view_model.dart';
+import '../../features/auth/presentation/register/view/register_view.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -30,44 +34,36 @@ abstract class AppRoutes {
 
       case Routes.signUp:
         return MaterialPageRoute(
-          builder: (_) =>  BlocProvider(
+          builder: (_) => BlocProvider(
             create: (_) => getIt<RegisterViewModel>(),
             child: const RegisterView(),
           ),
         );
 
       case Routes.forgotPassword:
-        return MaterialPageRoute(
-          builder: (_) => const ForgetPassword(),
-        );
+        return MaterialPageRoute(builder: (_) => const ForgetPassword());
 
       case Routes.verificationCode:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (_) =>  VerificationView(
-            email: args['email'],
-          ),
+          builder: (_) => VerificationView(email: args['email']),
         );
 
       case Routes.resetPassword:
         final args = settings.arguments as Map<String, dynamic>;
 
         return MaterialPageRoute(
-          builder: (_) => ResetPassword(
-            email: args['email'],
-            otpcode: args['otpcode'],
-          ),
+          builder: (_) =>
+              ResetPassword(email: args['email'], otpcode: args['otpcode']),
         );
 
       // Main Layout
       case Routes.mainLayout:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Home
       case Routes.home:
-        return MaterialPageRoute(builder: (_) =>  PersistenBottomNavBarDemo());
+        return MaterialPageRoute(builder: (_) => PersistenBottomNavBarDemo());
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const BestsellerView());
@@ -75,108 +71,80 @@ abstract class AppRoutes {
       case Routes.productDetails:
         final productId = settings.arguments as int? ?? 0;
         return MaterialPageRoute(
-            builder: (_) => ProductDetails(productId: productId));
+          builder: (_) => ProductDetails(productId: productId),
+        );
 
       case Routes.occasion:
-        return MaterialPageRoute(settings: settings,builder: (_) => const OccasionView());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const OccasionView(),
+        );
 
       case Routes.categories:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const CategoriesView());
 
       case Routes.search:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Cart & Checkout
       case Routes.cart:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.checkout:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.shippingAddress:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.savedAddresses:
-        return MaterialPageRoute(
-          builder: (_) => const SavedAddressView(),
-        );
+        return MaterialPageRoute(builder: (_) => const SavedAddressView());
 
       case Routes.addAddress:
+        final editingAddress = settings.arguments as AddressEntity?;
         return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
+          builder: (_) => AddressView(
+            editingAddress: editingAddress,
+          ),
         );
 
       // Orders
       case Routes.myOrders:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.orderDetails:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Notifications
       case Routes.notifications:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Profile
       case Routes.profile:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const ProfileView());
 
       case Routes.editProfile:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.changeLanguage:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.changePassword:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Tracking
       case Routes.orderSuccess:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.trackOrder:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.orderMap:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       default:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(
-              child: Text('Route Not Found'),
-            ),
-          ),
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('Route Not Found'))),
         );
     }
   }

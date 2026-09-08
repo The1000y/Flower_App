@@ -66,7 +66,7 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
       arguments: address,
     );
     if (result != null && mounted) {
-      context.read<SavedAddressViewModel>().onEvent(LoadAddresses());
+      context.read<SavedAddressViewModel>().doEvent(LoadAddresses());
     }
   }
 
@@ -79,7 +79,7 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
         child: AddressCard(
           address: address,
           onEdit: () => _goToEdit(address),
-          onDelete: () => context.read<SavedAddressViewModel>().onEvent(DeleteAddressPressed(address.id)),
+          onDelete: () => context.read<SavedAddressViewModel>().doEvent(DeleteAddressPressed(address.id)),
           onSelect: () {
             getIt<SelectedAddressViewModel>().onEvent(
               AddressSelectedEvent(

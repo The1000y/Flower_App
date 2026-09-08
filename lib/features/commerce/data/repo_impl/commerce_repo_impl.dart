@@ -1,7 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -29,7 +29,7 @@ class CommerceRepoImpl implements CommerceRepo {
       case SuccessResponce<List<CategoryDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
       case ErrorResponce<List<CategoryDto>>():
-        return ErrorResponce(response.error);
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
@@ -37,10 +37,14 @@ class CommerceRepoImpl implements CommerceRepo {
   Future<BaseResponce<List<BestSellerEntity>>> getBestSeller() async {
     final response = await localDataSource.getBestSellers();
     switch (response) {
-      case SuccessResponce<List<ItemDto>>():
-        return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
-      case ErrorResponce<List<ItemDto>>():
-        return ErrorResponce(response.error);
+      case SuccessResponce<List<ProductDto>>():
+        final data = response.data.map((element) {
+          return element.toDomain();
+        }).toList();
+        return SuccessResponce<List<BestSellerEntity>>(data);
+
+      case ErrorResponce<List<ProductDto>>():
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
@@ -51,13 +55,13 @@ class CommerceRepoImpl implements CommerceRepo {
       case SuccessResponce<List<SectionDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
       case ErrorResponce<List<SectionDto>>():
-        return ErrorResponce(response.error);
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
   @override
   Future<BaseResponce<List<OccasionEntity>>> getOccasions() async {
-    final response = await remoteDataSource.getOccasions();
+    final response = await localDataSource.getOccasions();
     switch (response) {
       case SuccessResponce<List<OccasionDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());

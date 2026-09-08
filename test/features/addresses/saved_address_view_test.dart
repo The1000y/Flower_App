@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
+import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_event.dart';
 import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_state.dart';
 import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_view_model.dart';
 import 'package:flower_app/features/addresses/presentation/saved_address/view/saved_address_view.dart';
@@ -15,10 +17,14 @@ class MockSavedAddressViewModel extends MockCubit<SavedAddressState> implements 
 void main() {
   late MockSavedAddressViewModel mockViewModel;
 
+  setUpAll(() {
+    registerFallbackValue(LoadAddresses());
+  });
+
   setUp(() {
     mockViewModel = MockSavedAddressViewModel();
-    when(() => mockViewModel.onEvent(any())).thenAnswer((_) async {});
-    
+    when(() => mockViewModel.doEvent(any())).thenAnswer((_) {});
+
     if (getIt.isRegistered<SavedAddressViewModel>()) {
       getIt.unregister<SavedAddressViewModel>();
     }
@@ -42,11 +48,13 @@ void main() {
     );
   }
 
-  testWidgets('shows loading indicator on initial state', (tester) async {
+  testWidgets('shows loading indicator while addresses are loading', (tester) async {
     whenListen(
       mockViewModel,
       const Stream<SavedAddressState>.empty(),
-      initialState: SavedAddressInitial(),
+      initialState: const SavedAddressState(
+        addressesState: BaseState<List<AddressEntity>>(isLoading: true),
+      ),
     );
 
     await pumpApp(tester);
@@ -58,7 +66,9 @@ void main() {
     whenListen(
       mockViewModel,
       const Stream<SavedAddressState>.empty(),
-      initialState: SavedAddressLoaded(const []),
+      initialState: const SavedAddressState(
+        addressesState: BaseState<List<AddressEntity>>(data: []),
+      ),
     );
 
     await pumpApp(tester);
@@ -76,12 +86,15 @@ void main() {
       area: 'Sheikh Zayed',
       isDefault: true,
       isServiceable: true,
+      createdAt: DateTime.now(),
     );
 
     whenListen(
       mockViewModel,
       const Stream<SavedAddressState>.empty(),
-      initialState: SavedAddressLoaded([tAddress]),
+      initialState: SavedAddressState(
+        addressesState: BaseState<List<AddressEntity>>(data: [tAddress]),
+      ),
     );
 
     await pumpApp(tester);

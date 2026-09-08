@@ -1,26 +1,25 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../../config/base/base_responce.dart';
-import '../../../domain/entities/address_entity.dart';
 import '../../../domain/usecases/delete_address_usecase.dart';
 import '../../../domain/usecases/get_addresses_usecase.dart';
 import '../../../domain/usecases/set_default_address_usecase.dart';
 import 'saved_address_event.dart';
 import 'saved_address_state.dart';
 
-@injectable
-class SavedAddressCubit extends Cubit<SavedAddressState> {
+@lazySingleton
+class SavedAddressViewModel extends Cubit<SavedAddressState> {
   final GetAddressesUseCase _getAddresses;
   final DeleteAddressUseCase _deleteAddress;
   final SetDefaultAddressUseCase _setDefaultAddress;
 
-  SavedAddressCubit(
+  SavedAddressViewModel(
       this._getAddresses,
       this._deleteAddress,
       this._setDefaultAddress,
       ) : super(const SavedAddressState());
 
-  void handle(SavedAddressEvent event) {
+  void doEvent(SavedAddressEvent event) {
     switch (event) {
       case LoadAddresses():
         _loadAddresses();

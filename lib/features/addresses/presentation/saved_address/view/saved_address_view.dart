@@ -7,28 +7,45 @@ import '../../../../../config/di/di.dart';
 import '../../../../../config/routing/routes.dart';
 import '../../../../../core/shared/app_widgets/custom_button.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
-import '../../../domain/entities/address_entity.dart';
 import '../manger/saved_address_event.dart';
-import '../manger/saved_address_state.dart';
 import '../manger/saved_address_view_model.dart';
 import 'widgets/saved_address_content.dart';
 
-class SavedAddressView extends StatelessWidget {
+class SavedAddressView extends StatefulWidget {
   const SavedAddressView({super.key});
+
+  @override
+  State<SavedAddressView> createState() => _SavedAddressViewState();
+}
+
+class _SavedAddressViewState extends State<SavedAddressView> {
+  late final SavedAddressViewModel _savedAddressViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _savedAddressViewModel = getIt<SavedAddressViewModel>()..doEvent(LoadAddresses());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   Future<void> _goToAddAddress(BuildContext context) async {
     final result = await Navigator.of(context).pushNamed(Routes.addAddress);
     if (result != null && context.mounted) {
-      context.read<SavedAddressViewModel>().onEvent(LoadAddresses());
+      _savedAddressViewModel.doEvent(LoadAddresses());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<SavedAddressViewModel>()..onEvent(LoadAddresses()),
+    return BlocProvider<SavedAddressViewModel>.value(
+      value: _savedAddressViewModel,
       child: Builder(
         builder: (context) => Scaffold(
+          backgroundColor: AppColors.whiteBase,
           appBar: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios_new, size: 20),

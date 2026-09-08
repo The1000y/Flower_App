@@ -1,7 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/addresses/data/datasource/address_local_datasource.dart';
-import 'package:flower_app/features/addresses/data/model/%20response/address_dto.dart';
-import 'package:flower_app/features/addresses/data/repo_impl/address_repository_impl.dart';
+import 'package:flower_app/features/addresses/data/data_source/local_data_source/address_local_data_source.dart';
+import 'package:flower_app/features/addresses/data/model/responce/address_dto.dart';
+import 'package:flower_app/features/addresses/data/repo_impl/address_repo_impl.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -9,14 +9,14 @@ import 'package:mockito/mockito.dart';
 
 import 'saved_address_repo_impl_test.mocks.dart';
 
-@GenerateMocks([SavedAddressLocalDataSource])
+@GenerateMocks([AddressLocalDataSource])
 void main() {
-  late MockSavedAddressLocalDataSource mockLocalDataSource;
-  late SavedAddressRepoImpl savedAddressRepoImpl;
+  late MockAddressLocalDataSource mockLocalDataSource;
+  late AddressRepoImpl savedAddressRepoImpl;
 
   setUp(() {
-    mockLocalDataSource = MockSavedAddressLocalDataSource();
-    savedAddressRepoImpl = SavedAddressRepoImpl(mockLocalDataSource);
+    mockLocalDataSource = MockAddressLocalDataSource();
+    savedAddressRepoImpl = AddressRepoImpl(mockLocalDataSource);
   });
 
   final dummyAddressDto = AddressDto(

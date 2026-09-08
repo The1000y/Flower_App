@@ -31,34 +31,35 @@ class AddressCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(color: Colors.grey.shade300),
         ),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.location_on_outlined, color: AppColors.pinkBase, size: 20.sp),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.location_on_outlined, color: AppColors.blackBase, size: 20.sp),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
                     address.city,
                     style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    '${address.addressLine} - ${address.area}',
-                    style: TextStyle(fontSize: 13.sp, color: AppColors.gray),
-                  ),
-                ],
-              ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete_outline, color: AppColors.error, size: 22.sp),
+                  onPressed: onDelete,
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit_outlined, color: AppColors.gray, size: 20.sp),
+                  onPressed: onEdit,
+                ),
+              ],
             ),
-            IconButton(
-              icon: Icon(Icons.delete_outline, color: AppColors.error, size: 22.sp),
-              onPressed: onDelete,
-            ),
-            IconButton(
-              icon: Icon(Icons.edit_outlined, color: AppColors.gray, size: 20.sp),
-              onPressed: onEdit,
+            SizedBox(height: 4.h),
+            Text(
+              '${address.addressLine} - ${address.area}',
+              style: TextStyle(fontSize: 13.sp, color: AppColors.gray),
             ),
           ],
         ),
