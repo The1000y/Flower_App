@@ -7,7 +7,6 @@ import 'package:flower_app/features/addresses/data/model/request/add_address_req
 import 'package:flower_app/features/addresses/data/model/responce/address_dto.dart';
 import 'package:injectable/injectable.dart';
 
-
 @Injectable(as: AddressLocalDataSource)
 class AddressLocalDataSourceImpl implements AddressLocalDataSource {
   @override
@@ -50,16 +49,26 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
       if (lng != AddressDummyData.addressDummyData["lng"]) {
         return ErrorResponce(Exception("❌ Wrong address: '$address'"));
       }
-      
 
-      return SuccessResponce<AddressDto>(
-        AddressDto.fromJson(AddressDummyData.addressDummyData),
+      // 🎯 Create a copy of the dummy data with a unique ID
+      final newAddressMap = Map<String, dynamic>.from(
+        AddressDummyData.addressDummyData,
       );
+      newAddressMap["id"] = "dummy-id-${DateTime.now().millisecondsSinceEpoch}";
+      newAddressMap["isDefault"] = AddressDummyData
+          .savedAddressesList
+          .isEmpty; // Make default if it's the only one
+
+      // 🎯 Add it to the static list so getAddresses() will see it
+      AddressDummyData.savedAddressesList.add(newAddressMap);
+
+      return SuccessResponce<AddressDto>(AddressDto.fromJson(newAddressMap));
     } on Exception catch (e) {
       log('❌ Exception: $e');
       return ErrorResponce<AddressDto>(e);
     }
   }
+
   @override
   Future<BaseResponce<List<AddressDto>>> getAddresses() async {
     await Future.delayed(const Duration(milliseconds: 400));
@@ -67,9 +76,11 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
       final dtos = AddressDummyData.savedAddressesList
           .map((json) => AddressDto.fromJson(json))
           .toList();
-      return SuccessResponce(dtos);
-    } catch (e) {
-      return ErrorResponce(Exception(e.toString()));
+
+      return SuccessResponce<List<AddressDto>>(dtos);
+    } on Exception catch (e) {
+      log('❌ Exception: $e');
+      return ErrorResponce<List<AddressDto>>(e);
     }
   }
 
@@ -79,15 +90,22 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
     try {
       final list = AddressDummyData.savedAddressesList;
       final index = list.indexWhere((a) => a['id'] == id);
-      if (index == -1) return SuccessResponce(false);
+
+      if (index == -1) {
+        return SuccessResponce<bool>(false);
+      }
 
       final wasDefault = list[index]['isDefault'] as bool;
       list.removeAt(index);
-      if (wasDefault && list.isNotEmpty) list[0]['isDefault'] = true;
 
-      return SuccessResponce(true);
-    } catch (e) {
-      return ErrorResponce(Exception(e.toString()));
+      if (wasDefault && list.isNotEmpty) {
+        list[0]['isDefault'] = true;
+      }
+
+      return SuccessResponce<bool>(true);
+    } on Exception catch (e) {
+      log('❌ Exception: $e');
+      return ErrorResponce<bool>(e);
     }
   }
 
@@ -97,14 +115,19 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
     try {
       final list = AddressDummyData.savedAddressesList;
       final index = list.indexWhere((a) => a['id'] == id);
-      if (index == -1) return ErrorResponce(Exception('Address not found'));
+
+      if (index == -1) {
+        return ErrorResponce(Exception("❌ Address not found with id: '$id'"));
+      }
 
       for (var i = 0; i < list.length; i++) {
         list[i]['isDefault'] = (list[i]['id'] == id);
       }
-      return SuccessResponce(AddressDto.fromJson(list[index]));
-    } catch (e) {
-      return ErrorResponce(Exception(e.toString()));
+
+      return SuccessResponce<AddressDto>(AddressDto.fromJson(list[index]));
+    } on Exception catch (e) {
+      log('❌ Exception: $e');
+      return ErrorResponce<AddressDto>(e);
     }
   }
 }

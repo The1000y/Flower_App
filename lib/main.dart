@@ -18,8 +18,10 @@ Future<void> main() async {
       minTextAdapt: true,
 
       splitScreenMode: true,
-
-      child: const FlowerApp(),
+builder: (context, child)
+{
+      return const FlowerApp();
+       },
     ),
   );
 }
