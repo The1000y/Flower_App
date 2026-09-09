@@ -45,7 +45,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
           ),
         ),
         PersistentTabConfig(
-          screen: const Card_view(),
+          screen: const CardView(),
           item: ItemConfig(
             icon: const Icon(Icons.shopping_cart),
             title: AppStrings.navCart,

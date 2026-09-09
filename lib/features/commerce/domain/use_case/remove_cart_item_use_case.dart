@@ -5,7 +5,7 @@ import '../entities/cart/cart_entity.dart';
 import '../repo/commerce_repo.dart';
 @injectable
 class RemoveCartItemUseCase {
-    CommerceRepo commerceRepo;
+ final CommerceRepo commerceRepo;
 RemoveCartItemUseCase({required this.commerceRepo});
 
   Future<BaseResponce<CartEntity>> call(String cartItemId) async {

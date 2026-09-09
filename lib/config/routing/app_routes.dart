@@ -94,7 +94,7 @@ abstract class AppRoutes {
       // Cart & Checkout
       case Routes.cart:
         return MaterialPageRoute(
-          builder: (_) => const Card_view(),
+          builder: (_) => const CardView(),
         );
 
       case Routes.checkout:

@@ -12,14 +12,14 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'widgets/cart_items_list.dart';
 
-class Card_view extends StatefulWidget {
-  const Card_view({super.key});
+class CardView extends StatefulWidget {
+  const CardView({super.key});
 
   @override
-  State<Card_view> createState() => CardViewState();
+  State<CardView> createState() => CardViewState();
 }
 
-class CardViewState extends State<Card_view> {
+class CardViewState extends State<CardView> {
   late final CartCubit _cubit;
 
   @override
@@ -36,7 +36,6 @@ class CardViewState extends State<Card_view> {
     _cubit.doEvent(GetCartItemsEvent());
   }
 
-  // يتم استدعاؤها كل مرة ندخل فيها على Cart
   void refreshCart() {
     _cubit.doEvent(GetCartItemsEvent());
   }
@@ -60,9 +59,7 @@ class CardViewState extends State<Card_view> {
         body: BlocBuilder<CartCubit, CartState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (state.errorMessage.isNotEmpty) {
@@ -81,26 +78,26 @@ class CardViewState extends State<Card_view> {
               );
             }
 
-            final subtotal = state.cartItems.fold<double>(
-              0,
-              (previousValue, item) =>
-                  previousValue + item.lineSubtotal,
-            );
-
-            final deliveryFee = state.totalPrice > subtotal
-                ? state.totalPrice - subtotal
+            final cart = state.data;
+            final subtotal =
+                cart?.items.fold<double>(
+                  0,
+                  (previousValue, item) => previousValue + item.lineSubtotal,
+                ) ??
+                0.0;
+            final totalPrice = cart?.total ?? 0.0;
+            final deliveryFee = totalPrice > subtotal
+                ? totalPrice - subtotal
                 : 0.0;
 
             return Column(
               children: [
                 Expanded(
                   child: CartItemsList(
-                    items: state.cartItems,
+                    items: state.data?.items ?? [],
                     onDelete: (cartItemId) {
                       _cubit.doEvent(
-                        RemoveCartItemEvent(
-                          cartItemId: cartItemId,
-                        ),
+                        RemoveCartItemEvent(cartItemId: cartItemId),
                       );
                     },
                     onQuantityChanged: (cartItemId, newQuantity) {
@@ -117,14 +114,11 @@ class CardViewState extends State<Card_view> {
                 SizedBox(height: 20.h),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Sub total:',
@@ -144,8 +138,7 @@ class CardViewState extends State<Card_view> {
                       ),
 
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'delivery Fee:',
@@ -167,8 +160,7 @@ class CardViewState extends State<Card_view> {
                       SizedBox(height: 10.h),
 
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Total:',
@@ -179,7 +171,7 @@ class CardViewState extends State<Card_view> {
                             ),
                           ),
                           Text(
-                            '\$${state.totalPrice.toStringAsFixed(2)}',
+                            '\$${(state.data?.total ?? 0.0).toStringAsFixed(2)}',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -203,7 +195,7 @@ class CardViewState extends State<Card_view> {
                   child: const Text('Checkout'),
                 ),
 
-                SizedBox(height: 20.h),
+                const SizedBox(height: 20),
               ],
             );
           },

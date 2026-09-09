@@ -1,34 +1,25 @@
-import 'package:equatable/equatable.dart';
 
-import '../../../../domain/entities/cart/cart_item_entity.dart';
+import 'package:flower_app/config/base/base_state.dart';
 
-class CartState extends Equatable {
-  final List<CartItemEntity> cartItems;
-  final double totalPrice;
-  final bool isLoading;
-  final String errorMessage;
+import '../../../../domain/entities/cart/cart_entity.dart';
 
+class CartState extends BaseState<CartEntity> {
   const CartState({
-    this.cartItems = const [],
-    this.totalPrice = 0.0,
-    this.isLoading = false,
-    this.errorMessage = '',
+    super.isLoading,
+    super.errorMessage,
+    super.data,
   });
 
   CartState copyWith({
-    List<CartItemEntity>? cartItems,
-    double? totalPrice,
     bool? isLoading,
     String? errorMessage,
+    CartEntity? data,
   }) {
     return CartState(
-      cartItems: cartItems ?? this.cartItems,
-      totalPrice: totalPrice ?? this.totalPrice,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
+      data: data ?? this.data,
     );
   }
-
-  @override
-  List<Object?> get props => [cartItems, totalPrice, isLoading, errorMessage];
 }
+
