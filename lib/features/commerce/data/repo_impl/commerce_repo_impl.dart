@@ -20,6 +20,7 @@ import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../domain/models/cart/add_cart_item_params.dart';
+import '../../domain/models/cart/update_cart_item_params.dart';
 
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
@@ -141,11 +142,13 @@ class CommerceRepoImpl implements CommerceRepo {
  @override
 Future<BaseResponce<CartEntity>> updateCartItemQuantity(
   String cartItemId,
-  UpdateCartItemRequestDto request,
+  UpdateCartItemParams params,
 ) async {
   final response = await localDataSource.updateCartItemQuantity(
     cartItemId,
-    request,
+    UpdateCartItemRequestDto(
+      quantity: params.quantity,
+    ),
   );
 
   switch (response) {

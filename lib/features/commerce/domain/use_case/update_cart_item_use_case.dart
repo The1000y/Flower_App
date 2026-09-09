@@ -1,7 +1,8 @@
+
+import 'package:flower_app/features/commerce/domain/models/cart/update_cart_item_params.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../config/base/base_responce.dart';
-import '../../data/model/request/cart_request/update_cart_item_request_dto.dart';
 import '../entities/cart/cart_entity.dart';
 import '../repo/commerce_repo.dart';
 
@@ -15,11 +16,12 @@ class UpdateCartItemUseCase {
 
   Future<BaseResponce<CartEntity>> call(
     String cartItemId,
-    UpdateCartItemRequestDto request,
+    UpdateCartItemParams params,
   ) async {
     return await commerceRepo.updateCartItemQuantity(
       cartItemId,
-      request,
+      params,
     );
   }
 }
+

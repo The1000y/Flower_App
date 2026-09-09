@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../domain/models/cart/add_cart_item_params.dart';
+import '../../../../domain/models/cart/update_cart_item_params.dart';
 
 @injectable
 class CartCubit extends Cubit<CartState> {
@@ -152,7 +153,9 @@ class CartCubit extends Cubit<CartState> {
 
   final result = await updateCartItemUseCase.call(
     cartItemId,
-    request,
+    UpdateCartItemParams(
+      quantity: quantity,
+    ),
   );
 
   switch (result) {

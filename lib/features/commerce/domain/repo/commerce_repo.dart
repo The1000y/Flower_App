@@ -10,6 +10,7 @@ import 'package:flower_app/features/commerce/domain/entities/products/pagination
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 
 import '../models/cart/add_cart_item_params.dart';
+import '../models/cart/update_cart_item_params.dart';
 
 abstract interface class CommerceRepo {
   Future<BaseResponce<List<CategoryEntity>>> getCategories();
@@ -35,8 +36,7 @@ abstract interface class CommerceRepo {
 
   Future<BaseResponce<CartEntity>> updateCartItemQuantity(
     String cartItemId,
-    UpdateCartItemRequestDto request,
-  );
+    UpdateCartItemParams params,);
 
   Future<BaseResponce<CartEntity>> removeCartItem(
     String cartItemId,
