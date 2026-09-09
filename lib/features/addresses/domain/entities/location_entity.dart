@@ -1,4 +1,3 @@
-// domain/entities/location_entity.dart
 class GovernorateEntity {
   final String id;
   final String nameAr;
