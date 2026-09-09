@@ -11,6 +11,8 @@ import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/car
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../domain/models/cart/add_cart_item_params.dart';
+
 @injectable
 class CartCubit extends Cubit<CartState> {
   final UpdateCartItemUseCase updateCartItemUseCase;
@@ -103,7 +105,12 @@ class CartCubit extends Cubit<CartState> {
     quantity: quantity,
   );
 
-  final result = await addCartItemUseCase.call(request);
+  final result = await addCartItemUseCase.call(
+    AddCartItemParams(
+      productId: productId,
+      quantity: quantity,
+    ),
+  );
 
 
   switch (result) {

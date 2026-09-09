@@ -9,6 +9,8 @@ import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_e
 import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 
+import '../models/cart/add_cart_item_params.dart';
+
 abstract interface class CommerceRepo {
   Future<BaseResponce<List<CategoryEntity>>> getCategories();
 
@@ -28,7 +30,7 @@ abstract interface class CommerceRepo {
   Future<BaseResponce<CartEntity>> getCart();
 
   Future<BaseResponce<CartEntity>> addToCart(
-    AddCartItemRequestDto request,
+  AddCartItemParams params,
   );
 
   Future<BaseResponce<CartEntity>> updateCartItemQuantity(

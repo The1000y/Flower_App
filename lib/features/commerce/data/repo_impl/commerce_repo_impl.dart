@@ -19,6 +19,8 @@ import 'package:flower_app/features/commerce/domain/entities/products/product_en
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../domain/models/cart/add_cart_item_params.dart';
+
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
   final CommerceLocalDataSource localDataSource;
@@ -96,15 +98,19 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<CartEntity>> addToCart(AddCartItemRequestDto request) async {
-    final response = await localDataSource.addToCart(request);
+  Future<BaseResponce<CartEntity>> addToCart(AddCartItemParams params) async {
+    final response = await localDataSource.addToCart(
+      AddCartItemRequestDto(
+        productId: params.productId,
+        quantity: params.quantity,
+      ),
+    );
     switch (response) {
       case SuccessResponce<CartResponseDto>():
         return SuccessResponce(response.data.toDomain());
       case ErrorResponce<CartResponseDto>():
         return ErrorResponce(response.error);
     }
-
   }
 
   @override
