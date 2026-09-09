@@ -1,5 +1,6 @@
 
 abstract class AppStrings{
+  static const String yourcartisempty = 'Your cart is empty';
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';

@@ -2,6 +2,8 @@ import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_enti
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import '../../../../../../core/constants/app_strings/app_strings.dart';
+
 class CartItem extends StatelessWidget {
   final CartItemEntity item;
   final VoidCallback onDelete;
@@ -60,7 +62,7 @@ class CartItem extends StatelessWidget {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text('EGP ${item.unitPrice.toStringAsFixed(0)}'),
+                            Text('${AppStrings.currencyEGP}{item.unitPrice.toStringAsFixed(0)}'),
                           ],
                         ),
                       ),
@@ -73,7 +75,7 @@ class CartItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'EGP ${item.lineSubtotal.toStringAsFixed(0)}',
+                        ' ${AppStrings.currencyEGP}{item.lineSubtotal.toStringAsFixed(0)}',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16.sp,

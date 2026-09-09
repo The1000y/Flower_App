@@ -1,3 +1,4 @@
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class CartItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return const Center(child: Text('Your cart is empty'));
+      return  Center(child: Text(AppStrings.yourcartisempty));
     }
 
     return ListView.builder(

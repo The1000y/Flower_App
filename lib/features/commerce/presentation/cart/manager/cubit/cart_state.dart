@@ -1,15 +1,15 @@
-
 import 'package:flower_app/config/base/base_state.dart';
 
 import '../../../../domain/entities/cart/cart_entity.dart';
 
 class CartState extends BaseState<CartEntity> {
-  const CartState({
-    super.isLoading,
-    super.errorMessage,
-    super.data,
-  });
+  const CartState({super.isLoading, super.errorMessage, super.data});
 
+  CartEntity get cart =>
+      data ??
+      CartEntity(items: const [], subtotal: 0, total: 0, hasChanges: false);
+
+  @override
   CartState copyWith({
     bool? isLoading,
     String? errorMessage,
@@ -22,4 +22,3 @@ class CartState extends BaseState<CartEntity> {
     );
   }
 }
-

@@ -1,8 +1,5 @@
+
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/features/commerce/domain/use_case/add_cart_item_use_case.dart';
-import 'package:flower_app/features/commerce/domain/use_case/get_cart_use_case.dart';
-import 'package:flower_app/features/commerce/domain/use_case/remove_cart_item_use_case.dart';
-import 'package:flower_app/features/commerce/domain/use_case/update_cart_item_use_case.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
@@ -12,44 +9,13 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'widgets/cart_items_list.dart';
 
-class CardView extends StatefulWidget {
-  const CardView({super.key});
-
-  @override
-  State<CardView> createState() => CardViewState();
-}
-
-class CardViewState extends State<CardView> {
-  late final CartCubit _cubit;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _cubit = CartCubit(
-      getCartUseCase: getIt<GetCartUseCase>(),
-      addCartItemUseCase: getIt<AddCartItemUseCase>(),
-      updateCartItemUseCase: getIt<UpdateCartItemUseCase>(),
-      removeCartItemUseCase: getIt<RemoveCartItemUseCase>(),
-    );
-
-    _cubit.doEvent(GetCartItemsEvent());
-  }
-
-  void refreshCart() {
-    _cubit.doEvent(GetCartItemsEvent());
-  }
-
-  @override
-  void dispose() {
-    _cubit.close();
-    super.dispose();
-  }
+class CartView extends StatelessWidget {
+  const CartView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: _cubit,
+      value: getIt<CartCubit>(),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -59,7 +25,9 @@ class CardViewState extends State<CardView> {
         body: BlocBuilder<CartCubit, CartState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
 
             if (state.errorMessage.isNotEmpty) {
@@ -70,7 +38,11 @@ class CardViewState extends State<CardView> {
                     Text(state.errorMessage),
                     const SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: refreshCart,
+                      onPressed: () {
+                        context.read<CartCubit>().doEvent(
+                              GetCartItemsEvent(),
+                            );
+                      },
                       child: const Text('Retry'),
                     ),
                   ],
@@ -79,13 +51,17 @@ class CardViewState extends State<CardView> {
             }
 
             final cart = state.data;
+
             final subtotal =
                 cart?.items.fold<double>(
                   0,
-                  (previousValue, item) => previousValue + item.lineSubtotal,
+                  (previousValue, item) =>
+                      previousValue + item.lineSubtotal,
                 ) ??
                 0.0;
+
             final totalPrice = cart?.total ?? 0.0;
+
             final deliveryFee = totalPrice > subtotal
                 ? totalPrice - subtotal
                 : 0.0;
@@ -94,19 +70,21 @@ class CardViewState extends State<CardView> {
               children: [
                 Expanded(
                   child: CartItemsList(
-                    items: state.data?.items ?? [],
+                    items: cart?.items ?? [],
                     onDelete: (cartItemId) {
-                      _cubit.doEvent(
-                        RemoveCartItemEvent(cartItemId: cartItemId),
-                      );
+                      context.read<CartCubit>().doEvent(
+                            RemoveCartItemEvent(
+                              cartItemId: cartItemId,
+                            ),
+                          );
                     },
                     onQuantityChanged: (cartItemId, newQuantity) {
-                      _cubit.doEvent(
-                        UpdateCartItemEvent(
-                          cartItemId: cartItemId,
-                          quantity: newQuantity,
-                        ),
-                      );
+                      context.read<CartCubit>().doEvent(
+                            UpdateCartItemEvent(
+                              cartItemId: cartItemId,
+                              quantity: newQuantity,
+                            ),
+                          );
                     },
                   ),
                 ),
@@ -114,11 +92,14 @@ class CardViewState extends State<CardView> {
                 SizedBox(height: 20.h),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                  ),
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Sub total:',
@@ -138,7 +119,8 @@ class CardViewState extends State<CardView> {
                       ),
 
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'delivery Fee:',
@@ -160,7 +142,8 @@ class CardViewState extends State<CardView> {
                       SizedBox(height: 10.h),
 
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Total:',
@@ -171,7 +154,7 @@ class CardViewState extends State<CardView> {
                             ),
                           ),
                           Text(
-                            '\$${(state.data?.total ?? 0.0).toStringAsFixed(2)}',
+                            '\$${totalPrice.toStringAsFixed(2)}',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -204,3 +187,4 @@ class CardViewState extends State<CardView> {
     );
   }
 }
+

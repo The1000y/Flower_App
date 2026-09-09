@@ -9,7 +9,6 @@ import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
 import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +93,7 @@ abstract class AppRoutes {
       // Cart & Checkout
       case Routes.cart:
         return MaterialPageRoute(
-          builder: (_) => const CardView(),
+          builder: (_) => const CartView(),
         );
 
       case Routes.checkout:

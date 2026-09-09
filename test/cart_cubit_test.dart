@@ -66,8 +66,8 @@ void main() {
     cubit.doEvent(GetCartItemsEvent());
     await pumpEventQueue();
 
-    expect(cubit.state.cartItems.length, 1);
-    expect(cubit.state.totalPrice, 420);
+    expect(cubit.state.cart.items.length, 1);
+    expect(cubit.state.cart.total, 420);
 
     await cubit.close();
   });
