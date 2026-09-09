@@ -11,6 +11,18 @@ class ChangePasswordUseCase {
   ChangePasswordUseCase(this.profileRepo);
 
   Future<BaseResponce<ChangePasswordResponse>> call(ChangePasswordRequest request) async {
+    if (request.currentPassword == null || request.currentPassword!.trim().isEmpty) {
+      return ErrorResponce<ChangePasswordResponse>(Exception('Current password cannot be empty'));
+    }
+
+    if (request.newPassword == null || request.newPassword!.trim().isEmpty) {
+      return ErrorResponce<ChangePasswordResponse>(Exception('New password cannot be empty'));
+    }
+
+    if (request.newPassword != request.confirmNewPassword) {
+      return ErrorResponce<ChangePasswordResponse>(Exception('Passwords do not match'));
+    }
+
     return await profileRepo.changePassword(request);
   }
 }
