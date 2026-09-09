@@ -1,3 +1,4 @@
+import 'package:flower_app/features/profile/domain/entities/change_password_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
@@ -28,4 +29,13 @@ class ChangePasswordResponse {
   factory ChangePasswordResponse.fromJson(Map<String, dynamic> json) => _$ChangePasswordResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChangePasswordResponseToJson(this);
+
+  ChangePasswordEntity toEntity() {
+    return ChangePasswordEntity(
+      data: data,
+      isSuccess: isSuccess,
+      message: message,
+      errorCode: errorCode,
+    );
+  }
 }

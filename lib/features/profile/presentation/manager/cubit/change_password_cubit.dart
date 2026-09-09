@@ -1,6 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/profile/data/model/request/change_password_request/change_password_request.dart';
-import 'package:flower_app/features/profile/data/model/response/change_password_response/change_password_response.dart';
+
+import 'package:flower_app/features/profile/domain/entities/change_password_entity.dart';
 import 'package:flower_app/features/profile/domain/use_case/change_password_use_case.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_event.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_state.dart';
@@ -41,16 +41,16 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
       ),
     );
 
-    final request = ChangePasswordRequest(
+
+
+    final response = await _changePasswordUseCase.call(
       currentPassword: currentPassword,
       newPassword: newPassword,
       confirmNewPassword: confirmPassword,
     );
 
-    final response = await _changePasswordUseCase.call(request);
-
     switch (response) {
-      case SuccessResponce<ChangePasswordResponse>():
+      case SuccessResponce<ChangePasswordEntity>():
         emit(
           state.copyWith(
             changePasswordState: state.changePasswordState.copyWith(
@@ -62,7 +62,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
         );
         break;
 
-      case ErrorResponce<ChangePasswordResponse>():
+      case ErrorResponce<ChangePasswordEntity>():
         emit(
           state.copyWith(
             changePasswordState: state.changePasswordState.copyWith(

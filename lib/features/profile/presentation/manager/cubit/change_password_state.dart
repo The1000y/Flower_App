@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/profile/data/model/response/change_password_response/change_password_response.dart';
+import 'package:flower_app/features/profile/domain/entities/change_password_entity.dart';
 
 class ChangePasswordState extends Equatable {
-  final BaseState<ChangePasswordResponse> changePasswordState;
+  final BaseState<ChangePasswordEntity> changePasswordState;
 
   const ChangePasswordState({
-    this.changePasswordState = const BaseState<ChangePasswordResponse>(),
+    this.changePasswordState = const BaseState<ChangePasswordEntity>(),
   });
 
   ChangePasswordState copyWith({
-    BaseState<ChangePasswordResponse>? changePasswordState,
+    BaseState<ChangePasswordEntity>? changePasswordState,
   }) {
     return ChangePasswordState(
       changePasswordState: changePasswordState ?? this.changePasswordState,
