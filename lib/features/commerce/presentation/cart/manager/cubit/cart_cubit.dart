@@ -1,6 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
-import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
+
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/use_case/add_cart_item_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_cart_use_case.dart';
@@ -101,16 +100,13 @@ class CartCubit extends Cubit<CartState> {
     errorMessage: '',
   ));
 
-  final request = AddCartItemRequestDto(
+  final params = AddCartItemParams(
     productId: productId,
     quantity: quantity,
   );
 
   final result = await addCartItemUseCase.call(
-    AddCartItemParams(
-      productId: productId,
-      quantity: quantity,
-    ),
+    params
   );
 
 
@@ -147,15 +143,13 @@ class CartCubit extends Cubit<CartState> {
     errorMessage: '',
   ));
 
-  final request = UpdateCartItemRequestDto(
+  final params = UpdateCartItemParams(
     quantity: quantity,
   );
 
   final result = await updateCartItemUseCase.call(
     cartItemId,
-    UpdateCartItemParams(
-      quantity: quantity,
-    ),
+   params,
   );
 
   switch (result) {
