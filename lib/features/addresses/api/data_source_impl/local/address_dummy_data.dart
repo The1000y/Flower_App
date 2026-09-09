@@ -11,7 +11,7 @@ abstract class AddressDummyData {
     //lat-log in emulator locationPosition
     "lat": 29.964004958067264,
     "lng": 32.550108432769775,
-    "label": "Home",
+    "label": "home",
     "isDefault": false,
     "storeId": "store-123",
     "isServiceable": true, 

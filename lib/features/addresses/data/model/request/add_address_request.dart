@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final addAddressRequest = addAddressRequestFromJson(jsonString);
 
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
@@ -14,34 +11,37 @@ String addAddressRequestToJson(AddAddressRequest data) => json.encode(data.toJso
 @JsonSerializable()
 class AddAddressRequest {
     @JsonKey(name: "recipientName")
-    String? recipientName;
+    String recipientName;
     @JsonKey(name: "recipientPhone")
-    String? recipientPhone;
+    String recipientPhone;
     @JsonKey(name: "addressLine")
-    String? addressLine;
+    String addressLine;
     @JsonKey(name: "city")
-    String? city;
+    String city;
     @JsonKey(name: "area")
-    String? area;
+    String area;
     @JsonKey(name: "lat")
-    double? lat;
+    double lat;
     @JsonKey(name: "lng")
-    double? lng;
+    double lng;
     @JsonKey(name: "label")
-    String? label;
+    String label;
 
     AddAddressRequest({
-        this.recipientName,
-        this.recipientPhone,
-        this.addressLine,
-        this.city,
-        this.area,
-        this.lat,
-        this.lng,
-        this.label,
+        required this.recipientName,
+        required this.recipientPhone,
+        required this.addressLine,
+        required this.city,
+        required this.area,
+        required this.lat,
+        required this.lng,
+        required this.label,
     });
 
     factory AddAddressRequest.fromJson(Map<String, dynamic> json) => _$AddAddressRequestFromJson(json);
 
     Map<String, dynamic> toJson() => _$AddAddressRequestToJson(this);
+    
+  
+    
 }

@@ -1,4 +1,4 @@
-import 'package:flower_app/features/addresses/data/model/request/add_address_request.dart';
+import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 sealed class AddressEvents {}
@@ -21,6 +21,6 @@ class SelectCityEvent extends AddressEvents {
 }
 
 class SubmitAddressEvent extends AddressEvents {
-  final AddAddressRequest addAddressRequest;
-  SubmitAddressEvent({required this.addAddressRequest});
+  final AddAddressParams addAddressParams;
+  SubmitAddressEvent({required this.addAddressParams});
 }
