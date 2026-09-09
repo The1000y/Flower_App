@@ -23,12 +23,20 @@ void main() {
   late MockAddCartItemUseCase addCartItemUseCase;
   late MockUpdateCartItemUseCase updateCartItemUseCase;
   late MockRemoveCartItemUseCase removeCartItemUseCase;
+  late CartCubit cubit;
 
   setUp(() {
     getCartUseCase = MockGetCartUseCase();
     addCartItemUseCase = MockAddCartItemUseCase();
     updateCartItemUseCase = MockUpdateCartItemUseCase();
     removeCartItemUseCase = MockRemoveCartItemUseCase();
+
+    cubit = CartCubit(
+      getCartUseCase: getCartUseCase,
+      addCartItemUseCase: addCartItemUseCase,
+      updateCartItemUseCase: updateCartItemUseCase,
+      removeCartItemUseCase: removeCartItemUseCase,
+    );
 
     when(() => getCartUseCase.call()).thenAnswer(
       (_) async => SuccessResponce(
@@ -55,20 +63,16 @@ void main() {
     );
   });
 
-  test('loads cart items when GetCartItemsEvent is dispatched', () async {
-    final cubit = CartCubit(
-      getCartUseCase: getCartUseCase,
-      addCartItemUseCase: addCartItemUseCase,
-      updateCartItemUseCase: updateCartItemUseCase,
-      removeCartItemUseCase: removeCartItemUseCase,
-    );
+  tearDown(() async {
+    await cubit.close();
+  });
 
+  test('loads cart items when GetCartItemsEvent is dispatched', () async {
     cubit.doEvent(GetCartItemsEvent());
+
     await pumpEventQueue();
 
-    expect(cubit.state.cart.items.length, 1);
-    expect(cubit.state.cart.total, 420);
-
-    await cubit.close();
+    expect(cubit.state.data?.items.length, 1);
+    expect(cubit.state.data?.total, 420);
   });
 }

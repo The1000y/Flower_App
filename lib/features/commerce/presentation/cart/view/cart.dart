@@ -1,5 +1,6 @@
 
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
@@ -19,7 +20,7 @@ class CartView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Cart'),
+          title: const Text(AppStrings.navCart),
           backgroundColor: Colors.white,
         ),
         body: BlocBuilder<CartCubit, CartState>(
@@ -43,7 +44,7 @@ class CartView extends StatelessWidget {
                               GetCartItemsEvent(),
                             );
                       },
-                      child: const Text('Retry'),
+                      child: const Text(AppStrings.retry),
                     ),
                   ],
                 ),
@@ -102,7 +103,7 @@ class CartView extends StatelessWidget {
                             MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Sub total:',
+                            AppStrings.subtotal,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
@@ -175,7 +176,7 @@ class CartView extends StatelessWidget {
                       vertical: 10,
                     ),
                   ),
-                  child: const Text('Checkout'),
+                  child: const Text(AppStrings.checkout),
                 ),
 
                 const SizedBox(height: 20),
