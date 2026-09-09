@@ -13,7 +13,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../domain/models/cart/add_cart_item_params.dart';
 import '../../../../domain/models/cart/update_cart_item_params.dart';
 
-@injectable
+@singleton
 class CartCubit extends Cubit<CartState> {
   final UpdateCartItemUseCase updateCartItemUseCase;
   final RemoveCartItemUseCase removeCartItemUseCase;
@@ -41,6 +41,9 @@ class CartCubit extends Cubit<CartState> {
       case GetCartItemsEvent():
         _getCart();
         break;
+        case CartRefreshRequestedEvent():
+  _getCart();
+  break;
     }
   }
 

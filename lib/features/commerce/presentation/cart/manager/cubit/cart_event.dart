@@ -21,3 +21,4 @@ class RemoveCartItemEvent extends CartEvent {
 
   RemoveCartItemEvent({required this.cartItemId});
 }
+class CartRefreshRequestedEvent extends CartEvent {}
