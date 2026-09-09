@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
+import '../../features/profile/presentation/manager/cubit/change_password_cubit.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -129,7 +130,12 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.changePassword:
-        return MaterialPageRoute(builder: (_) => const ChangePasswordView());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ChangePasswordCubit>(),
+            child: const ChangePasswordView(),
+          ),
+        );
 
       // Tracking
       case Routes.orderSuccess:
