@@ -28,6 +28,7 @@ abstract class Routes {
   static const String myOrders = '/my_orders';
   static const String orderDetails = '/order_details';
 
+
   // Notifications
   static const String notifications = '/notifications';
 
