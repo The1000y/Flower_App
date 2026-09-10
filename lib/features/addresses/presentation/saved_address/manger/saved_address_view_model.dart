@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../../config/base/base_responce.dart';
 import '../../../domain/usecases/delete_address_usecase.dart';
 import '../../../domain/usecases/get_addresses_usecase.dart';
 import '../../../domain/usecases/set_default_address_usecase.dart';
@@ -32,44 +31,82 @@ class SavedAddressViewModel extends Cubit<SavedAddressState> {
 
   Future<void> _loadAddresses() async {
     emit(state.copyWith(
-      addressesState: state.addressesState.copyWith(isLoading: true, errorMessage: ''),
+      addressesState: state.addressesState.copyWith(
+        isLoading: true,
+        errorMessage: '',
+      ),
     ));
 
-    final response = await _getAddresses.execute();
+    try {
+      final addresses = await _getAddresses.execute();
 
-    switch (response) {
-      case SuccessResponce():
-        emit(state.copyWith(
-          addressesState: state.addressesState.copyWith(isLoading: false, data: response.data),
-        ));
-      case ErrorResponce():
-        emit(state.copyWith(
-          addressesState: state.addressesState.copyWith(isLoading: false, errorMessage: response.error.toString()),
-        ));
+      emit(state.copyWith(
+        addressesState: state.addressesState.copyWith(
+          isLoading: false,
+          data: addresses,
+        ),
+      ));
+    } catch (e) {
+      // 🎯 Catch any repository errors here
+      emit(state.copyWith(
+        addressesState: state.addressesState.copyWith(
+          isLoading: false,
+          errorMessage: e.toString(),
+        ),
+      ));
     }
   }
 
   Future<void> _deleteAndReload(String id) async {
-    final response = await _deleteAddress.execute(id);
-    switch (response) {
-      case SuccessResponce():
+    emit(state.copyWith(
+      addressesState: state.addressesState.copyWith(
+        isLoading: true,
+        errorMessage: '',
+      ),
+    ));
+
+    try {
+      final isDeleted = await _deleteAddress.execute(id);
+
+      if (isDeleted) {
         await _loadAddresses();
-      case ErrorResponce():
+      } else {
         emit(state.copyWith(
-          addressesState: state.addressesState.copyWith(errorMessage: response.error.toString()),
+          addressesState: state.addressesState.copyWith(
+            isLoading: false,
+            errorMessage: 'Failed to delete address.',
+          ),
         ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        addressesState: state.addressesState.copyWith(
+          isLoading: false,
+          errorMessage: e.toString(),
+        ),
+      ));
     }
   }
 
   Future<void> _setDefaultAndReload(String id) async {
-    final response = await _setDefaultAddress.execute(id);
-    switch (response) {
-      case SuccessResponce():
-        await _loadAddresses();
-      case ErrorResponce():
-        emit(state.copyWith(
-          addressesState: state.addressesState.copyWith(errorMessage: response.error.toString()),
-        ));
+    emit(state.copyWith(
+      addressesState: state.addressesState.copyWith(
+        isLoading: true,
+        errorMessage: '',
+      ),
+    ));
+
+    try {
+      await _setDefaultAddress.execute(id);
+
+      await _loadAddresses();
+    } catch (e) {
+      emit(state.copyWith(
+        addressesState: state.addressesState.copyWith(
+          isLoading: false,
+          errorMessage: e.toString(),
+        ),
+      ));
     }
   }
 }

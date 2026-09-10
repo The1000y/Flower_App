@@ -1,7 +1,6 @@
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/addresses/presentation/saved_address/view/saved_address_view.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
@@ -17,6 +16,7 @@ import 'package:flower_app/features/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../features/addresses/presentation/add_address/view/address_view.dart';
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
 

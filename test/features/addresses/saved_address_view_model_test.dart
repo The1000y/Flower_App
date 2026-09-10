@@ -1,6 +1,4 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/usecases/delete_address_usecase.dart';
 import 'package:flower_app/features/addresses/domain/usecases/get_addresses_usecase.dart';
@@ -58,7 +56,7 @@ void main() {
       'emits [loading, loaded] when LoadAddresses succeeds',
       build: () {
         when(() => mockGetAddressesUseCase.execute())
-            .thenAnswer((_) async => SuccessResponce<List<AddressEntity>>([tAddress]));
+            .thenAnswer((_) async => [tAddress]);
         return viewModel;
       },
       act: (cubit) => cubit.doEvent(LoadAddresses()),
@@ -78,7 +76,7 @@ void main() {
       'emits [loading, error] when LoadAddresses fails',
       build: () {
         when(() => mockGetAddressesUseCase.execute())
-            .thenAnswer((_) async => ErrorResponce(Exception('Load failed')));
+            .thenThrow(Exception('Load failed'));
         return viewModel;
       },
       act: (cubit) => cubit.doEvent(LoadAddresses()),
@@ -95,13 +93,16 @@ void main() {
       'reloads the list when DeleteAddress succeeds',
       build: () {
         when(() => mockDeleteAddressUseCase.execute('1'))
-            .thenAnswer((_) async => SuccessResponce<bool>(true));
+            .thenAnswer((_) async => true);
+
         when(() => mockGetAddressesUseCase.execute())
-            .thenAnswer((_) async => SuccessResponce<List<AddressEntity>>([]));
+            .thenAnswer((_) async => []);
         return viewModel;
       },
       act: (cubit) => cubit.doEvent(DeleteAddressPressed('1')),
       expect: () => [
+        isA<SavedAddressState>()
+            .having((s) => s.addressesState.isLoading, 'isLoading', isTrue),
         isA<SavedAddressState>()
             .having((s) => s.addressesState.isLoading, 'isLoading', isTrue),
         isA<SavedAddressState>()
@@ -118,12 +119,15 @@ void main() {
       'emits an error and does not reload when DeleteAddress fails',
       build: () {
         when(() => mockDeleteAddressUseCase.execute('1'))
-            .thenAnswer((_) async => ErrorResponce(Exception('Delete failed')));
+            .thenThrow(Exception('Delete failed'));
         return viewModel;
       },
       act: (cubit) => cubit.doEvent(DeleteAddressPressed('1')),
       expect: () => [
         isA<SavedAddressState>()
+            .having((s) => s.addressesState.isLoading, 'isLoading', isTrue),
+        isA<SavedAddressState>()
+            .having((s) => s.addressesState.isLoading, 'isLoading', isFalse)
             .having((s) => s.addressesState.errorMessage, 'errorMessage', isNotEmpty),
       ],
       verify: (_) {

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
@@ -6,16 +5,16 @@ import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
-import 'package:flower_app/features/addresses/data/model/request/add_address_request.dart';
-import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
-import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
-import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
-import 'package:flower_app/features/addresses/presentation/view/widgets/helper_methods/helper_methods.dart';
+import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-// ignore: must_be_immutable
+import '../../manager/cubit/add_address_cubit.dart';
+import '../../manager/cubit/address_events.dart';
+import '../../manager/cubit/address_state.dart';
+import 'helper_methods/helper_methods.dart';
+
 class CustomAddressBody extends StatefulWidget {
   CustomAddressBody({
     super.key,
@@ -50,9 +49,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     _initializeControllers();
     cubit = context.read<AddressCubit>();
     cubit.doEvent(
-      InitializeAddressEvent(
-        existingAddress: widget.editingAddress,
-      ),
+      InitializeAddressEvent(existingAddress: widget.editingAddress),
     );
 
     if (widget.editingAddress != null) {
@@ -103,7 +100,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     return BlocConsumer<AddressCubit, AddressState>(
       listenWhen: (previous, current) {
         return previous.locationState.errorMessage !=
-                current.locationState.errorMessage ||
+            current.locationState.errorMessage ||
             previous.addAddressState.errorMessage !=
                 current.addAddressState.errorMessage ||
             previous.addAddressState.data != current.addAddressState.data ||
@@ -113,7 +110,6 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
       listener: (context, state) {
         if (state.locationState.data != null &&
             state.selectedCoordinates == null) {
-          // لو لم نحدد موقع بعد
           _animateCameraToLocation(state.locationState.data!);
         }
 
@@ -143,7 +139,6 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
           );
         }
 
-        // أخطاء reverse geocoding
         if (state.reverseGeocodeState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -173,10 +168,10 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
 
               Listener(
                 onPointerDown: (_) {
-                  widget.isMapScroll(false); // لما تحط إيدك على الخريطة
+                  widget.isMapScroll(false);
                 },
                 onPointerUp: (_) {
-                  widget.isMapScroll(true); // لما تشيل إيدك
+                  widget.isMapScroll(true);
                 },
                 child: Container(
                   width: double.infinity,
@@ -184,7 +179,6 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                   decoration: BoxDecoration(color: AppColors.lightPink),
                   child: Stack(
                     children: [
-                      // لو كانت الخريطة لم تُحمّل بعد
                       if (isLocationLoading)
                         const Center(child: CircularProgressIndicator())
                       else
@@ -209,7 +203,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                               initialCameraPosition: CameraPosition(
                                 zoom: 14,
                                 target:
-                                    state.selectedCoordinates ??
+                                state.selectedCoordinates ??
                                     const LatLng(
                                       30.047931723716083,
                                       31.238564150922823,
@@ -240,8 +234,6 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                               ),
                           ],
                         ),
-
-                      // الصورة (الـ marker) في المنتصف
                     ],
                   ),
                 ),
@@ -259,7 +251,6 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                 controller: addressController,
                 label: AppStrings.addressTitle,
                 hintText: AppStrings.enterAddressHint,
-                readOnly: true,
               ),
               const SizedBox(height: 24),
               CustomTextFormField(
@@ -334,9 +325,9 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                     child: DropdownButtonFormField<String>(
                       isExpanded: true,
                       initialValue:
-                          (filteredCities.any(
+                      (filteredCities.any(
                             (city) => city.id == state.selectedCity,
-                          ))
+                      ))
                           ? state.selectedCity
                           : null,
                       hint: Text(
@@ -385,42 +376,43 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                 onPressed: isLoading
                     ? null
                     : () {
-                        if (!formKey.currentState!.validate()) return;
+                  if (!formKey.currentState!.validate()) return;
 
-                        final matchedGovernorates = state.governorates
-                            .where((g) => g.id == state.selectedGovernorate)
-                            .toList();
+                  final matchedGovernorates = state.governorates
+                      .where((g) => g.id == state.selectedGovernorate)
+                      .toList();
 
-                        final matchedAreas = filteredCities
-                            .where((c) => c.id == state.selectedCity)
-                            .toList();
+                  final matchedAreas = filteredCities
+                      .where((c) => c.id == state.selectedCity)
+                      .toList();
 
-                        if (matchedGovernorates.isEmpty || matchedAreas.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please re-select governorate and area'),
-                            ),
-                          );
-                          return;
-                        }
+                  if (matchedGovernorates.isEmpty ||
+                      matchedAreas.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Please re-select governorate and area',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
 
-                        final address = AddAddressRequest(
-                          recipientName: recipientNameController.text.trim(),
-                          recipientPhone: phoneNumberController.text.trim(),
-                          addressLine: addressController.text.trim(),
-                          city: matchedGovernorates.first.nameEn,
-                          area: matchedAreas.first.nameEn,
-                          lat: state.selectedCoordinates?.latitude,
-                          lng: state.selectedCoordinates?.longitude,
-                          label: null,
-                        );
+                  final address = AddAddressParams(
+                    recipientName: recipientNameController.text.trim(),
+                    recipientPhone: phoneNumberController.text.trim(),
+                    addressLine: addressController.text.trim(),
+                    city: matchedGovernorates.first.nameEn,
+                    area: matchedAreas.first.nameEn,
+                    lat: state.selectedCoordinates?.latitude ?? 0.0,
+                    lng: state.selectedCoordinates?.longitude ?? 0.0,
+                    label: "",
+                  );
 
-                        cubit.doEvent(
-                          SubmitAddressEvent(
-                            addAddressRequest: address,
-                          ),
-                        );
-                      },
+                  cubit.doEvent(
+                    SubmitAddressEvent(addAddressParams: address),
+                  );
+                },
                 isEnabled: !isLoading,
                 enabledColor: AppColors.pinkBase,
               ),

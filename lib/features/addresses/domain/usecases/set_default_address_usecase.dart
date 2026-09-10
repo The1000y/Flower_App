@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import '../../../../config/base/base_responce.dart';
 import '../entities/address_entity.dart';
 import '../repo/address_repo.dart';
 
@@ -8,7 +7,7 @@ class SetDefaultAddressUseCase {
   final AddressRepo _repo;
   SetDefaultAddressUseCase(this._repo);
 
-  Future<BaseResponce<AddressEntity>> execute(String id) {
+  Future<AddressEntity> execute(String id) {
     return _repo.setDefaultAddress(id);
   }
 }

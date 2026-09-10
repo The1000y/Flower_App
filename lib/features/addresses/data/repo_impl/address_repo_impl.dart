@@ -19,11 +19,12 @@ class AddressRepoImpl implements AddressRepo {
   final LocationDataSource locationDataSource;
 
   AddressRepoImpl(this.addressLocalDataSource, this.locationDataSource);
+
   @override
   Future<BaseResponce<AddressEntity>> addAddress({
     required AddAddressParams addAddressParams,
   }) async {
-    var responce = await addressLocalDataSource.addAddress(
+    var response = await addressLocalDataSource.addAddress(
       addAddressRequest: AddAddressRequest(
         recipientName: addAddressParams.recipientName,
         recipientPhone: addAddressParams.recipientPhone,
@@ -36,12 +37,12 @@ class AddressRepoImpl implements AddressRepo {
       ),
     );
 
-    switch (responce) {
+    switch (response) {
       case SuccessResponce<AddressDto>():
-        return SuccessResponce(responce.data.toDomain());
+        return SuccessResponce(response.data.toDomain());
 
       case ErrorResponce<AddressDto>():
-        return ErrorResponce(responce.error);
+        return ErrorResponce(response.error);
     }
   }
 
@@ -64,30 +65,37 @@ class AddressRepoImpl implements AddressRepo {
   Future<Placemark?> getReverseGeocodedAddress(LatLng coordinates) async {
     return await locationDataSource.getReverseGeocodedAddress(coordinates);
   }
+
   @override
-  Future<BaseResponce<List<AddressEntity>>> getAddresses() async {
+  Future<List<AddressEntity>> getAddresses() async {
     final response = await addressLocalDataSource.getAddresses();
     switch (response) {
       case SuccessResponce<List<AddressDto>>():
-        return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
+        return response.data.map((e) => e.toDomain()).toList();
       case ErrorResponce<List<AddressDto>>():
-        return ErrorResponce(response.error);
+        throw response.error;
     }
   }
 
   @override
-  Future<BaseResponce<bool>> deleteAddress(String id) {
-    return addressLocalDataSource.deleteAddress(id);
+  Future<bool> deleteAddress(String id) async {
+    final response = await addressLocalDataSource.deleteAddress(id);
+    switch (response) {
+      case SuccessResponce<bool>():
+        return response.data;
+      case ErrorResponce<bool>():
+        throw response.error;
+    }
   }
 
   @override
-  Future<BaseResponce<AddressEntity>> setDefaultAddress(String id) async {
+  Future<AddressEntity> setDefaultAddress(String id) async {
     final response = await addressLocalDataSource.setDefaultAddress(id);
     switch (response) {
       case SuccessResponce<AddressDto>():
-        return SuccessResponce(response.data.toDomain());
+        return response.data.toDomain();
       case ErrorResponce<AddressDto>():
-        return ErrorResponce(response.error);
+        throw response.error;
     }
   }
 }

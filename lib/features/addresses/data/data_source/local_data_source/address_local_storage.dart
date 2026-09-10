@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../api/data_source_impl/local/address_dummy_data.dart';
 import '../../model/responce/address_dto.dart';
 
-
 @lazySingleton
 class AddressLocalStorage {
   static const _key = 'saved_addresses';
@@ -21,7 +20,9 @@ class AddressLocalStorage {
     }
 
     final decoded = jsonDecode(raw) as List;
-    return decoded.map((e) => AddressDto.fromJson(e as Map<String, dynamic>)).toList();
+    return decoded
+        .map((e) => AddressDto.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> save(List<AddressDto> addresses) async {
@@ -31,8 +32,6 @@ class AddressLocalStorage {
   }
 
   List<AddressDto> _seedAddresses() {
-    return [
-      AddressDto.fromJson(AddressDummyData.addressDummyData),
-    ];
+    return [AddressDto.fromJson(AddressDummyData.addressDummyData)];
   }
 }

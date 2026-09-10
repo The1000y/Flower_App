@@ -1,6 +1,8 @@
 import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../domain/entities/address_entity.dart';
+
 sealed class AddressEvents {}
 
 class InitializeAddressEvent extends AddressEvents {

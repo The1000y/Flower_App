@@ -9,11 +9,11 @@ import 'package:flower_app/features/addresses/domain/usecases/get_cities_use_cas
 import 'package:flower_app/features/addresses/domain/usecases/get_current_location_use_case.dart';
 import 'package:flower_app/features/addresses/domain/usecases/get_governomets_use_case.dart';
 import 'package:flower_app/features/addresses/domain/usecases/get_reverse_geocoded_address_use_case.dart';
-import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
-import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'address_events.dart';
+import 'address_state.dart';
 
 @injectable
 class AddressCubit extends Cubit<AddressState> {
@@ -113,19 +113,11 @@ class AddressCubit extends Cubit<AddressState> {
     }
   }
 
-  void doEvent(AddressEvents event) {
-    switch (event) {
-      case InitializeAddressEvent():
-      // 🎯 1. Pass the event parameter here
-        _initializeAddress(existingAddress: event.existingAddress);
-        break;
-    // ... rest of doEvent remains the same
-    }
-  }
-
   // 🎯 2. Add the parameter to the function signature
   Future<void> _initializeAddress({AddressEntity? existingAddress}) async {
-    emit(state.copyWith(locationState: const BaseState<LatLng>(isLoading: true)));
+    emit(
+      state.copyWith(locationState: const BaseState<LatLng>(isLoading: true)),
+    );
 
     try {
       // Fetch the governorates using his clean UseCase
@@ -133,20 +125,23 @@ class AddressCubit extends Cubit<AddressState> {
 
       // 🎯 3. RESTORED EDIT LOGIC: Check if we are editing an existing address
       if (existingAddress != null) {
-        final coordinates = (existingAddress.lat != null && existingAddress.lng != null)
+        final coordinates =
+            (existingAddress.lat != null && existingAddress.lng != null)
             ? LatLng(existingAddress.lat!, existingAddress.lng!)
             : const LatLng(30.047931723716083, 31.238564150922823);
 
         final matchedGovernorate = governorates.firstWhere(
-              (g) => g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
+          (g) => g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
           orElse: () => governorates.first,
         );
 
         // Fetch cities using his UseCase based on the matched governorate
-        final citiesInGovernorate = await _getCitiesUseCase.call(matchedGovernorate.id);
+        final citiesInGovernorate = await _getCitiesUseCase.call(
+          matchedGovernorate.id,
+        );
 
         final matchedCity = citiesInGovernorate.firstWhere(
-              (c) => c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
+          (c) => c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
           orElse: () => citiesInGovernorate.isNotEmpty
               ? citiesInGovernorate.first
               : throw Exception("No cities found"),
@@ -155,7 +150,8 @@ class AddressCubit extends Cubit<AddressState> {
         emit(
           state.copyWith(
             selectedCoordinates: coordinates,
-            streetAddress: '${existingAddress.addressLine}, ${existingAddress.city}',
+            streetAddress:
+                '${existingAddress.addressLine}, ${existingAddress.city}',
             governorates: governorates,
             selectedGovernorate: matchedGovernorate.id,
             selectedCity: matchedCity.id,
