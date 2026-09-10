@@ -10,16 +10,16 @@ String changePasswordRequestToJson(ChangePasswordRequest data) => json.encode(da
 @JsonSerializable()
 class ChangePasswordRequest {
 @JsonKey(name: "currentPassword")
-final String? currentPassword;
+final String currentPassword;
 @JsonKey(name: "newPassword")
-final String? newPassword;
+final String newPassword;
 @JsonKey(name: "confirmNewPassword")
-final String? confirmNewPassword;
+final String confirmNewPassword;
 
 ChangePasswordRequest({
-this.currentPassword,
-this.newPassword,
-this.confirmNewPassword,
+required this.currentPassword,
+required this.newPassword,
+required this.confirmNewPassword,
 });
 
 factory ChangePasswordRequest.fromJson(Map<String, dynamic> json) => _$ChangePasswordRequestFromJson(json);

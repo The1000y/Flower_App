@@ -34,22 +34,14 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   void _onUpdatePressed() {
     if (_formKey.currentState!.validate()) {
-      if (_newPasswordController.text == _confirmPasswordController.text) {
-        context.read<ChangePasswordCubit>().doEvent(
-              UpdatePasswordEvent(
-                currentPassword: _currentPasswordController.text,
-                newPassword: _newPasswordController.text,
-                confirmPassword: _confirmPasswordController.text,
-              ),
-            );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Passwords do not match"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // بمجرد نجاح الـ validate، فنحن واثقون أن الحقول ليست فارغة وأن كلمتي المرور متطابقتان
+      context.read<ChangePasswordCubit>().doEvent(
+        UpdatePasswordEvent(
+          currentPassword: _currentPasswordController.text,
+          newPassword: _newPasswordController.text,
+          confirmPassword: _confirmPasswordController.text,
+        ),
+      );
     }
   }
 
@@ -70,7 +62,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           ),
         ),
       ),
-      body: BlocConsumer<ChangePasswordCubit, ChangePasswordState>(
+      body: BlocListener<ChangePasswordCubit, ChangePasswordState>(
         listenWhen: (previous, current) {
           return previous.changePasswordState.isLoading !=
               current.changePasswordState.isLoading;
@@ -86,8 +78,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               );
             } else if (state.changePasswordState.data != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Password updated successfully"),
+                SnackBar(
+                  content: Text(AppStrings.passwordUpdatedSuccessfully),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -96,69 +88,71 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             }
           }
         },
-        builder: (context, state) {
-          final isLoading = state.changePasswordState.isLoading;
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 20.h),
 
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 20.h),
+                  CustomTextFormField(
+                    label: AppStrings.currentPasswordLabel,
+                    hintText: AppStrings.currentPasswordHint,
+                    controller: _currentPasswordController,
+                    validator: AuthValidators.password,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                  ),
 
-                    CustomTextFormField(
-                      label: AppStrings.currentPasswordLabel,
-                      hintText: AppStrings.currentPasswordHint,
-                      controller: _currentPasswordController,
-                      validator: AuthValidators.password,
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
+                  SizedBox(height: 20.h),
+
+                  CustomTextFormField(
+                    label: AppStrings.newPasswordLabel,
+                    hintText: AppStrings.passwordHint,
+                    controller: _newPasswordController,
+                    validator: AuthValidators.strongPassword, // استخدام strongPassword هنا
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  CustomTextFormField(
+                    label: AppStrings.confirmPasswordLabel,
+                    hintText: AppStrings.confirmPasswordHint,
+                    controller: _confirmPasswordController,
+                    validator: (value) => AuthValidators.confirmPassword(
+                      value,
+                      _newPasswordController.text,
                     ),
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                  ),
 
-                    SizedBox(height: 20.h),
+                  SizedBox(height: 48.h),
 
-                    CustomTextFormField(
-                      label: AppStrings.newPasswordLabel,
-                      hintText: AppStrings.passwordHint,
-                      controller: _newPasswordController,
-                      validator: AuthValidators.password,
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
-                    ),
+                  BlocBuilder<ChangePasswordCubit, ChangePasswordState>(
+                    builder: (context, state) {
+                      final isLoading = state.changePasswordState.isLoading;
 
-                    SizedBox(height: 20.h),
-
-                    CustomTextFormField(
-                      label: AppStrings.confirmPasswordLabel,
-                      hintText: AppStrings.confirmPasswordHint,
-                      controller: _confirmPasswordController,
-                      validator: (value) => AuthValidators.confirmPassword(
-                        value,
-                        _newPasswordController.text,
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
-                    ),
-
-                    SizedBox(height: 48.h),
-
-                    CustomButton(
-                      isLoading: isLoading,
-                      text: AppStrings.actionUpdate,
-                      onPressed: _onUpdatePressed,
-                      isEnabled: !isLoading,
-                      enabledColor: AppColors.gray,
-                      textColor: Colors.white,
-                    ),
-                  ],
-                ),
+                      return CustomButton(
+                        isLoading: isLoading,
+                        text: AppStrings.actionUpdate,
+                        onPressed: _onUpdatePressed,
+                        isEnabled: !isLoading,
+                        enabledColor: AppColors.gray,
+                        textColor: Colors.white,
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
