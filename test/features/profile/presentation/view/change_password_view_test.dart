@@ -1,4 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flower_app/config/base/base_state.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
+import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
+import 'package:flower_app/features/profile/domain/entities/change_password_entity.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_cubit.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_event.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_state.dart';
@@ -12,11 +17,15 @@ import 'package:mocktail/mocktail.dart';
 class MockChangePasswordCubit extends MockCubit<ChangePasswordState>
     implements ChangePasswordCubit {}
 
-class FakeChangePasswordEvent extends Fake implements ChangePasswordEvent {}
-
 void main() {
   setUpAll(() {
-    registerFallbackValue(FakeChangePasswordEvent());
+    registerFallbackValue(
+      UpdatePasswordEvent(
+        currentPassword: 'dummy',
+        newPassword: 'dummy',
+        confirmPassword: 'dummy',
+      ),
+    );
   });
 
   late MockChangePasswordCubit mockCubit;
@@ -24,6 +33,7 @@ void main() {
   setUp(() {
     mockCubit = MockChangePasswordCubit();
     when(() => mockCubit.state).thenReturn(const ChangePasswordState());
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream<ChangePasswordState>.empty());
   });
 
   Widget createWidgetUnderTest() {
@@ -49,15 +59,66 @@ void main() {
     testWidgets('dispatches UpdatePasswordEvent when form is valid', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      final fields = find.byType(TextFormField);
-      await tester.enterText(fields.at(0), 'OldPassword123');
-      await tester.enterText(fields.at(1), 'NewPassword123');
-      await tester.enterText(fields.at(2), 'NewPassword123');
+      await tester.enterText(find.byType(CustomTextFormField).at(0), 'OldPass@123');
+      await tester.enterText(find.byType(CustomTextFormField).at(1), 'NewStrong@123');
+      await tester.enterText(find.byType(CustomTextFormField).at(2), 'NewStrong@123');
 
-      await tester.tap(find.byType(ElevatedButton));
-      await tester.pump();
+      await tester.tap(find.byType(CustomButton));
+      await tester.pumpAndSettle();
 
       verify(() => mockCubit.doEvent(any())).called(1);
+    });
+
+    testWidgets('renders loading state on button when isLoading is true', (tester) async {
+      when(() => mockCubit.state).thenReturn(const ChangePasswordState(
+        changePasswordState: BaseState(isLoading: true),
+      ));
+
+      await tester.pumpWidget(createWidgetUnderTest());
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('shows error snackbar when state transitions from loading to error', (tester) async {
+      whenListen(
+        mockCubit,
+        Stream.fromIterable([
+          const ChangePasswordState(changePasswordState: BaseState(isLoading: true)),
+          const ChangePasswordState(
+            changePasswordState: BaseState(
+              isLoading: false,
+              errorMessage: 'Invalid current password',
+            ),
+          ),
+        ]),
+        initialState: const ChangePasswordState(),
+      );
+
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpAndSettle();
+
+      expect(find.text('Invalid current password'), findsOneWidget);
+    });
+
+    testWidgets('shows success snackbar when state transitions from loading to success', (tester) async {
+      whenListen(
+        mockCubit,
+        Stream.fromIterable([
+          const ChangePasswordState(changePasswordState: BaseState(isLoading: true)),
+          ChangePasswordState(
+            changePasswordState: BaseState(
+              isLoading: false,
+              data: ChangePasswordEntity(message: 'Success'),
+            ),
+          ),
+        ]),
+        initialState: const ChangePasswordState(),
+      );
+
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pump();
+
+      expect(find.text(AppStrings.passwordUpdatedSuccessfully), findsOneWidget);
     });
   });
 }

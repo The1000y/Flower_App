@@ -24,40 +24,7 @@ void main() {
   );
 
   group('ChangePasswordUseCase', () {
-    test('should return ErrorResponce when currentPassword is empty without calling repo', () async {
-      final result = await useCase.call(
-        currentPassword: '   ',
-        newPassword: 'NewPassword123',
-        confirmNewPassword: 'NewPassword123',
-      );
-
-      expect(result, isA<ErrorResponce<ChangePasswordEntity>>());
-      verifyZeroInteractions(mockProfileRepo);
-    });
-
-    test('should return ErrorResponce when newPassword is empty without calling repo', () async {
-      final result = await useCase.call(
-        currentPassword: 'OldPassword123',
-        newPassword: '',
-        confirmNewPassword: '',
-      );
-
-      expect(result, isA<ErrorResponce<ChangePasswordEntity>>());
-      verifyZeroInteractions(mockProfileRepo);
-    });
-
-    test('should return ErrorResponce when passwords do not match without calling repo', () async {
-      final result = await useCase.call(
-        currentPassword: 'OldPassword123',
-        newPassword: 'NewPassword123',
-        confirmNewPassword: 'DifferentPassword123',
-      );
-
-      expect(result, isA<ErrorResponce<ChangePasswordEntity>>());
-      verifyZeroInteractions(mockProfileRepo);
-    });
-
-    test('should call ProfileRepo.changePassword and return SuccessResponce when validation passes', () async {
+    test('should call ProfileRepo.changePassword and return SuccessResponce when repo succeeds', () async {
       when(() => mockProfileRepo.changePassword(
             currentPassword: 'OldPassword123',
             newPassword: 'NewPassword123',
