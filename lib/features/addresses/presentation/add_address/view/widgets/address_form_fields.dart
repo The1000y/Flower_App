@@ -160,7 +160,7 @@ class _LocationDropdowns extends StatelessWidget {
           child: DropdownButtonFormField<String>(
             isExpanded: true,
             initialValue:
-                filteredCities.any((city) => city.id == state.selectedCity)
+            filteredCities.any((city) => city.id == state.selectedCity)
                 ? state.selectedCity
                 : null,
             hint: const Text(

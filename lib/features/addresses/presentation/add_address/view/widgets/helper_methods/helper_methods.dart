@@ -22,4 +22,3 @@ Future<BitmapDescriptor> loadIcon() async {
 
 
 
-

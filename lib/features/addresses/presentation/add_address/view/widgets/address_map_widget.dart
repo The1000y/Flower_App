@@ -48,43 +48,43 @@ class _AddressMapWidgetState extends State<AddressMapWidget> {
         child: widget.isLoading
             ? const Center(child: CircularProgressIndicator())
             : Stack(
-                children: [
-                  GoogleMap(
-                    cameraTargetBounds: egyptBounds,
-                    onCameraMove: (position) => mapCenter = position.target,
-                    onCameraIdle: () {
-                      if (mapCenter != null) {
-                        widget.cubit.doEvent(
-                          SelectLocationFromMapEvent(coordinates: mapCenter!),
-                        );
-                      }
-                    },
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    initialCameraPosition: CameraPosition(
-                      zoom: 14,
-                      target:
-                          widget.selectedCoordinates ??
-                          const LatLng(30.047931723716083, 31.238564150922823),
-                    ),
-                    minMaxZoomPreference: const MinMaxZoomPreference(5, 20),
-                    onMapCreated: (controller) async {
-                      if (!mounted) return;
-                      widget.controllerMap.complete(controller);
-                      setStyleMap(widget.controllerMap);
-                    },
-                  ),
-                  Positioned(
-                    bottom: 50,
-                    right: 0,
-                    left: 0,
-                    top: 0,
-                    child: Center(
-                      child: Image.asset(AppImages.iconMap, scale: 2.4),
-                    ),
-                  ),
-                ],
+          children: [
+            GoogleMap(
+              cameraTargetBounds: egyptBounds,
+              onCameraMove: (position) => mapCenter = position.target,
+              onCameraIdle: () {
+                if (mapCenter != null) {
+                  widget.cubit.doEvent(
+                    SelectLocationFromMapEvent(coordinates: mapCenter!),
+                  );
+                }
+              },
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              initialCameraPosition: CameraPosition(
+                zoom: 14,
+                target:
+                widget.selectedCoordinates ??
+                    const LatLng(30.047931723716083, 31.238564150922823),
               ),
+              minMaxZoomPreference: const MinMaxZoomPreference(5, 20),
+              onMapCreated: (controller) async {
+                if (!mounted) return;
+                widget.controllerMap.complete(controller);
+                setStyleMap(widget.controllerMap);
+              },
+            ),
+            Positioned(
+              bottom: 50,
+              right: 0,
+              left: 0,
+              top: 0,
+              child: Center(
+                child: Image.asset(AppImages.iconMap, scale: 2.4),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
