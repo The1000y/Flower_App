@@ -176,4 +176,12 @@ static const String titleAddress = 'Title';
   static const String labelAddress = 'Enter Title Address';
   static const String loadingAddress = 'Loading...';
   static const String occasionTitle = 'Occasion';
+  static const String labelTitle = 'Title';
+  static const String labelTitleHint = 'Title of the address';
+  static const String addressError = 'Could not get address details';
+  static const String addressRequired = 'Address is Required';
+  static const String labelRequired = 'Label is Required';
+  static const String recipientNameRequired = 'Name is Required';
+  static const String cityRequired = 'City is Required';
+  static const String phoneNumberRequired = 'Phone is Required';
 }

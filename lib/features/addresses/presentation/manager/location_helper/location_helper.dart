@@ -2,8 +2,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class LocationHelper {
-  static Future<Position?> checkAndRequestLocationAccess() async {
+ class LocationHelper {
+   Future<Position?> checkAndRequestLocationAccess() async {
     var serviceLocationEnabled = await checkAndRequestLocationServices();
     if (serviceLocationEnabled != true) {
       return null;
@@ -11,7 +11,7 @@ class LocationHelper {
     return await checkAndRequestLocationPermission();
   }
 
-  static Future<bool> checkAndRequestLocationServices() async {
+   Future<bool> checkAndRequestLocationServices() async {
     bool serviceLocationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceLocationEnabled) {
       serviceLocationEnabled = await Geolocator.openLocationSettings();
@@ -19,7 +19,7 @@ class LocationHelper {
     return serviceLocationEnabled;
   }
 
-  static Future<Position?> checkAndRequestLocationPermission() async {
+   Future<Position?> checkAndRequestLocationPermission() async {
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -33,7 +33,7 @@ class LocationHelper {
     return await Geolocator.getCurrentPosition();
   }
 
-  static Future<Placemark?> getReverseGeocodedAddress(
+   Future<Placemark?> getReverseGeocodedAddress(
     LatLng coordinates,
   ) async {
     try {

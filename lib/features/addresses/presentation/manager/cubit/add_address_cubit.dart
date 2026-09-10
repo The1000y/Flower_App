@@ -1,13 +1,16 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/addresses/data/model/request/add_address_request.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/location_entity.dart';
+import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
 import 'package:flower_app/features/addresses/domain/usecases/add_address_use_case.dart';
+import 'package:flower_app/features/addresses/domain/usecases/get_cities_use_case.dart';
+import 'package:flower_app/features/addresses/domain/usecases/get_current_location_use_case.dart';
+import 'package:flower_app/features/addresses/domain/usecases/get_governomets_use_case.dart';
+import 'package:flower_app/features/addresses/domain/usecases/get_reverse_geocoded_address_use_case.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
-import 'package:flower_app/features/addresses/presentation/manager/josn_helper/json_helper.dart';
-import 'package:flower_app/features/addresses/presentation/manager/location_helper/location_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
@@ -15,8 +18,18 @@ import 'package:injectable/injectable.dart';
 @injectable
 class AddressCubit extends Cubit<AddressState> {
   final AddAddressUseCase _addAddressUseCase;
+  final GetCitiesUseCase _getCitiesUseCase;
+  final GetReverseGeocodedAddressUseCase _getReverseGeocodedAddressUseCase;
+  final GetCurrentLocationUseCase _getCurrentLocationUseCase;
+  final GetGovernoratesUseCase _getGovernoratesUseCase;
 
-  AddressCubit(this._addAddressUseCase) : super(AddressState());
+  AddressCubit(
+    this._addAddressUseCase,
+    this._getCitiesUseCase,
+    this._getReverseGeocodedAddressUseCase,
+    this._getCurrentLocationUseCase,
+    this._getGovernoratesUseCase,
+  ) : super(AddressState());
 
   void doEvent(AddressEvents event) {
     switch (event) {
@@ -33,84 +46,117 @@ class AddressCubit extends Cubit<AddressState> {
         _selectCity(event.cityId);
         break;
       case SubmitAddressEvent():
-        _submitAddress(addAddressRequest: event.addAddressRequest);
+        _submitAddress(addaddressParams: event.addAddressParams);
         break;
     }
   }
 
-  void _submitAddress({required AddAddressRequest addAddressRequest}) async {
+  void _submitAddress({required AddAddressParams addaddressParams}) async {
     emit(
       state.copyWith(
         addAddressState: BaseState<AddressEntity>(isLoading: true),
       ),
     );
-    BaseResponce<AddressEntity> result = await _addAddressUseCase.call(
-      addAddressRequest,
-    );
-    switch (result) {
-      case SuccessResponce<AddressEntity>():
-        emit(
-          state.copyWith(
-            addAddressState: BaseState<AddressEntity>(
-              isLoading: false,
-              data: result.data,
+    try {
+      final selectedGovernorateObj = state.governorates.firstWhere(
+        (city) => city.id == state.selectedGovernorate,
+        orElse: () => throw Exception('Governorate not found'),
+      );
+      final selectedAreaObj = state.citiesState.data?.firstWhere(
+        (city) => city.id == state.selectedCity,
+        orElse: () => throw Exception('City not found'),
+      );
+      final addAddressParams = AddAddressParams(
+        recipientName: addaddressParams.recipientName,
+        recipientPhone: addaddressParams.recipientPhone,
+        addressLine: addaddressParams.addressLine,
+        city: selectedGovernorateObj.nameEn,
+        area: selectedAreaObj?.nameEn ?? '',
+        lat: state.selectedCoordinates?.latitude ?? 0.0,
+        lng: state.selectedCoordinates?.longitude ?? 0.0,
+        label: addaddressParams.label,
+      );
+      final result = await _addAddressUseCase.call(addAddressParams);
+
+      switch (result) {
+        case SuccessResponce<AddressEntity>():
+          emit(
+            state.copyWith(
+              addAddressState: BaseState<AddressEntity>(
+                isLoading: false,
+                data: result.data,
+              ),
             ),
-          ),
-        );
-      case ErrorResponce<AddressEntity>():
-        emit(
-          state.copyWith(
-            addAddressState: BaseState<AddressEntity>(
-              isLoading: false,
-              errorMessage: result.errorMessage,
+          );
+        case ErrorResponce<AddressEntity>():
+          emit(
+            state.copyWith(
+              addAddressState: BaseState<AddressEntity>(
+                isLoading: false,
+                errorMessage: result.errorMessage,
+              ),
             ),
+          );
+      }
+    } catch (e, s) {
+      print(e);
+      print(s);
+
+      emit(
+        state.copyWith(
+          addAddressState: BaseState(
+            isLoading: false,
+            errorMessage: e.toString(),
           ),
-        );
+        ),
+      );
     }
   }
 
+  void doEvent(AddressEvents event) {
+    switch (event) {
+      case InitializeAddressEvent():
+      // 🎯 1. Pass the event parameter here
+        _initializeAddress(existingAddress: event.existingAddress);
+        break;
+    // ... rest of doEvent remains the same
+    }
+  }
+
+  // 🎯 2. Add the parameter to the function signature
   Future<void> _initializeAddress({AddressEntity? existingAddress}) async {
-    emit(state.copyWith(locationState: BaseState<LatLng>(isLoading: true)));
+    emit(state.copyWith(locationState: const BaseState<LatLng>(isLoading: true)));
 
     try {
-      final governorates = await JsonHelper.getCity();
-      final allCities = await JsonHelper.getArea();
+      // Fetch the governorates using his clean UseCase
+      final governorates = await _getGovernoratesUseCase.call();
 
+      // 🎯 3. RESTORED EDIT LOGIC: Check if we are editing an existing address
       if (existingAddress != null) {
-        final coordinates =
-            (existingAddress.lat != null && existingAddress.lng != null)
-                ? LatLng(existingAddress.lat!, existingAddress.lng!)
-                : const LatLng(30.047931723716083, 31.238564150922823);
+        final coordinates = (existingAddress.lat != null && existingAddress.lng != null)
+            ? LatLng(existingAddress.lat!, existingAddress.lng!)
+            : const LatLng(30.047931723716083, 31.238564150922823);
 
         final matchedGovernorate = governorates.firstWhere(
-          (g) => g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
-          orElse: () => governorates.firstWhere(
-            (g) => g.nameEn == existingAddress.city,
-            orElse: () => governorates.first,
-          ),
+              (g) => g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
+          orElse: () => governorates.first,
         );
 
-        final citiesInGovernorate = allCities
-            .where((c) => c.governorateId == matchedGovernorate.id)
-            .toList();
+        // Fetch cities using his UseCase based on the matched governorate
+        final citiesInGovernorate = await _getCitiesUseCase.call(matchedGovernorate.id);
 
         final matchedCity = citiesInGovernorate.firstWhere(
-          (c) => c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
-          orElse: () => citiesInGovernorate.firstWhere(
-            (c) => c.nameEn == existingAddress.area,
-            orElse: () => citiesInGovernorate.isNotEmpty
-                ? citiesInGovernorate.first
-                : allCities.first,
-          ),
+              (c) => c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
+          orElse: () => citiesInGovernorate.isNotEmpty
+              ? citiesInGovernorate.first
+              : throw Exception("No cities found"),
         );
 
         emit(
           state.copyWith(
             selectedCoordinates: coordinates,
-            streetAddress:
-                '${existingAddress.addressLine}, ${existingAddress.city}',
+            streetAddress: '${existingAddress.addressLine}, ${existingAddress.city}',
             governorates: governorates,
-            cities: allCities,
             selectedGovernorate: matchedGovernorate.id,
             selectedCity: matchedCity.id,
             citiesState: BaseState<List<CityEntity>>(
@@ -123,22 +169,23 @@ class AddressCubit extends Cubit<AddressState> {
             ),
           ),
         );
-        return;
+        return; // Exit early since we are in edit mode
       }
 
-      var position = await LocationHelper.checkAndRequestLocationAccess();
+      // 🎯 4. KEEP HIS EXACT CODE for handling a brand new address
+      var position = await _getCurrentLocationUseCase.call();
 
       final coordinates = position != null
           ? LatLng(position.latitude, position.longitude)
           : const LatLng(30.047931723716083, 31.238564150922823);
 
-      final place = await LocationHelper.getReverseGeocodedAddress(coordinates);
+      final place = await _getReverseGeocodedAddressUseCase.call(coordinates);
 
       if (place == null) {
         emit(
           state.copyWith(
-            locationState: BaseState<LatLng>(
-              errorMessage: 'Could not get address details',
+            locationState: const BaseState<LatLng>(
+              errorMessage: AppStrings.addressError,
               isLoading: false,
             ),
           ),
@@ -153,7 +200,6 @@ class AddressCubit extends Cubit<AddressState> {
           selectedCoordinates: coordinates,
           streetAddress: fullAddress,
           governorates: governorates,
-          cities: allCities,
           locationState: BaseState<LatLng>(data: coordinates, isLoading: false),
         ),
       );
@@ -175,12 +221,12 @@ class AddressCubit extends Cubit<AddressState> {
       state.copyWith(reverseGeocodeState: BaseState<String>(isLoading: true)),
     );
     try {
-      final place = await LocationHelper.getReverseGeocodedAddress(coordinates);
+      final place = await _getReverseGeocodedAddressUseCase.call(coordinates);
       if (place == null) {
         emit(
           state.copyWith(
             reverseGeocodeState: BaseState<String>(
-              errorMessage: 'Could not get address details',
+              errorMessage: AppStrings.addressError,
             ),
           ),
         );
@@ -211,11 +257,16 @@ class AddressCubit extends Cubit<AddressState> {
   }
 
   Future<void> _selectGovernorate(String governorateId) async {
-    emit(state.copyWith(selectedGovernorate: governorateId, cities: null));
+    // emit(state.copyWith(selectedGovernorate: governorateId, cities: []));
+    emit(
+      state.copyWith(
+        selectedGovernorate: governorateId,
+        selectedCity: null,
+        citiesState: const BaseState(isLoading: true),
+      ),
+    );
     try {
-      final filtredCity = state.cities
-          .where((city) => city.governorateId == governorateId)
-          .toList();
+      final filtredCity = await _getCitiesUseCase.call(governorateId);
       if (filtredCity.isEmpty) {
         emit(
           state.copyWith(
