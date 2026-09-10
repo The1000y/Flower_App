@@ -1,3 +1,4 @@
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/features/commerce/presentation/tracking/view/order_success_view.dart';
 import 'package:flutter/material.dart';
@@ -26,25 +27,25 @@ void main() {
       setPhoneSurface(tester);
       await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.text('Your order placed\nsuccessfully!'), findsOneWidget);
+      expect(find.text(AppStrings.orderPlacedSuccess), findsOneWidget);
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
       expect(find.byIcon(Icons.arrow_back_ios), findsOneWidget);
       expect(find.byType(CustomButton), findsOneWidget);
-      expect(find.text('Track order'), findsWidgets);
+      expect(find.text(AppStrings.trackOrder), findsWidgets);
     });
 
     testWidgets('displays order ID when provided', (tester) async {
       setPhoneSurface(tester);
       await tester.pumpWidget(createWidgetUnderTest(orderId: '12345'));
 
-      expect(find.text('Order ID: 12345'), findsOneWidget);
+      expect(find.text('${AppStrings.orderIdPrefix}12345'), findsOneWidget);
     });
 
     testWidgets('does not display order ID widget when orderId is null', (tester) async {
       setPhoneSurface(tester);
       await tester.pumpWidget(createWidgetUnderTest(orderId: null));
 
-      expect(find.textContaining('Order ID:'), findsNothing);
+      expect(find.textContaining(AppStrings.orderIdPrefix), findsNothing);
     });
   });
 }
