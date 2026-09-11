@@ -1,7 +1,4 @@
-import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
-import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
@@ -10,8 +7,13 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../constants/app_strings/app_strings.dart';
 
-class PersistenBottomNavBarDemo extends StatelessWidget {
-  PersistenBottomNavBarDemo({super.key});
+class PersistentBottomNavBarDemo extends StatelessWidget {
+  PersistentBottomNavBarDemo({
+    super.key,
+    this.onCartTabSelected,
+  });
+
+  final VoidCallback? onCartTabSelected;
 
   final Widget homeScreen = HomeView();
 
@@ -24,7 +26,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
     return PersistentTabView(
       onTabChanged: (index) {
         if (index == 2) {
-          getIt<CartCubit>().doEvent(CartRefreshRequestedEvent());
+          onCartTabSelected?.call();
         }
       },
       tabs: [

@@ -10,11 +10,12 @@ import 'package:flower_app/features/auth/presentation/register/manager/register_
 import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
+import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../features/commerce/presentation/cart/view/cart.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -67,7 +68,16 @@ abstract class AppRoutes {
 
       // Home
       case Routes.home:
-        return MaterialPageRoute(builder: (_) =>  PersistenBottomNavBarDemo());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: getIt<CartCubit>(),
+            child: PersistentBottomNavBarDemo(
+              onCartTabSelected: () {
+                getIt<CartCubit>().doEvent(CartRefreshRequestedEvent());
+              },
+            ),
+          ),
+        );
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const BestsellerView());
@@ -93,7 +103,10 @@ abstract class AppRoutes {
       // Cart & Checkout
       case Routes.cart:
         return MaterialPageRoute(
-          builder: (_) => const CartView(),
+          builder: (_) => BlocProvider.value(
+            value: getIt<CartCubit>(),
+            child: const CartView(),
+          ),
         );
 
       case Routes.checkout:

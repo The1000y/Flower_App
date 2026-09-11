@@ -1,6 +1,4 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
-import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';

@@ -841,10 +841,17 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     final successResponse =
         productsResponse as SuccessResponce<ProductsResponseDto>;
 
-    final product = successResponse.data.data.items.firstWhere(
+    final productIndex = successResponse.data.data.items.indexWhere(
       (product) => product.id == request.productId,
-      orElse: () => throw Exception('Product not found'),
     );
+
+    if (productIndex == -1) {
+      return ErrorResponce<CartResponseDto>(
+        Exception('Product not found'),
+      );
+    }
+
+    final product = successResponse.data.data.items[productIndex];
 
     final cartItem = CartItemResponseDto(
       id: 'cart-item-${request.productId}-${DateTime.now().millisecondsSinceEpoch}',
