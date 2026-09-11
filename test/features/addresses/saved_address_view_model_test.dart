@@ -6,17 +6,21 @@ import 'package:flower_app/features/addresses/domain/usecases/set_default_addres
 import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_event.dart';
 import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_state.dart';
 import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_view_model.dart';
+import 'package:flower_app/features/addresses/presentation/saved_address/manger/selected_address_cubit/selected_address_state.dart';
+import 'package:flower_app/features/addresses/presentation/saved_address/manger/selected_address_cubit/selected_address_view_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockGetAddressesUseCase extends Mock implements GetAddressesUseCase {}
 class MockDeleteAddressUseCase extends Mock implements DeleteAddressUseCase {}
 class MockSetDefaultAddressUseCase extends Mock implements SetDefaultAddressUseCase {}
+class MockSelectedAddressViewModel extends Mock implements SelectedAddressViewModel {}
 
 void main() {
   late MockGetAddressesUseCase mockGetAddressesUseCase;
   late MockDeleteAddressUseCase mockDeleteAddressUseCase;
   late MockSetDefaultAddressUseCase mockSetDefaultAddressUseCase;
+  late MockSelectedAddressViewModel mockSelectedAddressViewModel;
   late SavedAddressViewModel viewModel;
 
   final tAddress = AddressEntity(
@@ -35,10 +39,14 @@ void main() {
     mockGetAddressesUseCase = MockGetAddressesUseCase();
     mockDeleteAddressUseCase = MockDeleteAddressUseCase();
     mockSetDefaultAddressUseCase = MockSetDefaultAddressUseCase();
+    mockSelectedAddressViewModel = MockSelectedAddressViewModel();
+    when(() => mockSelectedAddressViewModel.state)
+        .thenReturn(const SelectedAddressState());
     viewModel = SavedAddressViewModel(
       mockGetAddressesUseCase,
       mockDeleteAddressUseCase,
       mockSetDefaultAddressUseCase,
+      mockSelectedAddressViewModel,
     );
   });
 
