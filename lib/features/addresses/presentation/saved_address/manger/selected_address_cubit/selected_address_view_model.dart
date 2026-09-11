@@ -11,13 +11,11 @@ class SelectedAddressViewModel extends Cubit<SelectedAddressState> {
   void onEvent(SelectedAddressEvent event) {
     switch (event) {
       case AddressSelectedEvent():
-        print('✅ [SelectedAddressViewModel] Address Selected! ID: ${event.addressId}, Label: ${event.label}');
         emit(SelectedAddressState(
           addressId: event.addressId,
           label: event.label,
         ));
       case AddressDeselectedEvent():
-        print('❌ [SelectedAddressViewModel] Address Deselected!');
         emit(const SelectedAddressState());
     }
   }
