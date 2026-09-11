@@ -21,7 +21,7 @@ void main() {
 
   setUp(() {
     mockCubit = MockProductDetailsCubit();
-    
+
     // Allow re-assignment in GetIt
     getIt.allowReassignment = true;
     getIt.registerSingleton<ProductDetailsCubit>(mockCubit);
@@ -34,16 +34,20 @@ void main() {
   Widget createWidgetUnderTest() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-      child: const MaterialApp(
-        home: ProductDetails(productId: 1),
-      ),
+      child: const MaterialApp(home: ProductDetails(productId: 1)),
     );
   }
 
-  testWidgets('should display loading indicator when state is loading', (tester) async {
+  testWidgets('should display loading indicator when state is loading', (
+    tester,
+  ) async {
     // arrange
-    when(mockCubit.state).thenReturn(const ProductDetailsState(isLoading: true));
-    when(mockCubit.stream).thenAnswer((_) => Stream.value(const ProductDetailsState(isLoading: true)));
+    when(
+      mockCubit.state,
+    ).thenReturn(const ProductDetailsState(isLoading: true));
+    when(mockCubit.stream).thenAnswer(
+      (_) => Stream.value(const ProductDetailsState(isLoading: true)),
+    );
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
@@ -52,7 +56,9 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('should display product data when state is successful', (tester) async {
+  testWidgets('should display product data when state is successful', (
+    tester,
+  ) async {
     // arrange
     final tProduct = ProductDetailsEntity(
       id: 1,
@@ -66,8 +72,13 @@ void main() {
       includes: [],
       occasionIds: [],
     );
-    when(mockCubit.state).thenReturn(ProductDetailsState(isLoading: false, data: tProduct));
-    when(mockCubit.stream).thenAnswer((_) => Stream.value(ProductDetailsState(isLoading: false, data: tProduct)));
+    when(
+      mockCubit.state,
+    ).thenReturn(ProductDetailsState(isLoading: false, data: tProduct));
+    when(mockCubit.stream).thenAnswer(
+      (_) =>
+          Stream.value(ProductDetailsState(isLoading: false, data: tProduct)),
+    );
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
@@ -77,9 +88,16 @@ void main() {
     expect(find.text('Test Flower'), findsOneWidget);
   });
 
-  testWidgets('should display error message when state has error', (tester) async {
+  testWidgets('should display error message when state has error', (
+    tester,
+  ) async {
     // arrange
-    when(mockCubit.state).thenReturn(const ProductDetailsState(isLoading: false, errorMessage: 'Error occurred'));
+    when(mockCubit.state).thenReturn(
+      const ProductDetailsState(
+        isLoading: false,
+        errorMessage: 'Error occurred',
+      ),
+    );
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
