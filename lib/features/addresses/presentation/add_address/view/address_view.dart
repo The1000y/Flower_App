@@ -13,20 +13,22 @@ class AddressView extends StatefulWidget {
   final AddressEntity? editingAddress;
 
   const AddressView({super.key, this.editingAddress});
+
   @override
   State<AddressView> createState() => _AddressViewState();
 }
 
 class _AddressViewState extends State<AddressView> {
-  late Completer<GoogleMapController> controllerMap =
-  Completer<GoogleMapController>();
+  final Completer<GoogleMapController> controllerMap =
+      Completer<GoogleMapController>();
   bool isMapScroll = true;
 
-
   @override
-  dispose() {
+  void dispose() {
+    if (controllerMap.isCompleted) {
+      controllerMap.future.then((controller) => controller.dispose());
+    }
     super.dispose();
-    controllerMap = Completer<GoogleMapController>();
   }
 
   @override
@@ -35,7 +37,6 @@ class _AddressViewState extends State<AddressView> {
 
     return Scaffold(
       appBar: AppBar(
-        // leadingWidth: 0,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

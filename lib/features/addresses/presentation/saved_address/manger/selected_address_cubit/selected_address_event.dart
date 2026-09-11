@@ -6,3 +6,5 @@ class AddressSelectedEvent extends SelectedAddressEvent {
 
   AddressSelectedEvent({required this.addressId, required this.label});
 }
+
+class AddressDeselectedEvent extends SelectedAddressEvent {}

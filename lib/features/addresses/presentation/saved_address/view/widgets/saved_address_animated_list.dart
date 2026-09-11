@@ -67,6 +67,9 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
     );
     if (result != null && mounted) {
       context.read<SavedAddressViewModel>().doEvent(LoadAddresses());
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Address updated')),
+      );
     }
   }
 
@@ -80,15 +83,7 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
           address: address,
           onEdit: () => _goToEdit(address),
           onDelete: () => context.read<SavedAddressViewModel>().doEvent(DeleteAddressPressed(address.id)),
-          onSelect: () {
-            getIt<SelectedAddressViewModel>().onEvent(
-              AddressSelectedEvent(
-                addressId: address.id,
-                label: '${address.addressLine} - ${address.area}',
-              ),
-            );
-            Navigator.of(context).pop();
-          },
+
         ),
       ),
     );

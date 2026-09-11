@@ -2,6 +2,7 @@ import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/addresses/data/data_source/local_data_source/address_local_data_source.dart';
 import 'package:flower_app/features/addresses/data/data_source/local_data_source/location_data_source.dart';
 import 'package:flower_app/features/addresses/data/model/request/add_address_request.dart';
+import 'package:flower_app/features/addresses/data/model/request/update_address_request_dto.dart';
 import 'package:flower_app/features/addresses/data/model/responce/address_dto.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/location_entity.dart';
@@ -91,6 +92,33 @@ class AddressRepoImpl implements AddressRepo {
   @override
   Future<AddressEntity> setDefaultAddress(String id) async {
     final response = await addressLocalDataSource.setDefaultAddress(id);
+    switch (response) {
+      case SuccessResponce<AddressDto>():
+        return response.data.toDomain();
+      case ErrorResponce<AddressDto>():
+        throw response.error;
+    }
+  }
+
+  @override
+  Future<AddressEntity> updateAddress({
+    required String id,
+    required AddAddressParams params,
+  }) async {
+    final response = await addressLocalDataSource.updateAddress(
+      id: id,
+      request: UpdateAddressRequestDto(
+        recipientName: params.recipientName,
+        recipientPhone: params.recipientPhone,
+        addressLine: params.addressLine,
+        city: params.city,
+        area: params.area,
+        lat: params.lat,
+        lng: params.lng,
+        label: params.label,
+      ),
+    );
+
     switch (response) {
       case SuccessResponce<AddressDto>():
         return response.data.toDomain();

@@ -6,6 +6,7 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../domain/entities/address_entity.dart';
 import '../../manager/cubit/add_address_cubit.dart';
 import '../../manager/cubit/address_events.dart';
 import '../../manager/cubit/address_state.dart';
@@ -20,6 +21,7 @@ class AddressFormFields extends StatelessWidget {
     required this.labelController,
     required this.state,
     required this.cubit,
+    this.editingAddress,
   });
 
   final GlobalKey<FormState> formKey;
@@ -29,6 +31,7 @@ class AddressFormFields extends StatelessWidget {
   final TextEditingController labelController;
   final AddressState state;
   final AddressCubit cubit;
+  final AddressEntity? editingAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +96,7 @@ class AddressFormFields extends StatelessWidget {
   void _submit() {
     if (!formKey.currentState!.validate()) return;
 
-    final address = AddAddressParams(
+    final addressParams = AddAddressParams(
       recipientName: recipientNameController.text.trim(),
       recipientPhone: phoneNumberController.text.trim(),
       addressLine: addressController.text.trim(),
@@ -104,7 +107,15 @@ class AddressFormFields extends StatelessWidget {
       label: labelController.text.trim(),
     );
 
-    cubit.doEvent(SubmitAddressEvent(addAddressParams: address));
+    if (editingAddress != null) {
+      cubit.doEvent(UpdateExistingAddressEvent(
+        id: editingAddress!.id,
+        params: addressParams,
+      ));
+    } else {
+      cubit.doEvent(SubmitAddressEvent(addAddressParams: addressParams));
+    }
+
   }
 }
 

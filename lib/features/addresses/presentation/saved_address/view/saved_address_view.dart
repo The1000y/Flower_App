@@ -27,15 +27,13 @@ class _SavedAddressViewState extends State<SavedAddressView> {
     _savedAddressViewModel = getIt<SavedAddressViewModel>()..doEvent(LoadAddresses());
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Future<void> _goToAddAddress(BuildContext context) async {
     final result = await Navigator.of(context).pushNamed(Routes.addAddress);
     if (result != null && context.mounted) {
       _savedAddressViewModel.doEvent(LoadAddresses());
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Address added')),
+      );
     }
   }
 

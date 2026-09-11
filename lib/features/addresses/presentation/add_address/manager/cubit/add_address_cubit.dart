@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
@@ -12,6 +14,7 @@ import 'package:flower_app/features/addresses/domain/usecases/get_reverse_geocod
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import '../../../../domain/usecases/update_address_use_case.dart';
 import 'address_events.dart';
 import 'address_state.dart';
 
@@ -22,14 +25,16 @@ class AddressCubit extends Cubit<AddressState> {
   final GetReverseGeocodedAddressUseCase _getReverseGeocodedAddressUseCase;
   final GetCurrentLocationUseCase _getCurrentLocationUseCase;
   final GetGovernoratesUseCase _getGovernoratesUseCase;
+  final UpdateAddressUseCase _updateAddressUseCase;
 
   AddressCubit(
-    this._addAddressUseCase,
-    this._getCitiesUseCase,
-    this._getReverseGeocodedAddressUseCase,
-    this._getCurrentLocationUseCase,
-    this._getGovernoratesUseCase,
-  ) : super(AddressState());
+      this._addAddressUseCase,
+      this._getCitiesUseCase,
+      this._getReverseGeocodedAddressUseCase,
+      this._getCurrentLocationUseCase,
+      this._getGovernoratesUseCase,
+      this._updateAddressUseCase,
+      ) : super(AddressState());
 
   void doEvent(AddressEvents event) {
     switch (event) {
@@ -48,6 +53,9 @@ class AddressCubit extends Cubit<AddressState> {
       case SubmitAddressEvent():
         _submitAddress(addaddressParams: event.addAddressParams);
         break;
+      case UpdateExistingAddressEvent():
+        _updateExistingAddress(id: event.id, addaddressParams: event.params);
+        break;
     }
   }
 
@@ -59,11 +67,11 @@ class AddressCubit extends Cubit<AddressState> {
     );
     try {
       final selectedGovernorateObj = state.governorates.firstWhere(
-        (city) => city.id == state.selectedGovernorate,
+            (city) => city.id == state.selectedGovernorate,
         orElse: () => throw Exception('Governorate not found'),
       );
       final selectedAreaObj = state.citiesState.data?.firstWhere(
-        (city) => city.id == state.selectedCity,
+            (city) => city.id == state.selectedCity,
         orElse: () => throw Exception('City not found'),
       );
       final addAddressParams = AddAddressParams(
@@ -99,8 +107,12 @@ class AddressCubit extends Cubit<AddressState> {
           );
       }
     } catch (e, s) {
-      print(e);
-      print(s);
+      developer.log(
+        'Failed to submit address',
+        error: e,
+        stackTrace: s,
+        name: 'AddressCubit',
+      );
 
       emit(
         state.copyWith(
@@ -113,35 +125,31 @@ class AddressCubit extends Cubit<AddressState> {
     }
   }
 
-  // 🎯 2. Add the parameter to the function signature
   Future<void> _initializeAddress({AddressEntity? existingAddress}) async {
     emit(
       state.copyWith(locationState: const BaseState<LatLng>(isLoading: true)),
     );
 
     try {
-      // Fetch the governorates using his clean UseCase
       final governorates = await _getGovernoratesUseCase.call();
 
-      // 🎯 3. RESTORED EDIT LOGIC: Check if we are editing an existing address
       if (existingAddress != null) {
         final coordinates =
-            (existingAddress.lat != null && existingAddress.lng != null)
+        (existingAddress.lat != null && existingAddress.lng != null)
             ? LatLng(existingAddress.lat!, existingAddress.lng!)
             : const LatLng(30.047931723716083, 31.238564150922823);
 
         final matchedGovernorate = governorates.firstWhere(
-          (g) => g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
+              (g) => g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
           orElse: () => governorates.first,
         );
 
-        // Fetch cities using his UseCase based on the matched governorate
         final citiesInGovernorate = await _getCitiesUseCase.call(
           matchedGovernorate.id,
         );
 
         final matchedCity = citiesInGovernorate.firstWhere(
-          (c) => c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
+              (c) => c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
           orElse: () => citiesInGovernorate.isNotEmpty
               ? citiesInGovernorate.first
               : throw Exception("No cities found"),
@@ -151,7 +159,7 @@ class AddressCubit extends Cubit<AddressState> {
           state.copyWith(
             selectedCoordinates: coordinates,
             streetAddress:
-                '${existingAddress.addressLine}, ${existingAddress.city}',
+            '${existingAddress.addressLine}, ${existingAddress.city}',
             governorates: governorates,
             selectedGovernorate: matchedGovernorate.id,
             selectedCity: matchedCity.id,
@@ -165,10 +173,9 @@ class AddressCubit extends Cubit<AddressState> {
             ),
           ),
         );
-        return; // Exit early since we are in edit mode
+        return;
       }
 
-      // 🎯 4. KEEP HIS EXACT CODE for handling a brand new address
       var position = await _getCurrentLocationUseCase.call();
 
       final coordinates = position != null
@@ -233,8 +240,6 @@ class AddressCubit extends Cubit<AddressState> {
       emit(
         state.copyWith(
           streetAddress: fullAddress,
-          // selectedGovernorate: place.administrativeArea,
-          // selectedCity: place.locality,
           reverseGeocodeState: BaseState<String>(
             isLoading: false,
             data: fullAddress,
@@ -253,7 +258,6 @@ class AddressCubit extends Cubit<AddressState> {
   }
 
   Future<void> _selectGovernorate(String governorateId) async {
-    // emit(state.copyWith(selectedGovernorate: governorateId, cities: []));
     emit(
       state.copyWith(
         selectedGovernorate: governorateId,
@@ -297,5 +301,60 @@ class AddressCubit extends Cubit<AddressState> {
 
   Future<void> _selectCity(String cityId) async {
     emit(state.copyWith(selectedCity: cityId));
+  }
+
+  Future<void> _updateExistingAddress({required String id, required AddAddressParams addaddressParams}) async {
+    emit(
+      state.copyWith(
+        addAddressState: BaseState<AddressEntity>(isLoading: true),
+      ),
+    );
+    try {
+      final selectedGovernorateObj = state.governorates.firstWhere(
+            (city) => city.id == state.selectedGovernorate,
+        orElse: () => throw Exception('Governorate not found'),
+      );
+      final selectedAreaObj = state.citiesState.data?.firstWhere(
+            (city) => city.id == state.selectedCity,
+        orElse: () => throw Exception('City not found'),
+      );
+      final params = AddAddressParams(
+        recipientName: addaddressParams.recipientName,
+        recipientPhone: addaddressParams.recipientPhone,
+        addressLine: addaddressParams.addressLine,
+        city: selectedGovernorateObj.nameEn,
+        area: selectedAreaObj?.nameEn ?? '',
+        lat: state.selectedCoordinates?.latitude ?? 0.0,
+        lng: state.selectedCoordinates?.longitude ?? 0.0,
+        label: addaddressParams.label,
+      );
+
+      final result = await _updateAddressUseCase.execute(id, params);
+
+      emit(
+        state.copyWith(
+          addAddressState: BaseState<AddressEntity>(
+            isLoading: false,
+            data: result,
+          ),
+        ),
+      );
+    } catch (e, s) {
+      developer.log(
+        'Failed to update address',
+        error: e,
+        stackTrace: s,
+        name: 'AddressCubit',
+      );
+
+      emit(
+        state.copyWith(
+          addAddressState: BaseState(
+            isLoading: false,
+            errorMessage: e.toString(),
+          ),
+        ),
+      );
+    }
   }
 }

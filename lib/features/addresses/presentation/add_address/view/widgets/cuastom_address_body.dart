@@ -44,12 +44,13 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     recipientNameController = TextEditingController();
     labelController = TextEditingController();
     cubit = context.read<AddressCubit>();
-    cubit.doEvent(InitializeAddressEvent());
     cubit.doEvent(InitializeAddressEvent(existingAddress: widget.editingAddress));
 
     if (widget.editingAddress != null) {
       recipientNameController.text = widget.editingAddress!.recipientName;
       phoneNumberController.text = widget.editingAddress!.recipientPhone;
+      addressController.text = widget.editingAddress!.addressLine;
+      labelController.text = widget.editingAddress!.label ?? '';
     }
   }
 
@@ -77,19 +78,14 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   Widget build(BuildContext context) {
     return BlocConsumer<AddressCubit, AddressState>(
       listenWhen: (previous, current) =>
-      previous.locationState.errorMessage !=
-          current.locationState.errorMessage ||
-          previous.addAddressState.errorMessage !=
-              current.addAddressState.errorMessage ||
+      previous.locationState.errorMessage != current.locationState.errorMessage ||
+          previous.locationState.data != current.locationState.data ||
+          previous.addAddressState.errorMessage != current.addAddressState.errorMessage ||
           previous.addAddressState.data != current.addAddressState.data ||
-          previous.reverseGeocodeState.errorMessage !=
-              current.reverseGeocodeState.errorMessage,
+          previous.reverseGeocodeState.errorMessage != current.reverseGeocodeState.errorMessage ||
+          previous.reverseGeocodeState.data != current.reverseGeocodeState.data,
       listener: _handleStateChanges,
       builder: (context, state) {
-        if (state.reverseGeocodeState.data != null &&
-            state.reverseGeocodeState.data!.isNotEmpty) {
-          addressController.text = state.reverseGeocodeState.data!;
-        }
 
         return Form(
           key: formKey,
@@ -112,6 +108,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
                 labelController: labelController,
                 state: state,
                 cubit: cubit,
+                editingAddress: widget.editingAddress,
               ),
             ],
           ),
@@ -123,6 +120,11 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   void _handleStateChanges(BuildContext context, AddressState state) {
     if (state.locationState.data != null && state.selectedCoordinates == null) {
       _animateCameraToLocation(state.locationState.data!);
+    }
+
+    if (state.reverseGeocodeState.data != null &&
+        state.reverseGeocodeState.data!.isNotEmpty) {
+      addressController.text = state.reverseGeocodeState.data!;
     }
 
     final locationError = state.locationState.errorMessage;
@@ -138,13 +140,9 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     if (reverseGeocodeError.isNotEmpty) {
       _showError(context, reverseGeocodeError);
     }
+
     if (state.addAddressState.data != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: AppColors.success,
-          content: Text('Address added successfully'),
-        ),
-      );
+      Navigator.pop(context, true);
     }
   }
 

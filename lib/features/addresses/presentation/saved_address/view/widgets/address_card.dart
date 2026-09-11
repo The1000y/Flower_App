@@ -29,7 +29,9 @@ class AddressCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(
+            color: AppColors.gray,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,6 +63,8 @@ class AddressCard extends StatelessWidget {
               '${address.addressLine} - ${address.area}',
               style: TextStyle(fontSize: 13.sp, color: AppColors.gray),
             ),
+
+
           ],
         ),
       ),

@@ -9,15 +9,14 @@ import 'package:flower_app/features/addresses/data/model/responce/address_dto.da
 import 'package:flower_app/features/addresses/domain/entities/location_entity.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
+import '../../../data/model/request/update_address_request_dto.dart';
 
 @Injectable(as: AddressLocalDataSource)
 class AddressLocalDataSourceImpl implements AddressLocalDataSource {
+  final AssetBundle assetBundle;
 
-final AssetBundle assetBundle;
+  AddressLocalDataSourceImpl({required this.assetBundle});
 
-  AddressLocalDataSourceImpl({
-    required this.assetBundle,
-  });
   @override
   Future<BaseResponce<AddressDto>> addAddress({
     required AddAddressRequest addAddressRequest,
@@ -151,16 +150,19 @@ final AssetBundle assetBundle;
     final governoratesData = data.firstWhere((item) {
       return item['type'] == 'table' && item['name'] == 'cities';
     });
-    return (governoratesData['data'] as List).where((element) {
-      return element['governorate_id'].toString() == governorateId;
-    },). map((e) {
-      return CityEntity(
-        id: e['id'],
-        nameAr: e['city_name_ar'],
-        nameEn: e['city_name_en'],
-        governorateId: '${e['governorate_id']}',
-      );
-    }).toList();
+    return (governoratesData['data'] as List)
+        .where((element) {
+          return element['governorate_id'].toString() == governorateId;
+        })
+        .map((e) {
+          return CityEntity(
+            id: e['id'],
+            nameAr: e['city_name_ar'],
+            nameEn: e['city_name_en'],
+            governorateId: '${e['governorate_id']}',
+          );
+        })
+        .toList();
   }
 
   @override
@@ -179,5 +181,43 @@ final AssetBundle assetBundle;
         nameEn: e['governorate_name_en'],
       );
     }).toList();
+  }
+
+  @override
+  Future<BaseResponce<AddressDto>> updateAddress({
+    required String id,
+    required UpdateAddressRequestDto request,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    try {
+      final list = AddressDummyData.savedAddressesList;
+      final index = list.indexWhere((a) => a['id'] == id);
+
+      if (index == -1) {
+        return ErrorResponce(Exception("❌ Address not found with id: '$id'"));
+      }
+
+      final existing = list[index];
+      final updated = Map<String, dynamic>.from(existing);
+
+      if (request.recipientName != null)
+        updated['recipientName'] = request.recipientName;
+      if (request.recipientPhone != null)
+        updated['recipientPhone'] = request.recipientPhone;
+      if (request.addressLine != null)
+        updated['addressLine'] = request.addressLine;
+      if (request.city != null) updated['city'] = request.city;
+      if (request.area != null) updated['area'] = request.area;
+      if (request.lat != null) updated['lat'] = request.lat;
+      if (request.lng != null) updated['lng'] = request.lng;
+      if (request.label != null) updated['label'] = request.label;
+
+      list[index] = updated;
+
+      return SuccessResponce<AddressDto>(AddressDto.fromJson(updated));
+    } on Exception catch (e) {
+      log('❌ Exception: $e');
+      return ErrorResponce<AddressDto>(e);
+    }
   }
 }

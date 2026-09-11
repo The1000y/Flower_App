@@ -5,17 +5,21 @@ import '../../../domain/usecases/get_addresses_usecase.dart';
 import '../../../domain/usecases/set_default_address_usecase.dart';
 import 'saved_address_event.dart';
 import 'saved_address_state.dart';
+import 'selected_address_cubit/selected_address_event.dart';
+import 'selected_address_cubit/selected_address_view_model.dart';
 
 @lazySingleton
 class SavedAddressViewModel extends Cubit<SavedAddressState> {
   final GetAddressesUseCase _getAddresses;
   final DeleteAddressUseCase _deleteAddress;
   final SetDefaultAddressUseCase _setDefaultAddress;
+  final SelectedAddressViewModel _selectedAddressViewModel;
 
   SavedAddressViewModel(
       this._getAddresses,
       this._deleteAddress,
       this._setDefaultAddress,
+      this._selectedAddressViewModel,
       ) : super(const SavedAddressState());
 
   void doEvent(SavedAddressEvent event) {
@@ -47,7 +51,6 @@ class SavedAddressViewModel extends Cubit<SavedAddressState> {
         ),
       ));
     } catch (e) {
-      // 🎯 Catch any repository errors here
       emit(state.copyWith(
         addressesState: state.addressesState.copyWith(
           isLoading: false,
@@ -69,6 +72,11 @@ class SavedAddressViewModel extends Cubit<SavedAddressState> {
       final isDeleted = await _deleteAddress.execute(id);
 
       if (isDeleted) {
+        // FIX: clear the selected address if it was the one just deleted,
+        // so a stale addressId is never sent to checkout.
+        if (_selectedAddressViewModel.state.addressId == id) {
+          _selectedAddressViewModel.onEvent(AddressDeselectedEvent());
+        }
         await _loadAddresses();
       } else {
         emit(state.copyWith(
@@ -98,7 +106,6 @@ class SavedAddressViewModel extends Cubit<SavedAddressState> {
 
     try {
       await _setDefaultAddress.execute(id);
-
       await _loadAddresses();
     } catch (e) {
       emit(state.copyWith(

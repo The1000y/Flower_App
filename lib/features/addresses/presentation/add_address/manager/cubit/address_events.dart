@@ -30,3 +30,9 @@ class SubmitAddressEvent extends AddressEvents {
   final AddAddressParams addAddressParams;
   SubmitAddressEvent({required this.addAddressParams});
 }
+
+class UpdateExistingAddressEvent extends AddressEvents {
+  final String id;
+  final AddAddressParams params;
+  UpdateExistingAddressEvent({required this.id, required this.params});
+}

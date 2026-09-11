@@ -18,4 +18,8 @@ abstract interface class AddressRepo {
   Future<List<AddressEntity>> getAddresses();
   Future<bool> deleteAddress(String id);
   Future<AddressEntity> setDefaultAddress(String id);
+  Future<AddressEntity> updateAddress({
+    required String id,
+    required AddAddressParams params,
+  });
 }
