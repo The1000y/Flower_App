@@ -38,8 +38,8 @@ class _ProductDetailsState extends State<ProductDetails> {
               GetProductDetailsEvent(widget.productId),
             ),
         ),
-        BlocProvider(
-          create: (context) => getIt<CartCubit>(),
+        BlocProvider.value(
+          value: getIt<CartCubit>(),
         ),
       ],
       child: Scaffold(

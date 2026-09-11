@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/features/commerce/domain/entities/product_details/product_details_entity.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_state.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
@@ -8,8 +9,11 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart' as mocktail;
 
 import 'product_details_view_test.mocks.dart';
+
+class MockCartCubit extends mocktail.Mock implements CartCubit {}
 
 @GenerateMocks([ProductDetailsCubit])
 void main() {
@@ -25,6 +29,11 @@ void main() {
     // Allow re-assignment in GetIt
     getIt.allowReassignment = true;
     getIt.registerSingleton<ProductDetailsCubit>(mockCubit);
+
+    if (getIt.isRegistered<CartCubit>()) {
+      getIt.unregister<CartCubit>();
+    }
+    getIt.registerSingleton<CartCubit>(MockCartCubit());
 
     // Default stubbing
     when(mockCubit.stream).thenAnswer((_) => const Stream.empty());

@@ -19,7 +19,7 @@ class CartItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return  Center(child: Text(AppStrings.yourcartisempty));
+      return  Center(child: Text(AppStrings.yourCartIsEmpty));
     }
 
     return ListView.builder(
