@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
-import 'package:flower_app/features/addresses/presentation/add_address/view/widgets/cuastom_address_body.dart';
+import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
+import 'package:flower_app/features/addresses/presentation/view/widgets/custom_address_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../../domain/entities/address_entity.dart';
-import '../manager/cubit/add_address_cubit.dart';
 
 class AddressView extends StatefulWidget {
   final AddressEntity? editingAddress;
@@ -46,8 +45,8 @@ class _AddressViewState extends State<AddressView> {
         titleSpacing: 0,
         title: Text(AppStrings.addressTitle, style: testTheme.titleLarge),
       ),
-      body: BlocProvider<AddressCubit>(
-        create: (context) => getIt.get<AddressCubit>(),
+      body: BlocProvider<AddressCubit>.value(
+        value: getIt.get<AddressCubit>(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SingleChildScrollView(

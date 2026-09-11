@@ -15,7 +15,7 @@ class AddressEntity extends Equatable {
   final bool isServiceable;
   final DateTime createdAt;
 
-  AddressEntity({
+  const AddressEntity({
     required this.id,
     required this.recipientName,
     required this.recipientPhone,

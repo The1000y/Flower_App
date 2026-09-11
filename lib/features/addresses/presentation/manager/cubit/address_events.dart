@@ -1,7 +1,6 @@
+import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../../../domain/entities/address_entity.dart';
 
 sealed class AddressEvents {}
 
@@ -35,4 +34,28 @@ class UpdateExistingAddressEvent extends AddressEvents {
   final String id;
   final AddAddressParams params;
   UpdateExistingAddressEvent({required this.id, required this.params});
+}
+
+class FetchUserAddressesEvent extends AddressEvents {}
+
+class SelectAddressEvent extends AddressEvents {
+  final AddressEntity selectedAddress;
+  SelectAddressEvent({required this.selectedAddress});
+}
+
+class DeselectAddressEvent extends AddressEvents {}
+
+class SetDefaultAddressEvent extends AddressEvents {
+  final String id;
+  SetDefaultAddressEvent({required this.id});
+}
+
+class DeleteAddressEvent extends AddressEvents {
+  final String id;
+  DeleteAddressEvent({required this.id});
+}
+
+class SetClosestAddressEvent extends AddressEvents {
+  final LatLng currentLocation;
+  SetClosestAddressEvent({required this.currentLocation});
 }

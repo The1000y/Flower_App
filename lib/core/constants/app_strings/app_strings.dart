@@ -184,4 +184,5 @@ static const String titleAddress = 'Title';
   static const String recipientNameRequired = 'Name is Required';
   static const String cityRequired = 'City is Required';
   static const String phoneNumberRequired = 'Phone is Required';
+  static const String addYourAddress = 'Add Your Address';
 }

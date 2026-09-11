@@ -16,6 +16,27 @@ void main() {
   late MockLocationDataSource mockLocationDataSource; // 🎯 Added mock
   late AddressRepoImpl savedAddressRepoImpl;
 
+  setUpAll(() {
+    provideDummy<BaseResponce<List<AddressDto>>>(
+      SuccessResponce<List<AddressDto>>([]),
+    );
+    provideDummy<BaseResponce<bool>>(SuccessResponce<bool>(false));
+    provideDummy<BaseResponce<AddressDto>>(
+      SuccessResponce<AddressDto>(
+        AddressDto(
+          id: 'dummy',
+          recipientName: 'Dummy',
+          recipientPhone: '01000000000',
+          addressLine: 'Dummy Line',
+          city: 'Cairo',
+          area: 'Dokki',
+          isDefault: false,
+          isServiceable: true,
+        ),
+      ),
+    );
+  });
+
   setUp(() {
     mockLocalDataSource = MockAddressLocalDataSource();
     mockLocationDataSource = MockLocationDataSource(); // 🎯 Initialized mock

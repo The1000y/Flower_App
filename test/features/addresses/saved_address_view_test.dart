@@ -2,33 +2,27 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
-import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_event.dart';
-import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_state.dart';
-import 'package:flower_app/features/addresses/presentation/saved_address/manger/saved_address_view_model.dart';
-import 'package:flower_app/features/addresses/presentation/saved_address/view/saved_address_view.dart';
-import 'package:flower_app/features/addresses/presentation/saved_address/view/widgets/address_card.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
+import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
+import 'package:flower_app/features/addresses/presentation/view/saved_address/widgets/address_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockSavedAddressViewModel extends MockCubit<SavedAddressState> implements SavedAddressViewModel {}
+class MockAddressCubit extends MockCubit<AddressState> implements AddressCubit {}
 
 void main() {
-  late MockSavedAddressViewModel mockViewModel;
-
-  setUpAll(() {
-    registerFallbackValue(LoadAddresses());
-  });
+  late MockAddressCubit mockCubit;
 
   setUp(() {
-    mockViewModel = MockSavedAddressViewModel();
-    when(() => mockViewModel.doEvent(any())).thenAnswer((_) {});
+    mockCubit = MockAddressCubit();
 
-    if (getIt.isRegistered<SavedAddressViewModel>()) {
-      getIt.unregister<SavedAddressViewModel>();
+    if (getIt.isRegistered<AddressCubit>()) {
+      getIt.unregister<AddressCubit>();
     }
-    getIt.registerFactory<SavedAddressViewModel>(() => mockViewModel);
+    getIt.registerFactory<AddressCubit>(() => mockCubit);
   });
 
   tearDown(() {
@@ -50,9 +44,9 @@ void main() {
 
   testWidgets('shows loading indicator while addresses are loading', (tester) async {
     whenListen(
-      mockViewModel,
-      const Stream<SavedAddressState>.empty(),
-      initialState: const SavedAddressState(
+      mockCubit,
+      const Stream<AddressState>.empty(),
+      initialState: const AddressState(
         addressesState: BaseState<List<AddressEntity>>(isLoading: true),
       ),
     );
@@ -64,14 +58,15 @@ void main() {
 
   testWidgets('shows empty state message when addresses list is empty', (tester) async {
     whenListen(
-      mockViewModel,
-      const Stream<SavedAddressState>.empty(),
-      initialState: const SavedAddressState(
+      mockCubit,
+      const Stream<AddressState>.empty(),
+      initialState: const AddressState(
         addressesState: BaseState<List<AddressEntity>>(data: []),
       ),
     );
 
     await pumpApp(tester);
+    await tester.pumpAndSettle();
 
     expect(find.text('No saved addresses yet'), findsOneWidget);
   });
@@ -90,9 +85,9 @@ void main() {
     );
 
     whenListen(
-      mockViewModel,
-      const Stream<SavedAddressState>.empty(),
-      initialState: SavedAddressState(
+      mockCubit,
+      const Stream<AddressState>.empty(),
+      initialState: AddressState(
         addressesState: BaseState<List<AddressEntity>>(data: [tAddress]),
       ),
     );

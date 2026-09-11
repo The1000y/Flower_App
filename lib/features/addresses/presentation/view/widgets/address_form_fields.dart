@@ -3,13 +3,12 @@ import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../domain/entities/address_entity.dart';
-import '../../manager/cubit/add_address_cubit.dart';
-import '../../manager/cubit/address_events.dart';
-import '../../manager/cubit/address_state.dart';
 
 class AddressFormFields extends StatelessWidget {
   const AddressFormFields({
@@ -115,7 +114,6 @@ class AddressFormFields extends StatelessWidget {
     } else {
       cubit.doEvent(SubmitAddressEvent(addAddressParams: addressParams));
     }
-
   }
 }
 

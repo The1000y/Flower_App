@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../config/di/di.dart';
 import '../../../../../../config/routing/routes.dart';
 import '../../../../domain/entities/address_entity.dart';
-import '../../manger/saved_address_event.dart';
-import '../../manger/saved_address_view_model.dart';
-import '../../manger/selected_address_cubit/selected_address_event.dart';
-import '../../manger/selected_address_cubit/selected_address_view_model.dart';
+import '../../../manager/cubit/add_address_cubit.dart';
+import '../../../manager/cubit/address_events.dart';
 import 'address_card.dart';
 
 class SavedAddressAnimatedList extends StatefulWidget {
@@ -66,7 +63,7 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
       arguments: address,
     );
     if (result != null && mounted) {
-      context.read<SavedAddressViewModel>().doEvent(LoadAddresses());
+      context.read<AddressCubit>().doEvent(FetchUserAddressesEvent());
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Address updated')),
       );
@@ -82,7 +79,8 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
         child: AddressCard(
           address: address,
           onEdit: () => _goToEdit(address),
-          onDelete: () => context.read<SavedAddressViewModel>().doEvent(DeleteAddressPressed(address.id)),
+          onDelete: () =>
+              context.read<AddressCubit>().doEvent(DeleteAddressEvent(id: address.id)),
         ),
       ),
     );

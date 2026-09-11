@@ -5,8 +5,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../../../core/themes/app_colors/app_color.dart';
 import '../../../../domain/entities/address_entity.dart';
-import '../../manger/saved_address_state.dart';
-import '../../manger/saved_address_view_model.dart';
+import '../../../manager/cubit/address_state.dart';
+import '../../../manager/cubit/add_address_cubit.dart';
 import 'saved_address_animated_list.dart';
 
 class SavedAddressContent extends StatelessWidget {
@@ -14,7 +14,7 @@ class SavedAddressContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SavedAddressViewModel, SavedAddressState>(
+    return BlocConsumer<AddressCubit, AddressState>(
       listenWhen: (previous, current) =>
       previous.addressesState.errorMessage != current.addressesState.errorMessage,
       listener: (context, state) {

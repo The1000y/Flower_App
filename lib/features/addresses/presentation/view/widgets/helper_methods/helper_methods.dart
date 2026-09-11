@@ -14,11 +14,3 @@ Future<BitmapDescriptor> loadIcon() async {
     'assets/Vector.png',
   );
 }
-
-
-
-
-
-
-
-

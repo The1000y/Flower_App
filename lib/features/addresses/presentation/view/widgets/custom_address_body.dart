@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
+import 'package:flower_app/features/addresses/presentation/view/widgets/address_form_fields.dart';
+import 'package:flower_app/features/addresses/presentation/view/widgets/address_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../../../domain/entities/address_entity.dart';
-import '../../manager/cubit/add_address_cubit.dart';
-import '../../manager/cubit/address_events.dart';
-import '../../manager/cubit/address_state.dart';
-import 'address_form_fields.dart';
-import 'address_map_widget.dart';
 
 class CustomAddressBody extends StatefulWidget {
   const CustomAddressBody({
