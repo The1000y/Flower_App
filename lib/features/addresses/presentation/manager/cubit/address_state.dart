@@ -27,6 +27,9 @@ class AddressState extends Equatable {
   // المنطقة المختارة (ID)
   final String? selectedCity;
 
+  final List<AddressEntity> userAddresses;
+  final AddressEntity? selectedAddress;
+
   // State للموقع الأولي (loading, error, success)
   final BaseState<LatLng> locationState;
 
@@ -38,6 +41,9 @@ class AddressState extends Equatable {
 
   // State لحفظ العنوان
   final BaseState<AddressEntity> addAddressState;
+
+  // قائمة العناوين الخاصة بالمستخدم  
+  final BaseState<List<AddressEntity>> fetchAddressesState;
 
   const AddressState({
     this.currentLocation,
@@ -51,6 +57,9 @@ class AddressState extends Equatable {
     this.reverseGeocodeState = const BaseState(),
     this.citiesState = const BaseState(),
     this.addAddressState = const BaseState(),
+    this.userAddresses = const [],
+    this.selectedAddress,
+    this.fetchAddressesState = const BaseState(),
   });
 
   AddressState copyWith({
@@ -65,6 +74,9 @@ class AddressState extends Equatable {
     BaseState<String>? reverseGeocodeState,
     BaseState<List<CityEntity>>? citiesState,
     BaseState<AddressEntity>? addAddressState,
+    List<AddressEntity>? userAddresses,
+    AddressEntity? selectedAddress,
+    BaseState<List<AddressEntity>>? fetchAddressesState,
   }) {
     return AddressState(
       currentLocation: currentLocation ?? this.currentLocation,
@@ -78,6 +90,9 @@ class AddressState extends Equatable {
       reverseGeocodeState: reverseGeocodeState ?? this.reverseGeocodeState,
       citiesState: citiesState ?? this.citiesState,
       addAddressState: addAddressState ?? this.addAddressState,
+      userAddresses: userAddresses ?? this.userAddresses,
+      selectedAddress: selectedAddress ?? this.selectedAddress,
+      fetchAddressesState: fetchAddressesState ?? this.fetchAddressesState,
     );
   }
 
@@ -94,5 +109,8 @@ class AddressState extends Equatable {
     reverseGeocodeState,
     citiesState,
     addAddressState,
+    userAddresses,
+    selectedAddress,
+    fetchAddressesState,
   ];
 }

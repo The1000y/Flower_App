@@ -1,3 +1,4 @@
+import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -23,4 +24,16 @@ class SelectCityEvent extends AddressEvents {
 class SubmitAddressEvent extends AddressEvents {
   final AddAddressParams addAddressParams;
   SubmitAddressEvent({required this.addAddressParams});
+}
+
+class FetchUserAddressesEvent extends AddressEvents {}
+
+class SelectAddressEvent extends AddressEvents {
+  final AddressEntity selectedAddress;
+  SelectAddressEvent({required this.selectedAddress});
+}
+
+class SetClosestAddressEvent extends AddressEvents {
+  final LatLng currentLocation;
+  SetClosestAddressEvent({required this.currentLocation});
 }

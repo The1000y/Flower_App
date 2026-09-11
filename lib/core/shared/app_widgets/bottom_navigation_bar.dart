@@ -1,7 +1,11 @@
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
+import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../constants/app_strings/app_strings.dart';
@@ -14,7 +18,17 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final homeScreen = HomeView(controller: controller);
+    final homeScreen = MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: getIt.get<HomeCubit>(),
+        ),
+        BlocProvider.value(
+          value: getIt.get<AddressCubit>(),
+        ),
+      ],
+      child: HomeView(controller: controller),
+    );
     final categoriesScreen = CategoriesView();
     final cartScreen = Placeholder();
     final profileScreen = Placeholder();

@@ -1,6 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/features/addresses/api/data_source_impl/local/address_dummy_data.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/location_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
@@ -12,10 +13,11 @@ import 'package:flower_app/features/addresses/domain/usecases/get_reverse_geocod
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 
-@injectable
+@singleton
 class AddressCubit extends Cubit<AddressState> {
   final AddAddressUseCase _addAddressUseCase;
   final GetCitiesUseCase _getCitiesUseCase;
@@ -47,6 +49,15 @@ class AddressCubit extends Cubit<AddressState> {
         break;
       case SubmitAddressEvent():
         _submitAddress(addaddressParams: event.addAddressParams);
+        break;
+      case FetchUserAddressesEvent():
+        _fetchUserAddresses();
+        break;
+      case SelectAddressEvent():
+        _selectAddress(event.selectedAddress);
+        break;
+      case SetClosestAddressEvent():
+        _setClosestAddress(event.currentLocation);
         break;
     }
   }
@@ -80,8 +91,11 @@ class AddressCubit extends Cubit<AddressState> {
 
       switch (result) {
         case SuccessResponce<AddressEntity>():
+          final updatedAddresses = [...state.userAddresses, result.data];
           emit(
             state.copyWith(
+              userAddresses: updatedAddresses, // ✅ أضيف للـ list
+              selectedAddress: result.data,
               addAddressState: BaseState<AddressEntity>(
                 isLoading: false,
                 data: result.data,
@@ -124,7 +138,7 @@ class AddressCubit extends Cubit<AddressState> {
           : LatLng(30.047931723716083, 31.238564150922823);
 
       final governorates = await _getGovernoratesUseCase.call();
-      // final allCities = await _getCitiesUseCase.call(governorates.first.id);
+
       final place = await _getReverseGeocodedAddressUseCase.call(coordinates);
 
       if (place == null) {
@@ -248,5 +262,76 @@ class AddressCubit extends Cubit<AddressState> {
 
   Future<void> _selectCity(String cityId) async {
     emit(state.copyWith(selectedCity: cityId));
+  }
+
+  Future<void> _fetchUserAddresses() async {
+    emit(state.copyWith(fetchAddressesState: const BaseState(isLoading: true)));
+    try {
+      final addressDummmydata = AddressEntity(
+        id: AddressDummyData.addressDummyData["id"],
+        recipientName: AddressDummyData.addressDummyData["recipientName"],
+        recipientPhone: AddressDummyData.addressDummyData["recipientPhone"],
+        addressLine: AddressDummyData.addressDummyData["addressLine"],
+        city: AddressDummyData.addressDummyData["city"],
+        area: AddressDummyData.addressDummyData["area"],
+        isDefault: AddressDummyData.addressDummyData["isDefault"],
+        isServiceable: AddressDummyData.addressDummyData["isServiceable"],
+        createdAt: AddressDummyData.addressDummyData["createdAt"],
+      );
+      emit(
+        state.copyWith(
+          fetchAddressesState: BaseState<List<AddressEntity>>(
+            isLoading: false,
+            data: [addressDummmydata],
+          ),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          fetchAddressesState: BaseState<List<AddressEntity>>(
+            isLoading: false,
+            errorMessage: e.toString(),
+          ),
+        ),
+      );
+    }
+  }
+
+  void _selectAddress(AddressEntity selectedAddress) {
+    emit(state.copyWith(selectedAddress: selectedAddress));
+  }
+
+  void _setClosestAddress(LatLng currentLocation) {
+    if (state.userAddresses.isEmpty) {
+      emit(state.copyWith(selectedAddress: null));
+      return;
+    }
+
+    AddressEntity? closestAddress;
+    double minDistance = double.infinity;
+
+    for (var address in state.userAddresses) {
+      if (address.lat == null || address.lng == null) continue;
+      final distance =
+          Geolocator.distanceBetween(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            address.lat!,
+            address.lng!,
+          ) /
+          1000;
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestAddress = address;
+      }
+    }
+
+    if (closestAddress != null) {
+      emit(state.copyWith(selectedAddress: closestAddress));
+    } else {
+      emit(state.copyWith(selectedAddress: null));
+    }
   }
 }

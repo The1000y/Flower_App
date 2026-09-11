@@ -42,8 +42,8 @@ class _AddressViewState extends State<AddressView> {
         titleSpacing: 0,
         title: Text(AppStrings.addressTitle, style: testTheme.titleLarge),
       ),
-      body: BlocProvider<AddressCubit>(
-        create: (context) => getIt.get<AddressCubit>(),
+      body: BlocProvider<AddressCubit>.value(
+        value: getIt.get<AddressCubit>(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SingleChildScrollView(

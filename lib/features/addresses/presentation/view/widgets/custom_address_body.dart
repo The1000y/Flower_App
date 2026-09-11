@@ -135,6 +135,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
           content: Text('Address added successfully'),
         ),
       );
+      Navigator.pop(context);
     }
   }
 

@@ -13,6 +13,5 @@ abstract interface class AddressRepo {
   Future<List<GovernorateEntity>> getGovernorates();
   Future<List<CityEntity>> getCities({required String governorateId});
   Future<Position?> getCurrentLocation();
-
   Future<Placemark?> getReverseGeocodedAddress(LatLng coordinates);
 }
