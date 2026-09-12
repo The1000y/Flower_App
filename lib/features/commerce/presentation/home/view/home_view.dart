@@ -25,33 +25,26 @@ class HomeView extends StatelessWidget {
         body: SafeArea(
           child: SingleChildScrollView(
             child: BlocBuilder<HomeCubit, HomeState>(
-              // buildWhen: (previous, current) {
-              //   return previous.sectionsState != current.sectionsState;
-              // },
               builder: (context, state) {
                 final sectionsState = state.sectionsState;
 
                 if (sectionsState.isLoading) {
-                  return  Center(child: CircularProgressIndicator());
-               
+                  return Center(child: CircularProgressIndicator());
                 }
 
                 if (sectionsState.errorMessage.isNotEmpty) {
-                  return  Center(child: Text(sectionsState.errorMessage));
-                  
+                  return Center(child: Text(sectionsState.errorMessage));
                 }
                 final sections = sectionsState.data ?? [];
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // HEADER
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: CustomHeaderHomeView(),
                     ),
                     SizedBox(height: 16),
-                    // LOCATION
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: CustomLocationData(textTheme: textTheme),
@@ -60,7 +53,7 @@ class HomeView extends StatelessWidget {
                     Column(
                       children: List.generate(sections.length, (index) {
                         final section = sections[index];
-                        return BuildSections(context , controller).buildSection(
+                        return BuildSections(context, controller).buildSection(
                           section,
                           textTheme: textTheme,
                         );

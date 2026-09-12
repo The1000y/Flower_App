@@ -5,7 +5,6 @@ import 'package:flower_app/features/auth/presentation/forget_password/manager/cu
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_state.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/widgets/otp_pin_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 

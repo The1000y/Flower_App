@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
@@ -96,7 +97,9 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.addAddress:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+return MaterialPageRoute(
+          builder: (_) => const AddressView(),
+        );
 
       // Orders
       case Routes.myOrders:
