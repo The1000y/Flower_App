@@ -15,7 +15,14 @@ import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_e
 import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_item_response_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
+import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/section_entity.dart';
+import 'package:flower_app/features/commerce/domain/models/cart/add_cart_item_params.dart';
+import 'package:flower_app/features/commerce/domain/models/cart/update_cart_item_params.dart';
 
 class MockCommerceRemoteDataSource extends Mock
     implements CommerceRemoteDataSource {}
@@ -27,6 +34,11 @@ void main() {
   late MockCommerceRemoteDataSource mockRemoteDataSource;
   late MockCommerceLocalDataSource mockLocalDataSource;
   late CommerceRepoImpl commerceRepo;
+
+  setUpAll(() {
+    registerFallbackValue(AddCartItemRequestDto(productId: 0, quantity: 0));
+    registerFallbackValue(UpdateCartItemRequestDto(quantity: 0));
+  });
 
   setUp(() {
     mockRemoteDataSource = MockCommerceRemoteDataSource();
@@ -62,7 +74,7 @@ void main() {
 
     test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get occasions');
-      when(() => mockLocalDataSource.getOccasions()).thenAnswer(
+when(() => mockLocalDataSource.getOccasions()).thenAnswer(
         (_) async => ErrorResponce<List<OccasionDto>>(exception),
       );
 
@@ -126,9 +138,9 @@ void main() {
 
     test('should return ErrorResponce when remote data source fails', () async {
       final exception = Exception('Failed to get products');
-      when(() => mockRemoteDataSource.getProducts(1, page: 1)).thenAnswer(
-        (_) async => ErrorResponce<ProductsResponseDto>(exception),
-      );
+      when(
+        () => mockRemoteDataSource.getProducts(1, page: 1),
+      ).thenAnswer((_) async => ErrorResponce<ProductsResponseDto>(exception));
 
       final result = await commerceRepo.getOccasionsProducts(1, page: 1);
 
@@ -169,9 +181,9 @@ void main() {
     test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get categories');
 
-      when(() => mockLocalDataSource.getCategories()).thenAnswer(
-        (_) async => ErrorResponce<List<CategoryDto>>(exception),
-      );
+      when(
+        () => mockLocalDataSource.getCategories(),
+      ).thenAnswer((_) async => ErrorResponce<List<CategoryDto>>(exception));
 
       final result = await commerceRepo.getCategories();
       expect(result, isA<ErrorResponce<List<CategoryEntity>>>());
@@ -181,7 +193,7 @@ void main() {
   });
 
   group('getBestSeller', () {
-    test(
+test(
       'should return SuccessResponce with mapped best sellers',
       () async {
         final productDto = best_seller.ProductDto(
@@ -199,19 +211,158 @@ void main() {
           (_) async => SuccessResponce<List<best_seller.ProductDto>>([productDto]),
         );
 
-        final result = await commerceRepo.getBestSeller();
+      final result = await commerceRepo.getBestSeller();
 
-        expect(result, isA<SuccessResponce<List<BestSellerEntity>>>());
+      expect(result, isA<SuccessResponce<List<BestSellerEntity>>>());
 
-        final success = result as SuccessResponce<List<BestSellerEntity>>;
+      final success = result as SuccessResponce<List<BestSellerEntity>>;
 
-        expect(success.data.length, 1);
-        expect(success.data.first.id, 1);
-        expect(success.data.first.name, 'Red Rose Bouquet');
+      expect(success.data.length, 1);
+      expect(success.data.first.id, 1);
+      expect(success.data.first.name, 'Red Rose Bouquet');
 
-        verify(() => mockLocalDataSource.getBestSellers()).called(1);
-      },
+      verify(() => mockLocalDataSource.getBestSellers()).called(1);
+    });
+  });
+
+  group('cart operations', () {
+    final responseDto = CartResponseDto(
+      data: CartDataDto(
+        items: [
+          CartItemResponseDto(
+            id: 'item-1',
+            productId: 1,
+            productName: 'Rose Bouquet',
+            productImageUrl: 'https://example.com/rose.jpg',
+            unitPrice: 200,
+            quantity: 2,
+            lineSubtotal: 400,
+            inStock: true,
+            priceChanged: false,
+          ),
+        ],
+        subtotal: 400,
+        deliveryFee: 20,
+        total: 420,
+        hasChanges: false,
+      ),
+      isSuccess: true,
+      message: 'Success',
+      messageLocalized: 'Success',
+      statusCode: '200',
     );
+
+    test('getCart maps the local datasource response', () async {
+      when(
+        () => mockLocalDataSource.getCart(),
+      ).thenAnswer((_) async => SuccessResponce(responseDto));
+
+      final result = await commerceRepo.getCart();
+
+      expect(result, isA<SuccessResponce<CartEntity>>());
+      final cart = (result as SuccessResponce<CartEntity>).data;
+      expect(cart.items.single.productName, 'Rose Bouquet');
+      expect(cart.total, 420);
+      verify(() => mockLocalDataSource.getCart()).called(1);
+    });
+
+    test('getCart returns datasource errors', () async {
+      when(() => mockLocalDataSource.getCart()).thenAnswer(
+        (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
+      );
+
+      final result = await commerceRepo.getCart();
+
+      expect(result, isA<ErrorResponce<CartEntity>>());
+    });
+
+    test('addToCart maps the response and passes request values', () async {
+      when(
+        () => mockLocalDataSource.addToCart(any()),
+      ).thenAnswer((_) async => SuccessResponce(responseDto));
+
+      final result = await commerceRepo.addToCart(
+        const AddCartItemParams(productId: 7, quantity: 3),
+      );
+
+      expect(result, isA<SuccessResponce<CartEntity>>());
+      final request =
+          verify(
+                () => mockLocalDataSource.addToCart(captureAny()),
+              ).captured.single
+              as AddCartItemRequestDto;
+      expect(request.productId, 7);
+      expect(request.quantity, 3);
+    });
+
+    test('addToCart returns datasource errors', () async {
+      when(() => mockLocalDataSource.addToCart(any())).thenAnswer(
+        (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
+      );
+
+      final result = await commerceRepo.addToCart(
+        const AddCartItemParams(productId: 7, quantity: 3),
+      );
+
+      expect(result, isA<ErrorResponce<CartEntity>>());
+    });
+
+    test('updateCartItemQuantity passes id and quantity', () async {
+      when(
+        () => mockLocalDataSource.updateCartItemQuantity(any(), any()),
+      ).thenAnswer((_) async => SuccessResponce(responseDto));
+
+      final result = await commerceRepo.updateCartItemQuantity(
+        'item-1',
+        const UpdateCartItemParams(quantity: 5),
+      );
+
+      expect(result, isA<SuccessResponce<CartEntity>>());
+      final captured = verify(
+        () => mockLocalDataSource.updateCartItemQuantity(
+          captureAny(),
+          captureAny(),
+        ),
+      ).captured;
+      expect(captured[0], 'item-1');
+      expect((captured[1] as UpdateCartItemRequestDto).quantity, 5);
+    });
+
+    test('updateCartItemQuantity returns datasource errors', () async {
+      when(
+        () => mockLocalDataSource.updateCartItemQuantity(any(), any()),
+      ).thenAnswer(
+        (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
+      );
+
+      final result = await commerceRepo.updateCartItemQuantity(
+        'item-1',
+        const UpdateCartItemParams(quantity: 5),
+      );
+
+      expect(result, isA<ErrorResponce<CartEntity>>());
+    });
+
+    test('removeCartItem passes id and maps the response', () async {
+      when(
+        () => mockLocalDataSource.removeCartItem('item-1'),
+      ).thenAnswer((_) async => SuccessResponce(responseDto));
+
+      final result = await commerceRepo.removeCartItem('item-1');
+
+      expect(result, isA<SuccessResponce<CartEntity>>());
+      verify(() => mockLocalDataSource.removeCartItem('item-1')).called(1);
+    });
+
+    test('removeCartItem returns datasource errors', () async {
+      when(() => mockLocalDataSource.removeCartItem('item-1')).thenAnswer(
+        (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
+      );
+
+      final result = await commerceRepo.removeCartItem('item-1');
+
+      expect(result, isA<ErrorResponce<CartEntity>>());
+    });
   });
 
   group('getSection', () {

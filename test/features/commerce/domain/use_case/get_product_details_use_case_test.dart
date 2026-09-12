@@ -36,8 +36,9 @@ void main() {
 
   test('should call getProductDetails from repository', () async {
     // arrange
-    when(mockRepository.getProductDetails(any))
-        .thenAnswer((_) async => SuccessResponce(tProductEntity));
+    when(
+      mockRepository.getProductDetails(any),
+    ).thenAnswer((_) async => SuccessResponce(tProductEntity));
 
     // act
     final result = await useCase.execute(1);

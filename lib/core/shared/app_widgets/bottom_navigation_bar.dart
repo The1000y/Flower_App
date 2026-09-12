@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
@@ -11,8 +12,14 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../constants/app_strings/app_strings.dart';
 
-class PersistenBottomNavBarDemo extends StatelessWidget {
-  PersistenBottomNavBarDemo({super.key});
+class PersistentBottomNavBarDemo extends StatelessWidget {
+  PersistentBottomNavBarDemo({
+    super.key,
+    this.onCartTabSelected,
+  });
+
+  final VoidCallback? onCartTabSelected;
+
   final PersistentTabController controller = PersistentTabController(
     initialIndex: 0,
   );
@@ -31,16 +38,21 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
       child: HomeView(controller: controller),
     );
     final categoriesScreen = CategoriesView();
-    final cartScreen = Placeholder();
+    final cartScreen = const CartView();
     final profileScreen = ProfileView();
 
     return PersistentTabView(
       controller: controller,
+      onTabChanged: (index) {
+        if (index == 2) {
+          onCartTabSelected?.call();
+        }
+      },
       tabs: [
         PersistentTabConfig(
           screen: homeScreen,
           item: ItemConfig(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             title: AppStrings.navHome,
             activeForegroundColor: AppColors.pinkBase,
           ),
@@ -48,7 +60,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
         PersistentTabConfig(
           screen: categoriesScreen,
           item: ItemConfig(
-            icon: Icon(Icons.category),
+            icon: const Icon(Icons.category),
             title: AppStrings.navcategories,
             activeForegroundColor: AppColors.pinkBase,
           ),
@@ -56,7 +68,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
         PersistentTabConfig(
           screen: cartScreen,
           item: ItemConfig(
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             title: AppStrings.navCart,
             activeForegroundColor: AppColors.pinkBase,
           ),
@@ -64,7 +76,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
         PersistentTabConfig(
           screen: profileScreen,
           item: ItemConfig(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             title: AppStrings.navProfile,
             activeForegroundColor: AppColors.pinkBase,
           ),

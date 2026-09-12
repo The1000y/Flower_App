@@ -25,8 +25,9 @@ void main() {
       'when repository call succeeds',
       () async {
         // Arrange
-        final tSuccess =
-            SuccessResponce<List<SectionEntity>>(CommerceFixtures.tUnsortedSections);
+        final tSuccess = SuccessResponce<List<SectionEntity>>(
+          CommerceFixtures.tUnsortedSections,
+        );
         when(mockCommerceRepo.getSection()).thenAnswer((_) async => tSuccess);
 
         // Act
@@ -47,8 +48,9 @@ void main() {
       'returns ErrorResponce with message when repository call fails',
       () async {
         // Arrange
-        final tError =
-            ErrorResponce<List<SectionEntity>>(Exception('server error'));
+        final tError = ErrorResponce<List<SectionEntity>>(
+          Exception('server error'),
+        );
         when(mockCommerceRepo.getSection()).thenAnswer((_) async => tError);
 
         // Act

@@ -9,8 +9,63 @@ import 'package:flower_app/features/commerce/data/model/responce/products_respon
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:injectable/injectable.dart';
 
-@Injectable(as: CommerceLocalDataSource)
+import '../../../data/model/request/cart_request/add_cart_item_request_dto.dart';
+import '../../../data/model/request/cart_request/update_cart_item_request_dto.dart';
+import '../../../data/model/responce/cart_response/cart_item_response_dto.dart';
+import '../../../data/model/responce/cart_response/cart_response_dto.dart';
+
+@LazySingleton(as: CommerceLocalDataSource)
 class LocalDataSourceImpl implements CommerceLocalDataSource {
+  // ============================================================
+  // CART DATA
+  // ============================================================
+
+  final List<CartItemResponseDto> _cartItems = [
+    CartItemResponseDto(
+      id: 'cart-item-1',
+      productId: 1,
+      productName: 'Red Roses Bouquet',
+      productImageUrl:
+          'https://loremflickr.com/600/600/rose,bouquet?lock=101',
+      unitPrice: 600,
+      quantity: 1,
+      lineSubtotal: 600,
+      inStock: true,
+      availableStock: 10,
+      priceChanged: false,
+    ),
+    CartItemResponseDto(
+      id: 'cart-item-2',
+      productId: 2,
+      productName: 'Pink Roses Bouquet',
+      productImageUrl:
+          'https://loremflickr.com/600/600/pink,rose,bouquet?lock=102',
+      unitPrice: 550,
+      quantity: 2,
+      lineSubtotal: 1100,
+      inStock: true,
+      availableStock: 8,
+      priceChanged: false,
+    ),
+    CartItemResponseDto(
+      id: 'cart-item-3',
+      productId: 3,
+      productName: 'White Roses Bouquet',
+      productImageUrl:
+          'https://loremflickr.com/600/600/white,rose,bouquet?lock=103',
+      unitPrice: 500,
+      quantity: 1,
+      lineSubtotal: 500,
+      inStock: true,
+      availableStock: 5,
+      priceChanged: false,
+    ),
+  ];
+
+  // ============================================================
+  // CATEGORIES
+  // ============================================================
+
   @override
   Future<BaseResponce<List<CategoryDto>>> getCategories() async {
     await Future.delayed(const Duration(seconds: 2));
@@ -59,6 +114,10 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       return ErrorResponce<List<CategoryDto>>(e);
     }
   }
+
+  // ============================================================
+  // PRODUCTS
+  // ============================================================
 
   @override
   Future<BaseResponce<ProductsResponseDto>> getProducts() async {
@@ -458,14 +517,19 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     return SuccessResponce<ProductsResponseDto>(response);
   }
 
-@override
+// ============================================================
+  // BEST SELLERS
+  // ============================================================
+
+  @override
   Future<BaseResponce<List<best_seller.ProductDto>>> getBestSellers() async {
     await Future.delayed(const Duration(seconds: 3));
     List<best_seller.ProductDto> itemDummyList = [
       best_seller.ProductDto(
         id: 1,
         name: "Luxury Red Rose Bouquet",
-        imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
+        imageUrl:
+            "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
         currency: "SAR",
         price: 150,
         originalPrice: 200,
@@ -580,6 +644,10 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
+  // ============================================================
+  // SECTIONS
+  // ============================================================
+
   @override
   Future<BaseResponce<List<SectionDto>>> getSections() async {
     List<SectionDto> sectionDummyList = [
@@ -628,9 +696,12 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-@override
-  Future<BaseResponce<List<OccasionDto>>> getOccasions() async {
-    Future.delayed(const Duration(seconds: 5));
+// ============================================================
+  // OCCASIONS
+  // ============================================================
+
+  Future<BaseResponce<List<OccasionDto>>> getOccasion() async {
+    await Future.delayed(const Duration(seconds: 5));
     List<OccasionDto> occasionDummyList = [
       OccasionDto(
         id: 1,
@@ -665,9 +736,201 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
- 
 @override
-  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1}) async {
+  Future<BaseResponce<List<OccasionDto>>> getOccasions() => getOccasion();
+
+  @override
+  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(
+    int occasionId, {
+    int page = 1,
+  }) async {
     return getProducts();
+  }
+
+  // ============================================================
+  // CART
+  // ============================================================
+
+  CartResponseDto _buildCartResponse() {
+    final subtotal = _cartItems.fold<double>(
+      0,
+      (sum, item) => sum + item.lineSubtotal,
+    );
+
+    const deliveryFee = 100.0;
+
+    return CartResponseDto(
+      data: CartDataDto(
+        items: List<CartItemResponseDto>.from(_cartItems),
+        subtotal: subtotal,
+        deliveryFee: _cartItems.isEmpty ? 0 : deliveryFee,
+        total: _cartItems.isEmpty ? 0 : subtotal + deliveryFee,
+        hasChanges: false,
+      ),
+      isSuccess: true,
+      message: 'Success',
+      messageLocalized: 'Success',
+      statusCode: '200',
+    );
+  }
+
+  // ============================================================
+  // GET CART
+  // ============================================================
+
+  @override
+  Future<BaseResponce<CartResponseDto>> getCart() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    return SuccessResponce<CartResponseDto>(
+      _buildCartResponse(),
+    );
+  }
+
+  // ============================================================
+  // ADD TO CART
+  // ============================================================
+
+  @override
+  Future<BaseResponce<CartResponseDto>> addToCart(
+    AddCartItemRequestDto request,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final existingIndex = _cartItems.indexWhere(
+      (item) => item.productId == request.productId,
+    );
+
+    // Product already exists in cart
+    if (existingIndex != -1) {
+      final existingItem = _cartItems[existingIndex];
+
+      final newQuantity = existingItem.quantity + request.quantity;
+
+      final updatedItem = CartItemResponseDto(
+        id: existingItem.id,
+        productId: existingItem.productId,
+        productName: existingItem.productName,
+        productImageUrl: existingItem.productImageUrl,
+        unitPrice: existingItem.unitPrice,
+        quantity: newQuantity,
+        lineSubtotal: existingItem.unitPrice * newQuantity,
+        inStock: existingItem.inStock,
+        availableStock: existingItem.availableStock,
+        priceChanged: existingItem.priceChanged,
+      );
+
+      _cartItems[existingIndex] = updatedItem;
+
+      return SuccessResponce<CartResponseDto>(
+        _buildCartResponse(),
+      );
+    }
+
+    // Get product information
+    final productsResponse = await getProducts();
+
+    if (productsResponse is ErrorResponce<ProductsResponseDto>) {
+      return ErrorResponce<CartResponseDto>(
+        productsResponse.error,
+      );
+    }
+
+    final successResponse =
+        productsResponse as SuccessResponce<ProductsResponseDto>;
+
+    final productIndex = successResponse.data.data.items.indexWhere(
+      (product) => product.id == request.productId,
+    );
+
+    if (productIndex == -1) {
+      return ErrorResponce<CartResponseDto>(
+        Exception('Product not found'),
+      );
+    }
+
+    final product = successResponse.data.data.items[productIndex];
+
+    final cartItem = CartItemResponseDto(
+      id: 'cart-item-${request.productId}-${DateTime.now().millisecondsSinceEpoch}',
+      productId: product.id,
+      productName: product.name,
+      productImageUrl: product.imageUrl,
+      unitPrice: product.price,
+      quantity: request.quantity,
+      lineSubtotal: product.price * request.quantity,
+      inStock: product.status == 'InStock',
+      availableStock: 10,
+      priceChanged: false,
+    );
+
+    _cartItems.add(cartItem);
+
+    return SuccessResponce<CartResponseDto>(
+      _buildCartResponse(),
+    );
+  }
+
+  // ============================================================
+  // UPDATE CART ITEM QUANTITY
+  // ============================================================
+
+  @override
+  Future<BaseResponce<CartResponseDto>> updateCartItemQuantity(
+    String cartItemId,
+    UpdateCartItemRequestDto request,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final itemIndex = _cartItems.indexWhere(
+      (item) => item.id == cartItemId,
+    );
+
+    // Cart item not found
+    if (itemIndex == -1) {
+      return ErrorResponce<CartResponseDto>(
+        Exception('Cart item not found'),
+      );
+    }
+
+    final existingItem = _cartItems[itemIndex];
+
+    final updatedItem = CartItemResponseDto(
+      id: existingItem.id,
+      productId: existingItem.productId,
+      productName: existingItem.productName,
+      productImageUrl: existingItem.productImageUrl,
+      unitPrice: existingItem.unitPrice,
+      quantity: request.quantity,
+      lineSubtotal: existingItem.unitPrice * request.quantity,
+      inStock: existingItem.inStock,
+      availableStock: existingItem.availableStock,
+      priceChanged: existingItem.priceChanged,
+    );
+
+    _cartItems[itemIndex] = updatedItem;
+
+    return SuccessResponce<CartResponseDto>(
+      _buildCartResponse(),
+    );
+  }
+
+  // ============================================================
+  // REMOVE CART ITEM
+  // ============================================================
+
+  @override
+  Future<BaseResponce<CartResponseDto>> removeCartItem(
+    String cartItemId,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    _cartItems.removeWhere(
+      (item) => item.id == cartItemId,
+    );
+
+    return SuccessResponce<CartResponseDto>(
+      _buildCartResponse(),
+    );
   }
 }

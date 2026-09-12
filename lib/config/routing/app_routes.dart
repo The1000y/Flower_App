@@ -9,6 +9,9 @@ import 'package:flower_app/features/auth/presentation/login/manager/login_view_m
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
+import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
@@ -63,7 +66,16 @@ abstract class AppRoutes {
 
       // Home
       case Routes.home:
-        return MaterialPageRoute(builder: (_) => PersistenBottomNavBarDemo());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: getIt<CartCubit>(),
+            child: PersistentBottomNavBarDemo(
+              onCartTabSelected: () {
+                getIt<CartCubit>().doEvent(CartRefreshRequestedEvent());
+              },
+            ),
+          ),
+        );
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const BestsellerView());
@@ -88,7 +100,12 @@ abstract class AppRoutes {
 
       // Cart & Checkout
       case Routes.cart:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: getIt<CartCubit>(),
+            child: const CartView(),
+          ),
+        );
 
       case Routes.checkout:
         return MaterialPageRoute(builder: (_) => const Placeholder());
