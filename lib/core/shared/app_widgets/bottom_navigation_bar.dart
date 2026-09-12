@@ -13,10 +13,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import '../../constants/app_strings/app_strings.dart';
 
 class PersistentBottomNavBarDemo extends StatelessWidget {
-  PersistentBottomNavBarDemo({
-    super.key,
-    this.onCartTabSelected,
-  });
+  PersistentBottomNavBarDemo({super.key, this.onCartTabSelected});
 
   final VoidCallback? onCartTabSelected;
 
@@ -28,17 +25,16 @@ class PersistentBottomNavBarDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeScreen = MultiBlocProvider(
       providers: [
-        BlocProvider.value(
-          value: getIt.get<HomeCubit>(),
-        ),
-        BlocProvider.value(
-          value: getIt.get<AddressCubit>(),
-        ),
+        BlocProvider.value(value: getIt.get<HomeCubit>()),
+        BlocProvider.value(value: getIt.get<AddressCubit>()),
       ],
       child: HomeView(controller: controller),
     );
     final categoriesScreen = CategoriesView();
-    final cartScreen = const CartView();
+    final cartScreen = BlocProvider.value(
+      value: getIt.get<AddressCubit>(),
+      child: const CartView(),
+    );
     final profileScreen = ProfileView();
 
     return PersistentTabView(

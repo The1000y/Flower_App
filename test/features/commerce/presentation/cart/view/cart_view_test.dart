@@ -1,5 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
@@ -12,11 +14,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MockCartCubit extends MockCubit<CartState> implements CartCubit {}
 
+class MockAddressCubit extends MockCubit<AddressState>
+    implements AddressCubit {}
+
 void main() {
   late MockCartCubit mockCubit;
+  late MockAddressCubit mockAddressCubit;
 
   setUp(() {
     mockCubit = MockCartCubit();
+    mockAddressCubit = MockAddressCubit();
   });
 
   Future<void> pumpApp(WidgetTester tester, CartState state) async {
@@ -31,8 +38,11 @@ void main() {
       ScreenUtilPlusInit(
         designSize: const Size(375, 812),
         child: MaterialApp(
-          home: BlocProvider<CartCubit>.value(
-            value: mockCubit,
+          home: MultiBlocProvider(
+            providers: [
+              BlocProvider<CartCubit>.value(value: mockCubit),
+              BlocProvider<AddressCubit>.value(value: mockAddressCubit),
+            ],
             child: const CartView(),
           ),
         ),
@@ -49,10 +59,7 @@ void main() {
   testWidgets('shows a loading indicator while the cart is loading', (
     tester,
   ) async {
-    await pumpApp(
-      tester,
-      const CartState(isLoading: true),
-    );
+    await pumpApp(tester, const CartState(isLoading: true));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
@@ -66,7 +73,10 @@ void main() {
     );
 
     expect(find.text('Something went wrong'), findsOneWidget);
-    expect(find.widgetWithText(ElevatedButton, AppStrings.retry), findsOneWidget);
+    expect(
+      find.widgetWithText(ElevatedButton, AppStrings.retry),
+      findsOneWidget,
+    );
   });
 
   testWidgets('shows an empty message when the cart has no items', (

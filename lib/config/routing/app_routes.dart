@@ -1,6 +1,7 @@
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
@@ -101,8 +102,11 @@ abstract class AppRoutes {
       // Cart & Checkout
       case Routes.cart:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider.value(
-            value: getIt<CartCubit>(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<CartCubit>()),
+              BlocProvider.value(value: getIt<AddressCubit>()),
+            ],
             child: const CartView(),
           ),
         );
@@ -119,9 +123,7 @@ abstract class AppRoutes {
       case Routes.addAddress:
         final editingAddress = settings.arguments as AddressEntity?;
         return MaterialPageRoute(
-          builder: (_) => AddressView(
-            editingAddress: editingAddress,
-          ),
+          builder: (_) => AddressView(editingAddress: editingAddress),
         );
 
       // Orders
