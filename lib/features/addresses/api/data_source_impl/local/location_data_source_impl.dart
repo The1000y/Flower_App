@@ -45,7 +45,7 @@ class LocationDataSourceImpl implements LocationDataSource {
 
       return null;
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 }

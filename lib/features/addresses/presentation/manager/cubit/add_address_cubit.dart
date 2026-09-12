@@ -97,7 +97,7 @@ class AddressCubit extends Cubit<AddressState> {
       ),
     );
     try {
-      final selectedGovernorateObj = state.governorates.firstWhere(
+final selectedGovernorateObj = state.governorates.firstWhere(
             (city) => city.id == state.selectedGovernorate,
         orElse: () => throw Exception('Governorate not found'),
       );
@@ -109,7 +109,7 @@ class AddressCubit extends Cubit<AddressState> {
         recipientName: addaddressParams.recipientName,
         recipientPhone: addaddressParams.recipientPhone,
         addressLine: addaddressParams.addressLine,
-        city: selectedGovernorateObj.nameEn,
+        city: selectedGovernorateObj?.nameEn ?? '',
         area: selectedAreaObj?.nameEn ?? '',
         lat: state.selectedCoordinates?.latitude ?? 0.0,
         lng: state.selectedCoordinates?.longitude ?? 0.0,
@@ -311,7 +311,7 @@ class AddressCubit extends Cubit<AddressState> {
         citiesState: const BaseState(isLoading: true),
       ),
     );
-    try {
+try {
       final filteredCities = await _getCitiesUseCase.call(governorateId);
       if (filteredCities.isEmpty) {
         emit(
