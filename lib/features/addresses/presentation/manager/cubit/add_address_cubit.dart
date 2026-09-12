@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
@@ -69,19 +70,18 @@ class AddressCubit extends Cubit<AddressState> {
       ),
     );
     try {
-      final selectedGovernorateObj = state.governorates.firstWhere(
-        (city) => city.id == state.selectedGovernorate,
-        orElse: () => throw Exception('Governorate not found'),
+      final selectedGovernorateObj = state.governorates.firstWhereOrNull(
+        (g) => g.id == state.selectedGovernorate,
       );
-      final selectedAreaObj = state.citiesState.data?.firstWhere(
-        (city) => city.id == state.selectedCity,
-        orElse: () => throw Exception('City not found'),
+
+      final selectedAreaObj = state.citiesState.data?.firstWhereOrNull(
+        (c) => c.id == state.selectedCity,
       );
       final addAddressParams = AddAddressParams(
         recipientName: addaddressParams.recipientName,
         recipientPhone: addaddressParams.recipientPhone,
         addressLine: addaddressParams.addressLine,
-        city: selectedGovernorateObj.nameEn,
+        city: selectedGovernorateObj?.nameEn ?? '',
         area: selectedAreaObj?.nameEn ?? '',
         lat: state.selectedCoordinates?.latitude ?? 0.0,
         lng: state.selectedCoordinates?.longitude ?? 0.0,
@@ -226,38 +226,28 @@ class AddressCubit extends Cubit<AddressState> {
         citiesState: const BaseState(isLoading: true),
       ),
     );
-    try {
-      final filtredCity = await _getCitiesUseCase.call(governorateId);
-      if (filtredCity.isEmpty) {
-        emit(
-          state.copyWith(
-            citiesState: BaseState<List<CityEntity>>(
-              errorMessage: 'No cities found for this governorate',
-              isLoading: false,
-            ),
-          ),
-        );
-        return;
-      }
 
+    final filtredCity = await _getCitiesUseCase.call(governorateId);
+    if (filtredCity.isEmpty) {
       emit(
         state.copyWith(
           citiesState: BaseState<List<CityEntity>>(
-            isLoading: false,
-            data: filtredCity,
-          ),
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          citiesState: BaseState<List<CityEntity>>(
-            errorMessage: e.toString(),
+            errorMessage: 'No cities found for this governorate',
             isLoading: false,
           ),
         ),
       );
+      return;
     }
+
+    emit(
+      state.copyWith(
+        citiesState: BaseState<List<CityEntity>>(
+          isLoading: false,
+          data: filtredCity,
+        ),
+      ),
+    );
   }
 
   Future<void> _selectCity(String cityId) async {
