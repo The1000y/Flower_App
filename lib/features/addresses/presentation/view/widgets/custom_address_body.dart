@@ -141,7 +141,10 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     }
 
     if (state.addAddressState.data != null) {
-      Navigator.pop(context, true);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      cubit.doEvent(ResetAddAddressStateEvent());
     }
   }
 

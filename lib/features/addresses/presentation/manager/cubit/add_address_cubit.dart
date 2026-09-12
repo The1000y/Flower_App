@@ -84,6 +84,9 @@ class AddressCubit extends Cubit<AddressState> {
       case SetClosestAddressEvent():
         _setClosestAddress(event.currentLocation);
         break;
+      case ResetAddAddressStateEvent():
+        _resetAddAddressState();
+        break;
     }
   }
 
@@ -384,6 +387,8 @@ class AddressCubit extends Cubit<AddressState> {
               const <AddressEntity>[])
           .map((address) => address.id == id ? result : address)
           .toList();
+      final wasSelected = state.selectedAddressId == id ||
+          state.selectedAddress?.id == id;
 
       emit(
         state.copyWith(
@@ -396,6 +401,11 @@ class AddressCubit extends Cubit<AddressState> {
             isLoading: false,
             data: updatedSavedAddresses,
           ),
+          selectedAddress: wasSelected ? result : state.selectedAddress,
+          selectedAddressId: wasSelected ? result.id : state.selectedAddressId,
+          selectedAddressLabel: wasSelected
+              ? '${result.addressLine} - ${result.area}'
+              : state.selectedAddressLabel,
           addAddressState: BaseState<AddressEntity>(
             isLoading: false,
             data: result,
@@ -620,5 +630,13 @@ class AddressCubit extends Cubit<AddressState> {
     } else {
       _deselectAddress();
     }
+  }
+
+  void _resetAddAddressState() {
+    emit(
+      state.copyWith(
+        addAddressState: const BaseState<AddressEntity>(),
+      ),
+    );
   }
 }

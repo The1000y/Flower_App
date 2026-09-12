@@ -59,3 +59,5 @@ class SetClosestAddressEvent extends AddressEvents {
   final LatLng currentLocation;
   SetClosestAddressEvent({required this.currentLocation});
 }
+
+class ResetAddAddressStateEvent extends AddressEvents {}

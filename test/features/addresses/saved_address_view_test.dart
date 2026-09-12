@@ -9,7 +9,6 @@ import 'package:flower_app/features/addresses/presentation/view/saved_address/wi
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
 class MockAddressCubit extends MockCubit<AddressState> implements AddressCubit {}
 
