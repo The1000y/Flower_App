@@ -1,38 +1,33 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
-import 'package:flower_app/features/profile/domain/use_case/show_profile_usecase.dart';
+import 'package:flower_app/features/profile/domain/use_case/get_profile_usecase.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_event.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-class ProfileViewModel extends Cubit<ProfileState> {
-  final ShowProfileUsecase _getProfileUseCase;
+@injectable
+class ProfileHomeViewModel extends Cubit<ProfileHomeState> {
+  final GetProfileUseCase _getProfileUseCase;
 
-  ProfileViewModel(this._getProfileUseCase)
-      : super(const ProfileState());
+  ProfileHomeViewModel(this._getProfileUseCase)
+      : super(const ProfileHomeState());
 
-  void doIntent(ProfileIntent intent) {
+  void doIntent(ProfileHomeIntent intent) {
     switch (intent) {
       case GetProfileIntent():
         _getProfile();
-
-      
       case EditProfileIntent():
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case NotificationIntent():
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case LogoutIntent():
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        break;
     }
   }
 
   Future<void> _getProfile() async {
     emit(state.copyWith(isLoading: true));
 
-    final result = await _getProfileUseCase.getProfile();
+    final result = await _getProfileUseCase.call();
 
     switch (result) {
       case SuccessResponce<UserEntity>():

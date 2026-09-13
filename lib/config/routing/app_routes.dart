@@ -12,6 +12,10 @@ import 'package:flower_app/features/commerce/presentation/categories/view/catego
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flower_app/features/profile/presentation/view/notifcation_view.dart';
+import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
+import 'package:flower_app/features/profile/presentation/manager/profile_viewModel.dart';
+import 'package:flower_app/features/profile/presentation/view/profile_home_view.dart';
+import 'package:flower_app/features/profile/presentation/view/profile_view.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flower_app/features/profile/presentation/view/change_password_view.dart';
@@ -128,10 +132,20 @@ abstract class AppRoutes {
 
       // Profile
       case Routes.profile:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ProfileHomeViewModel>(),
+            child: const ProfileHomeView(),
+          ),
+        );
 
       case Routes.editProfile:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ProfileViewModel>(),
+            child: const ProfileView(),
+          ),
+        );
 
       case Routes.changeLanguage:
         return MaterialPageRoute(builder: (_) => const Placeholder());

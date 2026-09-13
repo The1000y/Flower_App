@@ -6,6 +6,5 @@ import 'package:flower_app/features/profile/data/model/response/get_profile_resp
 
 abstract interface class ProfileRemoteDataSource {
   Future<BaseResponce<ChangePasswordResponse>> changePassword(ChangePasswordRequest request);
-  Future<BaseResponce<GetProfileResponseDto>> getProfile();
   Future<BaseResponce<GetProfileResponseDto>> updateProfile(UpdateProfileRequestDto request);
 }

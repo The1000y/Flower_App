@@ -17,18 +17,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   ProfileRemoteDataSourceImpl(this._dio, this._apiClient);
 
   @override
-  Future<BaseResponce<GetProfileResponseDto>> getProfile() async {
-    try {
-      final response = await _dio.get('/users/me');
-      return SuccessResponce(GetProfileResponseDto.fromJson(response.data));
-    } on DioException catch (e) {
-      return ErrorResponce(e);
-    } catch (e) {
-      return ErrorResponce(Exception(e.toString()));
-    }
-  }
-
-  @override
   Future<BaseResponce<GetProfileResponseDto>> updateProfile(UpdateProfileRequestDto request) async {
     try {
       final response = await _dio.put('/users/me', data: request.toJson());

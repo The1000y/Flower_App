@@ -1,9 +1,9 @@
-sealed class ProfileIntent {}
+sealed class ProfileHomeIntent {}
 
-class GetProfileIntent extends ProfileIntent {}
+class GetProfileIntent extends ProfileHomeIntent {}
 
-class EditProfileIntent extends ProfileIntent {}
+class EditProfileIntent extends ProfileHomeIntent {}
 
-class NotificationIntent extends ProfileIntent {}
+class NotificationIntent extends ProfileHomeIntent {}
 
-class LogoutIntent extends ProfileIntent {}
+class LogoutIntent extends ProfileHomeIntent {}

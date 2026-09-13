@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flower_app/config/routing/routes.dart';
 import '../manager/cubit/profile_event.dart';
 import '../manager/cubit/profile_state.dart';
 import '../manager/cubit/profile_view_model.dart';
@@ -65,12 +66,13 @@ class _ProfileViewState extends State<ProfileView> {
         profile.gender.toLowerCase() == 'female';
   }
 
-  Future<void> _onAvatarTap(BuildContext context) async {
+  Future<void> _onAvatarTap() async {
     final picked = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
 
     if (picked != null) {
+      if (!mounted) return;
       context.read<ProfileViewModel>().doEvent(
             PickProfileImageEvent(
               imagePath: picked.path,
@@ -116,13 +118,13 @@ class _ProfileViewState extends State<ProfileView> {
           });
         }
 
-        if (state.profileState.errorMessage != null) {
+        if (state.profileState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
                 content: Text(
-                  state.profileState.errorMessage!,
+                  state.profileState.errorMessage,
                 ),
                 backgroundColor: AppColors.error,
               ),
@@ -139,13 +141,13 @@ class _ProfileViewState extends State<ProfileView> {
             );
         }
 
-        if (state.updateProfileState.errorMessage != null) {
+        if (state.updateProfileState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
                 content: Text(
-                  state.updateProfileState.errorMessage!,
+                  state.updateProfileState.errorMessage,
                 ),
                 backgroundColor: AppColors.error,
               ),
@@ -193,7 +195,7 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     Center(
                       child: GestureDetector(
-                        onTap: () => _onAvatarTap(context),
+                        onTap: _onAvatarTap,
                         child: Stack(
                           children: [
                             CircleAvatar(
@@ -289,7 +291,10 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                         suffixIcon: TextButton(
                           onPressed: () {
-                            // Navigate to change-password screen.
+                            Navigator.pushNamed(
+                              context,
+                              Routes.changePassword,
+                            );
                           },
                           child: Text(
                             'Change',

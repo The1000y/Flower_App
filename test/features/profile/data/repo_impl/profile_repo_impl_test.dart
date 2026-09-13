@@ -1,4 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/profile/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/profile/data/data_source/remote_data_source/profile_remote_data_source.dart';
 import 'package:flower_app/features/profile/data/model/request/change_password_request/change_password_request.dart';
 import 'package:flower_app/features/profile/data/model/response/change_password_response/change_password_response.dart';
@@ -9,6 +10,8 @@ import 'package:mocktail/mocktail.dart';
 
 class MockProfileRemoteDataSource extends Mock implements ProfileRemoteDataSource {}
 
+class MockProfileLocalDataSource extends Mock implements ProfileLocalDataSource {}
+
 class FakeChangePasswordRequest extends Fake implements ChangePasswordRequest {}
 
 void main() {
@@ -17,11 +20,13 @@ void main() {
   });
 
   late MockProfileRemoteDataSource mockRemoteDataSource;
+  late MockProfileLocalDataSource mockLocalDataSource;
   late ProfileRepoImpl repoImpl;
 
   setUp(() {
     mockRemoteDataSource = MockProfileRemoteDataSource();
-    repoImpl = ProfileRepoImpl(mockRemoteDataSource);
+    mockLocalDataSource = MockProfileLocalDataSource();
+    repoImpl = ProfileRepoImpl(mockRemoteDataSource, mockLocalDataSource);
   });
 
   final tResponse = ChangePasswordResponse(

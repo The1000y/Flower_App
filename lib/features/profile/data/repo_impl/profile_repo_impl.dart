@@ -1,3 +1,5 @@
+import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
+import 'package:flower_app/features/profile/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/profile/data/data_source/remote_data_source/profile_remote_data_source.dart';
 import 'package:flower_app/features/profile/data/model/request/change_password_request/change_password_request.dart';
 import 'package:flower_app/features/profile/data/model/response/change_password_response/change_password_response.dart';
@@ -14,17 +16,20 @@ import '../model/response/get_profile_response_dto.dart';
 @Injectable(as: ProfileRepo)
 class ProfileRepoImpl implements ProfileRepo {
   final ProfileRemoteDataSource _remoteDataSource;
+  final ProfileLocalDataSource profData;
 
-  ProfileRepoImpl(this._remoteDataSource);
+  ProfileRepoImpl(this._remoteDataSource, this.profData);
 
   @override
-  Future<BaseResponce<ProfileEntity>> getProfile() async {
-    final response = await _remoteDataSource.getProfile();
+  Future<BaseResponce<UserEntity>> getProfile() async {
+    final userData = await profData.getProfile();
 
-    return switch (response) {
-      SuccessResponce<GetProfileResponseDto>() => SuccessResponce(response.data.toDomain()),
-      ErrorResponce<GetProfileResponseDto>() => ErrorResponce(response.error),
-    };
+    switch (userData) {
+      case SuccessResponce():
+        return SuccessResponce(userData.data.toUserEntity());
+      case ErrorResponce():
+        return ErrorResponce(userData.error);
+    }
   }
 
   @override
@@ -37,8 +42,6 @@ class ProfileRepoImpl implements ProfileRepo {
       ErrorResponce<GetProfileResponseDto>() => ErrorResponce(response.error),
     };
   }
-
-
 
   @override
   Future<BaseResponce<ChangePasswordEntity>> changePassword({

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/profile/api/client/profile_api_client.dart';
 import 'package:flower_app/features/profile/api/data_source_impl/remote/profile_remote_data_source_impl.dart';
@@ -20,7 +21,7 @@ void main() {
 
   setUp(() {
     mockApiClient = MockProfileApiClient();
-    dataSource = ProfileRemoteDataSourceImpl(mockApiClient);
+    dataSource = ProfileRemoteDataSourceImpl(Dio(), mockApiClient);
   });
 
   final tRequest = ChangePasswordRequest(
