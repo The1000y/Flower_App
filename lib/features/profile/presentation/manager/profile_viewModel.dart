@@ -23,9 +23,6 @@ class ProfileViewModel extends Cubit<ProfileState> {
       case NotificationIntent():
         // TODO: Handle this case.
         throw UnimplementedError();
-      case LanguageIntent():
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case LogoutIntent():
         // TODO: Handle this case.
         throw UnimplementedError();

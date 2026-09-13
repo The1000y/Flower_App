@@ -7,8 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/body_profile.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
+import 'package:flower_app/l10n/app_localizations.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -45,8 +44,6 @@ class ProfileView extends StatelessWidget {
                 context.push(Routes.notification);
               },
               onLanguage: () {
-                context.read<ProfileViewModel>().doIntent(LanguageIntent());
-
                 _showLanguageBottomSheet(context);
               },
               onLogout: () {
@@ -79,19 +76,24 @@ class ProfileView extends StatelessWidget {
   }
 
   void _showLogoutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text(AppStrings.logout, textAlign: TextAlign.center),
-          content: const Text(AppStrings.confirmLogoutSubtitle, textAlign: TextAlign.center),
+          title: Text(l10n.logout, textAlign: TextAlign.center),
+          content: Text(
+            l10n.confirmLogoutSubtitle,
+            textAlign: TextAlign.center,
+          ),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
             OutlinedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text(AppStrings.actionCancel),
+              child: Text(l10n.actionCancel),
             ),
             ElevatedButton(
               onPressed: () {
@@ -100,7 +102,7 @@ class ProfileView extends StatelessWidget {
                 // هنا لاحقًا تعمل ConfirmLogoutIntent
                 // لما تضيف logout use case.
               },
-              child: const Text(AppStrings.logout),
+              child: Text(l10n.logout),
             ),
           ],
         );

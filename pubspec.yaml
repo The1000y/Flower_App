@@ -49,6 +49,11 @@ dependencies:
   cached_network_image: ^3.4.1
   firebase_core: ^4.14.0
   firebase_messaging: ^16.6.0
+  intl: any
+  shared_preferences: ^2.3.0
+
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +83,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

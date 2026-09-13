@@ -1,8 +1,9 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/optionTile.dart';
+import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileBody extends StatelessWidget {
   final UserEntity? user;
@@ -30,20 +31,22 @@ class ProfileBody extends StatelessWidget {
           const SizedBox(height: 20),
           _buildProfileOptions(context),
           const SizedBox(height: 20),
-          _buildVersion(),
+          _buildVersion(context),
         ],
       ),
     );
   }
 
   Widget _buildHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            AppStrings.floweryAppbarTitle,
+            l10n.floweryAppbarTitle,
             style: Theme.of(
               context,
             ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -114,11 +117,15 @@ class ProfileBody extends StatelessWidget {
   }
 
   Widget _buildProfileOptions(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final currentLanguageName =
+        context.watch<LocaleCubit>().currentLanguageName;
+
     return Column(
       children: [
         ProfileOptionTile(
           icon: Icons.receipt_long_outlined,
-          title: AppStrings.myOrdersTitle,
+          title: l10n.myOrdersTitle,
           onTap: () {
             // orders route
           },
@@ -126,7 +133,7 @@ class ProfileBody extends StatelessWidget {
 
         ProfileOptionTile(
           icon: Icons.bookmark_border,
-          title: AppStrings.saveAddress,
+          title: l10n.saveAddress,
           onTap: () {
             // saved address route
           },
@@ -136,7 +143,7 @@ class ProfileBody extends StatelessWidget {
 
         ProfileOptionTile(
           icon: Icons.notifications_none_outlined,
-          title: AppStrings.notificationTitle,
+          title: l10n.notificationTitle,
           trailing: Switch(
             value: true,
             onChanged: (_) {
@@ -150,14 +157,14 @@ class ProfileBody extends StatelessWidget {
 
         ProfileOptionTile(
           icon: Icons.language_outlined,
-          title: AppStrings.language,
-          trailingText: AppStrings.languageEnglish,
+          title: l10n.language,
+          trailingText: currentLanguageName,
           onTap: onLanguage,
         ),
 
         ProfileOptionTile(
           icon: Icons.info_outline,
-          title: AppStrings.aboutUs,
+          title: l10n.aboutUs,
           onTap: () {
             // about route
           },
@@ -165,7 +172,7 @@ class ProfileBody extends StatelessWidget {
 
         ProfileOptionTile(
           icon: Icons.description_outlined,
-          title: AppStrings.termsAndConditionsAlt,
+          title: l10n.termsAndConditionsAlt,
           onTap: () {
             // terms route
           },
@@ -175,18 +182,20 @@ class ProfileBody extends StatelessWidget {
 
         ProfileOptionTile(
           icon: Icons.logout_outlined,
-          title: AppStrings.logout,
+          title: l10n.logout,
           onTap: onLogout,
         ),
       ],
     );
   }
 
-  Widget _buildVersion() {
+  Widget _buildVersion(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Text(
-        AppStrings.versionProfile,
+        l10n.versionProfile,
         style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
       ),
     );
