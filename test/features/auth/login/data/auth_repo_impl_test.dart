@@ -1,4 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
+
 import 'package:flower_app/features/auth/api/data_source_impl/remote/dummy.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
@@ -6,6 +7,7 @@ import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../../../helpers/mock_auth_api_client.mocks.dart';
 
 import '../../../../helpers/auth_test_helpers.dart';
 
@@ -17,7 +19,7 @@ void main() {
     setUp(() {
       useInMemorySecureStorage();
       storage = SecureStorageService(const FlutterSecureStorage());
-      repo = buildLoginRepo(RemoteDataSourceImpl(), storage);
+      repo = buildLoginRepo(RemoteDataSourceImpl(MockAuthApiClient()), storage);
     });
 
     test('returns success and saves tokens when remember me is true', () async {
@@ -59,3 +61,6 @@ void main() {
     });
   });
 }
+
+
+

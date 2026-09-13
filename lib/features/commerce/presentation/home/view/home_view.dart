@@ -32,12 +32,12 @@ class HomeView extends StatelessWidget {
                 final sectionsState = state.sectionsState;
 
                 if (sectionsState.isLoading) {
-                  return  Center(child: CircularProgressIndicator());
+                  return SizedBox(height: MediaQuery.of(context).size.height * 0.7, child: const Center(child: CircularProgressIndicator()));
                
                 }
 
                 if (sectionsState.errorMessage.isNotEmpty) {
-                  return  Center(child: Text(sectionsState.errorMessage));
+                  return SizedBox(height: MediaQuery.of(context).size.height * 0.7, child: Center(child: Text(sectionsState.errorMessage)));
                   
                 }
                 final sections = sectionsState.data ?? [];

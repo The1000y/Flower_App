@@ -93,8 +93,8 @@ void main() {
 
   testWidgets('renders a tab per occasion when occasions are loaded', (tester) async {
     final occasions = [
-      OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url1'),
-      OccasionEntity(id: 2, name: 'Wedding', imageUrl: 'url2'),
+      OccasionEntity(id: '1', name: 'Birthday', imageUrl: 'url1'),
+      OccasionEntity(id: '2', name: 'Wedding', imageUrl: 'url2'),
     ];
 
     whenListen(
@@ -112,3 +112,4 @@ void main() {
     expect(find.text('Wedding'), findsOneWidget);
   });
 }
+

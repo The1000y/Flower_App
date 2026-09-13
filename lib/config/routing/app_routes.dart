@@ -65,7 +65,7 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const BestsellerView());
 
       case Routes.productDetails:
-        final productId = settings.arguments as int? ?? 0;
+        final productId = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (_) => ProductDetails(productId: productId),
         );
@@ -140,3 +140,4 @@ abstract class AppRoutes {
     }
   }
 }
+

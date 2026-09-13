@@ -20,7 +20,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
-  Future<void> getProductDetails(int productId) async {
+  Future<void> getProductDetails(String productId) async {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
 
     final result = await _getProductDetailsUseCase.execute(productId);
@@ -35,3 +35,5 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 }
+
+

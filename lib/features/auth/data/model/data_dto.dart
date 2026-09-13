@@ -18,7 +18,14 @@ class Datadto {
   DateTime? expiresAtUtc;
 
   Datadto({this.resetToken, this.expiresAtUtc});
-  factory Datadto.fromJson(Map<String, dynamic> json) => _$DatadtoFromJson(json);
+  factory Datadto.fromJson(Map<String, dynamic> json) {
+    return Datadto(
+      resetToken: (json['resetToken'] ?? json['token']) as String?,
+      expiresAtUtc: (json['expiresAtUtc'] ?? json['expirationDate']) == null
+          ? null
+          : DateTime.tryParse((json['expiresAtUtc'] ?? json['expirationDate']).toString()),
+    );
+  }
   Map<String, dynamic> toJson() => _$DatadtoToJson(this);
   VerifyOtpEntity toEntity() => VerifyOtpEntity(resetToken: resetToken ?? '', expiresAtUtc: expiresAtUtc ?? DateTime.now());
 }
@@ -41,3 +48,4 @@ class LoginDataDto {
   Map<String, dynamic> toJson() => _$LoginDataDtoToJson(this);
   LoginEntity toLoginEntity() => LoginEntity(accessToken: accessToken ?? '', refreshToken: refreshToken ?? '', expiresIn: expiresIn ?? 0, driverStatus: driverStatus ?? '', user: user?.toUserEntity());
 }
+
