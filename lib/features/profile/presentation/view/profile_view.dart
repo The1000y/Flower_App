@@ -1,112 +1,331 @@
-import 'package:flower_app/features/profile/presentation/manager/profile_event.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_state.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_viewModel.dart';
-import 'package:flower_app/features/profile/presentation/view/widgets/language.dart';
+import 'dart:io';
+import 'package:flower_app/config/utils/auth_validators.dart';
+import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
+import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/auth/presentation/register/view/widgets/register_custom_text_form_field.dart';
+import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
+import 'package:flower_app/features/profile/presentation/view/widgets/profile_gender_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flower_app/features/profile/presentation/view/widgets/body_profile.dart';
-import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/l10n/app_localizations.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:image_picker/image_picker.dart';
+import '../manager/cubit/profile_event.dart';
+import '../manager/cubit/profile_state.dart';
+import '../manager/cubit/profile_view_model.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProfileViewModel, ProfileState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  final ValueNotifier<bool> _isFemaleNotifier = ValueNotifier<bool>(true);
+
+  ProfileEntity? _loadedProfile;
+  bool _isSubmitted = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<ProfileViewModel>().doEvent(
+          FetchProfileEvent(),
+        );
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _isFemaleNotifier.dispose();
+
+    super.dispose();
+  }
+
+  void _fillFieldsFrom(ProfileEntity profile) {
+    _loadedProfile = profile;
+
+    _firstNameController.text = profile.firstName;
+    _lastNameController.text = profile.lastName;
+    _emailController.text = profile.email;
+    _phoneController.text = profile.phoneNumber;
+
+    _isFemaleNotifier.value =
+        profile.gender.toLowerCase() == 'female';
+  }
+
+  Future<void> _onAvatarTap(BuildContext context) async {
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (picked != null) {
+      context.read<ProfileViewModel>().doEvent(
+            PickProfileImageEvent(
+              imagePath: picked.path,
+            ),
           );
-        }
+    }
+  }
 
-        if (state.errorMessage.isNotEmpty) {
-          return Scaffold(body: Center(child: Text(state.errorMessage)));
-        }
+  void _onUpdatePressed(BuildContext context) {
+    setState(() {
+      _isSubmitted = true;
+    });
 
-        final user = state.data;
+    if (!_formKey.currentState!.validate() || _loadedProfile == null) {
+      return;
+    }
 
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: ProfileBody(
-              user: user,
-              onEditProfile: () {
-                context.read<ProfileViewModel>().doIntent(EditProfileIntent());
-
-                context.push(Routes.editProfile);
-              },
-              onNotification: () {
-                context.read<ProfileViewModel>().doIntent(NotificationIntent());
-
-                context.push(Routes.notification);
-              },
-              onLanguage: () {
-                _showLanguageBottomSheet(context);
-              },
-              onLogout: () {
-                context.read<ProfileViewModel>().doIntent(LogoutIntent());
-
-                _showLogoutDialog(context);
-              },
+    context.read<ProfileViewModel>().doEvent(
+          UpdateProfileEvent(
+            profile: ProfileEntity(
+              firstName: _firstNameController.text.trim(),
+              lastName: _lastNameController.text.trim(),
+              email: _emailController.text.trim(),
+              phoneNumber: _phoneController.text.trim(),
+              gender: _isFemaleNotifier.value ? 'Female' : 'Male',
+              photoUrl: _loadedProfile!.photoUrl,
             ),
           ),
         );
-      },
-    );
   }
 
-  void _showLanguageBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: const LanguageBottomSheet(),
-        );
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<ProfileViewModel, ProfileState>(
+      listenWhen: (previous, current) =>
+          previous.profileState != current.profileState ||
+          previous.updateProfileState != current.updateProfileState,
+      listener: (context, state) {
+        if (state.profileState.data != null &&
+            _loadedProfile == null) {
+          setState(() {
+            _fillFieldsFrom(state.profileState.data!);
+          });
+        }
+
+        if (state.profileState.errorMessage != null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.profileState.errorMessage!,
+                ),
+                backgroundColor: AppColors.error,
+              ),
+            );
+        }
+
+        if (state.updateProfileState.data != null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(
+                content: Text('Profile updated'),
+              ),
+            );
+        }
+
+        if (state.updateProfileState.errorMessage != null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.updateProfileState.errorMessage!,
+                ),
+                backgroundColor: AppColors.error,
+              ),
+            );
+        }
       },
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(l10n.logout, textAlign: TextAlign.center),
-          content: Text(
-            l10n.confirmLogoutSubtitle,
-            textAlign: TextAlign.center,
+      child: Scaffold(
+        backgroundColor: AppColors.whiteBase,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new),
+            onPressed: () => Navigator.pop(context),
           ),
-          actionsAlignment: MainAxisAlignment.center,
+          title: Text(
+            'Edit profile',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           actions: [
-            OutlinedButton(
+            IconButton(
+              icon: const Icon(Icons.notifications_none),
               onPressed: () {
-                Navigator.pop(context);
+                // Navigate to notifications screen.
               },
-              child: Text(l10n.actionCancel),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-
-                // هنا لاحقًا تعمل ConfirmLogoutIntent
-                // لما تضيف logout use case.
-              },
-              child: Text(l10n.logout),
             ),
           ],
-        );
-      },
+        ),
+        body: BlocBuilder<ProfileViewModel, ProfileState>(
+          builder: (context, state) {
+            if (state.profileState.isLoading &&
+                _loadedProfile == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 16.h,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: GestureDetector(
+                        onTap: () => _onAvatarTap(context),
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 40.r,
+                              backgroundImage:
+                                  state.pickedImagePath != null
+                                      ? FileImage(
+                                          File(
+                                            state.pickedImagePath!,
+                                          ),
+                                        )
+                                      : (_loadedProfile?.photoUrl != null
+                                          ? NetworkImage(
+                                              _loadedProfile!.photoUrl!,
+                                            )
+                                          : null),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: CircleAvatar(
+                                radius: 12.r,
+                                backgroundColor: AppColors.pinkBase,
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  size: 14.sp,
+                                  color: AppColors.whiteBase,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 24.h),
+
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: RegisterCustomTextFormField(
+                            label: 'First name',
+                            hintText: 'Enter first name',
+                            controller: _firstNameController,
+                            validator: AuthValidators.firstName,
+                            forceShowErrors: _isSubmitted,
+                          ),
+                        ),
+                        SizedBox(width: 17.w),
+                        Expanded(
+                          child: RegisterCustomTextFormField(
+                            label: 'Last name',
+                            hintText: 'Enter last name',
+                            controller: _lastNameController,
+                            validator: AuthValidators.lastName,
+                            forceShowErrors: _isSubmitted,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 24.h),
+
+                    RegisterCustomTextFormField(
+                      label: 'Email',
+                      hintText: 'Enter email',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: AuthValidators.email,
+                      forceShowErrors: _isSubmitted,
+                    ),
+
+                    SizedBox(height: 24.h),
+
+                    RegisterCustomTextFormField(
+                      label: 'Phone number',
+                      hintText: 'Enter phone number',
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      validator: AuthValidators.phone,
+                      forceShowErrors: _isSubmitted,
+                    ),
+
+                    SizedBox(height: 24.h),
+
+                    IgnorePointer(
+                      child: RegisterCustomTextFormField(
+                        label: 'Password',
+                        hintText: '',
+                        controller: TextEditingController(
+                          text: '••••••',
+                        ),
+                        suffixIcon: TextButton(
+                          onPressed: () {
+                            // Navigate to change-password screen.
+                          },
+                          child: Text(
+                            'Change',
+                            style: TextStyle(
+                              color: AppColors.pinkBase,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 16.h),
+
+                    ProfileGenderSelector(
+                      isFemaleNotifier: _isFemaleNotifier,
+                    ),
+
+                    SizedBox(height: 48.h),
+
+                    CustomButton(
+                      text: 'Update',
+                      isEnabled:
+                          !state.updateProfileState.isLoading,
+                      isLoading:
+                          state.updateProfileState.isLoading,
+                      enabledColor: AppColors.pinkBase,
+                      onPressed: () => _onUpdatePressed(context),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

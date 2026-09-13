@@ -24,9 +24,7 @@ void main() async {
   runApp(
     ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-
       minTextAdapt: true,
-
       splitScreenMode: true,
 
       child: FlowerApp(localeCubit: localeCubit),

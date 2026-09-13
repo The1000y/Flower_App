@@ -69,7 +69,7 @@ class AuthRepoImpl implements AuthRepo {
           await _secureStorage.saveAccessToken(login.accessToken);
           await _secureStorage.saveRefreshToken(login.refreshToken);
          
-          
+           await _secureStorage.saveRememberedEmail(credentials.email)
         }
         return SuccessResponce(login);
       }
