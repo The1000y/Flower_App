@@ -62,9 +62,14 @@ class AuthRepoImpl implements AuthRepo {
       final response = await _remoteDataSource.login(LoginRequest(email: credentials.email, password: credentials.password));
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.toLoginEntity();
+        if (login.user != null) {
+          await _secureStorage.saveUser(login.user!);
+        }
         if (rememberMe) {
           await _secureStorage.saveAccessToken(login.accessToken);
           await _secureStorage.saveRefreshToken(login.refreshToken);
+         
+          
         }
         return SuccessResponce(login);
       }

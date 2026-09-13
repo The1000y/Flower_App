@@ -41,4 +41,6 @@ abstract class Routes {
   static const String orderSuccess = '/order_success';
   static const String trackOrder = '/track_order';
   static const String orderMap = '/order_map';
+
+  static const String  notification ="/notification";
 }

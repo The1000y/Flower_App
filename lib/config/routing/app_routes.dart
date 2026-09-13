@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
@@ -10,6 +11,7 @@ import 'package:flower_app/features/commerce/presentation/bestseller/view/bestse
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
+import 'package:flower_app/features/profile/presentation/view/notifcation_view.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +84,6 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const CategoriesView());
 
       case Routes.search:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => getIt<SearchCubit>(),
@@ -114,6 +115,12 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Notifications
+      case Routes.notification:
+        final message = settings.arguments as RemoteMessage;
+        return MaterialPageRoute(
+          builder: (_) => NotifcationView(message: message),
+        );
+
       case Routes.notifications:
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
