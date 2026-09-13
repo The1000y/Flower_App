@@ -118,6 +118,7 @@ abstract class AppStrings{
   static const String actionUpdate = 'Update';
   static const String currentPasswordLabel = 'Current password';
   static const String currentPasswordHint = 'Current password';
+  static const String passwordUpdatedSuccessfully = 'Password updated successfully';
   static const String logoutDialogTitle = 'LOGOUT';
   static const String confirmLogoutSubtitle = 'Confirm logout!!';
   static const String actionCancel = 'Cancle';
