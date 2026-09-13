@@ -1,5 +1,5 @@
 abstract class ApiStrings {
-  static const String baseUrl = 'http://172.19.176.1:8080';
+  static const String baseUrl = 'http://172.31.112.1:8080';
 
   static const String login = '/auth/login';
   static const String register = '/auth/register';
