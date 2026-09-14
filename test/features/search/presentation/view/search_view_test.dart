@@ -145,6 +145,77 @@ void main() {
     expect(find.text('No results found'), findsOneWidget);
   });
 
+  testWidgets('does not dispatch a search event before the debounce delay elapses', (tester) async {
+    whenListen(
+      mockCubit,
+      const Stream<SearchState>.empty(),
+      initialState: const SearchState(),
+    );
+
+    await pumpApp(tester, wrap(const SearchState()));
+
+    await tester.enterText(find.byType(TextFormField), 'rose');
+    await tester.pump(const Duration(milliseconds: 399));
+
+    verifyNever(() => mockCubit.doEvent(any()));
+
+    // Let the pending debounce timer fire so no timer remains at teardown.
+    await tester.pump(const Duration(milliseconds: 1));
+  });
+
+  testWidgets('dispatches SearchProductsEvent with the typed query after the debounce delay', (tester) async {
+    whenListen(
+      mockCubit,
+      const Stream<SearchState>.empty(),
+      initialState: const SearchState(),
+    );
+
+    await pumpApp(tester, wrap(const SearchState()));
+
+    await tester.enterText(find.byType(TextFormField), 'rose');
+    await tester.pump(const Duration(milliseconds: 400));
+
+    verify(
+      () => mockCubit.doEvent(
+        any(
+          that: isA<SearchProductsEvent>().having((e) => e.query, 'query', 'rose'),
+        ),
+      ),
+    ).called(1);
+  });
+
+  testWidgets('resets the debounce timer on rapid typing and dispatches only the final query', (tester) async {
+    whenListen(
+      mockCubit,
+      const Stream<SearchState>.empty(),
+      initialState: const SearchState(),
+    );
+
+    await pumpApp(tester, wrap(const SearchState()));
+
+    await tester.enterText(find.byType(TextFormField), 'r');
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.enterText(find.byType(TextFormField), 'ros');
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.enterText(find.byType(TextFormField), 'roses');
+    await tester.pump(const Duration(milliseconds: 400));
+
+    verify(
+      () => mockCubit.doEvent(
+        any(
+          that: isA<SearchProductsEvent>().having((e) => e.query, 'query', 'roses'),
+        ),
+      ),
+    ).called(1);
+    verifyNever(
+      () => mockCubit.doEvent(
+        any(
+          that: isA<SearchProductsEvent>().having((e) => e.query, 'query', 'ros'),
+        ),
+      ),
+    );
+  });
+
   testWidgets('renders the product grid with product names', (tester) async {
     final products = [
       ProductEntity(
