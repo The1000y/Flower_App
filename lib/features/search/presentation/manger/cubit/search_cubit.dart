@@ -17,12 +17,12 @@ class SearchCubit extends Cubit<SearchState> {
   void doEvent(SearchEvent event) {
     switch (event) {
       case SearchProductsEvent():
-        searchProducts(event.query);
+        _searchProducts(event.query);
         break;
     }
   }
 
-  Future<void> searchProducts(String query) async {
+  Future<void> _searchProducts(String query) async {
     final trimmed = query.trim();
     emit(
       state.copyWith(

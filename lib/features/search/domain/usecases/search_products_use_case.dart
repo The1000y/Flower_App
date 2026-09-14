@@ -1,14 +1,27 @@
 import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:flower_app/features/search/domain/repo/search_repo.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class SearchProductsUseCase {
-  final SearchRepo searchRepo;
+  final CommerceRepo repo;
 
-  SearchProductsUseCase(this.searchRepo);
+  SearchProductsUseCase(this.repo);
   Future<BaseResponce<List<ProductEntity>>> call(String query) async {
-    return await searchRepo.searchProduct(query);
+  final response = await repo.getProducts();
+  switch (response) {
+    case SuccessResponce<List<ProductEntity>>():
+      return SuccessResponce(
+        response.data.where((product) {
+          return product.name.toLowerCase().contains(query.toLowerCase());
+        }).toList(),
+      );
+    case ErrorResponce<List<ProductEntity>>():
+      return ErrorResponce(response.error);
   }
 }
+}
+
+
