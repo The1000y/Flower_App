@@ -29,6 +29,7 @@ void main() {
   Future<void> pumpItem(
     WidgetTester tester, {
     CartItemEntity? item,
+    bool isLoading = false,
     VoidCallback onDelete = _noop,
     ValueChanged<int> onQuantityChanged = _noopChanged,
   }) async {
@@ -44,6 +45,7 @@ void main() {
           home: Scaffold(
             body: CartItem(
               item: item ?? buildItem(),
+              isLoading: isLoading,
               onDelete: onDelete,
               onQuantityChanged: onQuantityChanged,
             ),
@@ -89,6 +91,30 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.delete));
     expect(deleted, isTrue);
+  });
+
+  testWidgets('shows a loading indicator and disables actions while loading', (
+    tester,
+  ) async {
+    var deleted = false;
+    var lastDelta = 0;
+    await pumpItem(
+      tester,
+      item: buildItem(quantity: 3),
+      isLoading: true,
+      onDelete: () => deleted = true,
+      onQuantityChanged: (delta) => lastDelta = delta,
+    );
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byIcon(Icons.add), findsNothing);
+    expect(find.byIcon(Icons.remove), findsNothing);
+    expect(find.text('3'), findsNothing);
+
+    final deleteButton = tester.widget<IconButton>(
+      find.byIcon(Icons.delete),
+    );
+    expect(deleteButton.onPressed, isNull);
   });
 }
 

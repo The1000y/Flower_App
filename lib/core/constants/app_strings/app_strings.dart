@@ -58,6 +58,7 @@ abstract class AppStrings {
   static const String bloomSubtitle = 'Bloom with our exquisite best sellers';
   static const String statusLabel = 'Status: ';
   static const String addToCart = 'Add to cart';
+  static const String productAddedToCart = 'Product added to cart';
   static const String inStock = 'In stock';
   static const String taxNotice = 'All prices include tax';
   static const String description = 'Description';

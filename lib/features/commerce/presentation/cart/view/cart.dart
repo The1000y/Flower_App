@@ -68,6 +68,7 @@ class CartView extends StatelessWidget {
               Expanded(
                 child: CartItemsList(
                   items: cart?.items ?? [],
+                  loadingProductIds: state.loadingProductIds,
                   onDelete: (cartItemId) {
                     context.read<CartCubit>().doEvent(
                           RemoveCartItemEvent(
