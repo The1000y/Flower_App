@@ -33,6 +33,11 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     whenListen(mockCubit, const Stream<CartState>.empty(), initialState: state);
+    whenListen(
+      mockAddressCubit,
+      const Stream<AddressState>.empty(),
+      initialState: const AddressState(),
+    );
 
     await tester.pumpWidget(
       ScreenUtilPlusInit(
@@ -114,5 +119,64 @@ void main() {
 
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
     expect(find.text('${AppStrings.currencyEGP}400.00'), findsWidgets);
+  });
+
+  testWidgets('shows loading only for the affected product', (tester) async {
+    final cart = CartEntity(
+      items: [
+        CartItemEntity(
+          id: 'item-1',
+          productId: 1,
+          productName: 'Red Roses Bouquet',
+          productImageUrl: 'https://example.com/rose.jpg',
+          unitPrice: 200,
+          quantity: 2,
+          lineSubtotal: 400,
+          inStock: true,
+          priceChanged: false,
+        ),
+        CartItemEntity(
+          id: 'item-2',
+          productId: 2,
+          productName: 'White Tulips Bouquet',
+          productImageUrl: 'https://example.com/tulips.jpg',
+          unitPrice: 100,
+          quantity: 1,
+          lineSubtotal: 100,
+          inStock: true,
+          priceChanged: false,
+        ),
+      ],
+      subtotal: 500,
+      deliveryFee: 20,
+      total: 520,
+      hasChanges: false,
+    );
+
+    await pumpApp(
+      tester,
+      CartState(data: cart, loadingProductIds: {1}),
+    );
+
+    // Both items remain visible (no full-page loading).
+    expect(find.text('Red Roses Bouquet'), findsOneWidget);
+    expect(find.text('White Tulips Bouquet'), findsOneWidget);
+
+    // Only the loading product shows the inline indicator.
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    // The unaffected product keeps its quantity controls.
+    expect(find.byIcon(Icons.add), findsOneWidget);
+    expect(find.byIcon(Icons.remove), findsOneWidget);
+
+    // The affected product's delete is disabled; the other remains enabled.
+    final deleteButtons = tester
+        .widgetList<IconButton>(
+          find.widgetWithIcon(IconButton, Icons.delete),
+        )
+        .toList();
+    expect(deleteButtons.length, 2);
+    expect(deleteButtons[0].onPressed, isNull);
+    expect(deleteButtons[1].onPressed, isNotNull);
   });
 }

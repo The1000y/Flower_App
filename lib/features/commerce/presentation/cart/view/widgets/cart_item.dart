@@ -8,12 +8,14 @@ class CartItem extends StatelessWidget {
   final CartItemEntity item;
   final VoidCallback onDelete;
   final ValueChanged<int> onQuantityChanged;
+  final bool isLoading;
 
   const CartItem({
     super.key,
     required this.item,
     required this.onDelete,
     required this.onQuantityChanged,
+    this.isLoading = false,
   });
 
   @override
@@ -67,7 +69,7 @@ class CartItem extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed: onDelete,
+                        onPressed: isLoading ? null : onDelete,
                         icon: const Icon(Icons.delete, color: Colors.red),
                       ),
                     ],
@@ -83,15 +85,25 @@ class CartItem extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      IconButton(
-                        onPressed: () => onQuantityChanged(-1),
-                        icon: const Icon(Icons.remove),
-                      ),
-                      Text(item.quantity.toString()),
-                      IconButton(
-                        onPressed: () => onQuantityChanged(1),
-                        icon: const Icon(Icons.add),
-                      ),
+                      if (isLoading)
+                        SizedBox(
+                          width: 24.w,
+                          height: 24.h,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      else ...[
+                        IconButton(
+                          onPressed: () => onQuantityChanged(-1),
+                          icon: const Icon(Icons.remove),
+                        ),
+                        Text(item.quantity.toString()),
+                        IconButton(
+                          onPressed: () => onQuantityChanged(1),
+                          icon: const Icon(Icons.add),
+                        ),
+                      ],
                     ],
                   ),
                 ],

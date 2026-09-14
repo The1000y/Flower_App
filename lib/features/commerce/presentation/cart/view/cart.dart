@@ -122,6 +122,7 @@ class _CartViewState extends State<CartView> {
               Expanded(
                 child: CartItemsList(
                   items: cart?.items ?? [],
+                  loadingProductIds: state.loadingProductIds,
                   onDelete: (cartItemId) {
                     context.read<CartCubit>().doEvent(
                       RemoveCartItemEvent(cartItemId: cartItemId),
