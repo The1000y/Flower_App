@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_event.dart';
@@ -247,8 +248,86 @@ void main() {
 
     await pumpApp(tester, wrap(state));
 
-    expect(find.byType(GridView), findsOneWidget);
+    expect(find.byType(CustomScrollView), findsOneWidget);
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
     expect(find.text('White Lily Bouquet'), findsOneWidget);
+  });
+
+  testWidgets('shows a loading indicator when loading more products', (tester) async {
+    final products = [
+      ProductEntity(
+        id: 1,
+        name: 'Red Roses Bouquet',
+        imageUrl: 'https://example.com/rose.png',
+        currency: 'EGP',
+        price: 600,
+        status: 'InStock',
+      ),
+      ProductEntity(
+        id: 2,
+        name: 'White Lily Bouquet',
+        imageUrl: 'https://example.com/lily.png',
+        currency: 'EGP',
+        price: 700,
+        status: 'InStock',
+      ),
+    ];
+    final state = SearchState(
+      query: 'rose',
+      isLoadingMore: true,
+      resultState: BaseState<List<ProductEntity>>(data: products),
+    );
+    whenListen(
+      mockCubit,
+      const Stream<SearchState>.empty(),
+      initialState: state,
+    );
+
+    await pumpApp(tester, wrap(state));
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  testWidgets('dispatches LoadMoreSearchEvent when scrolled near the bottom with a next page', (tester) async {
+    final products = List.generate(
+      8,
+      (i) => ProductEntity(
+        id: i + 1,
+        name: 'Product $i',
+        imageUrl: 'https://example.com/$i.png',
+        currency: 'EGP',
+        price: 100,
+        status: 'InStock',
+      ),
+    );
+    final pagination = PaginationEntity(
+      page: 1,
+      pageSize: 8,
+      totalCount: 16,
+      totalPages: 2,
+      hasNextPage: true,
+      hasPreviousPage: false,
+    );
+    final state = SearchState(
+      query: 'flower',
+      resultState: BaseState<List<ProductEntity>>(data: products),
+      pagination: pagination,
+    );
+    whenListen(
+      mockCubit,
+      const Stream<SearchState>.empty(),
+      initialState: state,
+    );
+
+    await pumpApp(tester, wrap(state));
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -1000));
+    await tester.pump();
+
+    verify(
+      () => mockCubit.doEvent(
+        any(that: isA<LoadMoreSearchEvent>()),
+      ),
+    ).called(1);
   });
 }
