@@ -28,9 +28,13 @@ class CustomLocationData extends StatelessWidget {
   Widget build(BuildContext context) {
     if (addresses.isEmpty) {
       return Center(
-        child: CustomOutlinedButton(
-          onPressed: onAddNewAddressTap,
-          text: AppStrings.addYourAddress,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: CustomOutlinedButton(
+            onPressed: onAddNewAddressTap,
+            text: AppStrings.addYourAddress,
+            icon: Icons.add_location_alt_outlined,
+          ),
         ),
       );
     }

@@ -94,23 +94,27 @@ class AddressFormFields extends StatelessWidget {
 
   void _submit() {
     if (!formKey.currentState!.validate()) return;
-
     final addressParams = AddAddressParams(
       recipientName: recipientNameController.text.trim(),
       recipientPhone: phoneNumberController.text.trim(),
       addressLine: addressController.text.trim(),
-      city: state.selectedGovernorate ?? '',
-      area: state.selectedCity ?? '',
+      city: state.selectedCity ?? '',
+      area: '',
+      cityId: state.selectedCity ?? '',
+      areaId: '',
       lat: state.selectedCoordinates?.latitude ?? 30.047931723716083,
       lng: state.selectedCoordinates?.longitude ?? 31.238564150922823,
+
       label: labelController.text.trim(),
     );
 
     if (editingAddress != null) {
-      cubit.doEvent(UpdateExistingAddressEvent(
-        id: editingAddress!.id,
-        params: addressParams,
-      ));
+      cubit.doEvent(
+        UpdateExistingAddressEvent(
+          id: editingAddress!.id,
+          params: addressParams,
+        ),
+      );
     } else {
       cubit.doEvent(SubmitAddressEvent(addAddressParams: addressParams));
     }
@@ -131,10 +135,9 @@ class _LocationDropdowns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 159,
+        Expanded(
           child: DropdownButtonFormField<String>(
             isExpanded: true,
             initialValue: state.selectedGovernorate,
@@ -144,14 +147,64 @@ class _LocationDropdowns extends StatelessWidget {
             ),
             decoration: InputDecoration(
               labelText: AppStrings.cityLabel,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+              prefixIconColor: AppColors.pinkBase,
+              prefixIcon: const Icon(Icons.location_city_outlined),
+              filled: true,
+              fillColor: AppColors.white50,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.pinkBase,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.pinkBase,
+                  width: 1.6,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.error, width: 1),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.error,
+                  width: 1.6,
+                ),
+              ),
+              labelStyle: const TextStyle(fontWeight: FontWeight.w600),
             ),
             items: state.governorates.map((governorate) {
               return DropdownMenuItem<String>(
                 value: governorate.id,
-                child: Text(governorate.nameEn),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.location_city_outlined,
+                      size: 18,
+                      color: AppColors.pinkBase,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        governorate.nameEn,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             }).toList(),
             onChanged: (value) {
@@ -169,7 +222,7 @@ class _LocationDropdowns extends StatelessWidget {
           child: DropdownButtonFormField<String>(
             isExpanded: true,
             initialValue:
-            filteredCities.any((city) => city.id == state.selectedCity)
+                filteredCities.any((city) => city.id == state.selectedCity)
                 ? state.selectedCity
                 : null,
             hint: const Text(
@@ -178,14 +231,64 @@ class _LocationDropdowns extends StatelessWidget {
             ),
             decoration: InputDecoration(
               labelText: AppStrings.areaLabel,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+              prefixIconColor: AppColors.pinkBase,
+              prefixIcon: const Icon(Icons.map_outlined),
+              filled: true,
+              fillColor: AppColors.white50,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.pinkBase,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.pinkBase,
+                  width: 1.6,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.error, width: 1),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.error,
+                  width: 1.6,
+                ),
+              ),
+              labelStyle: const TextStyle(fontWeight: FontWeight.w600),
             ),
             items: filteredCities.map((city) {
               return DropdownMenuItem<String>(
                 value: city.id,
-                child: Text(city.nameEn),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 18,
+                      color: AppColors.pinkBase,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        city.nameEn,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             }).toList(),
             onChanged: (value) {

@@ -99,10 +99,8 @@ class AuthRepoImpl implements AuthRepo {
       );
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.toLoginEntity();
-        if (rememberMe) {
-          await _secureStorage.saveAccessToken(login.accessToken);
-          await _secureStorage.saveRefreshToken(login.refreshToken);
-        }
+        await _secureStorage.saveAccessToken(login.accessToken);
+        await _secureStorage.saveRefreshToken(login.refreshToken);
         return SuccessResponce(login);
       }
       return ErrorResponce(

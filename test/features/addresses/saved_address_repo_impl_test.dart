@@ -1,27 +1,31 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/addresses/data/data_source/local_data_source/address_local_data_source.dart';
-import 'package:flower_app/features/addresses/data/data_source/local_data_source/location_data_source.dart'; // 🎯 Added import
+import 'package:flower_app/features/addresses/data/data_source/local_data_source/location_data_source.dart';
+import 'package:flower_app/features/addresses/data/data_source/remote_data_source/address_remote_data_source.dart';
 import 'package:flower_app/features/addresses/data/model/responce/address_dto.dart';
+import 'package:flower_app/features/addresses/data/model/responce/area_dto.dart';
 import 'package:flower_app/features/addresses/data/repo_impl/address_repo_impl.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'saved_address_repo_impl_test.mocks.dart';
+class MockAddressRemoteDataSource extends Mock
+    implements AddressRemoteDataSource {}
 
-@GenerateMocks([AddressLocalDataSource, LocationDataSource])
+class MockLocationDataSource extends Mock implements LocationDataSource {}
+
 void main() {
-  late MockAddressLocalDataSource mockLocalDataSource;
-  late MockLocationDataSource mockLocationDataSource; // 🎯 Added mock
-  late AddressRepoImpl savedAddressRepoImpl;
+  late MockAddressRemoteDataSource mockRemoteDataSource;
+  late MockLocationDataSource mockLocationDataSource;
+  late AddressRepoImpl addressRepoImpl;
 
   setUpAll(() {
-    provideDummy<BaseResponce<List<AddressDto>>>(
+    registerFallbackValue(
       SuccessResponce<List<AddressDto>>([]),
     );
-    provideDummy<BaseResponce<bool>>(SuccessResponce<bool>(false));
-    provideDummy<BaseResponce<AddressDto>>(
+    registerFallbackValue(
+      SuccessResponce<bool>(false),
+    );
+    registerFallbackValue(
       SuccessResponce<AddressDto>(
         AddressDto(
           id: 'dummy',
@@ -35,14 +39,17 @@ void main() {
         ),
       ),
     );
+    registerFallbackValue(
+      SuccessResponce<List<AreaDto>>([]),
+    );
   });
 
   setUp(() {
-    mockLocalDataSource = MockAddressLocalDataSource();
-    mockLocationDataSource = MockLocationDataSource(); // 🎯 Initialized mock
+    mockRemoteDataSource = MockAddressRemoteDataSource();
+    mockLocationDataSource = MockLocationDataSource();
 
-    savedAddressRepoImpl = AddressRepoImpl(
-      mockLocalDataSource,
+    addressRepoImpl = AddressRepoImpl(
+      mockRemoteDataSource,
       mockLocationDataSource,
     );
   });
@@ -58,52 +65,108 @@ void main() {
     isServiceable: true,
   );
 
-  group('SavedAddressRepoImpl - GetAddresses', () {
-    test('should return List<AddressEntity> when data source succeeds', () async {
-      when(mockLocalDataSource.getAddresses()).thenAnswer(
-            (_) async => SuccessResponce<List<AddressDto>>([dummyAddressDto]),
+  group('AddressRepoImpl - GetAddresses', () {
+    test('should return List<AddressEntity> when remote data source succeeds',
+        () async {
+      when(() => mockRemoteDataSource.getAddresses()).thenAnswer(
+        (_) async => SuccessResponce<List<AddressDto>>([dummyAddressDto]),
       );
 
-      final result = await savedAddressRepoImpl.getAddresses();
+      final result = await addressRepoImpl.getAddresses();
 
-      // 🎯 Expect pure list
       expect(result, isA<List<AddressEntity>>());
-      verify(mockLocalDataSource.getAddresses()).called(1);
+      expect(result.length, 1);
+      expect(result.first.id, '123');
+      verify(() => mockRemoteDataSource.getAddresses()).called(1);
     });
 
-    test('should throw Exception when data source fails', () async {
-      when(mockLocalDataSource.getAddresses()).thenAnswer(
-            (_) async => ErrorResponce(Exception('Fetch failed')),
+    test('should throw Exception when remote data source fails', () async {
+      when(() => mockRemoteDataSource.getAddresses()).thenAnswer(
+        (_) async => ErrorResponce(Exception('Fetch failed')),
       );
 
-      // 🎯 Expect it to throw the error
-      expect(() => savedAddressRepoImpl.getAddresses(), throwsException);
+      expect(() => addressRepoImpl.getAddresses(), throwsException);
     });
   });
 
-  group('SavedAddressRepoImpl - DeleteAddress', () {
-    test('should return bool when data source succeeds', () async {
-      when(mockLocalDataSource.deleteAddress(any)).thenAnswer(
-            (_) async => SuccessResponce<bool>(true),
+  group('AddressRepoImpl - DeleteAddress', () {
+    test('should return bool when remote data source succeeds', () async {
+      when(() => mockRemoteDataSource.deleteAddress(any())).thenAnswer(
+        (_) async => SuccessResponce<bool>(true),
       );
 
-      final result = await savedAddressRepoImpl.deleteAddress('123');
+      final result = await addressRepoImpl.deleteAddress('123');
 
       expect(result, true);
-      verify(mockLocalDataSource.deleteAddress('123')).called(1);
+      verify(() => mockRemoteDataSource.deleteAddress('123')).called(1);
     });
   });
 
-  group('SavedAddressRepoImpl - SetDefaultAddress', () {
-    test('should return AddressEntity when data source succeeds', () async {
-      when(mockLocalDataSource.setDefaultAddress(any)).thenAnswer(
-            (_) async => SuccessResponce<AddressDto>(dummyAddressDto),
+  group('AddressRepoImpl - SetDefaultAddress', () {
+    test('should return AddressEntity when remote data source succeeds',
+        () async {
+      when(() => mockRemoteDataSource.setDefaultAddress(any())).thenAnswer(
+        (_) async => SuccessResponce<AddressDto>(dummyAddressDto),
       );
 
-      final result = await savedAddressRepoImpl.setDefaultAddress('123');
+      final result = await addressRepoImpl.setDefaultAddress('123');
 
       expect(result, isA<AddressEntity>());
-      verify(mockLocalDataSource.setDefaultAddress('123')).called(1);
+      verify(() => mockRemoteDataSource.setDefaultAddress('123')).called(1);
+    });
+  });
+
+  group('AddressRepoImpl - GetGovernorates', () {
+    test('should return GovernorateEntities from areas', () async {
+      when(() => mockRemoteDataSource.getAreas()).thenAnswer(
+        (_) async => SuccessResponce<List<AreaDto>>([
+          const AreaDto(
+            id: 'g1',
+            name: 'Giza',
+            cities: [
+              CityItemDto(id: 'c1', name: 'Dokki'),
+              CityItemDto(id: 'c2', name: 'Sheikh Zayed'),
+            ],
+          ),
+        ]),
+      );
+
+      final result = await addressRepoImpl.getGovernorates();
+
+      expect(result.length, 1);
+      expect(result.first.id, 'g1');
+      expect(result.first.nameEn, 'Giza');
+    });
+  });
+
+  group('AddressRepoImpl - GetCities', () {
+    test('should return cities for the matched governorate', () async {
+      when(() => mockRemoteDataSource.getAreas()).thenAnswer(
+        (_) async => SuccessResponce<List<AreaDto>>([
+          const AreaDto(
+            id: 'g1',
+            name: 'Giza',
+            cities: [
+              CityItemDto(id: 'c1', name: 'Dokki'),
+              CityItemDto(id: 'c2', name: 'Sheikh Zayed'),
+            ],
+          ),
+          const AreaDto(
+            id: 'g2',
+            name: 'Cairo',
+            cities: [
+              CityItemDto(id: 'c3', name: 'Maadi'),
+            ],
+          ),
+        ]),
+      );
+
+      final result = await addressRepoImpl.getCities(governorateId: 'g1');
+
+      expect(result.length, 2);
+      expect(result.first.id, 'c1');
+      expect(result.first.nameEn, 'Dokki');
+      expect(result.first.governorateId, 'g1');
     });
   });
 }

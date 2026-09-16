@@ -1,32 +1,40 @@
 import 'package:dio/dio.dart';
+import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class AuthInterceptors extends Interceptor {
   @override
-  void onRequest(
-      RequestOptions options,
-      RequestInterceptorHandler handler,
-      ) {
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    debugPrint('🚀 REQUEST');
-    debugPrint('METHOD: ${options.method}');
-    debugPrint('URL: ${options.uri}');
-    debugPrint('HEADERS: ${options.headers}');
-    debugPrint('QUERY: ${options.queryParameters}');
-    debugPrint('BODY: ${options.data}');
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    debugPrint('Interceptor executed');
+    try {
+      final token = await getIt<SecureStorageService>().getAccessToken();
+      debugPrint('TOKEN--------->: $token');
+      debugPrint('TOKEN IS EMPTY------->: ${token?.isEmpty}');
+      if (token != null && token.isNotEmpty) {
+        options.headers['Authorization'] = 'Bearer $token';
+      }
 
-    // TODO: Get token from secure storage
-    // options.headers['Authorization'] = 'Bearer $token';
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      debugPrint('🚀 REQUEST');
+      debugPrint('METHOD: ${options.method}');
+      debugPrint('URL: ${options.uri}');
+      debugPrint('HEADERS: ${options.headers}');
+      debugPrint('QUERY: ${options.queryParameters}');
+      debugPrint('BODY: ${options.data}');
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    } catch (e) {
+      debugPrint('AuthInterceptors: failed to attach token: $e');
+    }
 
     handler.next(options);
   }
 
   @override
-  void onResponse(
-      Response response,
-      ResponseInterceptorHandler handler,
-      ) {
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
     debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     debugPrint('✅ RESPONSE');
     debugPrint('STATUS: ${response.statusCode}');
@@ -39,10 +47,7 @@ class AuthInterceptors extends Interceptor {
   }
 
   @override
-  void onError(
-      DioException err,
-      ErrorInterceptorHandler handler,
-      ) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     debugPrint('❌ ERROR');
     debugPrint('TYPE: ${err.type}');
@@ -53,7 +58,7 @@ class AuthInterceptors extends Interceptor {
     debugPrint('RESPONSE DATA: ${err.response?.data}');
     debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-    // TODO: Delete token from secure storage if needed
+    // TODO: Refresh token handling / clear token on 401 if needed
 
     handler.next(err);
   }

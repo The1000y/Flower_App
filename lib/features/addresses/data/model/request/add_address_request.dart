@@ -12,29 +12,29 @@ String addAddressRequestToJson(AddAddressRequest data) => json.encode(data.toJso
 class AddAddressRequest {
     @JsonKey(name: "recipientName")
     String recipientName;
-    @JsonKey(name: "recipientPhone")
-    String recipientPhone;
+    @JsonKey(name: "phone")
+    String phone;
     @JsonKey(name: "addressLine")
     String addressLine;
-    @JsonKey(name: "city")
-    String city;
-    @JsonKey(name: "area")
-    String area;
-    @JsonKey(name: "lat")
-    double lat;
-    @JsonKey(name: "lng")
-    double lng;
+    @JsonKey(name: "cityId")
+    String cityId;
+    @JsonKey(name: "areaId")
+    String areaId;
+    @JsonKey(name: "latitude")
+    double latitude;
+    @JsonKey(name: "longitude")
+    double longitude;
     @JsonKey(name: "label")
     String label;
 
     AddAddressRequest({
         required this.recipientName,
-        required this.recipientPhone,
+        required this.phone,
         required this.addressLine,
-        required this.city,
-        required this.area,
-        required this.lat,
-        required this.lng,
+        required this.cityId,
+        required this.areaId,
+        required this.latitude,
+        required this.longitude,
         required this.label,
     });
 

@@ -109,8 +109,10 @@ class AddressCubit extends Cubit<AddressState> {
         recipientName: addaddressParams.recipientName,
         recipientPhone: addaddressParams.recipientPhone,
         addressLine: addaddressParams.addressLine,
-        city: selectedGovernorateObj?.nameEn ?? '',
-        area: selectedAreaObj?.nameEn ?? '',
+        city: selectedAreaObj?.nameEn ?? '',
+        area: selectedGovernorateObj?.nameEn ?? '',
+        cityId: state.selectedCity ?? '',
+        areaId: state.selectedGovernorate ?? '',
         lat: state.selectedCoordinates?.latitude ?? 0.0,
         lng: state.selectedCoordinates?.longitude ?? 0.0,
         label: addaddressParams.label,
@@ -187,7 +189,10 @@ class AddressCubit extends Cubit<AddressState> {
             : const LatLng(30.047931723716083, 31.238564150922823);
 
         final matchedGovernorate = governorates.firstWhere(
-              (g) => g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
+              (g) => existingAddress.cityId != null &&
+                  existingAddress.cityId!.isNotEmpty
+                  ? g.id == existingAddress.cityId
+                  : g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
           orElse: () => governorates.first,
         );
 
@@ -195,7 +200,10 @@ class AddressCubit extends Cubit<AddressState> {
             await _getCitiesUseCase.call(matchedGovernorate.id);
 
         final matchedCity = citiesInGovernorate.firstWhere(
-              (c) => c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
+              (c) => existingAddress.areaId != null &&
+                  existingAddress.areaId!.isNotEmpty
+                  ? c.id == existingAddress.areaId
+                  : c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
           orElse: () => citiesInGovernorate.isNotEmpty
               ? citiesInGovernorate.first
               : throw Exception("No cities found"),
@@ -222,6 +230,8 @@ class AddressCubit extends Cubit<AddressState> {
         return;
       }
 
+      emit(state.copyWith(governorates: governorates));
+
       var position = await _getCurrentLocationUseCase.call();
 
       final coordinates = position != null
@@ -233,6 +243,7 @@ class AddressCubit extends Cubit<AddressState> {
       if (place == null) {
         emit(
           state.copyWith(
+            selectedCoordinates: coordinates,
             locationState: const BaseState<LatLng>(
               errorMessage: AppStrings.addressError,
               isLoading: false,
@@ -248,7 +259,6 @@ class AddressCubit extends Cubit<AddressState> {
         state.copyWith(
           selectedCoordinates: coordinates,
           streetAddress: fullAddress,
-          governorates: governorates,
           locationState: BaseState<LatLng>(data: coordinates, isLoading: false),
         ),
       );
@@ -361,8 +371,10 @@ class AddressCubit extends Cubit<AddressState> {
         recipientName: params.recipientName,
         recipientPhone: params.recipientPhone,
         addressLine: params.addressLine,
-        city: selectedGovernorateObj.nameEn,
-        area: selectedAreaObj?.nameEn ?? '',
+        city: selectedAreaObj?.nameEn ?? '',
+        area: selectedGovernorateObj.nameEn,
+        cityId: state.selectedCity ?? '',
+        areaId: state.selectedGovernorate ?? '',
         lat: state.selectedCoordinates?.latitude ?? 0.0,
         lng: state.selectedCoordinates?.longitude ?? 0.0,
         label: params.label,

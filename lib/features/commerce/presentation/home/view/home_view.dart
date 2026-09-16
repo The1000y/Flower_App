@@ -40,21 +40,21 @@ class _HomeViewState extends State<HomeView> {
       child: Scaffold(
         backgroundColor: AppColors.whiteBase,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                final sectionsState = state.sectionsState;
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              final sectionsState = state.sectionsState;
 
-                if (sectionsState.isLoading) {
-                  return Center(child: CircularProgressIndicator());
-                }
+              if (sectionsState.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                if (sectionsState.errorMessage.isNotEmpty) {
-                  return Center(child: Text(sectionsState.errorMessage));
-                }
-                final sections = sectionsState.data ?? [];
+              if (sectionsState.errorMessage.isNotEmpty) {
+                return Center(child: Text(sectionsState.errorMessage));
+              }
+              final sections = sectionsState.data ?? [];
 
-                return Column(
+              return SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -112,9 +112,9 @@ class _HomeViewState extends State<HomeView> {
                       }),
                     ),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

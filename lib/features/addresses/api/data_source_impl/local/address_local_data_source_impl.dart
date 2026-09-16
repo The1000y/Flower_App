@@ -25,13 +25,13 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
     try {
       // 🎯 التفقد مع .trim()
       final name = addAddressRequest.recipientName.trim();
-      final phone = addAddressRequest.recipientPhone.trim();
+      final phone = addAddressRequest.phone.trim();
       final label = addAddressRequest.label.trim();
       final address = addAddressRequest.addressLine.trim();
-      final city = addAddressRequest.city.trim();
-      final area = addAddressRequest.area.trim();
-      final lat = addAddressRequest.lat;
-      final lng = addAddressRequest.lng;
+      final city = addAddressRequest.cityId.trim();
+      final area = addAddressRequest.areaId.trim();
+      final lat = addAddressRequest.latitude;
+      final lng = addAddressRequest.longitude;
 
       if (name != AddressDummyData.addressDummyData["recipientName"]) {
         return ErrorResponce(Exception("❌ Wrong recipient name: '$name'"));
@@ -200,17 +200,30 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
       final existing = list[index];
       final updated = Map<String, dynamic>.from(existing);
 
-      if (request.recipientName != null)
+      if (request.recipientName != null) {
         updated['recipientName'] = request.recipientName;
-      if (request.recipientPhone != null)
-        updated['recipientPhone'] = request.recipientPhone;
-      if (request.addressLine != null)
+      }
+      if (request.phone != null) {
+        updated['phone'] = request.phone;
+      }
+      if (request.addressLine != null) {
         updated['addressLine'] = request.addressLine;
-      if (request.city != null) updated['city'] = request.city;
-      if (request.area != null) updated['area'] = request.area;
-      if (request.lat != null) updated['lat'] = request.lat;
-      if (request.lng != null) updated['lng'] = request.lng;
-      if (request.label != null) updated['label'] = request.label;
+      }
+      if (request.cityId != null) {
+        updated['cityId'] = request.cityId;
+      }
+      if (request.areaId != null) {
+        updated['areaId'] = request.areaId;
+      }
+      if (request.latitude != null) {
+        updated['latitude'] = request.latitude;
+      }
+      if (request.longitude != null) {
+        updated['longitude'] = request.longitude;
+      }
+      if (request.label != null) {
+        updated['label'] = request.label;
+      }
 
       list[index] = updated;
 

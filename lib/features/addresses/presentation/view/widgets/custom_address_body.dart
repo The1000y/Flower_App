@@ -34,6 +34,9 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   late TextEditingController labelController;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late AddressCubit cubit;
+  String _lastLocationError = '';
+  String _lastAddAddressError = '';
+  String _lastReverseGeocodeError = '';
 
   @override
   void initState() {
@@ -130,14 +133,19 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     final addAddressError = state.addAddressState.errorMessage;
     final reverseGeocodeError = state.reverseGeocodeState.errorMessage;
 
-    if (locationError.isNotEmpty) {
-      _showError(context, locationError);
+    if (locationError != _lastLocationError) {
+      _lastLocationError = locationError;
+      if (locationError.isNotEmpty) _showError(context, locationError);
     }
-    if (addAddressError.isNotEmpty) {
-      _showError(context, addAddressError);
+    if (addAddressError != _lastAddAddressError) {
+      _lastAddAddressError = addAddressError;
+      if (addAddressError.isNotEmpty) _showError(context, addAddressError);
     }
-    if (reverseGeocodeError.isNotEmpty) {
-      _showError(context, reverseGeocodeError);
+    if (reverseGeocodeError != _lastReverseGeocodeError) {
+      _lastReverseGeocodeError = reverseGeocodeError;
+      if (reverseGeocodeError.isNotEmpty) {
+        _showError(context, reverseGeocodeError);
+      }
     }
 
     if (state.addAddressState.data != null) {
@@ -149,7 +157,9 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   }
 
   void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.removeCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(backgroundColor: AppColors.error, content: Text(message)),
     );
   }

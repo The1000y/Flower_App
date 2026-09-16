@@ -4,23 +4,31 @@ part 'update_address_request_dto.g.dart';
 
 @JsonSerializable()
 class UpdateAddressRequestDto {
+  @JsonKey(name: "recipientName")
   final String? recipientName;
-  final String? recipientPhone;
+  @JsonKey(name: "phone")
+  final String? phone;
+  @JsonKey(name: "addressLine")
   final String? addressLine;
-  final String? city;
-  final String? area;
-  final double? lat;
-  final double? lng;
+  @JsonKey(name: "cityId")
+  final String? cityId;
+  @JsonKey(name: "areaId")
+  final String? areaId;
+  @JsonKey(name: "latitude")
+  final double? latitude;
+  @JsonKey(name: "longitude")
+  final double? longitude;
+  @JsonKey(name: "label")
   final String? label;
 
   UpdateAddressRequestDto({
     this.recipientName,
-    this.recipientPhone,
+    this.phone,
     this.addressLine,
-    this.city,
-    this.area,
-    this.lat,
-    this.lng,
+    this.cityId,
+    this.areaId,
+    this.latitude,
+    this.longitude,
     this.label,
   });
 
