@@ -1,7 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/auth/data/model/data_dto.dart';
-import 'package:flower_app/features/auth/data/model/request/forget_request/verify_otp_request.dart';
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
@@ -18,6 +17,30 @@ import 'auth_repo-impl_test.mocks.dart';
 
 @GenerateMocks([RemoteDataSource, LocalDataSource])
 void main() {
+  provideDummy<BaseResponce<VerifyOtpResponse>>(
+    SuccessResponce(VerifyOtpResponse(
+      isSuccess: true,
+      errorCode: 0,
+      message: 'dummy',
+      data: Datadto(resetToken: 'dummy', expiresAtUtc: DateTime.now()),
+    )),
+  );
+  provideDummy<BaseResponce<ForgotPasswordResponseDto>>(
+    SuccessResponce(ForgotPasswordResponseDto(
+      isSuccess: true,
+      errorCode: '',
+      message: 'dummy',
+      data: 'dummy',
+    )),
+  );
+  provideDummy<BaseResponce<ResetPasswordResponseDto>>(
+    SuccessResponce(ResetPasswordResponseDto(
+      isSuccess: true,
+      errorCode: '',
+      message: 'dummy',
+      data: 'dummy',
+    )),
+  );
   late MockRemoteDataSource mockRemoteDataSource;
   late MockLocalDataSource mockLocalDataSource;
   late AuthRepoImpl authRepoImpl;

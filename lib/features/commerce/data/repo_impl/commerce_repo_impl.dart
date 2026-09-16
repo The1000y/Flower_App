@@ -39,7 +39,7 @@ class CommerceRepoImpl implements CommerceRepo {
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
         final data = response.data.products.map((element) {
-          return BestSellerEntity(id: element.id ?? '', name: element.name ?? '', imageUrl: element.imageUrl ?? '', currency: element.currency ?? 'EGP', price: element.price?.toInt() ?? 0, originalPrice: element.originalPrice?.toInt() ?? 0, discountPercentage: element.discountPercentage?.toInt() ?? 0, status: element.status ?? '');
+          return BestSellerEntity(id: element.id , name: element.name , imageUrl: element.imageUrl , currency: element.currency , price: element.price.toInt() , originalPrice: element.originalPrice?.toInt() ?? 0, discountPercentage: element.discountPercentage?.toInt() ?? 0, status: element.status );
         }).toList();
         return SuccessResponce<List<BestSellerEntity>>(data);
 

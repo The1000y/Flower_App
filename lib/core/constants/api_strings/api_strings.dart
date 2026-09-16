@@ -1,5 +1,7 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 abstract class ApiStrings {
-  static const String baseUrl = 'http://172.31.112.1:8080';
+  static String baseUrl = dotenv.env['BASE_URL'] ?? 'Api not found';
 
   static const String login = '/auth/login';
   static const String register = '/auth/register';

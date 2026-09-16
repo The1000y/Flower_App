@@ -51,3 +51,4 @@ app.*.map.json
 *.mocks.dart
 *.gr.dart
 *.config.dart
+.env 
