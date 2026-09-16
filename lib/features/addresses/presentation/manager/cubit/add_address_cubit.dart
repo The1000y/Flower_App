@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
+import 'package:flower_app/config/errors/friendly_error_message.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/location_entity.dart';
@@ -152,7 +153,7 @@ class AddressCubit extends Cubit<AddressState> {
             state.copyWith(
               addAddressState: BaseState<AddressEntity>(
                 isLoading: false,
-                errorMessage: result.errorMessage,
+                errorMessage: FriendlyErrorMessage.from(result.error),
               ),
             ),
           );
@@ -169,7 +170,7 @@ class AddressCubit extends Cubit<AddressState> {
         state.copyWith(
           addAddressState: BaseState(
             isLoading: false,
-            errorMessage: e.toString(),
+            errorMessage: FriendlyErrorMessage.from(e),
           ),
         ),
       );

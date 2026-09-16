@@ -186,6 +186,13 @@ abstract class AppStrings{
   static const String cityRequired = 'City is Required';
   static const String phoneNumberRequired = 'Phone is Required';
   static const String addYourAddress = 'Add Your Address';
+  static const String addressAddedSuccess = 'Address added successfully';
+  static const String addressAddFailedServer =
+      'Something went wrong. Please try again later.';
+  static const String addressAddFailedNotServiceable =
+      'This address is not available for delivery. Please choose another location.';
+  static const String addressAddFailedInvalid =
+      'The address information is invalid. Please check your details.';
   static const String retry = 'Retry';
 }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/shared/app_widgets/custom_snack_bar.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -149,6 +150,10 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     }
 
     if (state.addAddressState.data != null) {
+      CustomSnackBar.showSuccess(
+        context,
+        message: AppStrings.addressAddedSuccess,
+      );
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }
@@ -157,10 +162,6 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   }
 
   void _showError(BuildContext context, String message) {
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.removeCurrentSnackBar();
-    messenger.showSnackBar(
-      SnackBar(backgroundColor: AppColors.error, content: Text(message)),
-    );
+    CustomSnackBar.showError(context, message: message);
   }
 }
