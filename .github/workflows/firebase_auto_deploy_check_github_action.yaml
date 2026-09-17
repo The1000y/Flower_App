@@ -1,0 +1,52 @@
+name: Flutter Firebase App Distribution
+
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+  build-and-deploy-android:
+    name: Firebase deploy APK App
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # Checkout the source repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Set up Java environment required for Android compilation
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Install Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.2'
+          cache: true
+
+      # Fetch project dependencies
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Generate Retrofit / Injectable / JSON files
+      - name: Generate files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Build release APK
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Deploy APK to Firebase App Distribution
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          file: build/app/outputs/flutter-apk/app-release.apk
+          groups: testers-team
