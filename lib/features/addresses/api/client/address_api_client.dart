@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/core/constants/api_strings/api_strings.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/addresses/data/model/request/add_address_request.dart';
 import 'package:flower_app/features/addresses/data/model/request/update_address_request_dto.dart';
 import 'package:flower_app/features/addresses/data/model/responce/address_list_response_dto.dart';
@@ -22,15 +23,15 @@ abstract class AddressApiClient {
 
   @GET(ApiStrings.nearestStore)
   Future<NearestStoreResponseDto> getNearestStore(
-    @Query('lat') double lat,
-    @Query('lng') double lng,
+    @Query(AppStrings.lat) double lat,
+    @Query(AppStrings.lng) double lng,
   );
 
   @GET(ApiStrings.userAddresses)
   Future<AddressListResponseDto> getAddresses();
 
   @GET('${ApiStrings.userAddresses}/{addressId}')
-  Future<AddressResponse> getAddressById(@Path('addressId') String addressId);
+  Future<AddressResponse> getAddressById(@Path(AppStrings.addressId) String addressId);
 
   @POST(ApiStrings.userAddresses)
   Future<AddressResponse> createAddress(@Body() AddAddressRequest request);
