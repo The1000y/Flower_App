@@ -9,7 +9,8 @@ class RegisterCustomTextFormField extends StatefulWidget {
     this.controller,
     this.validator,
     this.keyboardType,
-    this.isPassword = false, // New parameter to handle password logic internally
+    this.isPassword = false,
+    this.readOnly = false,
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
@@ -22,6 +23,7 @@ class RegisterCustomTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final bool isPassword;
+  final bool readOnly;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final ValueChanged<String>? onChanged;
@@ -65,6 +67,7 @@ class _RegisterCustomTextFormFieldState extends State<RegisterCustomTextFormFiel
 
     return TextFormField(
       focusNode: _focusNode,
+      readOnly: widget.readOnly,
       autovalidateMode: shouldValidate
           ? AutovalidateMode.always
           : AutovalidateMode.disabled,

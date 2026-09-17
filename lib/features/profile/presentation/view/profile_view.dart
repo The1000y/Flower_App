@@ -282,26 +282,25 @@ class _ProfileViewState extends State<ProfileView> {
 
                     SizedBox(height: 24.h),
 
-                    IgnorePointer(
-                      child: RegisterCustomTextFormField(
-                        label: 'Password',
-                        hintText: '',
-                        controller: TextEditingController(
-                          text: '••••••',
-                        ),
-                        suffixIcon: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.changePassword,
-                            );
-                          },
-                          child: Text(
-                            'Change',
-                            style: TextStyle(
-                              color: AppColors.pinkBase,
-                              fontWeight: FontWeight.w600,
-                            ),
+                    RegisterCustomTextFormField(
+                      label: 'Password',
+                      hintText: '',
+                      readOnly: true,
+                      controller: TextEditingController(
+                        text: '••••••',
+                      ),
+                      suffixIcon: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.changePassword,
+                          );
+                        },
+                        child: Text(
+                          'Change',
+                          style: TextStyle(
+                            color: AppColors.pinkBase,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),

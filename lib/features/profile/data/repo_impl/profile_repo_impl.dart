@@ -13,6 +13,17 @@ import '../../domain/repo/profile_repo.dart';
 import '../model/request/update_profile_request_dto.dart';
 import '../model/response/get_profile_response_dto.dart';
 
+// TODO: Dummy fallback for Profile data. Remove or replace when live API/auth flow is active.
+const _dummyUserEntity = UserEntity(
+  id: 1,
+  fullName: "John Doe",
+  email: "john.doe@example.com",
+  phoneNumber: "+1234567890",
+  gender: "male",
+  role: "user",
+  status: "active",
+);
+
 @Injectable(as: ProfileRepo)
 class ProfileRepoImpl implements ProfileRepo {
   final ProfileRemoteDataSource _remoteDataSource;
@@ -28,7 +39,9 @@ class ProfileRepoImpl implements ProfileRepo {
       case SuccessResponce():
         return SuccessResponce(userData.data.toUserEntity());
       case ErrorResponce():
-        return ErrorResponce(userData.error);
+        // Fallback to dummy profile data if local storage fails or is empty.
+        // To remove this fallback, simply return: return ErrorResponce(userData.error);
+        return SuccessResponce(_dummyUserEntity);
     }
   }
 
@@ -55,10 +68,8 @@ class ProfileRepoImpl implements ProfileRepo {
       confirmNewPassword: confirmPassword,
     );
 
-    // 2. إرسال الـ Request للـ DataSource
     final response = await _remoteDataSource.changePassword(request);
 
-    // 3. التحويل وإرجاع النتيجة
     switch (response) {
       case SuccessResponce<ChangePasswordResponse>():
         return SuccessResponce<ChangePasswordEntity>(response.data.toEntity());

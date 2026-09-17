@@ -14,7 +14,7 @@ class ProfileLocalDataSourceImp implements ProfileLocalDataSource {
   @override
   Future<BaseResponce<UserDto>> getProfile() async {
     try {
-      final response = await _secureStorage.getUser(AppStrings.userData);
+      final response = await _secureStorage.getUser();
 
       if (response == null || response.isEmpty) {
         return ErrorResponce<UserDto>(
@@ -23,15 +23,12 @@ class ProfileLocalDataSourceImp implements ProfileLocalDataSource {
       }
 
       final Map<String, dynamic> jsonData = jsonDecode(response);
-
       final user = UserDto.fromJson(jsonData);
 
       return SuccessResponce<UserDto>(user);
     } catch (error) {
       return ErrorResponce<UserDto>(
-        error is Exception
-            ? error
-            : Exception(error.toString()),
+        error is Exception ? error : Exception(error.toString()),
       );
     }
   }

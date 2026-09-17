@@ -18,4 +18,30 @@ class UserEntity {
     this.photoUrl,
     required this.status,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'gender': gender,
+      'role': role,
+      'photoUrl': photoUrl,
+      'status': status,
+    };
+  }
+
+  factory UserEntity.fromJson(Map<String, dynamic> json) {
+    return UserEntity(
+      id: json['id'] as int? ?? 0,
+      fullName: json['fullName'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String? ?? '',
+      gender: json['gender'] as String? ?? '',
+      role: json['role'] as String? ?? '',
+      photoUrl: json['photoUrl'] as String?,
+      status: json['status'] as String? ?? '',
+    );
+  }
 }
