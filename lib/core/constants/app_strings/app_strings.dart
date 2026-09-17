@@ -1,5 +1,4 @@
-
-abstract class AppStrings{
+abstract class AppStrings {
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
@@ -28,24 +27,28 @@ abstract class AppStrings{
   static const String termsLink = 'Terms&Conditions';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String passwordAppBarTitle = 'Password';
-  static const String forgetPasswordHeader = 'Forget password'; // Distinct from the "Forget password?" link
-  static const String forgetPasswordSubtitle = 'Please enter your email associated to your account';
+  static const String forgetPasswordHeader =
+      'Forget password'; // Distinct from the "Forget password?" link
+  static const String forgetPasswordSubtitle =
+      'Please enter your email associated to your account';
   static const String confirmButton = 'Confirm';
   static const String emailVerificationTitle = 'Email verification';
-  static const String emailVerificationSubtitle = 'Please enter your code that send to your email address';
+  static const String emailVerificationSubtitle =
+      'Please enter your code that send to your email address';
   static const String invalidCodeError = 'Invalid code';
   static const String didntReceiveCode = 'Didn\'t receive code? ';
   static const String resendLink = 'Resend';
   static const String resetPasswordTitle = 'Reset password';
-  static const String resetPasswordSubtitle = 'Password must not be empty and must contain 6 characters with upper case letter and one number at least';
+  static const String resetPasswordSubtitle =
+      'Password must not be empty and must contain\n 6 characters with upper case letter and one\n number at least';
   static const String newPasswordLabel = 'New password';
-  static const String floweryAppbarTitle='Flowery';
-  static const String searchHint='Search';
+  static const String floweryAppbarTitle = 'Flowery';
+  static const String searchHint = 'Search';
   static const String deliverToPrefix = 'Deliver to ';
-  static const String categoriesLabel='Categories';
-  static const String bestsellerLabel='Best seller';
-  static const String ocassionLabel='Ocassion';
-  static const String viewAllLabel='View all';
+  static const String categoriesLabel = 'Categories';
+  static const String bestsellerLabel = 'Best seller';
+  static const String ocassionLabel = 'Ocassion';
+  static const String viewAllLabel = 'View all';
   static const String navHome = 'Home';
   static const String navCart = 'Cart';
   static const String navProfile = 'Profile';
@@ -106,7 +109,8 @@ abstract class AppStrings{
   static const String notificationRemember = 'Remember';
   static const String language = 'Language';
   static const String aboutUs = 'About us';
-  static const String termsAndConditionsAlt = 'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
+  static const String termsAndConditionsAlt =
+      'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
   static const String logout = 'Logout';
   static const String changeLanguageTitle = 'Change Language';
   static const String languageArabic = 'Arabic';
@@ -135,4 +139,64 @@ abstract class AppStrings{
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
+  // Auth storage keys
+  static const String refreshToken = 'refresh_token';
+  static const String accessToken = 'access_token';
+  static const String rememberedEmail = 'remembered_email';
+
+  // Auth error / validation messages
+  static const String loginFailed = 'Login failed';
+  static const String loginSuccess = 'Login successful';
+  static const String invalidCredentials = 'Invalid email or password';
+  static const String somethingWentWrong = 'Something went wrong';
+  static const String emailRequired = 'Email is required';
+  static const String emailInvalid = 'Enter a valid email';
+  static const String passwordRequired = 'Password is required';
+  static const String passwordMinLength =
+      'Password must be at least 8 characters';
+  static const String passwordStrongRules =
+      'Password must contain uppercase, lowercase, number and special character';
+  static const String confirmPasswordRequired = 'Please confirm your password';
+  static const String confirmPasswordMismatch = 'Passwords do not match';
+  static const String usernameRequired = 'Username is required';
+  static const String usernameMinLength =
+      'Username must be at least 3 characters';
+  static const String firstNameRequired = 'First name is required';
+  static const String firstNameOnlyLetters =
+      'First name must contain only letters';
+  static const String lastNameRequired = 'Last name is required';
+  static const String lastNameOnlyLetters =
+      'Last name must contain only letters';
+  static const String phoneRequired = 'Phone number is required';
+  static const String phoneInvalid = 'Enter a valid Egyptian phone number';
+  // Auth storage keys
+  // Auth error / validation messages
+  static const String registerError = 'Failed register';
+  static const String registerSuccess = 'Register successful';
+  static const String occasionTitle = 'Occasion';
+
+  static const String savedAddressEmpty = 'No saved addresses yet';
+  static const String titleAddress = 'Title';
+  static const String labelAddress = 'Enter Title Address';
+  static const String loadingAddress = 'Loading...';
+  static const String labelTitle = 'Title';
+  static const String labelTitleHint = 'Title of the address';
+  static const String addressError = 'Could not get address details';
+  static const String addressRequired = 'Address is Required';
+  static const String labelRequired = 'Label is Required';
+  static const String recipientNameRequired = 'Name is Required';
+  static const String cityRequired = 'City is Required';
+  static const String phoneNumberRequired = 'Phone is Required';
+  static const String addYourAddress = 'Add Your Address';
+  static const String addressAddedSuccess = 'Address added successfully';
+  static const String addressAddFailedServer =
+      'Something went wrong. Please try again later.';
+  static const String addressAddFailedNotServiceable =
+      'This address is not available for delivery. Please choose another location.';
+  static const String addressAddFailedInvalid =
+      'The address information is invalid. Please check your details.';
+  static const String retry = 'Retry';
+  static const String lat = 'lat';
+  static const String lng = 'lng';
+  static const String addressId = 'addressId';
 }

@@ -12,6 +12,9 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.onChanged,
+    this.autovalidateMode,
+    this.readOnly = false,
   });
 
   final String label;
@@ -22,14 +25,20 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final ValueChanged<String>? onChanged;
+  final AutovalidateMode? autovalidateMode;
+  final bool? readOnly;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly ?? false,
+      autovalidateMode: autovalidateMode,
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
       obscureText: obscureText,
+      onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
@@ -50,6 +59,20 @@ class CustomTextFormField extends StatelessWidget {
           borderSide: BorderSide(
             width: 1.5.w,
             color: Colors.green,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(
+            width: 1.5.w,
+            color: Colors.red,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(
+            width: 1.5.w,
+            color: Colors.red,
           ),
         ),
       ),

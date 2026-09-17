@@ -45,11 +45,26 @@ dependencies:
   persistent_bottom_nav_bar_v2: ^6.3.2
   flutter_secure_storage: ^11.0.0
   google_fonts: ^8.2.0
+  pinput: ^6.0.2
+  cached_network_image: ^3.4.1
+  shared_preferences: ^2.5.5
+  permission_handler: ^13.0.2
+  geolocator: ^14.0.3
+  google_maps_flutter: ^2.18.0
+  geocoding: 4.0.0
+  flutter_dotenv: ^6.0.1
+  collection: ^1.19.1
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_secure_storage_platform_interface: ^2.0.3
+  mocktail: ^1.0.5
+  mockito: ^5.5.0
+  bloc_test: ^9.1.7
   retrofit_generator: ^10.0.1
+  test: ^1.31.0
   build_runner: ^2.6.0
   json_serializable: ^6.10.0
   injectable_generator: 3.0.2
@@ -60,6 +75,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.8
+  flutter_launcher_icons: ^0.14.4
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,8 +91,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/
+    - assets/jsons/
+    - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -102,3 +122,23 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+# --- APP ICON CONFIGURATION ---
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#F9ECF0"
+  adaptive_icon_foreground: "assets/splash_logo.png"
+
+# --- SPLASH SCREEN CONFIGURATION ---
+flutter_native_splash:
+  color: "#F9ECF0" # This fills the background of the splash screen
+  image: "assets/splash_logo.png" # Your transparent logo
+  android: true
+  ios: true
+
+  # Optional: Keeps the splash screen looking crisp and not stretched
+  android_12:
+    image: "assets/splash_logo.png"
+    icon_background_color: "#F9ECF0"
