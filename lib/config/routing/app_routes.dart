@@ -20,7 +20,7 @@ import 'package:flower_app/features/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../features/addresses/presentation/view/address_view.dart';
+import '../../features/addresses/presentation/view/add_address/address_view.dart';
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
 

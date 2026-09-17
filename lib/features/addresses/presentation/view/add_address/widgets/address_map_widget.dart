@@ -4,9 +4,10 @@ import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
-import 'package:flower_app/features/addresses/presentation/view/widgets/helper_methods/helper_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'helper_methods/helper_methods.dart';
 
 class AddressMapWidget extends StatefulWidget {
   const AddressMapWidget({

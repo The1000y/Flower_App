@@ -3,7 +3,7 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
-import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
+import 'package:flower_app/features/addresses/presentation/view/add_address/address_view.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_event.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_state.dart';

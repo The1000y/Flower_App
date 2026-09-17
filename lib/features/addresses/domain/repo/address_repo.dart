@@ -10,14 +10,21 @@ abstract interface class AddressRepo {
   Future<BaseResponce<AddressEntity>> addAddress({
     required AddAddressParams addAddressParams,
   });
+
   Future<List<GovernorateEntity>> getGovernorates();
+
   Future<List<CityEntity>> getCities({required String governorateId});
+
   Future<Position?> getCurrentLocation();
+
   Future<Placemark?> getReverseGeocodedAddress(LatLng coordinates);
 
   Future<List<AddressEntity>> getAddresses();
+
   Future<bool> deleteAddress(String id);
+
   Future<AddressEntity> setDefaultAddress(String id);
+
   Future<AddressEntity> updateAddress({
     required String id,
     required AddAddressParams params,
