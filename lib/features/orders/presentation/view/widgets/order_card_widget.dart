@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -12,6 +13,7 @@ class OrderCardWidget extends StatelessWidget {
   final String orderDeliverDate;
   final bool isActive;
   final String imageUrl;
+  final VoidCallback onActionPressed;
 
   const OrderCardWidget({
     required this.orderName,
@@ -20,6 +22,7 @@ class OrderCardWidget extends StatelessWidget {
     required this.orderDeliverDate,
     required this.isActive,
     required this.imageUrl,
+    required this.onActionPressed,
     super.key,
   });
 
@@ -31,7 +34,7 @@ class OrderCardWidget extends StatelessWidget {
         border: Border.all(color: AppColors.grayDark),
       ),
       child: Padding(
-        padding:  EdgeInsets.all(8.w),
+        padding: EdgeInsets.all(8.w),
         child: Row(
           children: [
             ClipRRect(
@@ -51,13 +54,13 @@ class OrderCardWidget extends StatelessWidget {
                   Text(orderPrice),
                   Text(
                     isActive
-                        ? "Order number $orderId"
-                        : "Delivered on $orderDeliverDate",
+                        ? "${AppStrings.orderNumberPrefix}$orderId"
+                        : "${AppStrings.deliveredOnPrefix}$orderDeliverDate",
                   ),
                   CustomButton(
-                    text: isActive ? "Track order" : "Reorder",
+                    text: isActive ? AppStrings.trackOrder : AppStrings.reorder,
                     isEnabled: true,
-                    onPressed: () {},
+                    onPressed: onActionPressed,
                     enabledColor: AppColors.pinkBase,
                   ),
                 ],

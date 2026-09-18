@@ -1,5 +1,5 @@
 import 'package:flower_app/config/di/di.dart';
-
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/orders/presentation/manager/cubit/orders_cubit.dart';
 import 'package:flower_app/features/orders/presentation/manager/orders_state.dart';
 import 'package:flower_app/features/orders/presentation/view/widgets/order_card_widget.dart';
@@ -7,100 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import '../../../../config/routing/routes.dart';
+
 class MyOrdersView extends StatelessWidget {
   const MyOrdersView({super.key});
-
-  // static List<OrderEntity> activeOrders = [
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "",
-  //     isActive: true,
-  //     imageUrl: "https://example.com/rose.png",
-  //     // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "",
-  //     isActive: true,
-  //     imageUrl: "https://example.com/rose.png",
-  //     // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "",
-  //     isActive: true,
-  //     imageUrl: "https://example.com/rose.png",
-  //     // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "",
-  //     isActive: true,
-  //     imageUrl: "https://example.com/rose.png",
-  //     // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "",
-  //     isActive: true,
-  //     imageUrl: "https://example.com/rose.png",
-  //     // حط أي لينك صورة وهمي
-  //   ),
-  //   // ممكن تكرر الـ OrderEntity ده كمان مرتين عشان اللستة تكبر
-  // ]; //todo dummy data
-  // static List<OrderEntity> completedOrders = [
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "20-25-1",
-  //     isActive: false,
-  //     imageUrl: "https://example.com/rose.png", // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "20-25-1",
-  //     isActive: false,
-  //     imageUrl: "https://example.com/rose.png", // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "20-25-1",
-  //     isActive: false,
-  //     imageUrl: "https://example.com/rose.png", // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "20-25-1",
-  //     isActive: false,
-  //     imageUrl: "https://example.com/rose.png", // حط أي لينك صورة وهمي
-  //   ),
-  //   OrderEntity(
-  //     orderName: "Red roses",
-  //     orderPrice: "EGP 600",
-  //     orderId: "123456",
-  //     orderDeliverDate: "20-25-1",
-  //     isActive: false,
-  //     imageUrl: "https://example.com/rose.png", // حط أي لينك صورة وهمي
-  //   ),
-  //   // ممكن تكرر الـ OrderEntity ده كمان مرتين عشان اللستة تكبر
-  // ]; //todo dummy data
 
   @override
   Widget build(BuildContext context) {
@@ -110,16 +20,16 @@ class MyOrdersView extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: Text("My orders"),
+            title: Text(AppStrings.myOrdersTitle),
             bottom: TabBar(
               tabs: [
                 Padding(
                   padding: EdgeInsets.only(bottom: 6.h),
-                  child: Text("Active"),
+                  child: Text(AppStrings.tabActive),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 6.h),
-                  child: Text("Completed"),
+                  child: Text(AppStrings.tabCompleted),
                 ),
               ],
             ),
@@ -141,6 +51,9 @@ class MyOrdersView extends StatelessWidget {
                           orderDeliverDate: currentOrder.orderDeliverDate,
                           isActive: currentOrder.isActive,
                           imageUrl: currentOrder.imageUrl,
+                          onActionPressed: () {
+                            Navigator.pushNamed(context, Routes.trackOrder);
+                          },
                         );
                       },
                       separatorBuilder: (context, index) {
@@ -170,6 +83,9 @@ class MyOrdersView extends StatelessWidget {
                           orderDeliverDate: currentOrder.orderDeliverDate,
                           isActive: currentOrder.isActive,
                           imageUrl: currentOrder.imageUrl,
+                          onActionPressed: () {
+                            Navigator.pushNamed(context, Routes.cart);
+                          },
                         );
                       },
                       separatorBuilder: (context, index) {
