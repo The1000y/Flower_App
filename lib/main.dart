@@ -39,8 +39,8 @@ class FlowerApp extends StatelessWidget {
       theme: AppTheme.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+     // localizationsDelegates: AppLocalizations.localizationsDelegates,
+     // supportedLocales: AppLocalizations.supportedLocales,
     ),);
   }
 }

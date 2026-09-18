@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
-import '../../../features/profile/presentation/manager/profile_viewModel.dart';
-import '../../../features/profile/presentation/view/profile_home_view.dart';
 import '../../constants/app_strings/app_strings.dart';
 
 class PersistentBottomNavBarDemo extends StatelessWidget {
@@ -36,11 +34,7 @@ class PersistentBottomNavBarDemo extends StatelessWidget {
       value: getIt.get<AddressCubit>(),
       child: const CartView(),
     );
-
-    final profileScreen = BlocProvider<ProfileHomeViewModel>(
-      create: (_) => getIt<ProfileHomeViewModel>(),
-      child: const ProfileHomeView(),
-    );
+    final profileScreen = Placeholder();
 
     return PersistentTabView(
       controller: controller,
