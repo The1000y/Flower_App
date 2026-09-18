@@ -1,5 +1,5 @@
 name: Flutter Firebase App Distribution
-# Test Firebase App Distribution
+# Test Firebase App Distribution: Release v1.0.1
 on:
   push:
     branches:
