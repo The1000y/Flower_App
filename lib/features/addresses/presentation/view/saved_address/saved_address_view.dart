@@ -70,7 +70,7 @@ class _SavedAddressViewState extends State<SavedAddressView> {
     if (result != null && context.mounted) {
       context.read<AddressCubit>().doEvent(FetchUserAddressesEvent());
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Address added')),
+        const SnackBar(content: Text(AppStrings.addressAddedSuccess)),
       );
     }
   }

@@ -21,11 +21,11 @@ class HomeCubit extends Cubit<HomeState> {
   final GetOccasionsUseCase _getOccasionsUseCase;
 
   HomeCubit(
-    this._getCategoriesUseCase,
-    this._getBestSellerUseCase,
-    this._getSectionUseCase,
-    this._getOccasionsUseCase,
-  ) : super(const HomeState());
+      this._getCategoriesUseCase,
+      this._getBestSellerUseCase,
+      this._getSectionUseCase,
+      this._getOccasionsUseCase,
+      ) : super(const HomeState());
 
   Future<void> doEvent(HomeEvent event) async {
     switch (event) {
@@ -125,8 +125,8 @@ class HomeCubit extends Cubit<HomeState> {
 
     switch (result) {
       case SuccessResponce<List<SectionEntity>>():
-        final sections = result.data;  
-      
+        final sections = result.data;
+
         // sections.sort(
         //   (SectionEntity a, SectionEntity b) => a.index.compareTo(b.index),
         // );

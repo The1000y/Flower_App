@@ -3,7 +3,6 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
-import 'package:flower_app/features/addresses/presentation/view/add_address/address_view.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_event.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_state.dart';
@@ -13,6 +12,8 @@ import 'package:flower_app/features/commerce/presentation/home/view/widgets/cust
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+
+import '../../../../addresses/presentation/view/add_address/address_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key, required this.controller});
@@ -24,35 +25,37 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   @override
-  void initState() {
-    super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    context.read<HomeCubit>().doEvent(GetSectionEvent());
-    context.read<AddressCubit>().doEvent(FetchUserAddressesEvent());
-  });
-  }
-
-  @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
-   return  Scaffold(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+          getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
+        ),
+        BlocProvider(
+          create: (context) =>
+          getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
+        ),
+      ],
+      child: Scaffold(
         backgroundColor: AppColors.whiteBase,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                final sectionsState = state.sectionsState;
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              final sectionsState = state.sectionsState;
 
-                if (sectionsState.isLoading) {
-                  return Center(child: CircularProgressIndicator());
-                }
+              if (sectionsState.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                if (sectionsState.errorMessage.isNotEmpty) {
-                  return Center(child: Text(sectionsState.errorMessage));
-                }
-                final sections = sectionsState.data ?? [];
+              if (sectionsState.errorMessage.isNotEmpty) {
+                return Center(child: Text(sectionsState.errorMessage));
+              }
+              final sections = sectionsState.data ?? [];
 
-                return Column(
+              return SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -110,12 +113,12 @@ class _HomeViewState extends State<HomeView> {
                       }),
                     ),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
-      );
-    
+      ),
+    );
   }
 }

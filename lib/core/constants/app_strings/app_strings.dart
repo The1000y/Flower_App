@@ -192,4 +192,6 @@ abstract class AppStrings {
   static const String retry = 'Retry';
   static const String subtotal = 'Sub total:';
   static const String checkout = 'Checkout';
+  static const String addressAddedSuccess = 'Address added';
+  static const String addressUpdatedSuccess = 'Address updated';
 }

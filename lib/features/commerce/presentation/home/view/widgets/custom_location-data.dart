@@ -28,15 +28,19 @@ class CustomLocationData extends StatelessWidget {
   Widget build(BuildContext context) {
     if (addresses.isEmpty) {
       return Center(
-        child: CustomOutlinedButton(
-          onPressed: onAddNewAddressTap,
-          text: AppStrings.addYourAddress,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: CustomOutlinedButton(
+            onPressed: onAddNewAddressTap,
+            text: AppStrings.addYourAddress,
+            icon: Icons.add_location_alt_outlined,
+          ),
         ),
       );
     }
 
     final selectedId =
-        addresses.any((address) => address.id == selectedAddress?.id)
+    addresses.any((address) => address.id == selectedAddress?.id)
         ? selectedAddress?.id
         : null;
     if (addresses.isNotEmpty) {
@@ -48,7 +52,7 @@ class CustomLocationData extends StatelessWidget {
         items: [
           // العناوين الموجودة
           ...addresses.map(
-            (addr) => DropdownMenuItem(
+                (addr) => DropdownMenuItem(
               value: addr.id,
               child: Row(
                 children: [
@@ -93,7 +97,7 @@ class CustomLocationData extends StatelessWidget {
 
           // لو اختار عنوان موجود
           final newAddress = addresses.firstWhere(
-            (addr) => addr.id == selectedId,
+                (addr) => addr.id == selectedId,
           );
 
           onAddressChanged?.call(newAddress);

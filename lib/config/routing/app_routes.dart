@@ -16,13 +16,14 @@ import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
-import 'package:flower_app/features/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/addresses/presentation/view/add_address/address_view.dart';
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
+import '../../features/profile/presentation/manager/profile_viewModel.dart';
+import '../../features/profile/presentation/view/profile_home_view.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -139,8 +140,12 @@ abstract class AppRoutes {
 
       // Profile
       case Routes.profile:
-        return MaterialPageRoute(builder: (_) => const ProfileView());
-
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ProfileHomeViewModel>(),
+            child: const ProfileHomeView(),
+          ),
+        );
       case Routes.editProfile:
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
