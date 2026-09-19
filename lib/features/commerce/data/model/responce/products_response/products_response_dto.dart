@@ -49,10 +49,7 @@ class ProductListDataDto {
   @JsonKey(name: 'pagination')
   final PaginationDto pagination;
 
-  ProductListDataDto({
-    required this.items,
-    required this.pagination,
-  });
+  ProductListDataDto({required this.items, required this.pagination});
 
   factory ProductListDataDto.fromJson(Map<String, dynamic> json) =>
       _$ProductListDataDtoFromJson(json);

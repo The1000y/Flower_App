@@ -3,4 +3,5 @@ abstract class AppImages {
   static const String image1 = 'assets/Image.png';
   static const String wedding = 'assets/wedding.png';
   static const String error = 'assets/image_error.jpg';
+  static const String iconMap = 'assets/Vector.png';
 }

@@ -12,7 +12,8 @@ class CustomOccasionrList extends StatelessWidget {
     return SizedBox(
       height: 200,
       child: ListView.separated(
-        scrollCacheExtent: ScrollCacheExtent.pixels(500), scrollDirection: Axis.horizontal,
+        scrollCacheExtent: ScrollCacheExtent.pixels(500),
+        scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.only(left: 16, right: 16),
         itemCount: occasionList.length,
         separatorBuilder: (context, index) => const SizedBox(width: 8),

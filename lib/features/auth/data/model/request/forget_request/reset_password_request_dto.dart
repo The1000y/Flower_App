@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'reset_password_request_dto.g.dart';
 
-
 @JsonSerializable()
 class ResetPasswordRequestDto {
   @JsonKey(name: 'email')
@@ -15,7 +14,7 @@ class ResetPasswordRequestDto {
     required this.newPassword,
     required this.resetCode,
   });
-   factory ResetPasswordRequestDto.fromJson(Map<String, dynamic> json) =>
+  factory ResetPasswordRequestDto.fromJson(Map<String, dynamic> json) =>
       _$ResetPasswordRequestDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResetPasswordRequestDtoToJson(this);

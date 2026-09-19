@@ -1,5 +1,5 @@
-
-abstract class AppStrings{
+abstract class AppStrings {
+  static const String yourCartIsEmpty = 'Your cart is empty';
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
@@ -28,11 +28,14 @@ abstract class AppStrings{
   static const String termsLink = 'Terms&Conditions';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String passwordAppBarTitle = 'Password';
-  static const String forgetPasswordHeader = 'Forget password'; // Distinct from the "Forget password?" link
-  static const String forgetPasswordSubtitle = 'Please enter your email associated to your account';
+  static const String forgetPasswordHeader =
+      'Forget password'; // Distinct from the "Forget password?" link
+  static const String forgetPasswordSubtitle =
+      'Please enter your email associated to your account';
   static const String confirmButton = 'Confirm';
   static const String emailVerificationTitle = 'Email verification';
-  static const String emailVerificationSubtitle = 'Please enter your code that send to your email address';
+  static const String emailVerificationSubtitle =
+      'Please enter your code that send to your email address';
   static const String invalidCodeError = 'Invalid code';
   static const String didntReceiveCode = 'Didn\'t receive code? ';
   static const String resendLink = 'Resend';
@@ -55,6 +58,7 @@ abstract class AppStrings{
   static const String bloomSubtitle = 'Bloom with our exquisite best sellers';
   static const String statusLabel = 'Status: ';
   static const String addToCart = 'Add to cart';
+  static const String productAddedToCart = 'Product added to cart';
   static const String inStock = 'In stock';
   static const String taxNotice = 'All prices include tax';
   static const String description = 'Description';
@@ -171,6 +175,23 @@ abstract class AppStrings{
   // Auth error / validation messages
   static const String registerError = 'Failed register';
   static const String registerSuccess = 'Register successful';
-  static const String  occasionTitle = 'Occasion';
-
+  static const String savedAddressEmpty = 'No saved addresses yet';
+  static const String titleAddress = 'Title';
+  static const String labelAddress = 'Enter Title Address';
+  static const String loadingAddress = 'Loading...';
+  static const String occasionTitle = 'Occasion';
+  static const String labelTitle = 'Title';
+  static const String labelTitleHint = 'Title of the address';
+  static const String addressError = 'Could not get address details';
+  static const String addressRequired = 'Address is Required';
+  static const String labelRequired = 'Label is Required';
+  static const String recipientNameRequired = 'Name is Required';
+  static const String cityRequired = 'City is Required';
+  static const String phoneNumberRequired = 'Phone is Required';
+  static const String addYourAddress = 'Add Your Address';
+  static const String retry = 'Retry';
+  static const String subtotal = 'Sub total:';
+  static const String checkout = 'Checkout';
+  static const String addressAddedSuccess = 'Address added';
+  static const String addressUpdatedSuccess = 'Address updated';
 }

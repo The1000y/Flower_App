@@ -16,10 +16,10 @@ void main() {
       'images': ['img1', 'img2'],
       'description': 'desc',
       'includes': [
-        {'name': 'item1', 'quantity': 1}
+        {'name': 'item1', 'quantity': 1},
       ],
       'categoryId': 1,
-      'occasionIds': [1, 2]
+      'occasionIds': [1, 2],
     };
 
     test('fromJson should return a valid DTO', () {

@@ -13,48 +13,38 @@ void main() {
 
   setUp(() {
     authRepo = MockAuthRepo();
-    resetPasswordUserCase = ResetPasswordUserCase(
-      authRepo: authRepo,
-    );
+    resetPasswordUserCase = ResetPasswordUserCase(authRepo: authRepo);
   });
 
   group('ResetPasswordUserCase', () {
-    test(
-      'should call resetPassword from AuthRepo with correct data',
-      () async {
-        final response = SuccessResponce<ResetPassswordEntity>(
-          ResetPassswordEntity(
-            isSuccess: true,
-            message: 'success',
-          ),
-        );
+    test('should call resetPassword from AuthRepo with correct data', () async {
+      final response = SuccessResponce<ResetPassswordEntity>(
+        ResetPassswordEntity(isSuccess: true, message: 'success'),
+      );
 
-        when(
-          () => authRepo.resetPassword(
-            email: 'test@gmail.com',
-            otp: '123456',
-            password: 'A12320022',
-          ),
-        ).thenAnswer(
-          (_) async => response,
-        );
-
-        final result = await resetPasswordUserCase.call(
+      when(
+        () => authRepo.resetPassword(
           email: 'test@gmail.com',
           otp: '123456',
           password: 'A12320022',
-        );
+        ),
+      ).thenAnswer((_) async => response);
 
-        expect(result, response);
+      final result = await resetPasswordUserCase.call(
+        email: 'test@gmail.com',
+        otp: '123456',
+        password: 'A12320022',
+      );
 
-        verify(
-          () => authRepo.resetPassword(
-            email: 'test@gmail.com',
-            otp: '123456',
-            password: 'A12320022',
-          ),
-        ).called(1);
-      },
-    );
+      expect(result, response);
+
+      verify(
+        () => authRepo.resetPassword(
+          email: 'test@gmail.com',
+          otp: '123456',
+          password: 'A12320022',
+        ),
+      ).called(1);
+    });
   });
 }

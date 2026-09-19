@@ -18,9 +18,13 @@ class Datadto {
   DateTime? expiresAtUtc;
 
   Datadto({this.resetToken, this.expiresAtUtc});
-  factory Datadto.fromJson(Map<String, dynamic> json) => _$DatadtoFromJson(json);
+  factory Datadto.fromJson(Map<String, dynamic> json) =>
+      _$DatadtoFromJson(json);
   Map<String, dynamic> toJson() => _$DatadtoToJson(this);
-  VerifyOtpEntity toEntity() => VerifyOtpEntity(resetToken: resetToken ?? '', expiresAtUtc: expiresAtUtc ?? DateTime.now());
+  VerifyOtpEntity toEntity() => VerifyOtpEntity(
+    resetToken: resetToken ?? '',
+    expiresAtUtc: expiresAtUtc ?? DateTime.now(),
+  );
 }
 
 @JsonSerializable()
@@ -36,8 +40,21 @@ class LoginDataDto {
   @JsonKey(name: 'user')
   UserDto? user;
 
-  LoginDataDto({this.accessToken, this.refreshToken, this.expiresIn, this.driverStatus, this.user});
-  factory LoginDataDto.fromJson(Map<String, dynamic> json) => _$LoginDataDtoFromJson(json);
+  LoginDataDto({
+    this.accessToken,
+    this.refreshToken,
+    this.expiresIn,
+    this.driverStatus,
+    this.user,
+  });
+  factory LoginDataDto.fromJson(Map<String, dynamic> json) =>
+      _$LoginDataDtoFromJson(json);
   Map<String, dynamic> toJson() => _$LoginDataDtoToJson(this);
-  LoginEntity toLoginEntity() => LoginEntity(accessToken: accessToken ?? '', refreshToken: refreshToken ?? '', expiresIn: expiresIn ?? 0, driverStatus: driverStatus ?? '', user: user?.toUserEntity());
+  LoginEntity toLoginEntity() => LoginEntity(
+    accessToken: accessToken ?? '',
+    refreshToken: refreshToken ?? '',
+    expiresIn: expiresIn ?? 0,
+    driverStatus: driverStatus ?? '',
+    user: user?.toUserEntity(),
+  );
 }

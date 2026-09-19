@@ -3,9 +3,14 @@ import 'package:flower_app/config/routing/app_routes.dart';
 
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-void main() {
+import 'core/locale/locale_cubit.dart';
+
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
   runApp(
@@ -26,11 +31,16 @@ class FlowerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateRoute: AppRoutes.onGenerateRoute,
-      theme: AppTheme.lightThem,
-      debugShowCheckedModeBanner: false,
-      title: 'Flower App',
+    return BlocProvider<LocaleCubit>(
+      create: (_) => getIt<LocaleCubit>(),
+      child: MaterialApp(
+        onGenerateRoute: AppRoutes.onGenerateRoute,
+        theme: AppTheme.lightThem,
+        debugShowCheckedModeBanner: false,
+        title: 'Flower App',
+        // localizationsDelegates: AppLocalizations.localizationsDelegates,
+        // supportedLocales: AppLocalizations.supportedLocales,
+      ),
     );
   }
 }
