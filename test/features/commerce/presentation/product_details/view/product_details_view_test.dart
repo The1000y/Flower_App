@@ -236,7 +236,7 @@ void main() {
 
       // act
       await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       // assert
       expect(find.byType(CircularProgressIndicator), findsOneWidget);

@@ -111,7 +111,9 @@ void main() {
     expect(find.byIcon(Icons.remove), findsNothing);
     expect(find.text('3'), findsNothing);
 
-    final deleteButton = tester.widget<IconButton>(find.byIcon(Icons.delete));
+    final deleteButton = tester.widget<IconButton>(
+      find.widgetWithIcon(IconButton, Icons.delete),
+    );
     expect(deleteButton.onPressed, isNull);
   });
 }
