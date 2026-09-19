@@ -27,7 +27,7 @@ class AddressState extends Equatable {
   // المنطقة المختارة (ID)
   final String? selectedCity;
 
-  // قائمة العناوين الخاصة بالمستخدم  
+  // قائمة العناوين الخاصة بالمستخدم
   final List<AddressEntity> userAddresses;
 
   // العنوان المختار حاليًا (للاستخدام في الصفحة الرئيسية / الخروج)

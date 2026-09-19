@@ -4,10 +4,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'orders_response.g.dart';
-
-
 
 @JsonSerializable()
 class OrdersResponse {
@@ -16,12 +13,10 @@ class OrdersResponse {
   @JsonKey(name: "data")
   final List<OrderDto> data;
 
-  OrdersResponse({
-    required this.message,
-    required this.data,
-  });
+  OrdersResponse({required this.message, required this.data});
 
-  factory OrdersResponse.fromJson(Map<String, dynamic> json) => _$OrdersResponseFromJson(json);
+  factory OrdersResponse.fromJson(Map<String, dynamic> json) =>
+      _$OrdersResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrdersResponseToJson(this);
 }
@@ -50,7 +45,8 @@ class OrderDto {
     required this.coverImage,
   });
 
-  factory OrderDto.fromJson(Map<String, dynamic> json) => _$OrderDtoFromJson(json);
+  factory OrderDto.fromJson(Map<String, dynamic> json) =>
+      _$OrderDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderDtoToJson(this);
 }

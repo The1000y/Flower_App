@@ -8,7 +8,8 @@ import 'package:flower_app/features/commerce/data/model/responce/occasion_respon
 import 'package:flower_app/features/commerce/data/model/responce/products_response/product_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/pagination_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart' as best_seller;
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart'
+    as best_seller;
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
@@ -62,9 +63,9 @@ void main() {
 
     test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get occasions');
-      when(() => mockLocalDataSource.getOccasions()).thenAnswer(
-        (_) async => ErrorResponce<List<OccasionDto>>(exception),
-      );
+      when(
+        () => mockLocalDataSource.getOccasions(),
+      ).thenAnswer((_) async => ErrorResponce<List<OccasionDto>>(exception));
 
       final result = await commerceRepo.getOccasions();
 
@@ -107,7 +108,9 @@ void main() {
           errorCode: '',
         );
 
-        when(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).thenAnswer(
+        when(
+          () => mockRemoteDataSource.getProducts(occasionId: '1', page: 1),
+        ).thenAnswer(
           (_) async => SuccessResponce<ProductsResponseDto>(responseDto),
         );
 
@@ -120,20 +123,24 @@ void main() {
         expect(data.items.first.name, 'Red Rose');
         expect(data.items.first.price, 250);
         expect(data.pagination.page, 1);
-        verify(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).called(1);
+        verify(
+          () => mockRemoteDataSource.getProducts(occasionId: '1', page: 1),
+        ).called(1);
       },
     );
 
     test('should return ErrorResponce when remote data source fails', () async {
       final exception = Exception('Failed to get products');
-      when(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).thenAnswer(
-        (_) async => ErrorResponce<ProductsResponseDto>(exception),
-      );
+      when(
+        () => mockRemoteDataSource.getProducts(occasionId: '1', page: 1),
+      ).thenAnswer((_) async => ErrorResponce<ProductsResponseDto>(exception));
 
       final result = await commerceRepo.getOccasionsProducts('1', page: 1);
 
       expect(result, isA<ErrorResponce<PaginatedProducts>>());
-      verify(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).called(1);
+      verify(
+        () => mockRemoteDataSource.getProducts(occasionId: '1', page: 1),
+      ).called(1);
     });
   });
 
@@ -169,9 +176,9 @@ void main() {
     test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get categories');
 
-      when(() => mockLocalDataSource.getCategories()).thenAnswer(
-        (_) async => ErrorResponce<List<CategoryDto>>(exception),
-      );
+      when(
+        () => mockLocalDataSource.getCategories(),
+      ).thenAnswer((_) async => ErrorResponce<List<CategoryDto>>(exception));
 
       final result = await commerceRepo.getCategories();
       expect(result, isA<ErrorResponce<List<CategoryEntity>>>());
@@ -181,37 +188,35 @@ void main() {
   });
 
   group('getBestSeller', () {
-    test(
-      'should return SuccessResponce with mapped best sellers',
-      () async {
-        final productDto = best_seller.ProductDto(
-          id: '1',
-          name: 'Red Rose Bouquet',
-          imageUrl: 'https://example.com/rose.png',
-          currency: 'SAR',
-          price: 150,
-          originalPrice: 200,
-          discountPercentage: 25,
-          status: 'In stock',
-        );
+    test('should return SuccessResponce with mapped best sellers', () async {
+      final productDto = best_seller.ProductDto(
+        id: '1',
+        name: 'Red Rose Bouquet',
+        imageUrl: 'https://example.com/rose.png',
+        currency: 'SAR',
+        price: 150,
+        originalPrice: 200,
+        discountPercentage: 25,
+        status: 'In stock',
+      );
 
-        when(() => mockLocalDataSource.getBestSellers()).thenAnswer(
-          (_) async => SuccessResponce<List<best_seller.ProductDto>>([productDto]),
-        );
+      when(() => mockLocalDataSource.getBestSellers()).thenAnswer(
+        (_) async =>
+            SuccessResponce<List<best_seller.ProductDto>>([productDto]),
+      );
 
-        final result = await commerceRepo.getBestSeller();
+      final result = await commerceRepo.getBestSeller();
 
-        expect(result, isA<SuccessResponce<List<BestSellerEntity>>>());
+      expect(result, isA<SuccessResponce<List<BestSellerEntity>>>());
 
-        final success = result as SuccessResponce<List<BestSellerEntity>>;
+      final success = result as SuccessResponce<List<BestSellerEntity>>;
 
-        expect(success.data.length, 1);
-        expect(success.data.first.id, '1');
-        expect(success.data.first.name, 'Red Rose Bouquet');
+      expect(success.data.length, 1);
+      expect(success.data.first.id, '1');
+      expect(success.data.first.name, 'Red Rose Bouquet');
 
-        verify(() => mockLocalDataSource.getBestSellers()).called(1);
-      },
-    );
+      verify(() => mockLocalDataSource.getBestSellers()).called(1);
+    });
   });
 
   group('getSection', () {
@@ -247,9 +252,9 @@ void main() {
     test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get sections');
 
-      when(() => mockLocalDataSource.getSections()).thenAnswer(
-        (_) async => ErrorResponce<List<SectionDto>>(exception),
-      );
+      when(
+        () => mockLocalDataSource.getSections(),
+      ).thenAnswer((_) async => ErrorResponce<List<SectionDto>>(exception));
 
       final result = await commerceRepo.getSection();
       expect(result, isA<ErrorResponce<List<SectionEntity>>>());
@@ -257,8 +262,3 @@ void main() {
     });
   });
 }
-
-
-
-
-

@@ -27,15 +27,15 @@ class AddAddressParams extends Equatable {
 
   @override
   List<Object?> get props => [
-        recipientName,
-        recipientPhone,
-        addressLine,
-        city,
-        area,
-        cityId,
-        areaId,
-        lat,
-        lng,
-        label,
-      ];
+    recipientName,
+    recipientPhone,
+    addressLine,
+    city,
+    area,
+    cityId,
+    areaId,
+    lat,
+    lng,
+    label,
+  ];
 }

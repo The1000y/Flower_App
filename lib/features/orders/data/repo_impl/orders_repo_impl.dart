@@ -26,7 +26,8 @@ class OrdersRepoImpl implements OrdersRepo {
         orderId: "ORD-1026",
         orderDeliverDate: "2026-09-20",
         isActive: true,
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Lilium_candidum_1.jpg/800px-Lilium_candidum_1.jpg",
+        imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Lilium_candidum_1.jpg/800px-Lilium_candidum_1.jpg",
       ),
     ];
 
@@ -56,7 +57,8 @@ class OrdersRepoImpl implements OrdersRepo {
         orderId: "ORD-1001",
         orderDeliverDate: "2026-09-10", // تاريخ قديم
         isActive: false, // خلينا دي false عشان ده Completed
-        imageUrl: "https://www.thespruce.com/thmb/xM5z-Bhe_3wZ3kOksQkC229qK-Y=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/red-roses-58a6927a3df78c345b1338d3.jpg",
+        imageUrl:
+            "https://www.thespruce.com/thmb/xM5z-Bhe_3wZ3kOksQkC229qK-Y=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/red-roses-58a6927a3df78c345b1338d3.jpg",
       ),
     ];
 

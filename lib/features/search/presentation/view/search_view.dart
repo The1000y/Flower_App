@@ -46,16 +46,19 @@ class _SearchViewState extends State<SearchView> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.blackBase),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: AppColors.blackBase,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
         title: Text(
           'Search',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.sp,
-              ),
+            fontWeight: FontWeight.bold,
+            fontSize: 20.sp,
+          ),
         ),
       ),
       body: Column(
@@ -106,8 +109,9 @@ class _SearchViewState extends State<SearchView> {
             Text(resultState.errorMessage, textAlign: TextAlign.center),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () =>
-                  context.read<SearchCubit>().doEvent(SearchProductsEvent(state.query)),
+              onPressed: () => context.read<SearchCubit>().doEvent(
+                SearchProductsEvent(state.query),
+              ),
               child: const Text('Retry'),
             ),
           ],
@@ -147,7 +151,8 @@ class _SearchViewState extends State<SearchView> {
             name: product.name,
             price: product.price,
             oldPrice: product.originalPrice,
-            discount: product.discountPercentage?.round(), id: product.id,
+            discount: product.discountPercentage?.round(),
+            id: product.id,
           ),
         );
       },

@@ -5,13 +5,16 @@ import 'package:flower_app/features/commerce/api/client/commerce_api_client.dart
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: ProductDetailsLocalDataSource)
-class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource {
+class ProductDetailsLocalDataSourceImpl
+    implements ProductDetailsLocalDataSource {
   final CommerceApiClient _apiClient;
 
   ProductDetailsLocalDataSourceImpl(this._apiClient);
 
   @override
-  Future<BaseResponce<ProductDetailsResponseDto>> getProductDetails(String productId) async {
+  Future<BaseResponce<ProductDetailsResponseDto>> getProductDetails(
+    String productId,
+  ) async {
     try {
       final response = await _apiClient.getProductDetails(productId);
       return SuccessResponce(response);

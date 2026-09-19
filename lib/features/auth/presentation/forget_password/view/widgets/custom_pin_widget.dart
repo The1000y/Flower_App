@@ -13,12 +13,13 @@ class CustomPinWidget extends StatelessWidget {
   const CustomPinWidget({
     super.key,
     required this.codeController,
-    required this.textTheme, required this.state,
+    required this.textTheme,
+    required this.state,
   });
 
   final TextEditingController codeController;
   final TextTheme textTheme;
- final ForgetPasswordState state;
+  final ForgetPasswordState state;
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +29,16 @@ class CustomPinWidget extends StatelessWidget {
           controller: codeController,
           onCompleted: (value) {
             context.read<ForgetPasswordCubit>().doEvent(
-              VerifyOtpEvent(
-                otpCode: value,
-                email: "user@example.com",
-              ),
+              VerifyOtpEvent(otpCode: value, email: "user@example.com"),
             );
           },
           forceErrorState: state.otpState.errorMessage.isNotEmpty,
-          errorPinTheme:OtpPinTheme.themeErrorPin(textTheme),
+          errorPinTheme: OtpPinTheme.themeErrorPin(textTheme),
           animationCurve: Curves.bounceInOut,
           onTapOutside: (event) {
             FocusManager.instance.primaryFocus?.unfocus();
           },
-          cursor: Container(
-            width: 2,
-            height: 30,
-            color: AppColors.pinkBase,
-          ),
+          cursor: Container(width: 2, height: 30, color: AppColors.pinkBase),
           length: 6,
           keyboardType: TextInputType.number,
           submittedPinTheme: OtpPinTheme.themeSubmittedPin(textTheme),
@@ -66,9 +60,7 @@ class CustomPinWidget extends StatelessWidget {
                 Text(
                   // AppStrings.invalidCodeError,
                   state.otpState.errorMessage,
-                  style: textTheme.bodySmall?.copyWith(
-                    color: AppColors.error,
-                  ),
+                  style: textTheme.bodySmall?.copyWith(color: AppColors.error),
                 ),
               ],
             ),
@@ -77,10 +69,7 @@ class CustomPinWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "${AppStrings.didntReceiveCode} ",
-              style: textTheme.bodyLarge,
-            ),
+            Text("${AppStrings.didntReceiveCode} ", style: textTheme.bodyLarge),
             InkWell(
               onTap: () {
                 context.read<ForgetPasswordCubit>().doEvent(
@@ -102,4 +91,3 @@ class CustomPinWidget extends StatelessWidget {
     );
   }
 }
-

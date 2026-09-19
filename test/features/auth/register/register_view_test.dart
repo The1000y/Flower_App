@@ -78,7 +78,9 @@ Future<void> _fillValidFields(WidgetTester tester) async {
 
 void main() {
   group('RegisterView widget', () {
-    testWidgets('renders all form fields and the sign up button', (tester) async {
+    testWidgets('renders all form fields and the sign up button', (
+      tester,
+    ) async {
       await _pumpRegister(tester, FakeAuthRepo());
 
       expect(
@@ -113,7 +115,9 @@ void main() {
       expect(_signUpButton(), findsOneWidget);
     });
 
-    testWidgets('shows validation errors when fields are empty', (tester) async {
+    testWidgets('shows validation errors when fields are empty', (
+      tester,
+    ) async {
       await _pumpRegister(tester, FakeAuthRepo());
 
       await tester.ensureVisible(_signUpButton());
@@ -159,10 +163,7 @@ void main() {
       await tester.pump();
 
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(
-        find.text('something went wrong, pls try again'),
-        findsOneWidget,
-      );
+      expect(find.text('something went wrong, pls try again'), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 5));
     });

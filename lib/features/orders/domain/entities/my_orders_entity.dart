@@ -1,4 +1,3 @@
-
 class OrderEntity {
   final String orderName;
   final String orderPrice;
@@ -7,14 +6,12 @@ class OrderEntity {
   final bool isActive;
   final String imageUrl;
 
-  OrderEntity(
-  {required this.orderName,
-      required this.orderPrice,
-      required this.orderId,
-      required this.orderDeliverDate,
-      required this.isActive,
-      required this.imageUrl,
-});
-
-
+  OrderEntity({
+    required this.orderName,
+    required this.orderPrice,
+    required this.orderId,
+    required this.orderDeliverDate,
+    required this.isActive,
+    required this.imageUrl,
+  });
 }

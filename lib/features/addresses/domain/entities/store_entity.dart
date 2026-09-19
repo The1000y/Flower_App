@@ -23,13 +23,13 @@ class StoreEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        address,
-        phoneNumber,
-        latitude,
-        longitude,
-        openingTime,
-        closingTime,
-      ];
+    id,
+    name,
+    address,
+    phoneNumber,
+    latitude,
+    longitude,
+    openingTime,
+    closingTime,
+  ];
 }

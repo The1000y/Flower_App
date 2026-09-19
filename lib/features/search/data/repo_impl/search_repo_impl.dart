@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 class SearchRepoImpl implements SearchRepo {
   SearchRepoImpl(this.repository);
   final CommerceRepo repository;
-  
+
   @override
   Future<BaseResponce<List<ProductEntity>>> searchProduct(String query) async {
     final response = await repository.getProducts();

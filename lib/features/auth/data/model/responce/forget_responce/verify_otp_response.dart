@@ -21,12 +21,7 @@ class VerifyOtpResponse {
   @JsonKey(name: 'data')
   Datadto? data;
 
-  VerifyOtpResponse({
-    this.isSuccess,
-    this.errorCode,
-    this.message,
-    this.data,
-  });
+  VerifyOtpResponse({this.isSuccess, this.errorCode, this.message, this.data});
 
   factory VerifyOtpResponse.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('value')) {
@@ -37,7 +32,8 @@ class VerifyOtpResponse {
       return VerifyOtpResponse(
         isSuccess: json['isSuccess'] == true,
         errorCode: json['isSuccess'] == true ? 0 : 400,
-        message: json['error']?.toString() ??
+        message:
+            json['error']?.toString() ??
             (json['isSuccess'] == true
                 ? 'Operation completed successfully.'
                 : 'Invalid OTP or email'),

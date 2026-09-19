@@ -13,7 +13,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   final GetProductsUseCase _getProductsUseCase;
 
   OccasionCubit(this._getOccasionsUseCase, this._getProductsUseCase)
-      : super(const OccasionState());
+    : super(const OccasionState());
 
   void handle(OccasionEvent event) {
     switch (event) {
@@ -27,23 +27,34 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   Future<void> _loadOccasions(String? initialOccasionName) async {
-    emit(state.copyWith(
-      occasionsState: state.occasionsState.copyWith(isLoading: true, errorMessage: ''),
-    ));
+    emit(
+      state.copyWith(
+        occasionsState: state.occasionsState.copyWith(
+          isLoading: true,
+          errorMessage: '',
+        ),
+      ),
+    );
 
     final response = await _getOccasionsUseCase.execute();
 
     switch (response) {
       case SuccessResponce():
-        emit(state.copyWith(
-          occasionsState: state.occasionsState.copyWith(isLoading: false, data: response.data),
-        ));
+        emit(
+          state.copyWith(
+            occasionsState: state.occasionsState.copyWith(
+              isLoading: false,
+              data: response.data,
+            ),
+          ),
+        );
         if (response.data.isNotEmpty) {
           String idToLoad = response.data.first.id;
           if (initialOccasionName != null) {
             try {
               final matchedOccasion = response.data.firstWhere(
-                      (e) => e.name.toLowerCase() == initialOccasionName.toLowerCase()
+                (e) =>
+                    e.name.toLowerCase() == initialOccasionName.toLowerCase(),
               );
               idToLoad = matchedOccasion.id;
             } catch (e) {}
@@ -52,19 +63,30 @@ class OccasionCubit extends Cubit<OccasionState> {
           handle(LoadProductsForOccasion(idToLoad));
         }
       case ErrorResponce():
-        emit(state.copyWith(
-          occasionsState: state.occasionsState.copyWith(isLoading: false, errorMessage: response.errorMessage),
-        ));
+        emit(
+          state.copyWith(
+            occasionsState: state.occasionsState.copyWith(
+              isLoading: false,
+              errorMessage: response.errorMessage,
+            ),
+          ),
+        );
     }
   }
 
   Future<void> _loadProducts(String occasionId, {int page = 1}) async {
     if (page == 1) {
-      emit(state.copyWith(
-        productsState: state.productsState.copyWith(isLoading: true, errorMessage: '', data: []),
-        pagination: null,
-        currentOccasionId: occasionId,
-      ));
+      emit(
+        state.copyWith(
+          productsState: state.productsState.copyWith(
+            isLoading: true,
+            errorMessage: '',
+            data: [],
+          ),
+          pagination: null,
+          currentOccasionId: occasionId,
+        ),
+      );
     } else {
       emit(state.copyWith(isLoadingMore: true));
     }
@@ -77,17 +99,30 @@ class OccasionCubit extends Cubit<OccasionState> {
       case SuccessResponce():
         final items = page == 1
             ? response.data.items
-            : [...(state.productsState.data ?? const <ProductEntity>[]), ...response.data.items];
-        emit(state.copyWith(
-          productsState: state.productsState.copyWith(isLoading: false, data: items),
-          isLoadingMore: false,
-          pagination: response.data.pagination,
-        ));
+            : [
+                ...(state.productsState.data ?? const <ProductEntity>[]),
+                ...response.data.items,
+              ];
+        emit(
+          state.copyWith(
+            productsState: state.productsState.copyWith(
+              isLoading: false,
+              data: items,
+            ),
+            isLoadingMore: false,
+            pagination: response.data.pagination,
+          ),
+        );
       case ErrorResponce():
-        emit(state.copyWith(
-          productsState: state.productsState.copyWith(isLoading: false, errorMessage: response.errorMessage),
-          isLoadingMore: false,
-        ));
+        emit(
+          state.copyWith(
+            productsState: state.productsState.copyWith(
+              isLoading: false,
+              errorMessage: response.errorMessage,
+            ),
+            isLoadingMore: false,
+          ),
+        );
     }
   }
 
@@ -100,4 +135,3 @@ class OccasionCubit extends Cubit<OccasionState> {
     }
   }
 }
-

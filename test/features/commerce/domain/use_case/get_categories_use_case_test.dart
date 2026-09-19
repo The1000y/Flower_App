@@ -30,9 +30,7 @@ void main() {
           ),
         ];
 
-        final response = SuccessResponce<List<CategoryEntity>>(
-          categories,
-        );
+        final response = SuccessResponce<List<CategoryEntity>>(categories);
 
         when(
           () => mockCommerceRepo.getCategories(),
@@ -44,10 +42,7 @@ void main() {
         // Assert
         expect(result, same(response));
 
-        expect(
-          result,
-          isA<SuccessResponce<List<CategoryEntity>>>(),
-        );
+        expect(result, isA<SuccessResponce<List<CategoryEntity>>>());
 
         final success = result as SuccessResponce<List<CategoryEntity>>;
 
@@ -55,14 +50,9 @@ void main() {
         expect(success.data.length, 1);
         expect(success.data.first.id, 1);
         expect(success.data.first.name, 'Roses');
-        expect(
-          success.data.first.iconUrl,
-          'https://example.com/rose.png',
-        );
+        expect(success.data.first.iconUrl, 'https://example.com/rose.png');
 
-        verify(
-          () => mockCommerceRepo.getCategories(),
-        ).called(1);
+        verify(() => mockCommerceRepo.getCategories()).called(1);
       },
     );
 
@@ -72,9 +62,7 @@ void main() {
         // Arrange
         final exception = Exception('Failed to get categories');
 
-        final response = ErrorResponce<List<CategoryEntity>>(
-          exception,
-        );
+        final response = ErrorResponce<List<CategoryEntity>>(exception);
 
         when(
           () => mockCommerceRepo.getCategories(),
@@ -86,20 +74,14 @@ void main() {
         // Assert
         expect(result, same(response));
 
-        expect(
-          result,
-          isA<ErrorResponce<List<CategoryEntity>>>(),
-        );
+        expect(result, isA<ErrorResponce<List<CategoryEntity>>>());
 
         final error = result as ErrorResponce<List<CategoryEntity>>;
 
         expect(error.error, same(exception));
 
-        verify(
-          () => mockCommerceRepo.getCategories(),
-        ).called(1);
+        verify(() => mockCommerceRepo.getCategories()).called(1);
       },
     );
   });
 }
-

@@ -8,43 +8,42 @@ void main() {
   Widget createWidgetUnderTest(Widget widget) {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-      child: MaterialApp(
-        home: Scaffold(body: widget),
-      ),
+      child: MaterialApp(home: Scaffold(body: widget)),
     );
   }
 
   group('OrderCardWidget', () {
     testWidgets(
-        'renders active order card details and calls callback when tapped',
-        (tester) async {
-      bool buttonTapped = false;
+      'renders active order card details and calls callback when tapped',
+      (tester) async {
+        bool buttonTapped = false;
 
-      await tester.pumpWidget(
-        createWidgetUnderTest(
-          OrderCardWidget(
-            orderName: "Red Roses Bouquet",
-            orderPrice: "600 EGP",
-            orderId: "98231",
-            orderDeliverDate: "22 Sep",
-            isActive: true,
-            imageUrl: "https://example.com/rose.png",
-            onActionPressed: () => buttonTapped = true,
+        await tester.pumpWidget(
+          createWidgetUnderTest(
+            OrderCardWidget(
+              orderName: "Red Roses Bouquet",
+              orderPrice: "600 EGP",
+              orderId: "98231",
+              orderDeliverDate: "22 Sep",
+              isActive: true,
+              imageUrl: "https://example.com/rose.png",
+              onActionPressed: () => buttonTapped = true,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text("Red Roses Bouquet"), findsOneWidget);
-      expect(find.text("600 EGP"), findsOneWidget);
-      expect(
-        find.text("${AppStrings.orderNumberPrefix}98231"),
-        findsOneWidget,
-      );
-      expect(find.text(AppStrings.trackOrder), findsOneWidget);
+        expect(find.text("Red Roses Bouquet"), findsOneWidget);
+        expect(find.text("600 EGP"), findsOneWidget);
+        expect(
+          find.text("${AppStrings.orderNumberPrefix}98231"),
+          findsOneWidget,
+        );
+        expect(find.text(AppStrings.trackOrder), findsOneWidget);
 
-      await tester.tap(find.text(AppStrings.trackOrder));
-      expect(buttonTapped, isTrue);
-    });
+        await tester.tap(find.text(AppStrings.trackOrder));
+        expect(buttonTapped, isTrue);
+      },
+    );
 
     testWidgets('renders completed order card details', (tester) async {
       await tester.pumpWidget(

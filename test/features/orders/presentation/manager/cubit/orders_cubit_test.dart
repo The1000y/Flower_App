@@ -56,12 +56,12 @@ void main() {
   blocTest<OrdersCubit, OrdersState>(
     'emits [OrdersLoading, OrdersSuccess] when fetchOrders succeeds',
     build: () {
-      when(() => mockGetActiveOrdersUseCase()).thenAnswer(
-        (_) async => [tActiveOrder],
-      );
-      when(() => mockGetCompletedOrdersUseCase()).thenAnswer(
-        (_) async => [tCompletedOrder],
-      );
+      when(
+        () => mockGetActiveOrdersUseCase(),
+      ).thenAnswer((_) async => [tActiveOrder]);
+      when(
+        () => mockGetCompletedOrdersUseCase(),
+      ).thenAnswer((_) async => [tCompletedOrder]);
       return cubit;
     },
     act: (cubit) => cubit.fetchOrders(),

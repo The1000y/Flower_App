@@ -29,9 +29,7 @@ class AddressCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: AppColors.gray,
-          ),
+          border: Border.all(color: AppColors.gray),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,21 +37,36 @@ class AddressCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(Icons.location_on_outlined, color: AppColors.blackBase, size: 20.sp),
+                Icon(
+                  Icons.location_on_outlined,
+                  color: AppColors.blackBase,
+                  size: 20.sp,
+                ),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
                     address.city,
-                    style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete_outline, color: AppColors.error, size: 22.sp),
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: AppColors.error,
+                    size: 22.sp,
+                  ),
                   onPressed: onDelete,
                 ),
                 IconButton(
-                  icon: Icon(Icons.edit_outlined, color: AppColors.gray, size: 20.sp),
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    color: AppColors.gray,
+                    size: 20.sp,
+                  ),
                   onPressed: onEdit,
                 ),
               ],
@@ -63,8 +76,6 @@ class AddressCard extends StatelessWidget {
               '${address.addressLine} - ${address.area}',
               style: TextStyle(fontSize: 13.sp, color: AppColors.gray),
             ),
-
-
           ],
         ),
       ),

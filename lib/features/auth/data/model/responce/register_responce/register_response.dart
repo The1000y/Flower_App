@@ -15,12 +15,7 @@ class RegisterResponse {
   @JsonKey(name: 'data')
   final bool? data;
 
-  RegisterResponse({
-    this.isSuccess,
-    this.errorCode,
-    this.message,
-    this.data,
-  });
+  RegisterResponse({this.isSuccess, this.errorCode, this.message, this.data});
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('id') && !json.containsKey('data')) {

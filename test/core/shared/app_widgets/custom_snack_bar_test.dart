@@ -5,34 +5,37 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('CustomSnackBar', () {
-    testWidgets('showSuccess shows SnackBar with green background and message',
-        (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => CustomSnackBar.showSuccess(
-                  context,
-                  message: 'Address added successfully',
+    testWidgets(
+      'showSuccess shows SnackBar with green background and message',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => CustomSnackBar.showSuccess(
+                    context,
+                    message: 'Address added successfully',
+                  ),
+                  child: const Text('Show Success'),
                 ),
-                child: const Text('Show Success'),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Show Success'));
-      await tester.pump();
+        await tester.tap(find.text('Show Success'));
+        await tester.pump();
 
-      expect(find.text('Address added successfully'), findsOneWidget);
-      final snackBar = tester.widget<SnackBar>(find.byType(SnackBar));
-      expect(snackBar.backgroundColor, AppColors.success);
-    });
+        expect(find.text('Address added successfully'), findsOneWidget);
+        final snackBar = tester.widget<SnackBar>(find.byType(SnackBar));
+        expect(snackBar.backgroundColor, AppColors.success);
+      },
+    );
 
-    testWidgets('showError shows SnackBar with error background and message',
-        (tester) async {
+    testWidgets('showError shows SnackBar with error background and message', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

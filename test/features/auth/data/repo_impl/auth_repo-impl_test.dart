@@ -18,28 +18,34 @@ import 'auth_repo-impl_test.mocks.dart';
 @GenerateMocks([RemoteDataSource, LocalDataSource])
 void main() {
   provideDummy<BaseResponce<VerifyOtpResponse>>(
-    SuccessResponce(VerifyOtpResponse(
-      isSuccess: true,
-      errorCode: 0,
-      message: 'dummy',
-      data: Datadto(resetToken: 'dummy', expiresAtUtc: DateTime.now()),
-    )),
+    SuccessResponce(
+      VerifyOtpResponse(
+        isSuccess: true,
+        errorCode: 0,
+        message: 'dummy',
+        data: Datadto(resetToken: 'dummy', expiresAtUtc: DateTime.now()),
+      ),
+    ),
   );
   provideDummy<BaseResponce<ForgotPasswordResponseDto>>(
-    SuccessResponce(ForgotPasswordResponseDto(
-      isSuccess: true,
-      errorCode: '',
-      message: 'dummy',
-      data: 'dummy',
-    )),
+    SuccessResponce(
+      ForgotPasswordResponseDto(
+        isSuccess: true,
+        errorCode: '',
+        message: 'dummy',
+        data: 'dummy',
+      ),
+    ),
   );
   provideDummy<BaseResponce<ResetPasswordResponseDto>>(
-    SuccessResponce(ResetPasswordResponseDto(
-      isSuccess: true,
-      errorCode: '',
-      message: 'dummy',
-      data: 'dummy',
-    )),
+    SuccessResponce(
+      ResetPasswordResponseDto(
+        isSuccess: true,
+        errorCode: '',
+        message: 'dummy',
+        data: 'dummy',
+      ),
+    ),
   );
   late MockRemoteDataSource mockRemoteDataSource;
   late MockLocalDataSource mockLocalDataSource;
@@ -56,58 +62,86 @@ void main() {
   });
 
   group('AuthRepoImpl - VerifyOtp Tests', () {
-    test('verifyOtp should return SuccessResponce when data source succeeds', () async {
-      const email = 'user@example.com';
-      const otp = '123456';
+    test(
+      'verifyOtp should return SuccessResponce when data source succeeds',
+      () async {
+        const email = 'user@example.com';
+        const otp = '123456';
 
-      when(mockRemoteDataSource.verifyOtp(verifyOtpRequest: anyNamed('verifyOtpRequest')))
-          .thenAnswer((_) async => SuccessResponce<VerifyOtpResponse>(
-                VerifyOtpResponse(
-                  errorCode: 0,
-                  isSuccess: true,
-                  message: 'Operation completed successfully.',
-                  data: Datadto(expiresAtUtc: DateTime.now(), resetToken: 'token123'),
-                ),
-              ));
+        when(
+          mockRemoteDataSource.verifyOtp(
+            verifyOtpRequest: anyNamed('verifyOtpRequest'),
+          ),
+        ).thenAnswer(
+          (_) async => SuccessResponce<VerifyOtpResponse>(
+            VerifyOtpResponse(
+              errorCode: 0,
+              isSuccess: true,
+              message: 'Operation completed successfully.',
+              data: Datadto(
+                expiresAtUtc: DateTime.now(),
+                resetToken: 'token123',
+              ),
+            ),
+          ),
+        );
 
-      final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
+        final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
 
-      expect(result, isA<SuccessResponce<VerifyOtpEntity>>());
-    });
+        expect(result, isA<SuccessResponce<VerifyOtpEntity>>());
+      },
+    );
 
-    test('verifyOtp should return ErrorResponce when data source fails', () async {
-      const email = 'user@example.com';
-      const otp = 'invalid';
+    test(
+      'verifyOtp should return ErrorResponce when data source fails',
+      () async {
+        const email = 'user@example.com';
+        const otp = 'invalid';
 
-      when(mockRemoteDataSource.verifyOtp(verifyOtpRequest: anyNamed('verifyOtpRequest')))
-          .thenAnswer((_) async => ErrorResponce<VerifyOtpResponse>(Exception('Invalid OTP or email')));
+        when(
+          mockRemoteDataSource.verifyOtp(
+            verifyOtpRequest: anyNamed('verifyOtpRequest'),
+          ),
+        ).thenAnswer(
+          (_) async => ErrorResponce<VerifyOtpResponse>(
+            Exception('Invalid OTP or email'),
+          ),
+        );
 
-      final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
+        final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
 
-      expect(result, isA<ErrorResponce<VerifyOtpEntity>>());
-    });
+        expect(result, isA<ErrorResponce<VerifyOtpEntity>>());
+      },
+    );
   });
 
   group('AuthRepoImpl - ForgotPassword Tests', () {
-    test('should return SuccessResponce when remoteDataSource succeeds', () async {
-      final responseDto = ForgotPasswordResponseDto(
-        data: 'success',
-        message: 'Password reset email sent',
-        errorCode: '',
-        isSuccess: true,
-      );
+    test(
+      'should return SuccessResponce when remoteDataSource succeeds',
+      () async {
+        final responseDto = ForgotPasswordResponseDto(
+          data: 'success',
+          message: 'Password reset email sent',
+          errorCode: '',
+          isSuccess: true,
+        );
 
-      when(mockRemoteDataSource.forgotPassword(any))
-          .thenAnswer((_) async => SuccessResponce<ForgotPasswordResponseDto>(responseDto));
+        when(mockRemoteDataSource.forgotPassword(any)).thenAnswer(
+          (_) async => SuccessResponce<ForgotPasswordResponseDto>(responseDto),
+        );
 
-      final result = await authRepoImpl.forgetPassword(email: 'test@gmail.com');
+        final result = await authRepoImpl.forgetPassword(
+          email: 'test@gmail.com',
+        );
 
-      expect(result, isA<SuccessResponce>());
-    });
+        expect(result, isA<SuccessResponce>());
+      },
+    );
 
     test('should return ErrorResponce when remoteDataSource fails', () async {
-      when(mockRemoteDataSource.forgotPassword(any))
-          .thenAnswer((_) async => ErrorResponce(Exception('Something went wrong')));
+      when(mockRemoteDataSource.forgotPassword(any)).thenAnswer(
+        (_) async => ErrorResponce(Exception('Something went wrong')),
+      );
 
       final result = await authRepoImpl.forgetPassword(email: 'test@gmail.com');
 
@@ -116,29 +150,34 @@ void main() {
   });
 
   group('AuthRepoImpl - ResetPassword Tests', () {
-    test('should return SuccessResponce when remoteDataSource succeeds', () async {
-      final responseDto = ResetPasswordResponseDto(
-        data: 'success',
-        message: 'Password reset successfully',
-        errorCode: '',
-        isSuccess: true,
-      );
+    test(
+      'should return SuccessResponce when remoteDataSource succeeds',
+      () async {
+        final responseDto = ResetPasswordResponseDto(
+          data: 'success',
+          message: 'Password reset successfully',
+          errorCode: '',
+          isSuccess: true,
+        );
 
-      when(mockRemoteDataSource.resetPassword(any))
-          .thenAnswer((_) async => SuccessResponce(responseDto));
+        when(
+          mockRemoteDataSource.resetPassword(any),
+        ).thenAnswer((_) async => SuccessResponce(responseDto));
 
-      final result = await authRepoImpl.resetPassword(
-        email: 'test@gmail.com',
-        otp: '123456',
-        password: 'Password123',
-      );
+        final result = await authRepoImpl.resetPassword(
+          email: 'test@gmail.com',
+          otp: '123456',
+          password: 'Password123',
+        );
 
-      expect(result, isA<SuccessResponce>());
-    });
+        expect(result, isA<SuccessResponce>());
+      },
+    );
 
     test('should return ErrorResponce when remoteDataSource fails', () async {
-      when(mockRemoteDataSource.resetPassword(any))
-          .thenAnswer((_) async => ErrorResponce(Exception('Something went wrong')));
+      when(mockRemoteDataSource.resetPassword(any)).thenAnswer(
+        (_) async => ErrorResponce(Exception('Something went wrong')),
+      );
 
       final result = await authRepoImpl.resetPassword(
         email: 'test@gmail.com',

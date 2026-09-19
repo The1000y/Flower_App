@@ -30,20 +30,22 @@ class AuthValidators {
   }
 
   static String? confirmPassword(String? value, String original) {
-    if (value == null || value.isEmpty) return AppStrings.confirmPasswordRequired;
+    if (value == null || value.isEmpty)
+      return AppStrings.confirmPasswordRequired;
     if (value != original) return AppStrings.confirmPasswordMismatch;
     return null;
   }
 
   static String? username(String? value) {
-    if (value == null || value.trim().isEmpty) return AppStrings.usernameRequired;
+    if (value == null || value.trim().isEmpty)
+      return AppStrings.usernameRequired;
     if (value.trim().length < 3) {
       return AppStrings.usernameMinLength;
     }
     return null;
   }
 
-  static String? addressFields(String? value , String errorMessage) {
+  static String? addressFields(String? value, String errorMessage) {
     if (value == null || value.trim().isEmpty) return errorMessage;
     if (value.trim().length < 3) {
       return errorMessage;
@@ -52,7 +54,8 @@ class AuthValidators {
   }
 
   static String? firstName(String? value) {
-    if (value == null || value.trim().isEmpty) return AppStrings.firstNameRequired;
+    if (value == null || value.trim().isEmpty)
+      return AppStrings.firstNameRequired;
     if (!RegExp(r'^[a-zA-Z]{2,30}$').hasMatch(value)) {
       return AppStrings.firstNameOnlyLetters;
     }
@@ -60,7 +63,8 @@ class AuthValidators {
   }
 
   static String? lastName(String? value) {
-    if (value == null || value.trim().isEmpty) return AppStrings.lastNameRequired;
+    if (value == null || value.trim().isEmpty)
+      return AppStrings.lastNameRequired;
     if (!RegExp(r'^[a-zA-Z]{2,30}$').hasMatch(value)) {
       return AppStrings.lastNameOnlyLetters;
     }
@@ -75,4 +79,3 @@ class AuthValidators {
     return null;
   }
 }
-

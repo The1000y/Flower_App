@@ -36,8 +36,9 @@ void main() {
 
   test('should call getProductDetails from repository', () async {
     // arrange
-    when(mockRepository.getProductDetails('1'))
-        .thenAnswer((_) async => SuccessResponce(tProductEntity));
+    when(
+      mockRepository.getProductDetails('1'),
+    ).thenAnswer((_) async => SuccessResponce(tProductEntity));
 
     // act
     final result = await useCase.execute('1');
@@ -49,7 +50,3 @@ void main() {
     verifyNoMoreInteractions(mockRepository);
   });
 }
-
-
-
-

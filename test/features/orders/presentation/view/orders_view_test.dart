@@ -51,24 +51,25 @@ void main() {
   Widget createWidgetUnderTest() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-      child: const MaterialApp(
-        home: OrdersView(),
-      ),
+      child: const MaterialApp(home: OrdersView()),
     );
   }
 
   group('MyOrdersView', () {
-    testWidgets('displays CircularProgressIndicator when state is OrdersLoading',
-        (tester) async {
-      when(() => mockOrdersCubit.state).thenReturn(OrdersLoading());
+    testWidgets(
+      'displays CircularProgressIndicator when state is OrdersLoading',
+      (tester) async {
+        when(() => mockOrdersCubit.state).thenReturn(OrdersLoading());
 
-      await tester.pumpWidget(createWidgetUnderTest());
+        await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.byType(CircularProgressIndicator), findsAtLeastNWidgets(1));
-    });
+        expect(find.byType(CircularProgressIndicator), findsAtLeastNWidgets(1));
+      },
+    );
 
-    testWidgets('displays active orders when state is OrdersSuccess',
-        (tester) async {
+    testWidgets('displays active orders when state is OrdersSuccess', (
+      tester,
+    ) async {
       when(() => mockOrdersCubit.state).thenReturn(
         OrdersSuccess(
           activeOrders: [tActiveOrder],
@@ -86,8 +87,9 @@ void main() {
       expect(find.text("Red Roses"), findsOneWidget);
     });
 
-    testWidgets('displays error message when state is OrdersError',
-        (tester) async {
+    testWidgets('displays error message when state is OrdersError', (
+      tester,
+    ) async {
       const errorMessage = "Failed to load orders";
       when(() => mockOrdersCubit.state).thenReturn(OrdersError(errorMessage));
 
