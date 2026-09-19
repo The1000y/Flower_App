@@ -8,7 +8,8 @@ import 'package:flower_app/features/commerce/data/model/responce/occasion_respon
 import 'package:flower_app/features/commerce/data/model/responce/products_response/product_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/pagination_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart' as best_seller;
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart'
+    as best_seller;
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
@@ -74,9 +75,9 @@ void main() {
 
     test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get occasions');
-when(() => mockLocalDataSource.getOccasions()).thenAnswer(
-        (_) async => ErrorResponce<List<OccasionDto>>(exception),
-      );
+      when(
+        () => mockLocalDataSource.getOccasions(),
+      ).thenAnswer((_) async => ErrorResponce<List<OccasionDto>>(exception));
 
       final result = await commerceRepo.getOccasions();
 
@@ -193,23 +194,22 @@ when(() => mockLocalDataSource.getOccasions()).thenAnswer(
   });
 
   group('getBestSeller', () {
-test(
-      'should return SuccessResponce with mapped best sellers',
-      () async {
-        final productDto = best_seller.ProductDto(
-          id: 1,
-          name: 'Red Rose Bouquet',
-          imageUrl: 'https://example.com/rose.png',
-          currency: 'SAR',
-          price: 150,
-          originalPrice: 200,
-          discountPercentage: 25,
-          status: 'available',
-        );
+    test('should return SuccessResponce with mapped best sellers', () async {
+      final productDto = best_seller.ProductDto(
+        id: 1,
+        name: 'Red Rose Bouquet',
+        imageUrl: 'https://example.com/rose.png',
+        currency: 'SAR',
+        price: 150,
+        originalPrice: 200,
+        discountPercentage: 25,
+        status: 'available',
+      );
 
-        when(() => mockLocalDataSource.getBestSellers()).thenAnswer(
-          (_) async => SuccessResponce<List<best_seller.ProductDto>>([productDto]),
-        );
+      when(() => mockLocalDataSource.getBestSellers()).thenAnswer(
+        (_) async =>
+            SuccessResponce<List<best_seller.ProductDto>>([productDto]),
+      );
 
       final result = await commerceRepo.getBestSeller();
 
@@ -398,9 +398,9 @@ test(
     test('should return ErrorResponce when local data source fails', () async {
       final exception = Exception('Failed to get sections');
 
-      when(() => mockLocalDataSource.getSections()).thenAnswer(
-        (_) async => ErrorResponce<List<SectionDto>>(exception),
-      );
+      when(
+        () => mockLocalDataSource.getSections(),
+      ).thenAnswer((_) async => ErrorResponce<List<SectionDto>>(exception));
 
       final result = await commerceRepo.getSection();
       expect(result, isA<ErrorResponce<List<SectionEntity>>>());

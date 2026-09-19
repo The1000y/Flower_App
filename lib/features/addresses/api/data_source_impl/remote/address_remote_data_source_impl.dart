@@ -57,9 +57,7 @@ class AddressRemoteDataSourceImpl implements AddressRemoteDataSource {
         return SuccessResponce(response.data);
       }
 
-      return ErrorResponce(
-        Exception(response.message),
-      );
+      return ErrorResponce(Exception(response.message));
     } catch (e) {
       return ErrorResponce(e is Exception ? e : Exception(e.toString()));
     }

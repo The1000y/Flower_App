@@ -6,9 +6,12 @@ import 'package:flower_app/features/commerce/data/model/responce/product_details
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: ProductDetailsLocalDataSource)
-class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource {
+class ProductDetailsLocalDataSourceImpl
+    implements ProductDetailsLocalDataSource {
   @override
-  Future<BaseResponce<ProductDetailsResponseDto>> getProductDetails(int productId) async {
+  Future<BaseResponce<ProductDetailsResponseDto>> getProductDetails(
+    int productId,
+  ) async {
     // Determine details based on productId to avoid static content
     final Map<int, ProductDetailsDto> products = {
       1: ProductDetailsDto(
@@ -24,7 +27,8 @@ class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource
           "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
           "https://images.unsplash.com/photo-1561181286-d397369328d0",
         ],
-        description: "A premium arrangement of 24 deep red roses, symbolizing love and elegance.",
+        description:
+            "A premium arrangement of 24 deep red roses, symbolizing love and elegance.",
         includes: [
           ProductIncludeItemDto(name: 'Red roses', quantity: 24),
           ProductIncludeItemDto(name: 'Black wrap', quantity: 1),
@@ -34,7 +38,8 @@ class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource
       2: ProductDetailsDto(
         id: 2,
         name: "White Lily Arrangement",
-        imageUrl: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9",
+        imageUrl:
+            "https://images.unsplash.com/photo-1526047932273-341f2a7631f9",
         currency: "SAR",
         price: 120,
         originalPrice: 150,
@@ -44,7 +49,8 @@ class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource
           "https://images.unsplash.com/photo-1526047932273-341f2a7631f9",
           "https://images.unsplash.com/photo-1519225421980-715cb0215aed",
         ],
-        description: "Fresh white lilies paired with green foliage for a clean, sophisticated look.",
+        description:
+            "Fresh white lilies paired with green foliage for a clean, sophisticated look.",
         includes: [
           ProductIncludeItemDto(name: 'White lilies', quantity: 6),
           ProductIncludeItemDto(name: 'Glass vase', quantity: 1),
@@ -54,16 +60,18 @@ class ProductDetailsLocalDataSourceImpl implements ProductDetailsLocalDataSource
       // Default / Fallback for other IDs
     };
 
-    final productData = products[productId] ??
+    final productData =
+        products[productId] ??
         ProductDetailsDto(
           id: productId,
           name: "Bestseller Item $productId",
           imageUrl: "https://images.unsplash.com/photo-1561181286-d397369328d0",
           currency: "SAR",
-          price: 100 ,
+          price: 100,
           status: "In stock",
           images: ["https://images.unsplash.com/photo-1561181286-d397369328d0"],
-          description: "This is a detailed description for bestseller item number $productId.",
+          description:
+              "This is a detailed description for bestseller item number $productId.",
           includes: [
             ProductIncludeItemDto(name: 'Fresh Flowers', quantity: 12),
           ],

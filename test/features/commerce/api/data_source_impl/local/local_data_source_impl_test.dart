@@ -74,19 +74,21 @@ void main() {
       expect(item.lineSubtotal, 2400);
     });
 
-    test('updateCartItemQuantity returns an error when the item is missing',
-        () async {
-      final result = await dataSource.updateCartItemQuantity(
-        'missing-item',
-        UpdateCartItemRequestDto(quantity: 4),
-      );
+    test(
+      'updateCartItemQuantity returns an error when the item is missing',
+      () async {
+        final result = await dataSource.updateCartItemQuantity(
+          'missing-item',
+          UpdateCartItemRequestDto(quantity: 4),
+        );
 
-      expect(result, isA<ErrorResponce<CartResponseDto>>());
-      expect(
-        (result as ErrorResponce<CartResponseDto>).error.toString(),
-        contains('Cart item not found'),
-      );
-    });
+        expect(result, isA<ErrorResponce<CartResponseDto>>());
+        expect(
+          (result as ErrorResponce<CartResponseDto>).error.toString(),
+          contains('Cart item not found'),
+        );
+      },
+    );
 
     test('removeCartItem removes the item from the cart', () async {
       final result = await dataSource.removeCartItem('cart-item-1');

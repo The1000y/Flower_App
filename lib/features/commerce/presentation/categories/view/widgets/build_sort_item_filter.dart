@@ -3,12 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-enum SortType {
-  recommended,
-  newest,
-  priceLowToHigh,
-  priceHighToLow,
-}
+enum SortType { recommended, newest, priceLowToHigh, priceHighToLow }
 
 class BuildSortItemFilter extends StatelessWidget {
   const BuildSortItemFilter({
@@ -37,18 +32,13 @@ class BuildSortItemFilter extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: Colors.grey.shade300,
-          ),
+          border: Border.all(color: Colors.grey.shade300),
         ),
         child: Row(
           children: [
             Text(
               title,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
             ),
             const Spacer(),
             Radio<SortType>(

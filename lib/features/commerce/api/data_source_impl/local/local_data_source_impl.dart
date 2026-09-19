@@ -1,6 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart' as best_seller;
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart'
+    as best_seller;
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -25,8 +26,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       id: 'cart-item-1',
       productId: 1,
       productName: 'Red Roses Bouquet',
-      productImageUrl:
-          'https://loremflickr.com/600/600/rose,bouquet?lock=101',
+      productImageUrl: 'https://loremflickr.com/600/600/rose,bouquet?lock=101',
       unitPrice: 600,
       quantity: 1,
       lineSubtotal: 600,
@@ -517,7 +517,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     return SuccessResponce<ProductsResponseDto>(response);
   }
 
-// ============================================================
+  // ============================================================
   // BEST SELLERS
   // ============================================================
 
@@ -528,8 +528,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       best_seller.ProductDto(
         id: 1,
         name: "Luxury Red Rose Bouquet",
-        imageUrl:
-            "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
+        imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd",
         currency: "SAR",
         price: 150,
         originalPrice: 200,
@@ -696,7 +695,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-// ============================================================
+  // ============================================================
   // OCCASIONS
   // ============================================================
 
@@ -736,7 +735,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     }
   }
 
-@override
+  @override
   Future<BaseResponce<List<OccasionDto>>> getOccasions() => getOccasion();
 
   @override
@@ -782,9 +781,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
   Future<BaseResponce<CartResponseDto>> getCart() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    return SuccessResponce<CartResponseDto>(
-      _buildCartResponse(),
-    );
+    return SuccessResponce<CartResponseDto>(_buildCartResponse());
   }
 
   // ============================================================
@@ -822,18 +819,14 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
 
       _cartItems[existingIndex] = updatedItem;
 
-      return SuccessResponce<CartResponseDto>(
-        _buildCartResponse(),
-      );
+      return SuccessResponce<CartResponseDto>(_buildCartResponse());
     }
 
     // Get product information
     final productsResponse = await getProducts();
 
     if (productsResponse is ErrorResponce<ProductsResponseDto>) {
-      return ErrorResponce<CartResponseDto>(
-        productsResponse.error,
-      );
+      return ErrorResponce<CartResponseDto>(productsResponse.error);
     }
 
     final successResponse =
@@ -844,9 +837,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
     );
 
     if (productIndex == -1) {
-      return ErrorResponce<CartResponseDto>(
-        Exception('Product not found'),
-      );
+      return ErrorResponce<CartResponseDto>(Exception('Product not found'));
     }
 
     final product = successResponse.data.data.items[productIndex];
@@ -866,9 +857,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
 
     _cartItems.add(cartItem);
 
-    return SuccessResponce<CartResponseDto>(
-      _buildCartResponse(),
-    );
+    return SuccessResponce<CartResponseDto>(_buildCartResponse());
   }
 
   // ============================================================
@@ -882,15 +871,11 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
   ) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    final itemIndex = _cartItems.indexWhere(
-      (item) => item.id == cartItemId,
-    );
+    final itemIndex = _cartItems.indexWhere((item) => item.id == cartItemId);
 
     // Cart item not found
     if (itemIndex == -1) {
-      return ErrorResponce<CartResponseDto>(
-        Exception('Cart item not found'),
-      );
+      return ErrorResponce<CartResponseDto>(Exception('Cart item not found'));
     }
 
     final existingItem = _cartItems[itemIndex];
@@ -910,9 +895,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
 
     _cartItems[itemIndex] = updatedItem;
 
-    return SuccessResponce<CartResponseDto>(
-      _buildCartResponse(),
-    );
+    return SuccessResponce<CartResponseDto>(_buildCartResponse());
   }
 
   // ============================================================
@@ -925,12 +908,8 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
   ) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    _cartItems.removeWhere(
-      (item) => item.id == cartItemId,
-    );
+    _cartItems.removeWhere((item) => item.id == cartItemId);
 
-    return SuccessResponce<CartResponseDto>(
-      _buildCartResponse(),
-    );
+    return SuccessResponce<CartResponseDto>(_buildCartResponse());
   }
 }

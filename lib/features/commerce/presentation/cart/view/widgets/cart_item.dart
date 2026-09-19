@@ -64,7 +64,9 @@ class CartItem extends StatelessWidget {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text('${AppStrings.currencyEGP}${item.unitPrice.toStringAsFixed(0)}'),
+                            Text(
+                              '${AppStrings.currencyEGP}${item.unitPrice.toStringAsFixed(0)}',
+                            ),
                           ],
                         ),
                       ),

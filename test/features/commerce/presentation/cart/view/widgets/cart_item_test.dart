@@ -102,8 +102,8 @@ void main() {
       tester,
       item: buildItem(quantity: 3),
       isLoading: true,
-     // onDelete: () => deleted = true,
-    //  onQuantityChanged: (delta) => lastDelta = delta,
+      // onDelete: () => deleted = true,
+      //  onQuantityChanged: (delta) => lastDelta = delta,
     );
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -111,9 +111,7 @@ void main() {
     expect(find.byIcon(Icons.remove), findsNothing);
     expect(find.text('3'), findsNothing);
 
-    final deleteButton = tester.widget<IconButton>(
-      find.byIcon(Icons.delete),
-    );
+    final deleteButton = tester.widget<IconButton>(find.byIcon(Icons.delete));
     expect(deleteButton.onPressed, isNull);
   });
 }

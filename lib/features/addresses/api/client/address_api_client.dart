@@ -22,9 +22,9 @@ abstract class AddressApiClient {
 
   @GET(ApiStrings.nearestStore)
   Future<NearestStoreResponseDto> getNearestStore(
-      @Query('lat') double lat,
-      @Query('lng') double lng,
-      );
+    @Query('lat') double lat,
+    @Query('lng') double lng,
+  );
 
   @GET(ApiStrings.userAddresses)
   Future<AddressListResponseDto> getAddresses();
@@ -37,17 +37,15 @@ abstract class AddressApiClient {
 
   @PATCH('${ApiStrings.userAddresses}/{addressId}/default')
   Future<AddressResponse> setDefaultAddress(
-      @Path('addressId') String addressId,
-      );
+    @Path('addressId') String addressId,
+  );
 
   @PUT('${ApiStrings.userAddresses}/{addressId}')
   Future<AddressResponse> updateAddress(
-      @Path('addressId') String addressId,
-      @Body() UpdateAddressRequestDto request,
-      );
+    @Path('addressId') String addressId,
+    @Body() UpdateAddressRequestDto request,
+  );
 
   @DELETE('${ApiStrings.userAddresses}/{addressId}')
-  Future<HttpResponse<void>> deleteAddress(
-      @Path('addressId') String addressId,
-      );
+  Future<HttpResponse<void>> deleteAddress(@Path('addressId') String addressId);
 }

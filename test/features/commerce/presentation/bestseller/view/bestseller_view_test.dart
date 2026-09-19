@@ -87,9 +87,9 @@ void main() {
           const BestsellerState(isLoading: false, errorMessage: tError),
         );
 
-// Act
-      setPhoneSurface(tester);
-      await tester.pumpWidget(createWidgetUnderTest());
+        // Act
+        setPhoneSurface(tester);
+        await tester.pumpWidget(createWidgetUnderTest());
 
         // Assert
         expect(find.text(tError), findsOneWidget);

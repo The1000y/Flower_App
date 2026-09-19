@@ -152,10 +152,10 @@ class _LoginViewState extends State<LoginView> {
                       );
                     },
                   ),
-                   SizedBox(height: 12.h),
+                  SizedBox(height: 12.h),
                   //rememberme
                   const RememberCustom(),
-                   SizedBox(height: 16.h),
+                  SizedBox(height: 16.h),
                   BlocBuilder<LoginViewModel, LoginState>(
                     buildWhen: (previous, current) =>
                         previous.isLoading != current.isLoading,
@@ -169,14 +169,14 @@ class _LoginViewState extends State<LoginView> {
                       );
                     },
                   ),
-                   SizedBox(height: 16.h),
+                  SizedBox(height: 16.h),
                   CustomOutlinedButton(
                     text: AppStrings.continueAsGuest,
                     onPressed: () {
                       Navigator.pushNamed(context, Routes.home);
                     },
                   ),
-                   SizedBox(height: 24.h),
+                  SizedBox(height: 24.h),
                   SignupWidget(),
                 ],
               ),

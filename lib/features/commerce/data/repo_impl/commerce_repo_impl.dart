@@ -89,19 +89,25 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1}) async {
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
+    int occasionId, {
+    int page = 1,
+  }) async {
     final response = await remoteDataSource.getProducts(occasionId, page: page);
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
-        return SuccessResponce(PaginatedProducts(
-          items: response.data.products,
-          pagination: response.data.pagination,
-        ));
+        return SuccessResponce(
+          PaginatedProducts(
+            items: response.data.products,
+            pagination: response.data.pagination,
+          ),
+        );
       case ErrorResponce<ProductsResponseDto>():
         return ErrorResponce(response.error);
     }
   }
-@override
+
+  @override
   Future<BaseResponce<CartEntity>> addToCart(AddCartItemParams params) async {
     final response = await localDataSource.addToCart(
       AddCartItemRequestDto(
@@ -146,9 +152,7 @@ class CommerceRepoImpl implements CommerceRepo {
   ) async {
     final response = await localDataSource.updateCartItemQuantity(
       cartItemId,
-      UpdateCartItemRequestDto(
-        quantity: params.quantity,
-      ),
+      UpdateCartItemRequestDto(quantity: params.quantity),
     );
 
     switch (response) {

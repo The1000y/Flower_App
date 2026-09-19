@@ -19,10 +19,10 @@ class RegisterLoginLink extends StatelessWidget {
             TextSpan(
               text: ' ${AppStrings.loginTitle}',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.pinkBase,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.w500,
-                  ),
+                color: AppColors.pinkBase,
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.w500,
+              ),
               recognizer: recognizer,
             ),
           ],

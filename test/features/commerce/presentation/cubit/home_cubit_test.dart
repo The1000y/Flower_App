@@ -151,7 +151,7 @@ void main() {
         act: (cubit) => cubit.doEvent(GetSectionEvent()),
         setUp: () {
           when(mockGetSectionsUseCase.call()).thenAnswer(
-(_) async =>
+            (_) async =>
                 SuccessResponce(CommerceFixtures.tActiveSortedSections),
           );
           when(mockGetBestSellerUseCase.call()).thenAnswer(
@@ -168,18 +168,24 @@ void main() {
           const HomeState(),
           // Sections loaded (already sorted & active via the use case).
           const HomeState(
-            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
+            sectionsState: BaseState(
+              data: CommerceFixtures.tActiveSortedSections,
+            ),
           ),
           // Best sellers loaded for the active best-seller section.
           const HomeState(
             bestSellerState: BaseState(data: CommerceFixtures.tBestSellers),
-            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
+            sectionsState: BaseState(
+              data: CommerceFixtures.tActiveSortedSections,
+            ),
           ),
           // Categories loaded for the active category section.
           const HomeState(
             categoriesState: BaseState(data: CommerceFixtures.tCategories),
             bestSellerState: BaseState(data: CommerceFixtures.tBestSellers),
-            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
+            sectionsState: BaseState(
+              data: CommerceFixtures.tActiveSortedSections,
+            ),
           ),
         ],
         verify: (_) {

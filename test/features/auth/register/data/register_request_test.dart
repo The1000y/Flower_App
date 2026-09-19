@@ -70,7 +70,7 @@ void main() {
       expect(entity.password, password);
       expect(entity.confirmPassword, confirmPassword);
     });
-  test('fromEntity maps the entity fields to the DTO', () {
+    test('fromEntity maps the entity fields to the DTO', () {
       final entity = RegisterRequestEntity(
         fullName: fullName,
         email: email,

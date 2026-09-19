@@ -28,16 +28,12 @@ abstract interface class CommerceRepo {
 
   Future<BaseResponce<CartEntity>> getCart();
 
-  Future<BaseResponce<CartEntity>> addToCart(
-  AddCartItemParams params,
-  );
+  Future<BaseResponce<CartEntity>> addToCart(AddCartItemParams params);
 
   Future<BaseResponce<CartEntity>> updateCartItemQuantity(
     String cartItemId,
-    UpdateCartItemParams params,);
-
-  Future<BaseResponce<CartEntity>> removeCartItem(
-    String cartItemId,
+    UpdateCartItemParams params,
   );
-}
 
+  Future<BaseResponce<CartEntity>> removeCartItem(String cartItemId);
+}

@@ -32,14 +32,15 @@ class FlowerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LocaleCubit>(
-        create: (_) => getIt<LocaleCubit>(),
-        child: MaterialApp(
-      onGenerateRoute: AppRoutes.onGenerateRoute,
-      theme: AppTheme.lightThem,
-      debugShowCheckedModeBanner: false,
-      title: 'Flower App',
-     // localizationsDelegates: AppLocalizations.localizationsDelegates,
-     // supportedLocales: AppLocalizations.supportedLocales,
-    ),);
+      create: (_) => getIt<LocaleCubit>(),
+      child: MaterialApp(
+        onGenerateRoute: AppRoutes.onGenerateRoute,
+        theme: AppTheme.lightThem,
+        debugShowCheckedModeBanner: false,
+        title: 'Flower App',
+        // localizationsDelegates: AppLocalizations.localizationsDelegates,
+        // supportedLocales: AppLocalizations.supportedLocales,
+      ),
+    );
   }
 }

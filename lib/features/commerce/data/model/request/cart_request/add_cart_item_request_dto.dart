@@ -8,14 +8,10 @@ class AddCartItemRequestDto {
 
   final int quantity;
 
-  AddCartItemRequestDto({
-    required this.productId,
-    required this.quantity,
-  });
+  AddCartItemRequestDto({required this.productId, required this.quantity});
 
   factory AddCartItemRequestDto.fromJson(Map<String, dynamic> json) =>
       _$AddCartItemRequestDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$AddCartItemRequestDtoToJson(this);
+  Map<String, dynamic> toJson() => _$AddCartItemRequestDtoToJson(this);
 }

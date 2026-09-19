@@ -59,22 +59,25 @@ void main() {
   );
 
   group('SavedAddressRepoImpl - GetAddresses', () {
-    test('should return List<AddressEntity> when data source succeeds', () async {
-      when(mockLocalDataSource.getAddresses()).thenAnswer(
-            (_) async => SuccessResponce<List<AddressDto>>([dummyAddressDto]),
-      );
+    test(
+      'should return List<AddressEntity> when data source succeeds',
+      () async {
+        when(mockLocalDataSource.getAddresses()).thenAnswer(
+          (_) async => SuccessResponce<List<AddressDto>>([dummyAddressDto]),
+        );
 
-      final result = await savedAddressRepoImpl.getAddresses();
+        final result = await savedAddressRepoImpl.getAddresses();
 
-      // 🎯 Expect pure list
-      expect(result, isA<List<AddressEntity>>());
-      verify(mockLocalDataSource.getAddresses()).called(1);
-    });
+        // 🎯 Expect pure list
+        expect(result, isA<List<AddressEntity>>());
+        verify(mockLocalDataSource.getAddresses()).called(1);
+      },
+    );
 
     test('should throw Exception when data source fails', () async {
-      when(mockLocalDataSource.getAddresses()).thenAnswer(
-            (_) async => ErrorResponce(Exception('Fetch failed')),
-      );
+      when(
+        mockLocalDataSource.getAddresses(),
+      ).thenAnswer((_) async => ErrorResponce(Exception('Fetch failed')));
 
       // 🎯 Expect it to throw the error
       expect(() => savedAddressRepoImpl.getAddresses(), throwsException);
@@ -83,9 +86,9 @@ void main() {
 
   group('SavedAddressRepoImpl - DeleteAddress', () {
     test('should return bool when data source succeeds', () async {
-      when(mockLocalDataSource.deleteAddress(any)).thenAnswer(
-            (_) async => SuccessResponce<bool>(true),
-      );
+      when(
+        mockLocalDataSource.deleteAddress(any),
+      ).thenAnswer((_) async => SuccessResponce<bool>(true));
 
       final result = await savedAddressRepoImpl.deleteAddress('123');
 
@@ -96,9 +99,9 @@ void main() {
 
   group('SavedAddressRepoImpl - SetDefaultAddress', () {
     test('should return AddressEntity when data source succeeds', () async {
-      when(mockLocalDataSource.setDefaultAddress(any)).thenAnswer(
-            (_) async => SuccessResponce<AddressDto>(dummyAddressDto),
-      );
+      when(
+        mockLocalDataSource.setDefaultAddress(any),
+      ).thenAnswer((_) async => SuccessResponce<AddressDto>(dummyAddressDto));
 
       final result = await savedAddressRepoImpl.setDefaultAddress('123');
 

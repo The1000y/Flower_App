@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class AddAddressParams  extends Equatable {
+class AddAddressParams extends Equatable {
   final String recipientName;
   final String recipientPhone;
   final String addressLine;
@@ -23,13 +23,13 @@ class AddAddressParams  extends Equatable {
 
   @override
   List<Object?> get props => [
-        recipientName,
-        recipientPhone,
-        addressLine,
-        city,
-        area,
-        lat,
-        lng,
-        label,
-      ];
+    recipientName,
+    recipientPhone,
+    addressLine,
+    city,
+    area,
+    lat,
+    lng,
+    label,
+  ];
 }

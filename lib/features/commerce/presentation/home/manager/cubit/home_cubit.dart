@@ -21,11 +21,11 @@ class HomeCubit extends Cubit<HomeState> {
   final GetOccasionsUseCase _getOccasionsUseCase;
 
   HomeCubit(
-      this._getCategoriesUseCase,
-      this._getBestSellerUseCase,
-      this._getSectionUseCase,
-      this._getOccasionsUseCase,
-      ) : super(const HomeState());
+    this._getCategoriesUseCase,
+    this._getBestSellerUseCase,
+    this._getSectionUseCase,
+    this._getOccasionsUseCase,
+  ) : super(const HomeState());
 
   Future<void> doEvent(HomeEvent event) async {
     switch (event) {
@@ -178,9 +178,20 @@ class HomeCubit extends Cubit<HomeState> {
     final result = await _getOccasionsUseCase.call();
     switch (result) {
       case SuccessResponce<List<OccasionEntity>>():
-        emit(state.copyWith(occasionState: BaseState(data: result.data, isLoading: false)));
+        emit(
+          state.copyWith(
+            occasionState: BaseState(data: result.data, isLoading: false),
+          ),
+        );
       case ErrorResponce<List<OccasionEntity>>():
-        emit(state.copyWith(occasionState: BaseState(errorMessage: result.errorMessage, isLoading: false)));
+        emit(
+          state.copyWith(
+            occasionState: BaseState(
+              errorMessage: result.errorMessage,
+              isLoading: false,
+            ),
+          ),
+        );
     }
   }
 }

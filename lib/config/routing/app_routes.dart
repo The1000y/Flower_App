@@ -139,7 +139,7 @@ abstract class AppRoutes {
       // Profile
       case Routes.profile:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-       // return MaterialPageRoute(
+      // return MaterialPageRoute(
       //           builder: (_) => BlocProvider(
       //             create: (_) => getIt<ProfileHomeViewModel>(),
       //             child: const ProfileHomeView(),

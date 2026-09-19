@@ -12,14 +12,20 @@ import '../../model/responce/cart_response/cart_response_dto.dart';
 abstract interface class CommerceLocalDataSource {
   Future<BaseResponce<List<CategoryDto>>> getCategories();
   Future<BaseResponce<ProductsResponseDto>> getProducts();
-  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(int occasionId, {int page = 1});
+  Future<BaseResponce<ProductsResponseDto>> getProductsForOccasion(
+    int occasionId, {
+    int page = 1,
+  });
   Future<BaseResponce<List<ProductDto>>> getBestSellers();
   Future<BaseResponce<List<SectionDto>>> getSections();
   Future<BaseResponce<List<OccasionDto>>> getOccasions();
   Future<BaseResponce<CartResponseDto>> getCart();
-  Future<BaseResponce<CartResponseDto>> addToCart(AddCartItemRequestDto request);
-Future<BaseResponce<CartResponseDto>> updateCartItemQuantity(
-  String cartItemId,
-  UpdateCartItemRequestDto request,
-);  Future<BaseResponce<CartResponseDto>> removeCartItem(String cartItemId);
+  Future<BaseResponce<CartResponseDto>> addToCart(
+    AddCartItemRequestDto request,
+  );
+  Future<BaseResponce<CartResponseDto>> updateCartItemQuantity(
+    String cartItemId,
+    UpdateCartItemRequestDto request,
+  );
+  Future<BaseResponce<CartResponseDto>> removeCartItem(String cartItemId);
 }

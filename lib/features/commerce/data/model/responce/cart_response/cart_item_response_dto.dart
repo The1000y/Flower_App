@@ -42,19 +42,18 @@ class CartItemResponseDto {
   factory CartItemResponseDto.fromJson(Map<String, dynamic> json) =>
       _$CartItemResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$CartItemResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$CartItemResponseDtoToJson(this);
 
   CartItemEntity toDomain() => CartItemEntity(
-        id: id,
-        productId: productId,
-        productName: productName,
-        productImageUrl: productImageUrl,
-        unitPrice: unitPrice,
-        quantity: quantity,
-        lineSubtotal: lineSubtotal,
-        inStock: inStock,
-        availableStock: availableStock,
-        priceChanged: priceChanged,
-      );
+    id: id,
+    productId: productId,
+    productName: productName,
+    productImageUrl: productImageUrl,
+    unitPrice: unitPrice,
+    quantity: quantity,
+    lineSubtotal: lineSubtotal,
+    inStock: inStock,
+    availableStock: availableStock,
+    priceChanged: priceChanged,
+  );
 }

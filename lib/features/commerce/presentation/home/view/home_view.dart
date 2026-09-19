@@ -31,11 +31,11 @@ class _HomeViewState extends State<HomeView> {
       providers: [
         BlocProvider(
           create: (context) =>
-          getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
+              getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
         ),
         BlocProvider(
           create: (context) =>
-          getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
+              getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
         ),
       ],
       child: Scaffold(

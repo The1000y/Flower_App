@@ -103,9 +103,8 @@ class CartCubit extends Cubit<CartState> {
 
     final result = await addCartItemUseCase.call(params);
 
-    final updatedLoadingProductIds = {...state.loadingProductIds}..remove(
-        productId,
-      );
+    final updatedLoadingProductIds = {...state.loadingProductIds}
+      ..remove(productId);
 
     switch (result) {
       case SuccessResponce<CartEntity>():

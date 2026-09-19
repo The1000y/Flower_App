@@ -28,7 +28,10 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   }
 
   @override
-  Future<BaseResponce<ProductsResponseDto>> getProducts(int occasionId, {int page = 1}) async {
+  Future<BaseResponce<ProductsResponseDto>> getProducts(
+    int occasionId, {
+    int page = 1,
+  }) async {
     try {
       await Future.delayed(const Duration(seconds: 1));
 
@@ -37,7 +40,9 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
       final pageSize = fullDto.data.pagination.pageSize;
 
       final start = (page - 1) * pageSize;
-      final end = start + pageSize > allItems.length ? allItems.length : start + pageSize;
+      final end = start + pageSize > allItems.length
+          ? allItems.length
+          : start + pageSize;
       final pageItems = start >= allItems.length
           ? <dynamic>[]
           : allItems.sublist(start, end);

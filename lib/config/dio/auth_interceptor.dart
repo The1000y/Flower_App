@@ -7,9 +7,10 @@ class AuthInterceptors extends Interceptor {
     debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
 
     //add method that get token from secure storage
-    
+
     super.onRequest(options, handler);
   }
+
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
     debugPrint(
@@ -19,5 +20,3 @@ class AuthInterceptors extends Interceptor {
     super.onError(err, handler);
   }
 }
-
-

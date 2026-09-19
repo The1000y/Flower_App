@@ -153,10 +153,7 @@ void main() {
       hasChanges: false,
     );
 
-    await pumpApp(
-      tester,
-      CartState(data: cart, loadingProductIds: {1}),
-    );
+    await pumpApp(tester, CartState(data: cart, loadingProductIds: {1}));
 
     // Both items remain visible (no full-page loading).
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
@@ -171,9 +168,7 @@ void main() {
 
     // The affected product's delete is disabled; the other remains enabled.
     final deleteButtons = tester
-        .widgetList<IconButton>(
-          find.widgetWithIcon(IconButton, Icons.delete),
-        )
+        .widgetList<IconButton>(find.widgetWithIcon(IconButton, Icons.delete))
         .toList();
     expect(deleteButtons.length, 2);
     expect(deleteButtons[0].onPressed, isNull);

@@ -6,13 +6,10 @@ part 'update_cart_item_request_dto.g.dart';
 class UpdateCartItemRequestDto {
   final int quantity;
 
-  UpdateCartItemRequestDto({
-    required this.quantity,
-  });
+  UpdateCartItemRequestDto({required this.quantity});
 
   factory UpdateCartItemRequestDto.fromJson(Map<String, dynamic> json) =>
       _$UpdateCartItemRequestDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$UpdateCartItemRequestDtoToJson(this);
+  Map<String, dynamic> toJson() => _$UpdateCartItemRequestDtoToJson(this);
 }

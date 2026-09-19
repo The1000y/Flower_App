@@ -107,10 +107,12 @@ class AddressFormFields extends StatelessWidget {
     );
 
     if (editingAddress != null) {
-      cubit.doEvent(UpdateExistingAddressEvent(
-        id: editingAddress!.id,
-        params: addressParams,
-      ));
+      cubit.doEvent(
+        UpdateExistingAddressEvent(
+          id: editingAddress!.id,
+          params: addressParams,
+        ),
+      );
     } else {
       cubit.doEvent(SubmitAddressEvent(addAddressParams: addressParams));
     }
@@ -169,7 +171,7 @@ class _LocationDropdowns extends StatelessWidget {
           child: DropdownButtonFormField<String>(
             isExpanded: true,
             initialValue:
-            filteredCities.any((city) => city.id == state.selectedCity)
+                filteredCities.any((city) => city.id == state.selectedCity)
                 ? state.selectedCity
                 : null,
             hint: const Text(

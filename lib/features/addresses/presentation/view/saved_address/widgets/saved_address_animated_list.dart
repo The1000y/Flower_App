@@ -13,7 +13,8 @@ class SavedAddressAnimatedList extends StatefulWidget {
   const SavedAddressAnimatedList({super.key, required this.addresses});
 
   @override
-  State<SavedAddressAnimatedList> createState() => _SavedAddressAnimatedListState();
+  State<SavedAddressAnimatedList> createState() =>
+      _SavedAddressAnimatedListState();
 }
 
 class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
@@ -40,7 +41,7 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
         final removed = _internalList.removeAt(i);
         _listKey.currentState?.removeItem(
           i,
-              (context, animation) => _buildAnimatedCard(removed, animation),
+          (context, animation) => _buildAnimatedCard(removed, animation),
           duration: const Duration(milliseconds: 300),
         );
       }
@@ -51,7 +52,10 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
       final existingIndex = _internalList.indexWhere((a) => a.id == address.id);
       if (existingIndex == -1) {
         _internalList.insert(i, address);
-        _listKey.currentState?.insertItem(i, duration: const Duration(milliseconds: 300));
+        _listKey.currentState?.insertItem(
+          i,
+          duration: const Duration(milliseconds: 300),
+        );
       } else {
         _internalList[existingIndex] = address;
       }
@@ -59,10 +63,9 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
   }
 
   Future<void> _goToEdit(AddressEntity address) async {
-    final result = await Navigator.of(context).pushNamed(
-      Routes.addAddress,
-      arguments: address,
-    );
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(Routes.addAddress, arguments: address);
     if (result != null && mounted) {
       context.read<AddressCubit>().doEvent(FetchUserAddressesEvent());
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,7 +74,10 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
     }
   }
 
-  Widget _buildAnimatedCard(AddressEntity address, Animation<double> animation) {
+  Widget _buildAnimatedCard(
+    AddressEntity address,
+    Animation<double> animation,
+  ) {
     return SizeTransition(
       sizeFactor: animation,
       alignment: Alignment.topCenter,
@@ -80,8 +86,9 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
         child: AddressCard(
           address: address,
           onEdit: () => _goToEdit(address),
-          onDelete: () =>
-              context.read<AddressCubit>().doEvent(DeleteAddressEvent(id: address.id)),
+          onDelete: () => context.read<AddressCubit>().doEvent(
+            DeleteAddressEvent(id: address.id),
+          ),
         ),
       ),
     );

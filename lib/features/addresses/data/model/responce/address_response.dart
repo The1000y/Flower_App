@@ -8,33 +8,35 @@ import 'dart:convert';
 
 part 'address_response.g.dart';
 
-AddressResponse addressResponseFromJson(String str) => AddressResponse.fromJson(json.decode(str));
+AddressResponse addressResponseFromJson(String str) =>
+    AddressResponse.fromJson(json.decode(str));
 
-String addressResponseToJson(AddressResponse data) => json.encode(data.toJson());
+String addressResponseToJson(AddressResponse data) =>
+    json.encode(data.toJson());
 
 @JsonSerializable()
 class AddressResponse {
-    @JsonKey(name: "data")
-    AddressDto? data;
-    @JsonKey(name: "isSuccess")
-    bool? isSuccess;
-    @JsonKey(name: "message")
-    String? message;
-    @JsonKey(name: "messageLocalized")
-    String? messageLocalized;
-    @JsonKey(name: "statusCode")
-    String? statusCode;
+  @JsonKey(name: "data")
+  AddressDto? data;
+  @JsonKey(name: "isSuccess")
+  bool? isSuccess;
+  @JsonKey(name: "message")
+  String? message;
+  @JsonKey(name: "messageLocalized")
+  String? messageLocalized;
+  @JsonKey(name: "statusCode")
+  String? statusCode;
 
-    AddressResponse({
-        this.data,
-        this.isSuccess,
-        this.message,
-        this.messageLocalized,
-        this.statusCode,
-    });
+  AddressResponse({
+    this.data,
+    this.isSuccess,
+    this.message,
+    this.messageLocalized,
+    this.statusCode,
+  });
 
-    factory AddressResponse.fromJson(Map<String, dynamic> json) => _$AddressResponseFromJson(json);
+  factory AddressResponse.fromJson(Map<String, dynamic> json) =>
+      _$AddressResponseFromJson(json);
 
-    Map<String, dynamic> toJson() => _$AddressResponseToJson(this);
+  Map<String, dynamic> toJson() => _$AddressResponseToJson(this);
 }
-

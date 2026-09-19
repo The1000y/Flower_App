@@ -45,9 +45,7 @@ class _SavedAddressViewState extends State<SavedAddressView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Expanded(
-                      child: SavedAddressContent(),
-                    ),
+                    const Expanded(child: SavedAddressContent()),
                     SizedBox(height: 12.h),
                     CustomButton(
                       text: AppStrings.addNewAddress,
