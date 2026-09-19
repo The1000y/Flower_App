@@ -220,7 +220,7 @@ void main() {
   testWidgets('renders the product grid with product names', (tester) async {
     final products = [
       ProductEntity(
-        id: 1,
+        id: "1",
         name: 'Red Roses Bouquet',
         imageUrl: 'https://example.com/rose.png',
         currency: 'EGP',
@@ -228,7 +228,7 @@ void main() {
         status: 'InStock',
       ),
       ProductEntity(
-        id: 2,
+        id: "2",
         name: 'White Lily Bouquet',
         imageUrl: 'https://example.com/lily.png',
         currency: 'EGP',
@@ -256,7 +256,7 @@ void main() {
   testWidgets('shows a loading indicator when loading more products', (tester) async {
     final products = [
       ProductEntity(
-        id: 1,
+        id: "1",
         name: 'Red Roses Bouquet',
         imageUrl: 'https://example.com/rose.png',
         currency: 'EGP',
@@ -264,7 +264,7 @@ void main() {
         status: 'InStock',
       ),
       ProductEntity(
-        id: 2,
+        id: "2",
         name: 'White Lily Bouquet',
         imageUrl: 'https://example.com/lily.png',
         currency: 'EGP',
@@ -292,7 +292,7 @@ void main() {
     final products = List.generate(
       8,
       (i) => ProductEntity(
-        id: i + 1,
+        id: (i + 1).toString(),
         name: 'Product $i',
         imageUrl: 'https://example.com/$i.png',
         currency: 'EGP',
