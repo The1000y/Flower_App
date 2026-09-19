@@ -6,6 +6,7 @@ import 'package:flower_app/features/auth/presentation/forget_password/view/verif
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
+import 'package:flower_app/features/checkout/presentation/view/checkout_view.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
@@ -90,7 +91,7 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.checkout:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const CheckoutView());
 
       case Routes.shippingAddress:
         return MaterialPageRoute(builder: (_) => const Placeholder());
