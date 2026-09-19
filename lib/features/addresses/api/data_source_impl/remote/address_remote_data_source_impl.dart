@@ -52,12 +52,13 @@ class AddressRemoteDataSourceImpl implements AddressRemoteDataSource {
   Future<BaseResponce<List<AddressDto>>> getAddresses() async {
     try {
       final response = await addressApi.getAddresses();
-      if ((response.isSuccess == true || response.isSuccess == null) &&
-          response.data != null) {
-        return SuccessResponce(response.data!);
+
+      if (response.isSuccess) {
+        return SuccessResponce(response.data);
       }
+
       return ErrorResponce(
-        Exception(response.message ?? 'Failed to load addresses'),
+        Exception(response.message),
       );
     } catch (e) {
       return ErrorResponce(e is Exception ? e : Exception(e.toString()));

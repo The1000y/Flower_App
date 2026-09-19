@@ -200,12 +200,15 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
       final existing = list[index];
       final updated = Map<String, dynamic>.from(existing);
 
-      if (request.recipientName != null)
+      if (request.recipientName != null) {
         updated['recipientName'] = request.recipientName;
-      if (request.recipientPhone != null)
+      }
+      if (request.recipientPhone != null) {
         updated['recipientPhone'] = request.recipientPhone;
-      if (request.addressLine != null)
+      }
+      if (request.addressLine != null) {
         updated['addressLine'] = request.addressLine;
+      }
       if (request.city != null) updated['city'] = request.city;
       if (request.area != null) updated['area'] = request.area;
       if (request.lat != null) updated['lat'] = request.lat;

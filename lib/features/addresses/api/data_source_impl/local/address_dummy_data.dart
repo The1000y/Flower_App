@@ -1,5 +1,3 @@
-// features/addresses/api/data_source_impl/local/address_dummy_data.dart
-
 abstract class AddressDummyData {
   static Map<String, dynamic>   addressDummyData = {
     "id": "dummy-id-123",

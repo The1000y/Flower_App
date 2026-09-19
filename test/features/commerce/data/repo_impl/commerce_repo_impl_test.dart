@@ -8,7 +8,7 @@ import 'package:flower_app/features/commerce/data/model/responce/occasion_respon
 import 'package:flower_app/features/commerce/data/model/responce/products_response/product_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/pagination_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart' as best_seller;
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart' as best_seller;
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';

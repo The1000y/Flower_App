@@ -3,7 +3,7 @@ import 'package:flower_app/features/commerce/data/data_source/local_data_source/
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
 import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
 import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';

@@ -96,14 +96,14 @@ void main() {
   testWidgets('shows a loading indicator and disables actions while loading', (
     tester,
   ) async {
-    var deleted = false;
-    var lastDelta = 0;
+    //var deleted = false;
+    //var lastDelta = 0;
     await pumpItem(
       tester,
       item: buildItem(quantity: 3),
       isLoading: true,
-      onDelete: () => deleted = true,
-      onQuantityChanged: (delta) => lastDelta = delta,
+     // onDelete: () => deleted = true,
+    //  onQuantityChanged: (delta) => lastDelta = delta,
     );
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);

@@ -74,7 +74,7 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
   Widget _buildAnimatedCard(AddressEntity address, Animation<double> animation) {
     return SizeTransition(
       sizeFactor: animation,
-      axisAlignment: -1,
+      alignment: Alignment.topCenter,
       child: FadeTransition(
         opacity: animation,
         child: AddressCard(

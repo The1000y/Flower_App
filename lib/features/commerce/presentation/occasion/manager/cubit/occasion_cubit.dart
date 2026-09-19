@@ -1,3 +1,4 @@
+
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_occasions_use_case.dart';
@@ -46,7 +47,8 @@ class OccasionCubit extends Cubit<OccasionState> {
                       (e) => e.name.toLowerCase() == initialOccasionName.toLowerCase()
               );
               idToLoad = matchedOccasion.id;
-            } catch (e) {}
+            } catch (e) {// ignore: avoid_print
+               }
           }
 
           handle(LoadProductsForOccasion(idToLoad));

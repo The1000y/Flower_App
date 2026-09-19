@@ -37,7 +37,7 @@ class CartItem extends StatelessWidget {
                 width: 80.w,
                 height: 80.h,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Center(
+                errorBuilder: (_, _, _) => const Center(
                   child: Icon(Icons.image_not_supported, size: 60),
                 ),
               ),

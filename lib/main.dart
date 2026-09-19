@@ -8,7 +8,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'core/locale/locale_cubit.dart';
-import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");

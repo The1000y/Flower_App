@@ -7,7 +7,7 @@ import 'package:flower_app/features/addresses/presentation/view/add_address/addr
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_location-data.dart';
+import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_location_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';

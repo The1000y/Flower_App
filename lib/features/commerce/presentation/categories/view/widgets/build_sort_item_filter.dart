@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -19,9 +21,7 @@ class BuildSortItemFilter extends StatelessWidget {
 
   final String title;
   final SortType value;
-
   final SortType? groupValue;
-
   final ValueChanged<SortType?> onChanged;
 
   @override
@@ -50,16 +50,11 @@ class BuildSortItemFilter extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-
             const Spacer(),
-
             Radio<SortType>(
               value: value,
-
               groupValue: groupValue,
-
               activeColor: Colors.pink,
-
               onChanged: onChanged,
             ),
           ],

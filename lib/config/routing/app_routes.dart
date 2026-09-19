@@ -22,8 +22,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/addresses/presentation/view/add_address/address_view.dart';
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
-import '../../features/profile/presentation/manager/profile_viewModel.dart';
-import '../../features/profile/presentation/view/profile_home_view.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
