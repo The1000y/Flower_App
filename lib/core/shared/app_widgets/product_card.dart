@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductCard extends StatelessWidget {
-  final int id;
+  final String id;
   final String image;
   final String name;
   final double price;
@@ -161,3 +161,4 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
+

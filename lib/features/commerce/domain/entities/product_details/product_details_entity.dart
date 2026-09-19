@@ -1,7 +1,7 @@
 import 'product_include_item_entity.dart';
 
 class ProductDetailsEntity {
-  final int id;
+  final String id;
   final String name;
   final String imageUrl;
   final String currency;
@@ -12,8 +12,8 @@ class ProductDetailsEntity {
   final List<String> images;
   final String description;
   final List<ProductIncludeItemEntity> includes;
-  final int categoryId;
-  final List<int> occasionIds;
+  final String categoryId;
+  final List<String> occasionIds;
 
   ProductDetailsEntity({
     required this.id,
@@ -27,7 +27,9 @@ class ProductDetailsEntity {
     required this.images,
     required this.description,
     required this.includes,
-    this.categoryId = 0,
+    this.categoryId = '',
     required this.occasionIds,
   });
 }
+
+

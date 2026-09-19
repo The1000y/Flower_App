@@ -1,11 +1,13 @@
 import 'package:flower_app/features/auth/api/data_source_impl/remote/dummy.dart';
+
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/login_request.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../../../helpers/mock_auth_api_client.mocks.dart';
 
 void main() {
   group('RemoteDataSourceImpl', () {
-    final dataSource = RemoteDataSourceImpl();
+    final dataSource = RemoteDataSourceImpl(MockAuthApiClient());
 
     test('returns success for valid credentials', () async {
       final result = await dataSource.login(
@@ -34,3 +36,5 @@ void main() {
     });
   });
 }
+
+

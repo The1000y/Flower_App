@@ -12,6 +12,7 @@ SectionType? _stringToSectionType(String? type) {
   if (type == null) return null;
   switch (type.toLowerCase()) {
     case 'bestseller':
+    case 'productscarousel':
       return SectionType.bestSeller;
     case 'category':
     case 'categories':
@@ -31,7 +32,7 @@ String sectionDtoToJson(SectionDto data) => json.encode(data.toJson());
 @JsonSerializable()
 class SectionDto {
     @JsonKey(name: "id")
-    int? id;
+    String? id;
     @JsonKey(name: "type")
     String? type;
     @JsonKey(name: "index")
@@ -41,9 +42,9 @@ class SectionDto {
     @JsonKey(name: "title")
     String? title;
     @JsonKey(name: "occasionId")
-    int? occasionId;
+    String? occasionId;
     @JsonKey(name: "categoryId")
-    int? categoryId;
+    String? categoryId;
 
     SectionDto({
         this.id,
@@ -60,12 +61,15 @@ class SectionDto {
     Map<String, dynamic> toJson() => _$SectionDtoToJson(this);
 
     SectionEntity toDomain() => SectionEntity(
-        id: id??0,
+        id: id ?? '',
         type: _stringToSectionType(type) ?? SectionType.category,
         index: index??0,
         isActive: isActive??false,
         title: title??'',
-        occasionId: (occasionId is int) ? occasionId : null,
-        categoryId: (categoryId is int) ? categoryId : null,
+        occasionId: occasionId,
+        categoryId: categoryId,
     );
 }
+
+
+

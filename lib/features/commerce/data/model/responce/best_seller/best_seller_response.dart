@@ -16,11 +16,11 @@ String bestSellerResponseToJson(BestSellerResponse data) => json.encode(data.toJ
 class BestSellerResponse {
     @JsonKey(name: "data")
     Data? data;
-    @JsonKey(name: "isSuccess")
+    @JsonKey(name: "success")
     bool? isSuccess;
     @JsonKey(name: "message")
     String? message;
-    @JsonKey(name: "errorCode")
+    @JsonKey(name: "error")
     String? errorCode;
 
     BestSellerResponse({
@@ -81,3 +81,4 @@ class Pagination {
 
     Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }
+

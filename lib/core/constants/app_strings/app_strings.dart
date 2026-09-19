@@ -169,12 +169,32 @@ abstract class AppStrings {
       'Last name must contain only letters';
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Enter a valid Egyptian phone number';
-  // Auth storage keys
   // Auth error / validation messages
   static const String registerError = 'Failed register';
   static const String registerSuccess = 'Register successful';
+  static const String occasionTitle = 'Occasion';
+  static const String savedAddressEmpty = 'No saved addresses yet';
+  static const String titleAddress = 'Title';
+  static const String labelAddress = 'Enter Title Address';
+  static const String loadingAddress = 'Loading...';
+  static const String labelTitle = 'Title';
+  static const String labelTitleHint = 'Title of the address';
+  static const String addressError = 'Could not get address details';
+  static const String addressRequired = 'Address is Required';
+  static const String labelRequired = 'Label is Required';
+  static const String recipientNameRequired = 'Name is Required';
+  static const String cityRequired = 'City is Required';
+  static const String phoneNumberRequired = 'Phone is Required';
+  static const String addYourAddress = 'Add Your Address';
+  static const String addressAddedSuccess = 'Address added successfully';
+  static const String addressAddFailedServer =
+      'Something went wrong. Please try again later.';
+  static const String addressAddFailedNotServiceable =
+      'This address is not available for delivery. Please choose another location.';
+  static const String addressAddFailedInvalid =
+      'The address information is invalid. Please check your details.';
   static const String retry = 'Retry';
-  static const String noResult = 'No results found';
-   static const String  occasionTitle = 'Occasion';
-
+  static const String lat = 'lat';
+  static const String lng = 'lng';
+  static const String addressId = 'addressId';
 }

@@ -27,7 +27,7 @@ void main() {
   });
 
   final tProduct = ProductEntity(
-    id: 1,
+    id: '1',
     name: 'Red Rose',
     imageUrl: 'https://example.com/rose.png',
     currency: 'EGP',
@@ -104,7 +104,7 @@ void main() {
     final products = List.generate(
       20,
       (i) => ProductEntity(
-        id: i,
+        id: i.toString(),
         name: 'Product $i',
         imageUrl: 'url',
         currency: 'EGP',
@@ -140,7 +140,7 @@ void main() {
     final products = List.generate(
       20,
       (i) => ProductEntity(
-        id: i,
+        id: i.toString(),
         name: 'Product $i',
         imageUrl: 'url',
         currency: 'EGP',
@@ -172,3 +172,6 @@ void main() {
     verify(() => mockCubit.handle(any(that: isA<LoadMoreProducts>()))).called(greaterThanOrEqualTo(1));
   });
 }
+
+
+
