@@ -10,17 +10,14 @@ import 'package:flower_app/features/commerce/presentation/bestseller/view/bestse
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
-import 'package:flower_app/features/orders/presentation/view/my_orders_view.dart';
-import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
-import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
+import '../../features/orders/presentation/view/orders_view.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -103,11 +100,13 @@ abstract class AppRoutes {
 
       case Routes.addAddress:
         final editingAddress = settings.arguments as AddressEntity?;
-        return MaterialPageRoute(builder: (_) => AddressView(editingAddress: editingAddress));
+        return MaterialPageRoute(
+          builder: (_) => AddressView(editingAddress: editingAddress),
+        );
 
       // Orders
       case Routes.myOrders:
-        return MaterialPageRoute(builder: (_) => const MyOrdersView());
+        return MaterialPageRoute(builder: (_) => const OrdersView());
 
       case Routes.orderDetails:
         return MaterialPageRoute(builder: (_) => const Placeholder());
@@ -147,6 +146,3 @@ abstract class AppRoutes {
     }
   }
 }
-
-
-

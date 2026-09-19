@@ -4,7 +4,7 @@ import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/orders/domain/entities/my_orders_entity.dart';
 import 'package:flower_app/features/orders/presentation/manager/cubit/orders_cubit.dart';
 import 'package:flower_app/features/orders/presentation/manager/orders_state.dart';
-import 'package:flower_app/features/orders/presentation/view/my_orders_view.dart';
+import 'package:flower_app/features/orders/presentation/view/orders_view.dart';
 import 'package:flower_app/features/orders/presentation/view/widgets/order_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -52,7 +52,7 @@ void main() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
       child: const MaterialApp(
-        home: MyOrdersView(),
+        home: OrdersView(),
       ),
     );
   }

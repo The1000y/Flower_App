@@ -9,8 +9,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../config/routing/routes.dart';
 
-class MyOrdersView extends StatelessWidget {
-  const MyOrdersView({super.key});
+class OrdersView extends StatelessWidget {
+  const OrdersView({super.key});
 
   @override
   Widget build(BuildContext context) {
