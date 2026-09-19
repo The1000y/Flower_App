@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
+import 'package:flower_app/config/routing/routes.dart';
 
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class FlowerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: AppRoutes.onGenerateRoute,
+      initialRoute: Routes.login,
       theme: AppTheme.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',

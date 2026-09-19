@@ -1,3 +1,4 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -20,6 +21,8 @@ class CustomHeaderHomeView extends StatelessWidget {
         SizedBox(width: 17),
         Expanded(
           child: TextField(
+            readOnly: true,
+            onTap: () => Navigator.pushNamed(context, Routes.search),
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus?.unfocus();
             },
