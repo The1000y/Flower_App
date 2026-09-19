@@ -10,6 +10,9 @@ import 'package:flower_app/features/commerce/presentation/bestseller/view/bestse
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
+import 'package:flower_app/features/orders/presentation/view/my_orders_view.dart';
+import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
+import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
@@ -104,7 +107,7 @@ abstract class AppRoutes {
 
       // Orders
       case Routes.myOrders:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const MyOrdersView());
 
       case Routes.orderDetails:
         return MaterialPageRoute(builder: (_) => const Placeholder());
