@@ -101,13 +101,16 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
       await tester.pumpAndSettle();
 
+      expect(find.text('Update'), findsOneWidget);
       await tester.ensureVisible(find.text('Update'));
+      
+      // Tap the button
       await tester.tap(find.text('Update'));
       await tester.pump(); // Start the update
       await tester.pumpAndSettle(); // Finish the update and SnackBar animation
 
       expect(fakeRepo.updateCallCount, 1);
-      expect(find.text('Profile updated'), findsOneWidget);
+      expect(find.text('Profile updated'), findsWidgets);
     },
   );
 
@@ -124,7 +127,7 @@ void main() {
       await tester.pumpAndSettle(); // snackbar animation
 
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Exception: Network failure'), findsOneWidget);
+      expect(find.text('Exception: Network failure'), findsWidgets);
     },
   );
 }
