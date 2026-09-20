@@ -25,7 +25,7 @@ void main() {
 
   final tProducts = [
     const ProductEntity(
-      id: 1,
+      id: "1",
       name: 'Red Roses Bouquet',
       imageUrl: 'https://example.com/rose.png',
       currency: 'EGP',
@@ -33,7 +33,7 @@ void main() {
       status: 'InStock',
     ),
     const ProductEntity(
-      id: 2,
+      id: "2",
       name: 'White Tulip Arrangement',
       imageUrl: 'https://example.com/tulip.png',
       currency: 'EGP',
@@ -41,7 +41,7 @@ void main() {
       status: 'InStock',
     ),
     const ProductEntity(
-      id: 3,
+      id: "3",
       name: 'Rose Gold Vase',
       imageUrl: 'https://example.com/vase.png',
       currency: 'EGP',
@@ -49,7 +49,7 @@ void main() {
       status: 'InStock',
     ),
     const ProductEntity(
-      id: 4,
+      id: "4",
       name: 'Birthday Cake',
       imageUrl: 'https://example.com/cake.png',
       currency: 'EGP',
