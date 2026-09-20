@@ -1,5 +1,6 @@
 
 abstract class AppStrings{
+  static const String  userData = 'User';
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
@@ -110,6 +111,8 @@ abstract class AppStrings{
   static const String termsAndConditionsAlt =
       'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
   static const String logout = 'Logout';
+  static const String usernotfound = 'User not found';
+
   static const String changeLanguageTitle = 'Change Language';
   static const String languageArabic = 'Arabic';
   static const String languageEnglish = 'English';
