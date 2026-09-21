@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
+import '../../features/orders/presentation/view/my_orders_view.dart';
 
 abstract class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -104,7 +105,7 @@ abstract class AppRoutes {
 
       // Orders
       case Routes.myOrders:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const MyOrdersView());
 
       case Routes.orderDetails:
         return MaterialPageRoute(builder: (_) => const Placeholder());
