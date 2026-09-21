@@ -9,12 +9,12 @@ import 'package:flower_app/features/commerce/domain/entities/categories/categori
 import '../manager/cubit/categories_cubit.dart';
 import '../manager/cubit/categories_event.dart';
 import '../manager/cubit/categories_state.dart';
-import 'widgets/buildSortItemfFilter.dart';
-import 'widgets/filterView.dart';
-import 'widgets/tabBarView_widget.dart';
+import 'widgets/build_sort_item_filter.dart';
+import 'widgets/filter_view.dart';
+import 'widgets/tab_bar_view_widget.dart';
 
-class Categories_view extends StatelessWidget {
-  const Categories_view({super.key});
+class CategoriesView extends StatelessWidget {
+  const CategoriesView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -37,7 +37,7 @@ class CartItem extends StatelessWidget {
                 width: 80.w,
                 height: 80.h,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Center(
+                errorBuilder: (_, _, _) => const Center(
                   child: Icon(Icons.image_not_supported, size: 60),
                 ),
               ),
@@ -64,7 +64,9 @@ class CartItem extends StatelessWidget {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text('${AppStrings.currencyEGP}${item.unitPrice.toStringAsFixed(0)}'),
+                            Text(
+                              '${AppStrings.currencyEGP}${item.unitPrice.toStringAsFixed(2)}',
+                            ),
                           ],
                         ),
                       ),
@@ -77,7 +79,7 @@ class CartItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        ' ${AppStrings.currencyEGP}${item.lineSubtotal.toStringAsFixed(0)}',
+                        '${AppStrings.currencyEGP}${item.lineSubtotal.toStringAsFixed(2)}',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16.sp,

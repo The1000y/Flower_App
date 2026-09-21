@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
-import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 
 import 'cart_item_response_dto.dart';
 
@@ -30,8 +29,7 @@ class CartResponseDto {
   factory CartResponseDto.fromJson(Map<String, dynamic> json) =>
       _$CartResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$CartResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$CartResponseDtoToJson(this);
 
   CartEntity toDomain() => data.toDomain();
 }
@@ -59,14 +57,13 @@ class CartDataDto {
   factory CartDataDto.fromJson(Map<String, dynamic> json) =>
       _$CartDataDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$CartDataDtoToJson(this);
+  Map<String, dynamic> toJson() => _$CartDataDtoToJson(this);
 
   CartEntity toDomain() => CartEntity(
-        items: items.map((item) => item.toDomain()).toList(),
-        subtotal: subtotal,
-        deliveryFee: deliveryFee,
-        total: total,
-        hasChanges: hasChanges,
-      );
+    items: items.map((item) => item.toDomain()).toList(),
+    subtotal: subtotal,
+    deliveryFee: deliveryFee,
+    total: total,
+    hasChanges: hasChanges,
+  );
 }

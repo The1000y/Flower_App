@@ -62,32 +62,32 @@ void main() {
 
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
     expect(
-      find.text('${AppStrings.currencyEGP}${200.toStringAsFixed(0)}'),
+      find.text('${AppStrings.currencyEGP}${200.toStringAsFixed(2)}'),
       findsOneWidget,
     );
     expect(
-      find.text(' ${AppStrings.currencyEGP}${400.toStringAsFixed(0)}'),
+      find.text('${AppStrings.currencyEGP}${400.toStringAsFixed(2)}'),
       findsOneWidget,
     );
   });
 
   testWidgets('renders the quantity and fires callbacks', (tester) async {
     var deleted = false;
-    var lastDelta = 0;
+    var latestDelta = 0;
     await pumpItem(
       tester,
       item: buildItem(quantity: 3),
       onDelete: () => deleted = true,
-      onQuantityChanged: (delta) => lastDelta = delta,
+      onQuantityChanged: (delta) => latestDelta = delta,
     );
 
     expect(find.text('3'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.add));
-    expect(lastDelta, 1);
+    expect(latestDelta, 1);
 
     await tester.tap(find.byIcon(Icons.remove));
-    expect(lastDelta, -1);
+    expect(latestDelta, -1);
 
     await tester.tap(find.byIcon(Icons.delete));
     expect(deleted, isTrue);
@@ -96,14 +96,12 @@ void main() {
   testWidgets('shows a loading indicator and disables actions while loading', (
     tester,
   ) async {
-    var deleted = false;
-    var lastDelta = 0;
     await pumpItem(
       tester,
       item: buildItem(quantity: 3),
       isLoading: true,
-      onDelete: () => deleted = true,
-      onQuantityChanged: (delta) => lastDelta = delta,
+      onDelete: () {},
+      onQuantityChanged: (_) {},
     );
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -112,7 +110,7 @@ void main() {
     expect(find.text('3'), findsNothing);
 
     final deleteButton = tester.widget<IconButton>(
-      find.byIcon(Icons.delete),
+      find.widgetWithIcon(IconButton, Icons.delete),
     );
     expect(deleteButton.onPressed, isNull);
   });

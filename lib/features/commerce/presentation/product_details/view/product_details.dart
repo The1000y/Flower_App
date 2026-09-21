@@ -35,7 +35,6 @@ class _ProductDetailsState extends State<ProductDetails> {
               getIt<ProductDetailsCubit>()
                 ..doEvent(GetProductDetailsEvent(widget.productId)),
         ),
-        BlocProvider.value(value: getIt<CartCubit>()),
       ],
       child: BlocListener<CartCubit, CartState>(
         listenWhen: (previous, current) =>

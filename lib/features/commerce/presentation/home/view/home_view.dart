@@ -5,7 +5,7 @@ import 'package:flower_app/features/commerce/presentation/home/manager/cubit/hom
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_state.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/build_sections.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_header.dart';
-import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_location-data.dart';
+import 'package:flower_app/features/commerce/presentation/home/view/widgets/custom_location_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,7 +71,10 @@ class _HomeViewState extends State<HomeView> {
                     Column(
                       children: List.generate(sections.length, (index) {
                         final section = sections[index];
-                        return BuildSections().buildSection(section, textTheme: textTheme);
+                        return BuildSections().buildSection(
+                          section,
+                          textTheme: textTheme,
+                        );
                       }),
                     ),
                   ],
@@ -84,4 +87,3 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
-

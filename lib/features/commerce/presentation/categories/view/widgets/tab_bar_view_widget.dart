@@ -4,7 +4,7 @@ import 'package:flower_app/features/commerce/domain/entities/products/product_en
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import 'buildSortItemfFilter.dart';
+import 'build_sort_item_filter.dart';
 
 class TabbarviewWidget extends StatelessWidget {
   final String category;
@@ -25,7 +25,7 @@ class TabbarviewWidget extends StatelessWidget {
     final result = products.where((product) {
       final matchesCategory =
           category.toLowerCase() == 'all' ||
-              _matchesCategory(product, category);
+          _matchesCategory(product, category);
       final matchesSearch =
           query.isEmpty || product.name.toLowerCase().contains(query);
       return matchesCategory && matchesSearch;
@@ -74,7 +74,6 @@ class TabbarviewWidget extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final product = categoryProducts[index];
-
 
         return GestureDetector(
           onTap: () {

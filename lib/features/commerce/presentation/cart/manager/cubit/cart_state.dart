@@ -1,15 +1,18 @@
-import 'package:flower_app/config/base/base_state.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../../../domain/entities/cart/cart_entity.dart';
 
-class CartState extends BaseState<CartEntity> {
+class CartState extends Equatable {
+  final bool isLoading;
+  final String errorMessage;
+  final CartEntity? data;
   final bool addToCartSuccess;
   final Set<int> loadingProductIds;
 
   const CartState({
-    super.isLoading,
-    super.errorMessage,
-    super.data,
+    this.isLoading = false,
+    this.errorMessage = '',
+    this.data,
     this.addToCartSuccess = false,
     this.loadingProductIds = const {},
   });
@@ -20,7 +23,6 @@ class CartState extends BaseState<CartEntity> {
 
   bool isProductLoading(int productId) => loadingProductIds.contains(productId);
 
-  @override
   CartState copyWith({
     bool? isLoading,
     String? errorMessage,
@@ -36,4 +38,13 @@ class CartState extends BaseState<CartEntity> {
       loadingProductIds: loadingProductIds ?? this.loadingProductIds,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    isLoading,
+    errorMessage,
+    data,
+    addToCartSuccess,
+    loadingProductIds,
+  ];
 }

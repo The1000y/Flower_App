@@ -3,7 +3,7 @@ import 'package:flower_app/features/commerce/data/data_source/local_data_source/
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
 import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
 import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/item_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
@@ -85,14 +85,19 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1}) async {
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
+    int occasionId, {
+    int page = 1,
+  }) async {
     final response = await remoteDataSource.getProducts(occasionId, page: page);
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
-        return SuccessResponce(PaginatedProducts(
-          items: response.data.products,
-          pagination: response.data.pagination,
-        ));
+        return SuccessResponce(
+          PaginatedProducts(
+            items: response.data.products,
+            pagination: response.data.pagination,
+          ),
+        );
       case ErrorResponce<ProductsResponseDto>():
         return ErrorResponce(response.error);
     }
@@ -123,7 +128,6 @@ class CommerceRepoImpl implements CommerceRepo {
       case ErrorResponce<CartResponseDto>():
         return ErrorResponce(response.error);
     }
-  
   }
 
   @override
@@ -135,28 +139,24 @@ class CommerceRepoImpl implements CommerceRepo {
       case ErrorResponce<CartResponseDto>():
         return ErrorResponce(response.error);
     }
-   
   }
 
-  
- @override
-Future<BaseResponce<CartEntity>> updateCartItemQuantity(
-  String cartItemId,
-  UpdateCartItemParams params,
-) async {
-  final response = await localDataSource.updateCartItemQuantity(
-    cartItemId,
-    UpdateCartItemRequestDto(
-      quantity: params.quantity,
-    ),
-  );
+  @override
+  Future<BaseResponce<CartEntity>> updateCartItemQuantity(
+    String cartItemId,
+    UpdateCartItemParams params,
+  ) async {
+    final response = await localDataSource.updateCartItemQuantity(
+      cartItemId,
+      UpdateCartItemRequestDto(quantity: params.quantity),
+    );
 
-  switch (response) {
-    case SuccessResponce<CartResponseDto>():
-      return SuccessResponce(response.data.toDomain());
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
 
-    case ErrorResponce<CartResponseDto>():
-      return ErrorResponce(response.error);
+      case ErrorResponce<CartResponseDto>():
+        return ErrorResponce(response.error);
+    }
   }
-}
 }

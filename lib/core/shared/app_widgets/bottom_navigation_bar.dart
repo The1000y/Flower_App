@@ -8,16 +8,13 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import '../../constants/app_strings/app_strings.dart';
 
 class PersistentBottomNavBarDemo extends StatelessWidget {
-  PersistentBottomNavBarDemo({
-    super.key,
-    this.onCartTabSelected,
-  });
+  PersistentBottomNavBarDemo({super.key, this.onCartTabSelected});
 
   final VoidCallback? onCartTabSelected;
 
   final Widget homeScreen = HomeView();
 
-  final Widget categoriesScreen = Categories_view();
+  final Widget categoriesScreen = CategoriesView();
 
   final Widget profileScreen2 = Placeholder();
 
