@@ -2,15 +2,15 @@
 //
 //     final dataDto = dataDtoFromJson(jsonString);
 
+
+import 'package:flower_app/features/checkout/data/model/responce/payment_methods_dto.dart';
 import 'package:flower_app/features/checkout/domain/entities/checkout_details_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'dart:convert';
+
 
 part 'data_dto.g.dart';
 
-DataDto dataDtoFromJson(String str) => DataDto.fromJson(json.decode(str));
 
-String dataDtoToJson(DataDto data) => json.encode(data.toJson());
 
 @JsonSerializable()
 class DataDto {
@@ -23,7 +23,7 @@ class DataDto {
   @JsonKey(name: "estimatedDeliveryAt")
   String? estimatedDeliveryAt;
   @JsonKey(name: "paymentMethods")
-  List<PaymentMethod>? paymentMethods;
+  List<PaymentMethodsDto>? paymentMethods;
   @JsonKey(name: "isGift")
   bool? isGift;
   @JsonKey(name: "giftRecipientName")
@@ -47,18 +47,20 @@ class DataDto {
 
   Map<String, dynamic> toJson() => _$DataDtoToJson(this);
 
-
-
   CheckoutDetailsEntity toEntity() {
     return CheckoutDetailsEntity(
       subtotal: subtotal ?? 0,
       deliveryFee: deliveryFee ?? 0,
       total: total ?? 0,
       estimatedDeliveryAt: estimatedDeliveryAt ?? '',
-      paymentMethods: (paymentMethods ?? []).map((e) {
-        return e.toEntity();
-      }).toList(),
-  
+      paymentMethods:
+          paymentMethods?.map((element) {
+            return PaymentMethodEntity(
+              method: element.method ?? '',
+              gateways: element.gateways ?? const [],
+            );
+          }).toList() ??
+          [],
       isGift: isGift ?? false,
       giftRecipientName: giftRecipientName,
       giftRecipientPhone: giftRecipientPhone,
@@ -66,21 +68,4 @@ class DataDto {
   }
 }
 
-@JsonSerializable()
-class PaymentMethod {
-  @JsonKey(name: "method")
-  String? method;
-  @JsonKey(name: "gateways")
-  List<String>? gateways;
 
-  PaymentMethod({this.method, this.gateways});
-
-  factory PaymentMethod.fromJson(Map<String, dynamic> json) =>
-      _$PaymentMethodFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PaymentMethodToJson(this);
-
-  PaymentMethodEntity toEntity() {
-    return PaymentMethodEntity(method: method ?? '', gateways: gateways ?? []);
-  }
-}

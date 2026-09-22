@@ -1,0 +1,4 @@
+enum CheckoutPaymentMethod {
+  cash,
+  creditCard,
+}

@@ -1,6 +1,6 @@
 abstract class Routes {
   // Auth
-  static const String login = '/login';
+  static const String login = '/';
   static const String signUp = '/sign_up';
   static const String forgotPassword = '/forgot_password';
   static const String verificationCode = '/verification_code';
@@ -19,7 +19,7 @@ abstract class Routes {
 
   // Cart & Checkout
   static const String cart = '/cart';
-  static const String checkout = '/';
+  static const String checkout = '/checkout';
   static const String shippingAddress = '/shipping_address';
   static const String savedAddresses = '/saved_addresses';
   static const String addAddress = '/add_address';

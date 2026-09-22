@@ -4,15 +4,11 @@
 
 import 'package:flower_app/features/checkout/data/model/responce/data_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'dart:convert';
+
 
 part 'checkout_responce.g.dart';
 
-CheckoutResponce checkoutResponceFromJson(String str) =>
-    CheckoutResponce.fromJson(json.decode(str));
 
-String checkoutResponceToJson(CheckoutResponce data) =>
-    json.encode(data.toJson());
 
 @JsonSerializable()
 class CheckoutResponce {
