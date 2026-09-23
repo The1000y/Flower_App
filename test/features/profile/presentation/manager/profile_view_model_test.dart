@@ -1,5 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/config/base/base_state.dart';
+import 'package:flower_app/core/services/image_picker_service.dart';
 import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
 import 'package:flower_app/features/profile/domain/repo/profile_repo.dart';
 import 'package:flower_app/features/profile/domain/use_case/get_profile_use_case.dart';
@@ -27,9 +27,19 @@ class FakeProfileRepo implements ProfileRepo {
   ) async => updateProfileResponse;
 }
 
+class FakeImagePickerService implements ImagePickerService {
+  String? imagePathToReturn;
+
+  FakeImagePickerService({this.imagePathToReturn});
+
+  @override
+  Future<String?> pickFromGallery() async => imagePathToReturn;
+}
+
 void main() {
   late GetProfileUseCase getProfileUseCase;
   late UpdateProfileUseCase updateProfileUseCase;
+  late FakeImagePickerService fakeImagePickerService;
   late ProfileViewModel viewModel;
 
   final profileEntity = const ProfileEntity(
@@ -49,7 +59,12 @@ void main() {
     );
     getProfileUseCase = GetProfileUseCase(fakeRepo);
     updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-    viewModel = ProfileViewModel(getProfileUseCase, updateProfileUseCase);
+    fakeImagePickerService = FakeImagePickerService();
+    viewModel = ProfileViewModel(
+      getProfileUseCase,
+      updateProfileUseCase,
+      fakeImagePickerService,
+    );
 
     expect(viewModel.state, equals(const ProfileState()));
   });
@@ -63,7 +78,12 @@ void main() {
       );
       getProfileUseCase = GetProfileUseCase(fakeRepo);
       updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      viewModel = ProfileViewModel(getProfileUseCase, updateProfileUseCase);
+      fakeImagePickerService = FakeImagePickerService();
+      viewModel = ProfileViewModel(
+        getProfileUseCase,
+        updateProfileUseCase,
+        fakeImagePickerService,
+      );
 
       final emitted = expectLater(
         viewModel.stream,
@@ -93,7 +113,12 @@ void main() {
       );
       getProfileUseCase = GetProfileUseCase(fakeRepo);
       updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      viewModel = ProfileViewModel(getProfileUseCase, updateProfileUseCase);
+      fakeImagePickerService = FakeImagePickerService();
+      viewModel = ProfileViewModel(
+        getProfileUseCase,
+        updateProfileUseCase,
+        fakeImagePickerService,
+      );
 
       final emitted = expectLater(
         viewModel.stream,
@@ -125,7 +150,14 @@ void main() {
     );
     getProfileUseCase = GetProfileUseCase(fakeRepo);
     updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-    viewModel = ProfileViewModel(getProfileUseCase, updateProfileUseCase);
+    fakeImagePickerService = FakeImagePickerService(
+      imagePathToReturn: 'path/to/image.png',
+    );
+    viewModel = ProfileViewModel(
+      getProfileUseCase,
+      updateProfileUseCase,
+      fakeImagePickerService,
+    );
 
     final emitted = expectLater(
       viewModel.stream,
@@ -138,7 +170,7 @@ void main() {
       ]),
     );
 
-    viewModel.doEvent(PickProfileImageEvent(imagePath: 'path/to/image.png'));
+    viewModel.doEvent(PickProfileImageEvent());
     await emitted;
   });
 
@@ -159,7 +191,12 @@ void main() {
       );
       getProfileUseCase = GetProfileUseCase(fakeRepo);
       updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      viewModel = ProfileViewModel(getProfileUseCase, updateProfileUseCase);
+      fakeImagePickerService = FakeImagePickerService();
+      viewModel = ProfileViewModel(
+        getProfileUseCase,
+        updateProfileUseCase,
+        fakeImagePickerService,
+      );
 
       final emitted = expectLater(
         viewModel.stream,
@@ -197,7 +234,12 @@ void main() {
       );
       getProfileUseCase = GetProfileUseCase(fakeRepo);
       updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      viewModel = ProfileViewModel(getProfileUseCase, updateProfileUseCase);
+      fakeImagePickerService = FakeImagePickerService();
+      viewModel = ProfileViewModel(
+        getProfileUseCase,
+        updateProfileUseCase,
+        fakeImagePickerService,
+      );
 
       final emitted = expectLater(
         viewModel.stream,

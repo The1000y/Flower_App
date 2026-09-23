@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flower_app/features/profile/api/client/profile_api_client.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../config/base/base_responce.dart';
@@ -8,19 +9,37 @@ import '../../../data/model/response/get_profile_response_dto.dart';
 
 @Injectable(as: ProfileRemoteDataSource)
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
-  final Dio _dio;
+  final ProfileApiClient _client;
 
-  ProfileRemoteDataSourceImpl(this._dio);
+  ProfileRemoteDataSourceImpl(this._client);
 
   @override
-  Future<BaseResponce<GetProfileResponseDto>> updateProfile(UpdateProfileRequestDto request) async {
+  Future<BaseResponce<GetProfileResponseDto>> getProfile() async {
     try {
-      final response = await _dio.put('/users/me', data: request.toJson());
-      return SuccessResponce(GetProfileResponseDto.fromJson(response.data));
+      final response = await _client.getProfile();
+      return SuccessResponce<GetProfileResponseDto>(response);
     } on DioException catch (e) {
-      return ErrorResponce(e);
+      return ErrorResponce<GetProfileResponseDto>(e);
     } catch (e) {
-      return ErrorResponce(Exception(e.toString()));
+      return ErrorResponce<GetProfileResponseDto>(Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<BaseResponce<void>> updateProfile(UpdateProfileRequestDto request) async {
+    try {
+      await _client.updateProfile(
+        request.fullName,
+        request.email,
+        request.phone,
+        request.gender,
+        request.photo,
+      );
+      return SuccessResponce<void>(null);
+    } on DioException catch (e) {
+      return ErrorResponce<void>(e);
+    } catch (e) {
+      return ErrorResponce<void>(Exception(e.toString()));
     }
   }
 }

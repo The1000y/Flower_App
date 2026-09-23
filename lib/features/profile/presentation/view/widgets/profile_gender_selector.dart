@@ -1,3 +1,4 @@
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -12,7 +13,7 @@ class ProfileGenderSelector extends StatelessWidget {
     return Row(
       children: [
         Text(
-          'Gender',
+          AppStrings.genderTitle,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             fontSize: 18.sp,
             fontWeight: FontWeight.w500,
@@ -29,10 +30,10 @@ class ProfileGenderSelector extends StatelessWidget {
               child: Row(
                 children: [
                   const Radio<bool>(value: true, activeColor: AppColors.pinkBase),
-                  Text('Female', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.blackBase)),
+                  Text(AppStrings.genderFemaleLabel, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.blackBase)),
                   SizedBox(width: 15.5.w),
                   const Radio<bool>(value: false, activeColor: AppColors.pinkBase),
-                  Text('Male', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.blackBase)),
+                  Text(AppStrings.genderMaleLabel, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.blackBase)),
                 ],
               ),
             );

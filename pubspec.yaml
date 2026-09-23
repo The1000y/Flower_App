@@ -54,6 +54,7 @@ dependencies:
   geocoding: 4.0.0
   flutter_dotenv: ^6.0.1
   collection: ^1.19.1
+  image_picker: ^1.2.3
 
 
 dev_dependencies:

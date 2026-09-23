@@ -18,4 +18,7 @@ abstract class ApiStrings {
   static const String areas = '/address/api/areas';
   static const String nearestStore = '/address/api/stores/nearest-store';
   static const String userAddresses = '/address/users/me/addresses';
+  // Profile
+  static const String getProfile = '/api/users/GetProfile';
+  static const String updateProfile = '/api/users/UpdateProfile';
 }

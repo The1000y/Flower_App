@@ -4,12 +4,10 @@ import 'package:flower_app/features/profile/domain/repo/profile_repo.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-
 class GetProfileUseCase {
   final ProfileRepo profileRepo;
+
   GetProfileUseCase(this.profileRepo);
 
-  Future<BaseResponce<ProfileEntity>> call() async{
-    return await profileRepo.getProfile();
-  }
+  Future<BaseResponce<ProfileEntity>> call() => profileRepo.getProfile();
 }

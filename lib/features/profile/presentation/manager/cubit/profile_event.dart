@@ -4,10 +4,7 @@ sealed class ProfileEvents {}
 
 class FetchProfileEvent extends ProfileEvents {}
 
-class PickProfileImageEvent extends ProfileEvents {
-  final String imagePath;
-  PickProfileImageEvent({required this.imagePath});
-}
+class PickProfileImageEvent extends ProfileEvents {}
 
 class UpdateProfileEvent extends ProfileEvents {
   final ProfileEntity profile;
