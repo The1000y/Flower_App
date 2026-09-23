@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class GetCheckoutUseCase {
-  CheckoutRepo checkoutRepo;
+  final CheckoutRepo checkoutRepo;
 
   GetCheckoutUseCase({required this.checkoutRepo});
 

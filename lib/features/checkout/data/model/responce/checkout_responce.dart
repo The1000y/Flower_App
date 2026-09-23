@@ -2,7 +2,8 @@
 //
 //     final checkoutResponce = checkoutResponceFromJson(jsonString);
 
-import 'package:flower_app/features/checkout/data/model/responce/data_dto.dart';
+import 'package:flower_app/features/checkout/data/model/responce/checkout_details_dto.dart';
+import 'package:flower_app/features/checkout/data/model/responce/checkout_error.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 
@@ -17,9 +18,9 @@ class CheckoutResponce {
   @JsonKey(name: "message")
   String? message;
   @JsonKey(name: "data")
-  DataDto? data;
+  CheckoutDetailsDto? data;
   @JsonKey(name: "error")
-  Error? error;
+  CheckoutError? error;
 
   CheckoutResponce({this.success, this.message, this.data, this.error});
 
@@ -29,16 +30,3 @@ class CheckoutResponce {
   Map<String, dynamic> toJson() => _$CheckoutResponceToJson(this);
 }
 
-@JsonSerializable()
-class Error {
-  @JsonKey(name: "code")
-  String? code;
-  @JsonKey(name: "field")
-  String? field;
-
-  Error({this.code, this.field});
-
-  factory Error.fromJson(Map<String, dynamic> json) => _$ErrorFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ErrorToJson(this);
-}

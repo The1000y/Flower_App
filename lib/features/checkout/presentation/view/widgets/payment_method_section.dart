@@ -1,4 +1,5 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
@@ -14,32 +15,40 @@ class PaymentMethodSection extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Padding(
-
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child:
-      BlocSelector<CheckoutCubit, CheckoutState, CheckoutPaymentMethod>(
+      child: BlocSelector<CheckoutCubit, CheckoutState, CheckoutPaymentMethod>(
         selector: (state) => state.selectedPaymentMethod,
         builder: (context, selected) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Text('Payment method',style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600  ,fontSize: 18),),
-              const SizedBox(height: 16),
-              _PaymentOptionTile(
-                title: 'Cash on delivery',
-                value: CheckoutPaymentMethod.cash,
-                groupValue: selected,
-                onChanged: () => context.read<CheckoutCubit>().doEvent(
-                  SelectPaymentMethodEvent(paymentMethod: CheckoutPaymentMethod.cash),
-                )
+              Text(
+                AppStrings.paymentMethod,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
               ),
               const SizedBox(height: 16),
               _PaymentOptionTile(
-                title: 'Credit card',
+                title: AppStrings.cashOnDelivery,
+                value: CheckoutPaymentMethod.cash,
+                groupValue: selected,
+                onChanged: () => context.read<CheckoutCubit>().doEvent(
+                  SelectPaymentMethodEvent(
+                    paymentMethod: CheckoutPaymentMethod.cash,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _PaymentOptionTile(
+                title: AppStrings.creditCard,
                 value: CheckoutPaymentMethod.creditCard,
                 groupValue: selected,
                 onChanged: () => context.read<CheckoutCubit>().doEvent(
-                  SelectPaymentMethodEvent(paymentMethod: CheckoutPaymentMethod.creditCard),
+                  SelectPaymentMethodEvent(
+                    paymentMethod: CheckoutPaymentMethod.creditCard,
+                  ),
                 ),
               ),
             ],

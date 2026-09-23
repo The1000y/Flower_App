@@ -1,7 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/checkout/api/client/checkout_api_client.dart';
 import 'package:flower_app/features/checkout/data/data_source/remote_data_source.dart';
-import 'package:flower_app/features/checkout/data/model/responce/data_dto.dart';
+import 'package:flower_app/features/checkout/data/model/responce/checkout_details_dto.dart';
 import 'package:flower_app/features/checkout/data/model/responce/estimation_time_dto.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,12 +11,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   RemoteDataSourceImpl(this.checkoutApiClient);
   @override
-  Future<BaseResponce<DataDto>> getCheckoutDetails() async {
+  Future<BaseResponce<CheckoutDetailsDto>> getCheckoutDetails() async {
     try {
       final responce = await checkoutApiClient.getCheckoutDetails();
-      return SuccessResponce<DataDto>(responce.data ?? DataDto());
+      return SuccessResponce<CheckoutDetailsDto>(responce.data ?? CheckoutDetailsDto());
     } on Exception catch (e) {
-      return ErrorResponce<DataDto>(e);
+      return ErrorResponce<CheckoutDetailsDto>(e);
     }
   }
 

@@ -1,7 +1,12 @@
-class EstimationTimeEntity {
-  String estimatedDeliveryAt;
+import 'package:equatable/equatable.dart';
 
-  EstimationTimeEntity({
+class EstimationTimeEntity extends Equatable {
+ final String estimatedDeliveryAt;
+
+ const EstimationTimeEntity({
     required this.estimatedDeliveryAt,
   });
+
+  @override
+  List<Object?> get props => [estimatedDeliveryAt];
 }

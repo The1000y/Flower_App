@@ -1,4 +1,5 @@
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
@@ -25,7 +26,13 @@ class DeliveryAddressSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text('Delivery address', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600  ,fontSize: 18),),
+          Text(
+            AppStrings.deliveryAddress,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
           const SizedBox(height: 16),
           BlocBuilder<AddressCubit, AddressState>(
             buildWhen: (previous, current) =>
@@ -43,25 +50,25 @@ class DeliveryAddressSection extends StatelessWidget {
                 return Text(
                   addressesState.errorMessage.isNotEmpty
                       ? addressesState.errorMessage
-                      : 'No saved addresses',
+                      : AppStrings.noSavedAddresses,
                 );
               }
               return Column(
                 children: [
-                  for (var i = 0; i < addresses.length; i++) ...[
-                    if (i > 0) const SizedBox(height: 16),
+                  for (final address in addresses) ...[
+                    if (addresses.indexOf(address) > 0) const SizedBox(height: 16),
                     _AddressTile(
-                      address: addresses[i],
+                      address: address,
                       groupValue: state.selectedAddressId ?? '',
                       onSelect: () {
                         cubit.doEvent(
                           SelectAddressEvent(
-                            addressId: addresses[i].id,
-                            selectedAddress: addresses[i],
+                            addressId: address.id,
+                            selectedAddress: address,
                           ),
                         );
                         cubit2.doEvent(
-                          GetEstimationTimeEvent(addressId: addresses[i].id),
+                          GetEstimationTimeEvent(addressId: address.id),
                         );
                       },
                       // onSelect: () => context.read<CheckoutCubit>().doEvent(
@@ -84,7 +91,7 @@ class DeliveryAddressSection extends StatelessWidget {
             },
             icon: Icon(Icons.add, color: AppColors.pinkBase, size: 22.sp),
             label: Text(
-              'Add new',
+              AppStrings.addNew,
               style: TextStyle(
                 color: AppColors.pinkBase,
                 fontSize: 16.sp,
@@ -111,7 +118,7 @@ class _AddressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     var theme = Theme.of(context);
+    var theme = Theme.of(context);
     final subtitle = [
       address.addressLine,
       address.area,
@@ -133,7 +140,13 @@ class _AddressTile extends StatelessWidget {
       ),
       child: RadioListTile<String>.adaptive(
         contentPadding: EdgeInsets.zero,
-        title: Text(address.label ?? '' ,style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600  ,fontSize: 18),),
+        title: Text(
+          address.label ?? '',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ),
+        ),
         subtitle: Text(subtitle),
         secondary: IconButton(
           icon: Icon(Icons.edit_outlined, color: AppColors.gray, size: 28.sp),

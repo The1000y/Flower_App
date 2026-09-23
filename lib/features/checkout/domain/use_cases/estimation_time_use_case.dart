@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 @injectable
 class EstimationTimeUseCase {
 
-  CheckoutRepo checkoutRepo ;
+ final CheckoutRepo checkoutRepo ;
 
   EstimationTimeUseCase(this.checkoutRepo);
 

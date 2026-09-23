@@ -1,4 +1,5 @@
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
@@ -16,26 +17,27 @@ class OrderSummarySection extends StatelessWidget {
         children: [
           BlocBuilder<CheckoutCubit, CheckoutState>(
             buildWhen: (previous, current) =>
-            previous.checkoutDetailsState != current.checkoutDetailsState,
+                previous.checkoutDetailsState != current.checkoutDetailsState,
             builder: (context, state) {
               final details = state.checkoutDetailsState.data;
               return Column(
                 children: [
                   _SummaryRow(
-                    label: 'Sub Total',
-                    value: '${details?.subtotal ?? 0}\$',
+                    label: AppStrings.subTotal,
+                    value: '${details?.subtotal ?? 0}${AppStrings.currencyUsd}',
                   ),
                   const SizedBox(height: 8),
                   _SummaryRow(
-                    label: 'Delivery Fee',
-                    value: '${details?.deliveryFee ?? 0}\$',
+                    label: AppStrings.deliveryFee,
+                    value:
+                        '${details?.deliveryFee ?? 0}${AppStrings.currencyUsd}',
                   ),
                   const SizedBox(height: 12),
                   const Divider(height: 1, color: AppColors.white60),
                   const SizedBox(height: 12),
                   _SummaryRow(
-                    label: 'Total',
-                    value: '${details?.total ?? 0}\$',
+                    label: AppStrings.total,
+                    value: '${details?.total ?? 0}${AppStrings.currencyUsd}',
                     isTotal: true,
                   ),
                 ],
@@ -44,7 +46,7 @@ class OrderSummarySection extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           CustomButton(
-            text: 'Place order',
+            text: AppStrings.placeOrder,
             onPressed: () {},
             isEnabled: true,
             enabledColor: AppColors.pinkBase,

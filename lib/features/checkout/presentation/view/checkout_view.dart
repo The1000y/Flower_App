@@ -15,9 +15,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-class CheckoutView extends StatelessWidget {
+class CheckoutView extends StatefulWidget {
   const CheckoutView({super.key});
 
+  @override
+  State<CheckoutView> createState() => _CheckoutViewState();
+}
+
+class _CheckoutViewState extends State<CheckoutView> {
+  final giftFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -80,8 +86,7 @@ class CheckoutView extends StatelessWidget {
                 color: AppColors.lightGray,
               ),
               const SizedBox(height: 24),
-              const GiftSection(),
-
+               GiftSection(formKey: giftFormKey),
               const SizedBox(height: 24),
               const OrderSummarySection(),
             ],

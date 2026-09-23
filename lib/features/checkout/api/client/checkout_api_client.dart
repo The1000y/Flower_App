@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/core/constants/api_strings/api_strings.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/checkout/data/model/responce/checkout_responce.dart';
 import 'package:flower_app/features/checkout/data/model/responce/estimation_time_response.dart';
 
@@ -18,6 +19,6 @@ abstract class CheckoutApiClient {
   Future<CheckoutResponce> getCheckoutDetails();
   @GET(ApiStrings.estimationTime)
   Future<EstimationTimeResponse> getEstimationTime(
-    @Query('addressId') String addressId,
+    @Query(AppStrings.addressId) String addressId,
   );
 }

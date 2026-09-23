@@ -8,12 +8,12 @@ import 'package:flower_app/features/checkout/domain/entities/checkout_details_en
 import 'package:json_annotation/json_annotation.dart';
 
 
-part 'data_dto.g.dart';
+part 'checkout_details_dto.g.dart';
 
 
 
 @JsonSerializable()
-class DataDto {
+class CheckoutDetailsDto {
   @JsonKey(name: "subtotal")
   int? subtotal;
   @JsonKey(name: "deliveryFee")
@@ -31,7 +31,7 @@ class DataDto {
   @JsonKey(name: "giftRecipientPhone")
   String? giftRecipientPhone;
 
-  DataDto({
+  CheckoutDetailsDto({
     this.subtotal,
     this.deliveryFee,
     this.total,
@@ -42,10 +42,10 @@ class DataDto {
     this.giftRecipientPhone,
   });
 
-  factory DataDto.fromJson(Map<String, dynamic> json) =>
-      _$DataDtoFromJson(json);
+  factory CheckoutDetailsDto.fromJson(Map<String, dynamic> json) =>
+      _$CheckoutDetailsDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DataDtoToJson(this);
+  Map<String, dynamic> toJson() => _$CheckoutDetailsDtoToJson(this);
 
   CheckoutDetailsEntity toEntity() {
     return CheckoutDetailsEntity(
