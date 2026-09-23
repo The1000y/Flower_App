@@ -199,4 +199,11 @@ static const String lat = 'lat';
 static const String lng = 'lng';
 static const String addressId = 'addressId';
 static const String noResult = 'No Result found';
+  // Profile
+  static const String profileUpdated = 'Profile updated';
+  static const String genderFemaleLabel = 'Female';
+  static const String genderMaleLabel = 'Male';
+  static const String genderFemaleApi = 'Female';
+  static const String genderMaleApi = 'Male';
+  static const String passwordMask = '••••••';
 }
