@@ -1,11 +1,13 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
-import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/categories_response/categories_response_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/products_response/pagination_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../data/model/responce/occasion_response/occasion_dto.dart';
 import '../../client/commerce_api_client.dart';
+import 'occasion_dummy_data.dart';
 
 @Injectable(as: CommerceRemoteDataSource)
 class RemoteDataSourceImpl implements CommerceRemoteDataSource {
@@ -13,55 +15,60 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   RemoteDataSourceImpl(this.commerceApi);
 
   @override
-  Future<BaseResponce<List<SectionDto>>> getSections() async {
+  Future<BaseResponce<List<OccasionDto>>> getOccasions() async {
     try {
-      final response = await commerceApi.getHomeSections();
-      if (response.isSuccess == true || response.isSuccess == null) {
-        return SuccessResponce(response.data ?? []);
-      }
-      return ErrorResponce(Exception(response.message));
+      final json = OccasionDummyData.occasions;
+      final dtoList = (json['data'] as List)
+          .map((item) => OccasionDto.fromJson(item as Map<String, dynamic>))
+          .toList();
+      return SuccessResponce(dtoList);
     } catch (e) {
       return ErrorResponce(e is Exception ? e : Exception(e.toString()));
     }
   }
 
   @override
-  Future<BaseResponce<List<CategoryDto>>> getCategories() async {
+  Future<BaseResponce<ProductsResponseDto>> getProducts(int occasionId, {int page = 1}) async {
     try {
-      final response = await commerceApi.getCategories();
-      if (response.isSuccess == true) {
-        return SuccessResponce(response.data);
-      }
-      return ErrorResponce(Exception(response.message));
+      await Future.delayed(const Duration(seconds: 1));
+
+      final fullDto = ProductsResponseDto.fromJson(OccasionDummyData.products);
+      final allItems = fullDto.data.items;
+      final pageSize = fullDto.data.pagination.pageSize;
+
+      final start = (page - 1) * pageSize;
+      final end = start + pageSize > allItems.length ? allItems.length : start + pageSize;
+      final pageItems = start >= allItems.length
+          ? <dynamic>[]
+          : allItems.sublist(start, end);
+
+      final totalPages = (allItems.length / pageSize).ceil();
+
+      final dto = ProductsResponseDto(
+        data: ProductListDataDto(
+          items: pageItems.cast(),
+          pagination: PaginationDto(
+            page: page,
+            pageSize: pageSize,
+            totalCount: allItems.length,
+            totalPages: totalPages,
+            hasNextPage: end < allItems.length,
+            hasPreviousPage: page > 1,
+          ),
+        ),
+        isSuccess: true,
+        message: '',
+        errorCode: 'None',
+      );
+
+      return SuccessResponce(dto);
     } catch (e) {
       return ErrorResponce(e is Exception ? e : Exception(e.toString()));
     }
   }
 
   @override
-  Future<BaseResponce<List<OccasionDto>>> getOccasions({int pageNumber = 1, int pageSize = 10}) async {
-    try {
-      final response = await commerceApi.getOccasions(pageNumber, pageSize);
-      if (response.isSuccess == true || response.isSuccess == null) {
-        return SuccessResponce(response.data.items);
-      }
-      return ErrorResponce(Exception(response.message));
-    } catch (e) {
-      return ErrorResponce(e is Exception ? e : Exception(e.toString()));
-    }
-  }
-
-  @override
-  Future<BaseResponce<ProductsResponseDto>> getProducts({String? categoryId, String? occasionId, String? keyword, String? sortBy, int page = 1, int pageSize = 10}) async {
-    try {
-      final response = await commerceApi.getProducts(categoryId, occasionId, keyword, sortBy, page, pageSize);
-      if (response.isSuccess == true || response.isSuccess == null) {
-        return SuccessResponce(response);
-      }
-      return ErrorResponce(Exception(response.message));
-    } catch (e) {
-      return ErrorResponce(e is Exception ? e : Exception(e.toString()));
-    }
+  Future<BaseResponce<List<CategoriesResponseDto>>> getCategories() async {
+    return SuccessResponce([]);
   }
 }
-

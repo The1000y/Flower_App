@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final bestSellerResponse = bestSellerResponseFromJson(jsonString);
-
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
@@ -16,11 +12,11 @@ String bestSellerResponseToJson(BestSellerResponse data) => json.encode(data.toJ
 class BestSellerResponse {
     @JsonKey(name: "data")
     Data? data;
-    @JsonKey(name: "success")
+    @JsonKey(name: "isSuccess")
     bool? isSuccess;
     @JsonKey(name: "message")
     String? message;
-    @JsonKey(name: "error")
+    @JsonKey(name: "errorCode")
     String? errorCode;
 
     BestSellerResponse({
@@ -81,4 +77,3 @@ class Pagination {
 
     Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }
-

@@ -30,8 +30,8 @@ void main() {
   });
 
   final occasions = [
-    OccasionEntity(id: '1', name: 'Birthday', imageUrl: 'url1'),
-    OccasionEntity(id: '2', name: 'Wedding', imageUrl: 'url2'),
+    OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url1'),
+    OccasionEntity(id: 2, name: 'Wedding', imageUrl: 'url2'),
   ];
 
   Future<void> pumpApp(WidgetTester tester, Widget widget) async {
@@ -76,4 +76,3 @@ void main() {
     expect(captured.whereType<LoadProductsForOccasion>().last.occasionId, 2);
   });
 }
-

@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductDetails extends StatefulWidget {
-  final String productId;
+  final int productId;
   const ProductDetails({super.key, required this.productId});
 
   @override
@@ -277,5 +277,3 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 }
-
-

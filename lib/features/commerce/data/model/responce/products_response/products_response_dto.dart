@@ -8,27 +8,23 @@ part 'products_response_dto.g.dart';
 
 @JsonSerializable()
 class ProductsResponseDto {
-  @JsonKey(name: 'value')
-  final ProductListDataDto? value;
-
   @JsonKey(name: 'data')
-  final ProductListDataDto? data;
+  final ProductListDataDto data;
 
-  @JsonKey(name: 'success')
-  final bool? isSuccess;
+  @JsonKey(name: 'isSuccess')
+  final bool isSuccess;
 
   @JsonKey(name: 'message')
-  final String? message;
+  final String message;
 
-  @JsonKey(name: 'error')
-  final String? errorCode;
+  @JsonKey(name: 'errorCode')
+  final String errorCode;
 
   ProductsResponseDto({
-    this.value,
-    this.data,
-    this.isSuccess,
-    this.message,
-    this.errorCode,
+    required this.data,
+    required this.isSuccess,
+    required this.message,
+    required this.errorCode,
   });
 
   factory ProductsResponseDto.fromJson(Map<String, dynamic> json) =>
@@ -36,14 +32,12 @@ class ProductsResponseDto {
 
   Map<String, dynamic> toJson() => _$ProductsResponseDtoToJson(this);
 
-  ProductListDataDto get _effectiveData => value ?? data!;
-
   List<ProductEntity> get products {
-    return _effectiveData.items.map((item) => item.toDomain()).toList();
+    return data.items.map((item) => item.toDomain()).toList();
   }
 
   PaginationEntity get pagination {
-    return _effectiveData.pagination?.toDomain() ?? PaginationEntity(page: 1, pageSize: 10, totalPages: 1, totalCount: 0, hasNextPage: false, hasPreviousPage: false);
+    return data.pagination.toDomain();
   }
 }
 
@@ -53,11 +47,11 @@ class ProductListDataDto {
   final List<ProductDto> items;
 
   @JsonKey(name: 'pagination')
-  final PaginationDto? pagination;
+  final PaginationDto pagination;
 
   ProductListDataDto({
     required this.items,
-    this.pagination,
+    required this.pagination,
   });
 
   factory ProductListDataDto.fromJson(Map<String, dynamic> json) =>
@@ -65,4 +59,3 @@ class ProductListDataDto {
 
   Map<String, dynamic> toJson() => _$ProductListDataDtoToJson(this);
 }
-

@@ -10,14 +10,14 @@ class OccasionState extends Equatable {
   final BaseState<List<ProductEntity>> productsState;
   final bool isLoadingMore;
   final PaginationEntity? pagination;
-  final String currentOccasionId;
+  final int currentOccasionId;
 
   const OccasionState({
     this.occasionsState = const BaseState<List<OccasionEntity>>(data: []),
     this.productsState = const BaseState<List<ProductEntity>>(data: []),
     this.isLoadingMore = false,
     this.pagination,
-    this.currentOccasionId = '',
+    this.currentOccasionId = 0,
   });
 
   OccasionState copyWith({
@@ -25,7 +25,7 @@ class OccasionState extends Equatable {
     BaseState<List<ProductEntity>>? productsState,
     bool? isLoadingMore,
     PaginationEntity? pagination,
-    String? currentOccasionId,
+    int? currentOccasionId,
   }) {
     return OccasionState(
       occasionsState: occasionsState ?? this.occasionsState,
@@ -45,4 +45,3 @@ class OccasionState extends Equatable {
     currentOccasionId,
   ];
 }
-

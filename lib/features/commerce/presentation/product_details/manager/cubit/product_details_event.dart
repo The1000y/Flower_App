@@ -1,8 +1,7 @@
 sealed class ProductDetailsEvent {}
 
 class GetProductDetailsEvent extends ProductDetailsEvent {
-  final String productId;
+  final int productId;
 
   GetProductDetailsEvent(this.productId);
 }
-

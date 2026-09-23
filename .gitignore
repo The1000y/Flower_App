@@ -51,6 +51,14 @@ app.*.map.json
 *.mocks.dart
 *.gr.dart
 *.config.dart
-.env 
+# Backend/local environment files
+.env
+.env.*
+!.env.example
 
-android/build/
+# Backend setup and local Docker files
+setup.sh
+docker-compose.prod.yml
+
+# Postman collection
+flowery_postman_collection.json

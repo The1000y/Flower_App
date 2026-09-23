@@ -16,11 +16,11 @@ String homeSectionsResponseToJson(HomeSectionsResponse data) => json.encode(data
 class HomeSectionsResponse {
     @JsonKey(name: "data")
     List<SectionDto>? data;
-    @JsonKey(name: "success")
+    @JsonKey(name: "isSuccess")
     bool? isSuccess;
     @JsonKey(name: "message")
     String? message;
-    @JsonKey(name: "error")
+    @JsonKey(name: "errorCode")
     String? errorCode;
 
     HomeSectionsResponse({
@@ -34,5 +34,4 @@ class HomeSectionsResponse {
 
     Map<String, dynamic> toJson() => _$HomeSectionsResponseToJson(this);
 }
-
 

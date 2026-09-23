@@ -16,12 +16,12 @@ class CommerceFixtures {
   // ---------------------------------------------------------------------
   static const List<CategoryEntity> tCategories = [
     CategoryEntity(
-      id: '1',
+      id: 1,
       name: 'Flowers',
       iconUrl: 'https://cdn.flowery-app.com/categories/flowers.png',
     ),
     CategoryEntity(
-      id: '2',
+      id: 2,
       name: 'Gift',
       iconUrl: 'https://cdn.flowery-app.com/categories/gift.png',
     ),
@@ -29,12 +29,12 @@ class CommerceFixtures {
 
   static final List<CategoryDto> tCategoryDtos = [
     CategoryDto(
-      id: '1',
+      id: 1,
       name: 'Flowers',
       iconUrl: 'https://cdn.flowery-app.com/categories/flowers.png',
     ),
     CategoryDto(
-      id: '2',
+      id: 2,
       name: 'Gift',
       iconUrl: 'https://cdn.flowery-app.com/categories/gift.png',
     ),
@@ -45,7 +45,7 @@ class CommerceFixtures {
   // ---------------------------------------------------------------------
   static const List<BestSellerEntity> tBestSellers = [
     BestSellerEntity(
-      id: '1',
+      id: 1,
       name: 'Luxury Red Rose Bouquet',
       imageUrl: 'https://images.unsplash.com/photo-1563241527',
       currency: 'EGP',
@@ -58,7 +58,7 @@ class CommerceFixtures {
 
   static final List<ProductDto> tBestSellerDtos = [
     ProductDto(
-      id: '1',
+      id: 1,
       name: 'Luxury Red Rose Bouquet',
       imageUrl: 'https://images.unsplash.com/photo-1563241527',
       currency: 'EGP',
@@ -77,21 +77,21 @@ class CommerceFixtures {
   /// inactive section that must be dropped.
   static final List<SectionEntity> tUnsortedSections = [
     const SectionEntity(
-      id: '5',
+      id: 5,
       type: SectionType.category,
       index: 9,
       isActive: false,
       title: 'Should be filtered out',
     ),
     const SectionEntity(
-      id: '1',
+      id: 1,
       type: SectionType.category,
       index: 1,
       isActive: true,
       title: 'Categories',
     ),
     const SectionEntity(
-      id: '2',
+      id: 2,
       type: SectionType.bestSeller,
       index: 0,
       isActive: true,
@@ -102,14 +102,14 @@ class CommerceFixtures {
   /// Expected output after sorting by index and removing inactive sections.
   static const List<SectionEntity> tActiveSortedSections = [
     SectionEntity(
-      id: '2',
+      id: 2,
       type: SectionType.bestSeller,
       index: 0,
       isActive: true,
       title: 'Best seller',
     ),
     SectionEntity(
-      id: '1',
+      id: 1,
       type: SectionType.category,
       index: 1,
       isActive: true,
@@ -119,7 +119,7 @@ class CommerceFixtures {
 
   static final List<SectionDto> tSectionDtos = [
     SectionDto(
-      id: '2',
+      id: 2,
       type: 'BestSeller',
       index: 0,
       isActive: true,
@@ -128,7 +128,7 @@ class CommerceFixtures {
       categoryId: null,
     ),
     SectionDto(
-      id: '1',
+      id: 1,
       type: 'Categories',
       index: 1,
       isActive: true,
@@ -142,13 +142,12 @@ class CommerceFixtures {
   // Occasions
   // ---------------------------------------------------------------------
   static final List<OccasionEntity> tOccasions = [
-    OccasionEntity(id: '1', name: 'Birthday', imageUrl: 'birthday.png'),
-    OccasionEntity(id: '2', name: 'Wedding', imageUrl: 'wedding.png'),
+    OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'birthday.png'),
+    OccasionEntity(id: 2, name: 'Wedding', imageUrl: 'wedding.png'),
   ];
 
   static final List<OccasionDto> tOccasionDtos = [
-    OccasionDto(id: '1', name: 'Birthday', imageUrl: 'birthday.png'),
-    OccasionDto(id: '2', name: 'Wedding', imageUrl: 'wedding.png'),
+    OccasionDto(id: 1, name: 'Birthday', imageUrl: 'birthday.png'),
+    OccasionDto(id: 2, name: 'Wedding', imageUrl: 'wedding.png'),
   ];
 }
-

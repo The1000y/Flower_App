@@ -2,52 +2,32 @@ import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_pas
 import 'package:json_annotation/json_annotation.dart';
 part 'reset_password_response_dto.g.dart';
 
+
 @JsonSerializable()
 class ResetPasswordResponseDto {
-  @JsonKey(name: 'data')
-  final String data;
-  @JsonKey(name: 'message')
-  final String message;
-  @JsonKey(name: 'errorCode')
-  final String errorCode;
-  @JsonKey(name: 'isSuccess')
-  final bool isSuccess;
+  @JsonKey(
+  name:'data'
+)
+final String data;
+@JsonKey(
+  name:'message'
+)
+final String message;
+@JsonKey(
+  name:'errorCode'
+)
+final String errorCode;
+@JsonKey(
+  name:'isSuccess'
+)
+final bool isSuccess;
 
-  ResetPassswordEntity toDomain() {
+ResetPassswordEntity toDomain() {
     return ResetPassswordEntity(isSuccess: isSuccess, message: message);
   }
-
-  ResetPasswordResponseDto({
-    required this.data,
-    required this.message,
-    required this.errorCode,
-    required this.isSuccess,
-  });
-
-  factory ResetPasswordResponseDto.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('value')) {
-      final value = json['value'];
-      final message = value is Map
-          ? (value['message']?.toString() ?? '')
-          : value?.toString() ?? '';
-      return ResetPasswordResponseDto(
-        data: message,
-        message: message,
-        errorCode: json['error']?.toString() ?? '0',
-        isSuccess: json['isSuccess'] != false,
-      );
-    }
-    if (json.containsKey('message') && !json.containsKey('data')) {
-      final message = json['message']?.toString() ?? '';
-      return ResetPasswordResponseDto(
-        data: message,
-        message: message,
-        errorCode: json['error']?.toString() ?? '0',
-        isSuccess: json['isSuccess'] != false,
-      );
-    }
-    return _$ResetPasswordResponseDtoFromJson(json);
-  }
+  ResetPasswordResponseDto({required this.data, required this.message, required this.errorCode, required this.isSuccess});
+  factory ResetPasswordResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$ResetPasswordResponseDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResetPasswordResponseDtoToJson(this);
 }

@@ -1,95 +1,124 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
+import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/model/data_dto.dart';
+import 'package:flower_app/features/auth/data/model/request/forget_request/verify_otp_request.dart';
+
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
-import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
-import 'package:flower_app/features/auth/api/service/secure_storage.dart';
-import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'auth_repo-impl_test.mocks.dart';
+import '../../api/data_source_impl/local/local_data_source_impl_test.mocks.dart';
+import '../../../../helpers/auth_test_helpers.dart';
 
-@GenerateMocks([RemoteDataSource, LocalDataSource])
+
+@GenerateMocks([LocalDataSource])
 void main() {
-  provideDummy<BaseResponce<VerifyOtpResponse>>(
-    SuccessResponce(VerifyOtpResponse(
-      isSuccess: true,
-      errorCode: 0,
-      message: 'dummy',
-      data: Datadto(resetToken: 'dummy', expiresAtUtc: DateTime.now()),
-    )),
-  );
-  provideDummy<BaseResponce<ForgotPasswordResponseDto>>(
-    SuccessResponce(ForgotPasswordResponseDto(
-      isSuccess: true,
-      errorCode: '',
-      message: 'dummy',
-      data: 'dummy',
-    )),
-  );
-  provideDummy<BaseResponce<ResetPasswordResponseDto>>(
-    SuccessResponce(ResetPasswordResponseDto(
-      isSuccess: true,
-      errorCode: '',
-      message: 'dummy',
-      data: 'dummy',
-    )),
-  );
-  late MockRemoteDataSource mockRemoteDataSource;
   late MockLocalDataSource mockLocalDataSource;
-  late AuthRepoImpl authRepoImpl;
 
   setUp(() {
-    mockRemoteDataSource = MockRemoteDataSource();
     mockLocalDataSource = MockLocalDataSource();
-    authRepoImpl = AuthRepoImpl(
-      mockLocalDataSource,
-      mockRemoteDataSource,
-      SecureStorageService(const FlutterSecureStorage()),
-    );
   });
 
+  provideDummy<VerifyOtpRequest>(
+    VerifyOtpRequest(email: '', otp: ''),
+  );
+
+  provideDummy<BaseResponce<VerifyOtpResponse>>(
+    SuccessResponce<VerifyOtpResponse>(
+      VerifyOtpResponse(
+        errorCode: 0,
+        isSuccess: true,
+        message: "Operation completed successfully.",
+        data: Datadto(expiresAtUtc: DateTime.now(), resetToken: 'token123'),
+      ),
+    ),
+  );
+
+  provideDummy<BaseResponce<ForgotPasswordResponseDto>>(
+    SuccessResponce<ForgotPasswordResponseDto>(
+      ForgotPasswordResponseDto(
+        data: 'dummy',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
+      ),
+    ),
+  );
+
+  provideDummy<BaseResponce<ResetPasswordResponseDto>>(
+    SuccessResponce<ResetPasswordResponseDto>(
+      ResetPasswordResponseDto(
+        data: 'dummy',
+        message: '',
+        errorCode: '',
+        isSuccess: true,
+      ),
+    ),
+  );
+
   group('AuthRepoImpl - VerifyOtp Tests', () {
-    test('verifyOtp should return SuccessResponce when data source succeeds', () async {
+    test('verifyOtp should return SuccessResponce when data source succeeds',
+        () async {
+      // Arrange
       const email = 'user@example.com';
       const otp = '123456';
 
-      when(mockRemoteDataSource.verifyOtp(verifyOtpRequest: anyNamed('verifyOtpRequest')))
-          .thenAnswer((_) async => SuccessResponce<VerifyOtpResponse>(
-                VerifyOtpResponse(
-                  errorCode: 0,
-                  isSuccess: true,
-                  message: 'Operation completed successfully.',
-                  data: Datadto(expiresAtUtc: DateTime.now(), resetToken: 'token123'),
-                ),
-              ));
+      when(
+        mockLocalDataSource.verifyOtp(
+          verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp),
+        ),
+      ).thenAnswer(
+        (_) async => SuccessResponce<VerifyOtpResponse>(
+          VerifyOtpResponse(
+            errorCode: 0,
+            isSuccess: true,
+            message: "Operation completed successfully.",
+            data: Datadto(expiresAtUtc: DateTime.now(), resetToken: 'token123'),
+          ),
+        ),
+      );
 
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
+
+      // Act
       final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
 
+      // Assert
       expect(result, isA<SuccessResponce<VerifyOtpEntity>>());
     });
 
-    test('verifyOtp should return ErrorResponce when data source fails', () async {
+    test('verifyOtp should return ErrorResponce when data source fails',
+        () async {
+      // Arrange
       const email = 'user@example.com';
       const otp = 'invalid';
 
-      when(mockRemoteDataSource.verifyOtp(verifyOtpRequest: anyNamed('verifyOtpRequest')))
-          .thenAnswer((_) async => ErrorResponce<VerifyOtpResponse>(Exception('Invalid OTP or email')));
+      when(
+        mockLocalDataSource.verifyOtp(
+          verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp),
+        ),
+      ).thenAnswer(
+        (_) async => ErrorResponce<VerifyOtpResponse>(
+          Exception("Invalid OTP or email"),
+        ),
+      );
 
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
+
+      // Act
       final result = await authRepoImpl.verifyOtp(email: email, otp: otp);
 
+      // Assert
       expect(result, isA<ErrorResponce<VerifyOtpEntity>>());
     });
   });
 
   group('AuthRepoImpl - ForgotPassword Tests', () {
-    test('should return SuccessResponce when remoteDataSource succeeds', () async {
+    test('should return SuccessResponce when localDataSource succeeds', () async {
       final responseDto = ForgotPasswordResponseDto(
         data: 'success',
         message: 'Password reset email sent',
@@ -97,26 +126,42 @@ void main() {
         isSuccess: true,
       );
 
-      when(mockRemoteDataSource.forgotPassword(any))
-          .thenAnswer((_) async => SuccessResponce<ForgotPasswordResponseDto>(responseDto));
+      when(mockLocalDataSource.forgotPassword(
+        any,
+      )).thenAnswer(
+        (_) async => SuccessResponce<ForgotPasswordResponseDto>(responseDto),
+      );
 
-      final result = await authRepoImpl.forgetPassword(email: 'test@gmail.com');
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
+
+      final result = await authRepoImpl.forgetPassword(
+        email: 'test@gmail.com',
+      );
 
       expect(result, isA<SuccessResponce>());
+      verify(mockLocalDataSource.forgotPassword(any)).called(1);
     });
 
-    test('should return ErrorResponce when remoteDataSource fails', () async {
-      when(mockRemoteDataSource.forgotPassword(any))
-          .thenAnswer((_) async => ErrorResponce(Exception('Something went wrong')));
+    test('should return ErrorResponce when localDataSource fails', () async {
+      final exception = Exception('Something went wrong');
 
-      final result = await authRepoImpl.forgetPassword(email: 'test@gmail.com');
+      when(mockLocalDataSource.forgotPassword(any)).thenAnswer(
+        (_) async => ErrorResponce(exception),
+      );
+
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
+
+      final result = await authRepoImpl.forgetPassword(
+        email: 'test@gmail.com',
+      );
 
       expect(result, isA<ErrorResponce>());
+      verify(mockLocalDataSource.forgotPassword(any)).called(1);
     });
   });
 
   group('AuthRepoImpl - ResetPassword Tests', () {
-    test('should return SuccessResponce when remoteDataSource succeeds', () async {
+    test('should return SuccessResponce when localDataSource succeeds', () async {
       final responseDto = ResetPasswordResponseDto(
         data: 'success',
         message: 'Password reset successfully',
@@ -124,8 +169,11 @@ void main() {
         isSuccess: true,
       );
 
-      when(mockRemoteDataSource.resetPassword(any))
-          .thenAnswer((_) async => SuccessResponce(responseDto));
+      when(mockLocalDataSource.resetPassword(any)).thenAnswer(
+        (_) async => SuccessResponce(responseDto),
+      );
+
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       final result = await authRepoImpl.resetPassword(
         email: 'test@gmail.com',
@@ -134,11 +182,17 @@ void main() {
       );
 
       expect(result, isA<SuccessResponce>());
+      verify(mockLocalDataSource.resetPassword(any)).called(1);
     });
 
-    test('should return ErrorResponce when remoteDataSource fails', () async {
-      when(mockRemoteDataSource.resetPassword(any))
-          .thenAnswer((_) async => ErrorResponce(Exception('Something went wrong')));
+    test('should return ErrorResponce when localDataSource fails', () async {
+      final exception = Exception('Something went wrong');
+
+      when(mockLocalDataSource.resetPassword(any)).thenAnswer(
+        (_) async => ErrorResponce(exception),
+      );
+
+      final authRepoImpl = buildPasswordRecoveryRepo(mockLocalDataSource);
 
       final result = await authRepoImpl.resetPassword(
         email: 'test@gmail.com',
@@ -147,6 +201,7 @@ void main() {
       );
 
       expect(result, isA<ErrorResponce>());
+      verify(mockLocalDataSource.resetPassword(any)).called(1);
     });
   });
 }

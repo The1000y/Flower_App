@@ -62,10 +62,7 @@ class VerificationView extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   Routes.resetPassword,
-                  arguments: {
-                    'email': email,
-                    'otpcode': state.otpState.data!.resetToken,
-                  },
+                  arguments: {'email': email, 'otpcode': codeController.text},
                 );
               }
             }

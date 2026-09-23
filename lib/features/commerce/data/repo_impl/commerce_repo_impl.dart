@@ -1,6 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -23,45 +24,44 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<List<CategoryEntity>>> getCategories() async {
-    final response = await remoteDataSource.getCategories();
+    final response = await localDataSource.getCategories();
     switch (response) {
       case SuccessResponce<List<CategoryDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
       case ErrorResponce<List<CategoryDto>>():
-        return ErrorResponce(response.error);
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
   @override
   Future<BaseResponce<List<BestSellerEntity>>> getBestSeller() async {
-    // For Best Seller, we fetch regular products from the remote catalog
-    final response = await remoteDataSource.getProducts(pageSize: 10);
+    final response = await localDataSource.getBestSellers();
     switch (response) {
-      case SuccessResponce<ProductsResponseDto>():
-        final data = response.data.products.map((element) {
-          return BestSellerEntity(id: element.id , name: element.name , imageUrl: element.imageUrl , currency: element.currency , price: element.price.toInt() , originalPrice: element.originalPrice?.toInt() ?? 0, discountPercentage: element.discountPercentage?.toInt() ?? 0, status: element.status );
+      case SuccessResponce<List<ProductDto>>():
+        final data = response.data.map((element) {
+          return element.toDomain();
         }).toList();
         return SuccessResponce<List<BestSellerEntity>>(data);
 
-      case ErrorResponce<ProductsResponseDto>():
-        return ErrorResponce(response.error);
+      case ErrorResponce<List<ProductDto>>():
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
   @override
   Future<BaseResponce<List<SectionEntity>>> getSection() async {
-    final response = await remoteDataSource.getSections();
+    final response = await localDataSource.getSections();
     switch (response) {
       case SuccessResponce<List<SectionDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
       case ErrorResponce<List<SectionDto>>():
-        return ErrorResponce(response.error);
+        return ErrorResponce(Exception(response.errorMessage));
     }
   }
 
   @override
   Future<BaseResponce<List<OccasionEntity>>> getOccasions() async {
-    final response = await remoteDataSource.getOccasions();
+    final response = await localDataSource.getOccasions();
     switch (response) {
       case SuccessResponce<List<OccasionDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
@@ -72,7 +72,7 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<List<ProductEntity>>> getProducts() async {
-    final response = await remoteDataSource.getProducts();
+    final response = await localDataSource.getProducts();
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
         return SuccessResponce(response.data.products);
@@ -82,8 +82,8 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(String occasionId, {int page = 1}) async {
-    final response = await remoteDataSource.getProducts(occasionId: occasionId.toString(), page: page);
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1}) async {
+    final response = await remoteDataSource.getProducts(occasionId, page: page);
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
         return SuccessResponce(PaginatedProducts(
@@ -95,5 +95,3 @@ class CommerceRepoImpl implements CommerceRepo {
     }
   }
 }
-
-

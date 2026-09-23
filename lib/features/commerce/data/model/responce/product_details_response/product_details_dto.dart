@@ -6,47 +6,34 @@ part 'product_details_dto.g.dart';
 
 @JsonSerializable()
 class ProductDetailsDto {
-  @JsonKey(name: 'id')
-  final String id;
-  @JsonKey(name: 'name')
+  final int id;
   final String name;
-  @JsonKey(name: 'imageUrl')
   final String imageUrl;
-  @JsonKey(name: 'currency')
-  final String? currency;
-  @JsonKey(name: 'price')
+  final String currency;
   final double price;
-  @JsonKey(name: 'discountedPrice')
-  final double? discountedPrice;
-  @JsonKey(name: 'discountPercent')
-  final double? discountPercent;
-  @JsonKey(name: 'inStock')
-  final bool? inStock;
-  @JsonKey(name: 'images')
-  final List<String>? images;
-  @JsonKey(name: 'description')
-  final String? description;
-  @JsonKey(name: 'includes')
-  final List<ProductIncludeItemDto>? includes;
-  @JsonKey(name: 'categoryId')
-  final String? categoryId;
-  @JsonKey(name: 'occasionIds')
-  final List<String>? occasionIds;
+  final double? originalPrice;
+  final double? discountPercentage;
+  final String status;
+  final List<String> images;
+  final String description;
+  final List<ProductIncludeItemDto> includes;
+  final int? categoryId;
+  final List<int> occasionIds;
 
   ProductDetailsDto({
     required this.id,
     required this.name,
     required this.imageUrl,
-    this.currency,
+    required this.currency,
     required this.price,
-    this.discountedPrice,
-    this.discountPercent,
-    this.inStock,
-    this.images,
-    this.description,
-    this.includes,
+    this.originalPrice,
+    this.discountPercentage,
+    required this.status,
+    required this.images,
+    required this.description,
+    required this.includes,
     this.categoryId,
-    this.occasionIds,
+    required this.occasionIds,
   });
 
   factory ProductDetailsDto.fromJson(Map<String, dynamic> json) => _$ProductDetailsDtoFromJson(json);
@@ -56,15 +43,15 @@ class ProductDetailsDto {
         id: id,
         name: name,
         imageUrl: imageUrl,
-        currency: currency ?? 'EGP',
-        price: discountedPrice ?? price,
-        originalPrice: discountedPrice != null ? price : null,
-        discountPercentage: discountPercent,
-        status: (inStock ?? true) ? 'In Stock' : 'Out of Stock',
-        images: images ?? [],
-        description: description ?? '',
-        includes: includes?.map((e) => e.toDomain()).toList() ?? [],
-        categoryId: categoryId ?? '',
-        occasionIds: occasionIds ?? [],
+        currency: currency,
+        price: price,
+        originalPrice: originalPrice,
+        discountPercentage: discountPercentage,
+        status: status,
+        images: images,
+        description: description,
+        includes: includes.map((e) => e.toDomain()).toList(),
+        categoryId: categoryId ?? 0,
+        occasionIds: occasionIds,
       );
 }

@@ -6,13 +6,13 @@ enum SectionType {
 }
 
 class SectionEntity extends Equatable {
-  final String id;
+  final int id;
   final SectionType type;
   final int index;
   final bool isActive;
   final String title;
-  final String? occasionId;
-  final String? categoryId;
+  final int? occasionId;
+  final int? categoryId;
 
   const SectionEntity({
     required this.id,
@@ -35,4 +35,3 @@ class SectionEntity extends Equatable {
     categoryId,
   ];
 }
-

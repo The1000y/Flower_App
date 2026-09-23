@@ -5,29 +5,29 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ProductDetailsDto', () {
     final tJson = {
-      'id': '1',
+      'id': 1,
       'name': 'Test Product',
       'imageUrl': 'url',
       'currency': 'EGP',
       'price': 100.0,
-      'discountedPrice': 100.0,
-      'discountPercent': 16.6,
-      'inStock': true,
+      'originalPrice': 120.0,
+      'discountPercentage': 16.6,
+      'status': 'InStock',
       'images': ['img1', 'img2'],
       'description': 'desc',
       'includes': [
         {'name': 'item1', 'quantity': 1}
       ],
-      'categoryId': '1',
-      'occasionIds': ['1', '2']
+      'categoryId': 1,
+      'occasionIds': [1, 2]
     };
 
     test('fromJson should return a valid DTO', () {
       final result = ProductDetailsDto.fromJson(tJson);
-      expect(result.id, '1');
+      expect(result.id, 1);
       expect(result.name, 'Test Product');
-      expect(result.includes?.length, 1);
-      expect(result.includes?[0].name, 'item1');
+      expect(result.includes.length, 1);
+      expect(result.includes[0].name, 'item1');
     });
 
     test('toDomain should return a valid Entity', () {
@@ -37,7 +37,7 @@ void main() {
       expect(result, isA<ProductDetailsEntity>());
       expect(result.id, dto.id);
       expect(result.name, dto.name);
-      expect(result.includes.length, dto.includes?.length ?? 0);
+      expect(result.includes.length, dto.includes.length);
     });
   });
 }

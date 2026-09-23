@@ -35,7 +35,7 @@ void main() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
       child: const MaterialApp(
-        home: ProductDetails(productId: '1'),
+        home: ProductDetails(productId: 1),
       ),
     );
   }
@@ -55,7 +55,7 @@ void main() {
   testWidgets('should display product data when state is successful', (tester) async {
     // arrange
     final tProduct = ProductDetailsEntity(
-      id: '1',
+      id: 1,
       name: 'Test Flower',
       imageUrl: 'https://test.com/image.png',
       currency: 'EGP',
@@ -89,5 +89,3 @@ void main() {
     expect(find.text('Retry'), findsOneWidget);
   });
 }
-
-

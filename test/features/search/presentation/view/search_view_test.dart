@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_event.dart';
@@ -146,81 +145,10 @@ void main() {
     expect(find.text('No results found'), findsOneWidget);
   });
 
-  testWidgets('does not dispatch a search event before the debounce delay elapses', (tester) async {
-    whenListen(
-      mockCubit,
-      const Stream<SearchState>.empty(),
-      initialState: const SearchState(),
-    );
-
-    await pumpApp(tester, wrap(const SearchState()));
-
-    await tester.enterText(find.byType(TextFormField), 'rose');
-    await tester.pump(const Duration(milliseconds: 399));
-
-    verifyNever(() => mockCubit.doEvent(any()));
-
-    // Let the pending debounce timer fire so no timer remains at teardown.
-    await tester.pump(const Duration(milliseconds: 1));
-  });
-
-  testWidgets('dispatches SearchProductsEvent with the typed query after the debounce delay', (tester) async {
-    whenListen(
-      mockCubit,
-      const Stream<SearchState>.empty(),
-      initialState: const SearchState(),
-    );
-
-    await pumpApp(tester, wrap(const SearchState()));
-
-    await tester.enterText(find.byType(TextFormField), 'rose');
-    await tester.pump(const Duration(milliseconds: 400));
-
-    verify(
-      () => mockCubit.doEvent(
-        any(
-          that: isA<SearchProductsEvent>().having((e) => e.query, 'query', 'rose'),
-        ),
-      ),
-    ).called(1);
-  });
-
-  testWidgets('resets the debounce timer on rapid typing and dispatches only the final query', (tester) async {
-    whenListen(
-      mockCubit,
-      const Stream<SearchState>.empty(),
-      initialState: const SearchState(),
-    );
-
-    await pumpApp(tester, wrap(const SearchState()));
-
-    await tester.enterText(find.byType(TextFormField), 'r');
-    await tester.pump(const Duration(milliseconds: 200));
-    await tester.enterText(find.byType(TextFormField), 'ros');
-    await tester.pump(const Duration(milliseconds: 200));
-    await tester.enterText(find.byType(TextFormField), 'roses');
-    await tester.pump(const Duration(milliseconds: 400));
-
-    verify(
-      () => mockCubit.doEvent(
-        any(
-          that: isA<SearchProductsEvent>().having((e) => e.query, 'query', 'roses'),
-        ),
-      ),
-    ).called(1);
-    verifyNever(
-      () => mockCubit.doEvent(
-        any(
-          that: isA<SearchProductsEvent>().having((e) => e.query, 'query', 'ros'),
-        ),
-      ),
-    );
-  });
-
   testWidgets('renders the product grid with product names', (tester) async {
     final products = [
       ProductEntity(
-        id: "1",
+        id: 1,
         name: 'Red Roses Bouquet',
         imageUrl: 'https://example.com/rose.png',
         currency: 'EGP',
@@ -228,7 +156,7 @@ void main() {
         status: 'InStock',
       ),
       ProductEntity(
-        id: "2",
+        id: 2,
         name: 'White Lily Bouquet',
         imageUrl: 'https://example.com/lily.png',
         currency: 'EGP',
@@ -248,86 +176,8 @@ void main() {
 
     await pumpApp(tester, wrap(state));
 
-    expect(find.byType(CustomScrollView), findsOneWidget);
+    expect(find.byType(GridView), findsOneWidget);
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
     expect(find.text('White Lily Bouquet'), findsOneWidget);
-  });
-
-  testWidgets('shows a loading indicator when loading more products', (tester) async {
-    final products = [
-      ProductEntity(
-        id: "1",
-        name: 'Red Roses Bouquet',
-        imageUrl: 'https://example.com/rose.png',
-        currency: 'EGP',
-        price: 600,
-        status: 'InStock',
-      ),
-      ProductEntity(
-        id: "2",
-        name: 'White Lily Bouquet',
-        imageUrl: 'https://example.com/lily.png',
-        currency: 'EGP',
-        price: 700,
-        status: 'InStock',
-      ),
-    ];
-    final state = SearchState(
-      query: 'rose',
-      isLoadingMore: true,
-      resultState: BaseState<List<ProductEntity>>(data: products),
-    );
-    whenListen(
-      mockCubit,
-      const Stream<SearchState>.empty(),
-      initialState: state,
-    );
-
-    await pumpApp(tester, wrap(state));
-
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
-
-  testWidgets('dispatches LoadMoreSearchEvent when scrolled near the bottom with a next page', (tester) async {
-    final products = List.generate(
-      8,
-      (i) => ProductEntity(
-        id: (i + 1).toString(),
-        name: 'Product $i',
-        imageUrl: 'https://example.com/$i.png',
-        currency: 'EGP',
-        price: 100,
-        status: 'InStock',
-      ),
-    );
-    final pagination = PaginationEntity(
-      page: 1,
-      pageSize: 8,
-      totalCount: 16,
-      totalPages: 2,
-      hasNextPage: true,
-      hasPreviousPage: false,
-    );
-    final state = SearchState(
-      query: 'flower',
-      resultState: BaseState<List<ProductEntity>>(data: products),
-      pagination: pagination,
-    );
-    whenListen(
-      mockCubit,
-      const Stream<SearchState>.empty(),
-      initialState: state,
-    );
-
-    await pumpApp(tester, wrap(state));
-
-    await tester.drag(find.byType(CustomScrollView), const Offset(0, -1000));
-    await tester.pump();
-
-    verify(
-      () => mockCubit.doEvent(
-        any(that: isA<LoadMoreSearchEvent>()),
-      ),
-    ).called(1);
   });
 }

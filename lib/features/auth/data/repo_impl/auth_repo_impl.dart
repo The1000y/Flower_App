@@ -23,109 +23,67 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
+  final LocalDataSource _localDataSource;
   final RemoteDataSource _remoteDataSource;
   final SecureStorageService _secureStorage;
 
-  AuthRepoImpl(
-    LocalDataSource _,
-    this._remoteDataSource,
-    this._secureStorage,
-  );
+  AuthRepoImpl(this._localDataSource, this._remoteDataSource, this._secureStorage);
 
   @override
-  Future<BaseResponce<ForgetPasswordEntity>> forgetPassword({
-    required String email,
-  }) async {
-    final response = await _remoteDataSource.forgotPassword(
-      ForgotPasswordRequestDto(email: email),
-    );
+  Future<BaseResponce<ForgetPasswordEntity>> forgetPassword({required String email}) async {
+    final response = await _localDataSource.forgotPassword(ForgotPasswordRequestDto(email: email));
     return switch (response) {
-      SuccessResponce<ForgotPasswordResponseDto>() =>
-        SuccessResponce(response.data.toDomain()),
-      ErrorResponce<ForgotPasswordResponseDto>() =>
-        ErrorResponce(response.error),
+      SuccessResponce<ForgotPasswordResponseDto>() => SuccessResponce(response.data.toDomain()),
+      ErrorResponce<ForgotPasswordResponseDto>() => ErrorResponce(response.error),
     };
   }
 
   @override
-  Future<BaseResponce<ResetPassswordEntity>> resetPassword({
-    required String email,
-    required String otp,
-    required String password,
-  }) async {
-    final response = await _remoteDataSource.resetPassword(
-      ResetPasswordRequestDto(
-        resetToken: otp,
-        newPassword: password,
-        confirmPassword: password,
-      ),
-    );
+  Future<BaseResponce<ResetPassswordEntity>> resetPassword({required String email, required String otp, required String password}) async {
+    final response = await _localDataSource.resetPassword(ResetPasswordRequestDto(email: email, newPassword: password, resetCode: otp));
     return switch (response) {
-      SuccessResponce<ResetPasswordResponseDto>() =>
-        SuccessResponce(response.data.toDomain()),
-      ErrorResponce<ResetPasswordResponseDto>() =>
-        ErrorResponce(response.error),
+      SuccessResponce<ResetPasswordResponseDto>() => SuccessResponce(response.data.toDomain()),
+      ErrorResponce<ResetPasswordResponseDto>() => ErrorResponce(response.error),
     };
   }
 
   @override
-  Future<BaseResponce<VerifyOtpEntity>> verifyOtp({
-    required String email,
-    required String otp,
-  }) async {
-    final response = await _remoteDataSource.verifyOtp(
-      verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp),
-    );
+  Future<BaseResponce<VerifyOtpEntity>> verifyOtp({required String email, required String otp}) async {
+    final response = await _localDataSource.verifyOtp(verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp));
     return switch (response) {
-      SuccessResponce<VerifyOtpResponse>() =>
-        SuccessResponce(response.data.data!.toEntity()),
+      SuccessResponce<VerifyOtpResponse>() => SuccessResponce(response.data.data!.toEntity()),
       ErrorResponce<VerifyOtpResponse>() => ErrorResponce(response.error),
     };
   }
 
   @override
-  Future<BaseResponce<LoginEntity>> login(
-    LoginCredentials credentials, {
-    bool rememberMe = false,
-  }) async {
+  Future<BaseResponce<LoginEntity>> login(LoginCredentials credentials, {bool rememberMe = false}) async {
     try {
-      final response = await _remoteDataSource.login(
-        LoginRequest(
-          email: credentials.email,
-          password: credentials.password,
-          deviceId: 'flutter_customer_app',
-          fcmToken: 'dummy_fcm_token',
-        ),
-      );
+      final response = await _remoteDataSource.login(LoginRequest(email: credentials.email, password: credentials.password));
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.toLoginEntity();
         await _secureStorage.saveAccessToken(login.accessToken);
         await _secureStorage.saveRefreshToken(login.refreshToken);
+        if (rememberMe) {
+          await _secureStorage.saveRememberedEmail(credentials.email);
+        }
         return SuccessResponce(login);
       }
-      return ErrorResponce(
-        Exception(response.message ?? AppStrings.loginFailed),
-      );
+      return ErrorResponce(Exception(response.message ?? AppStrings.loginFailed));
     } catch (error) {
-      return ErrorResponce(
-        error is Exception ? error : Exception(error.toString()),
-      );
+      return ErrorResponce(error is Exception ? error : Exception(error.toString()));
     }
   }
 
   @override
   Future<String?> getRememberedEmail() => _secureStorage.getRememberedEmail();
   @override
-  Future<void> saveRememberedEmail(String email) =>
-      _secureStorage.saveRememberedEmail(email);
+  Future<void> saveRememberedEmail(String email) => _secureStorage.saveRememberedEmail(email);
   @override
-  Future<void> deleteRememberedEmail() =>
-      _secureStorage.deleteRememberedEmail();
+  Future<void> deleteRememberedEmail() => _secureStorage.deleteRememberedEmail();
 
   @override
-  Future<BaseResponce<RegisterEntity>> register(
-    RegisterRequestEntity entity,
-  ) async {
+  Future<BaseResponce<RegisterEntity>> register(RegisterRequestEntity entity) async {
     try {
       final request = RegisterRequest.fromEntity(entity);
       final response = await _remoteDataSource.register(request);
@@ -134,13 +92,9 @@ class AuthRepoImpl implements AuthRepo {
         return SuccessResponce(response.toRegisterEntity());
       }
 
-      return ErrorResponce(
-        Exception(response.message ?? AppStrings.registerError),
-      );
+      return ErrorResponce(Exception(response.message ?? AppStrings.registerError));
     } catch (error) {
-      return ErrorResponce(
-        error is Exception ? error : Exception(error.toString()),
-      );
+      return ErrorResponce(error is Exception ? error : Exception(error.toString()));
     }
   }
 }

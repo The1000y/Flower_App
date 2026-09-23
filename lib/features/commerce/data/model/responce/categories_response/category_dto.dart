@@ -5,9 +5,8 @@ part 'category_dto.g.dart';
 
 @JsonSerializable()
 class CategoryDto {
-  final String id;
+  final int id;
   final String name;
-  @JsonKey(name: 'icon')
   final String iconUrl;
 
   CategoryDto({

@@ -39,7 +39,7 @@ void main() {
       'should return SuccessResponce<List<OccasionEntity>> when local data source succeeds',
       () async {
         final occasionDto = OccasionDto(
-          id: '1',
+          id: 1,
           name: 'Birthday',
           imageUrl: 'https://example.com/birthday.png',
         );
@@ -53,7 +53,7 @@ void main() {
         expect(result, isA<SuccessResponce<List<OccasionEntity>>>());
         final data = (result as SuccessResponce<List<OccasionEntity>>).data;
         expect(data.length, 1);
-        expect(data.first.id, '1');
+        expect(data.first.id, 1);
         expect(data.first.name, 'Birthday');
         expect(data.first.imageUrl, 'https://example.com/birthday.png');
         verify(() => mockLocalDataSource.getOccasions()).called(1);
@@ -78,14 +78,14 @@ void main() {
       'should return SuccessResponce<PaginatedProducts> when remote data source succeeds',
       () async {
         final productDto = ProductDto(
-          id: '1',
+          id: 1,
           name: 'Red Rose',
           imageUrl: 'https://example.com/rose.png',
           currency: 'EGP',
           price: 250,
-          discountedPrice: 250,
-          discountPercent: 16.67,
-          inStock: true,
+          originalPrice: 300,
+          discountPercentage: 16.67,
+          status: 'Available',
         );
 
         final paginationDto = PaginationDto(
@@ -107,33 +107,33 @@ void main() {
           errorCode: '',
         );
 
-        when(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).thenAnswer(
+        when(() => mockRemoteDataSource.getProducts(1, page: 1)).thenAnswer(
           (_) async => SuccessResponce<ProductsResponseDto>(responseDto),
         );
 
-        final result = await commerceRepo.getOccasionsProducts('1', page: 1);
+        final result = await commerceRepo.getOccasionsProducts(1, page: 1);
 
         expect(result, isA<SuccessResponce<PaginatedProducts>>());
         final data = (result as SuccessResponce<PaginatedProducts>).data;
         expect(data.items.length, 1);
-        expect(data.items.first.id, '1');
+        expect(data.items.first.id, 1);
         expect(data.items.first.name, 'Red Rose');
         expect(data.items.first.price, 250);
         expect(data.pagination.page, 1);
-        verify(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).called(1);
+        verify(() => mockRemoteDataSource.getProducts(1, page: 1)).called(1);
       },
     );
 
     test('should return ErrorResponce when remote data source fails', () async {
       final exception = Exception('Failed to get products');
-      when(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).thenAnswer(
+      when(() => mockRemoteDataSource.getProducts(1, page: 1)).thenAnswer(
         (_) async => ErrorResponce<ProductsResponseDto>(exception),
       );
 
-      final result = await commerceRepo.getOccasionsProducts('1', page: 1);
+      final result = await commerceRepo.getOccasionsProducts(1, page: 1);
 
       expect(result, isA<ErrorResponce<PaginatedProducts>>());
-      verify(() => mockRemoteDataSource.getProducts(occasionId: '1', page: 1)).called(1);
+      verify(() => mockRemoteDataSource.getProducts(1, page: 1)).called(1);
     });
   });
 
@@ -142,7 +142,7 @@ void main() {
       'should return SuccessResponce with mapped categories when local data source succeeds',
       () async {
         final categoryDto = CategoryDto(
-          id: '1',
+          id: 1,
           name: 'Roses',
           iconUrl: 'https://example.com/rose.png',
         );
@@ -158,7 +158,7 @@ void main() {
         final success = result as SuccessResponce<List<CategoryEntity>>;
 
         expect(success.data.length, 1);
-        expect(success.data.first.id, '1');
+        expect(success.data.first.id, 1);
         expect(success.data.first.name, 'Roses');
         expect(success.data.first.iconUrl, 'https://example.com/rose.png');
 
@@ -185,14 +185,14 @@ void main() {
       'should return SuccessResponce with mapped best sellers',
       () async {
         final productDto = best_seller.ProductDto(
-          id: '1',
+          id: 1,
           name: 'Red Rose Bouquet',
           imageUrl: 'https://example.com/rose.png',
           currency: 'SAR',
           price: 150,
           originalPrice: 200,
           discountPercentage: 25,
-          status: 'In stock',
+          status: 'available',
         );
 
         when(() => mockLocalDataSource.getBestSellers()).thenAnswer(
@@ -206,7 +206,7 @@ void main() {
         final success = result as SuccessResponce<List<BestSellerEntity>>;
 
         expect(success.data.length, 1);
-        expect(success.data.first.id, '1');
+        expect(success.data.first.id, 1);
         expect(success.data.first.name, 'Red Rose Bouquet');
 
         verify(() => mockLocalDataSource.getBestSellers()).called(1);
@@ -219,7 +219,7 @@ void main() {
       'should return SuccessResponce with mapped sections when local data source succeeds',
       () async {
         final sectionDto = SectionDto(
-          id: '1',
+          id: 1,
           type: 'Categories',
           index: 0,
           isActive: true,
@@ -237,7 +237,7 @@ void main() {
         expect(result, isA<SuccessResponce<List<SectionEntity>>>());
         final success = result as SuccessResponce<List<SectionEntity>>;
         expect(success.data.length, 1);
-        expect(success.data.first.id, '1');
+        expect(success.data.first.id, 1);
         expect(success.data.first.type, SectionType.category);
         expect(success.data.first.title, 'Categories');
         verify(() => mockLocalDataSource.getSections()).called(1);
@@ -257,8 +257,3 @@ void main() {
     });
   });
 }
-
-
-
-
-

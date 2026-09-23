@@ -1,5 +1,4 @@
 import 'package:flower_app/config/base/base_responce.dart';
-
 import 'package:flower_app/features/auth/api/data_source_impl/remote/dummy.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
@@ -7,7 +6,6 @@ import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../../../helpers/mock_auth_api_client.mocks.dart';
 
 import '../../../../helpers/auth_test_helpers.dart';
 
@@ -19,7 +17,7 @@ void main() {
     setUp(() {
       useInMemorySecureStorage();
       storage = SecureStorageService(const FlutterSecureStorage());
-      repo = buildLoginRepo(RemoteDataSourceImpl(MockAuthApiClient()), storage);
+      repo = buildLoginRepo(RemoteDataSourceImpl(), storage);
     });
 
     test('returns success and saves tokens when remember me is true', () async {
@@ -33,14 +31,14 @@ void main() {
       expect(await storage.getRefreshToken(), isNotNull);
     });
 
-    test('saves tokens on success even when remember me is false', () async {
+    test('does not save tokens when remember me is false', () async {
       final result = await repo.login(
         LoginCredentials(email: Dummy.email, password: Dummy.pass),
       );
 
       expect(result, isA<SuccessResponce>());
-      expect(await storage.getAccessToken(), isNotNull);
-      expect(await storage.getRefreshToken(), isNotNull);
+      expect(await storage.getAccessToken(), isNull);
+      expect(await storage.getRefreshToken(), isNull);
     });
 
     test('returns error for invalid credentials', () async {
@@ -61,6 +59,3 @@ void main() {
     });
   });
 }
-
-
-

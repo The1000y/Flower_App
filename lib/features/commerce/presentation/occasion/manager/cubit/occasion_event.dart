@@ -6,7 +6,7 @@ LoadOccasions({this.initialOccasionName});
 }
 
 class LoadProductsForOccasion extends OccasionEvent {
-  final String occasionId;
+  final int occasionId;
   LoadProductsForOccasion(this.occasionId);
 }
 

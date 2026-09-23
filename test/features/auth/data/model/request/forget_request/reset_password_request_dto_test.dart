@@ -5,30 +5,30 @@ void main() {
   group('ResetPasswordRequestDto', () {
     test('should create ResetPasswordRequestDto from JSON correctly', () {
       final json = {
-        'resetToken': '123456',
-        'newPassword': 'Password123!',
-        'confirmPassword': 'Password123!',
+        'email': 'test@gmail.com',
+        'resetCode': '123456',
+        'newPassword': 'A12320022',
       };
 
       final result = ResetPasswordRequestDto.fromJson(json);
 
-      expect(result.resetToken, '123456');
-      expect(result.newPassword, 'Password123!');
-      expect(result.confirmPassword, 'Password123!');
+      expect(result.email, 'test@gmail.com');
+      expect(result.resetCode, '123456');
+      expect(result.newPassword, 'A12320022');
     });
 
     test('should convert ResetPasswordRequestDto to JSON correctly', () {
       const dto = ResetPasswordRequestDto(
-        resetToken: '123456',
-        newPassword: 'Password123!',
-        confirmPassword: 'Password123!',
+        email: 'test@gmail.com',
+        resetCode: '123456',
+        newPassword: 'A12320022',
       );
 
       final result = dto.toJson();
 
-      expect(result['resetToken'], '123456');
-      expect(result['newPassword'], 'Password123!');
-      expect(result['confirmPassword'], 'Password123!');
+      expect(result['email'], 'test@gmail.com');
+      expect(result['resetCode'], '123456');
+      expect(result['newPassword'], 'A12320022');
     });
   });
 }

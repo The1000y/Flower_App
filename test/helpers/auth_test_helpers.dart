@@ -1,5 +1,4 @@
 import 'package:flower_app/config/base/base_responce.dart';
-
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/local/local_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
@@ -23,7 +22,6 @@ import 'package:flower_app/features/auth/domain/use_case/save_remembered_email_u
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'mock_auth_api_client.mocks.dart';
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
 import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
 
@@ -143,7 +141,7 @@ final SecureStorageService _storage = SecureStorageService(
 AuthRepoImpl buildPasswordRecoveryRepo(LocalDataSource localDataSource) {
   return AuthRepoImpl(
     localDataSource,
-    RemoteDataSourceImpl(MockAuthApiClient()),
+    RemoteDataSourceImpl(),
     SecureStorageService(const FlutterSecureStorage()),
   );
 }
@@ -179,6 +177,3 @@ Future<String?> readStorageValue(String key) async {
 
   return storage.read(key: key);
 }
-
-
-
