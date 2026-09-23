@@ -7,6 +7,7 @@ import 'package:flower_app/features/orders/presentation/manager/orders_state.dar
 import 'package:flower_app/features/orders/presentation/view/my_orders_view.dart';
 import 'package:flower_app/features/orders/presentation/view/widgets/order_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -42,7 +43,7 @@ void main() {
     mockOrdersCubit = MockOrdersCubit();
     getIt.registerSingleton<OrdersCubit>(mockOrdersCubit);
 
-    when(() => mockOrdersCubit.state).thenReturn(OrdersInitial());
+    when(() => mockOrdersCubit.state).thenReturn(const OrdersState(baseState: OrdersBaseState.initial));
     when(() => mockOrdersCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockOrdersCubit.fetchOrders()).thenAnswer((_) async {});
     when(() => mockOrdersCubit.close()).thenAnswer((_) async {});
@@ -51,8 +52,11 @@ void main() {
   Widget createWidgetUnderTest() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-      child: const MaterialApp(
-        home: MyOrdersView(),
+      child: MaterialApp(
+        home: BlocProvider<OrdersCubit>.value(
+          value: mockOrdersCubit,
+          child: const MyOrdersView(),
+        ),
       ),
     );
   }
@@ -60,7 +64,7 @@ void main() {
   group('MyOrdersView', () {
     testWidgets('displays CircularProgressIndicator when state is OrdersLoading',
         (tester) async {
-      when(() => mockOrdersCubit.state).thenReturn(OrdersLoading());
+      when(() => mockOrdersCubit.state).thenReturn(const OrdersState(baseState: OrdersBaseState.loading));
 
       await tester.pumpWidget(createWidgetUnderTest());
 
@@ -70,7 +74,8 @@ void main() {
     testWidgets('displays active orders when state is OrdersSuccess',
         (tester) async {
       when(() => mockOrdersCubit.state).thenReturn(
-        OrdersSuccess(
+        OrdersState(
+          baseState: OrdersBaseState.success,
           activeOrders: [tActiveOrder],
           completedOrders: [tCompletedOrder],
         ),
@@ -89,7 +94,7 @@ void main() {
     testWidgets('displays error message when state is OrdersError',
         (tester) async {
       const errorMessage = "Failed to load orders";
-      when(() => mockOrdersCubit.state).thenReturn(OrdersError(errorMessage));
+      when(() => mockOrdersCubit.state).thenReturn(const OrdersState(baseState: OrdersBaseState.error, errorMessage: errorMessage));
 
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
