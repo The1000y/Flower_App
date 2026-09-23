@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -21,12 +22,33 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final cubit = context.read<SearchCubit>();
+    final state = cubit.state;
+    if (state.isLoadingMore || state.resultState.isLoading) return;
+    if (state.pagination?.hasNextPage != true) return;
+    final threshold = _scrollController.position.maxScrollExtent - 200.h;
+    if (_scrollController.position.pixels >= threshold) {
+      cubit.doEvent(LoadMoreSearchEvent());
+    }
+  }
 
   @override
   void dispose() {
     _debounce?.cancel();
     _searchController.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -108,7 +130,7 @@ class _SearchViewState extends State<SearchView> {
             ElevatedButton(
               onPressed: () =>
                   context.read<SearchCubit>().doEvent(SearchProductsEvent(state.query)),
-              child: const Text('Retry'),
+              child: const Text(AppStrings.retry),
             ),
           ],
         ),
@@ -119,38 +141,52 @@ class _SearchViewState extends State<SearchView> {
     if (products.isEmpty) {
       return Center(
         child: Text(
-          'No results found',
+          AppStrings.noResult,
           style: TextStyle(color: AppColors.black30, fontSize: 16.sp),
         ),
       );
     }
 
-    return GridView.builder(
-      padding: EdgeInsets.all(16.w),
-      itemCount: products.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12.w,
-        mainAxisSpacing: 12.h,
-        mainAxisExtent: 280.h,
-      ),
-      itemBuilder: (context, index) {
-        final ProductEntity product = products[index];
-        return GestureDetector(
-          onTap: () => Navigator.pushNamed(
-            context,
-            Routes.productDetails,
-            arguments: product.id,
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.all(16.w),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12.w,
+              mainAxisSpacing: 12.h,
+              mainAxisExtent: 280.h,
+            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final ProductEntity product = products[index];
+              return GestureDetector(
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  Routes.productDetails,
+                  arguments: product.id,
+                ),
+                child: ProductCard(
+                  id: product.id,
+                  image: product.imageUrl,
+                  name: product.name,
+                  price: product.price,
+                  oldPrice: product.originalPrice,
+                  discount: product.discountPercentage?.round(),
+                ),
+              );
+            }, childCount: products.length),
           ),
-          child: ProductCard(
-            image: product.imageUrl,
-            name: product.name,
-            price: product.price,
-            oldPrice: product.originalPrice,
-            discount: product.discountPercentage?.round(), id: product.id,
+        ),
+        if (state.isLoadingMore)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: const Center(child: CircularProgressIndicator()),
+            ),
           ),
-        );
-      },
+      ],
     );
   }
 }

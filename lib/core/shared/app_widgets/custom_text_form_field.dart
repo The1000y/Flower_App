@@ -14,6 +14,7 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.onChanged,
     this.autovalidateMode,
+    this.readOnly = false,
   });
 
   final String label;
@@ -26,10 +27,12 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final ValueChanged<String>? onChanged;
   final AutovalidateMode? autovalidateMode;
+  final bool? readOnly;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly ?? false,
       autovalidateMode: autovalidateMode,
       controller: controller,
       validator: validator,

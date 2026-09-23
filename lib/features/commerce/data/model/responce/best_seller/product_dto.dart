@@ -6,7 +6,7 @@ part 'product_dto.g.dart';
 @JsonSerializable()
 class ProductDto {
     @JsonKey(name: "id")
-    int? id;
+    String? id;
     @JsonKey(name: "name")
     String? name;
     @JsonKey(name: "imageUrl")
@@ -39,7 +39,7 @@ class ProductDto {
 
     BestSellerEntity toDomain (){
       return BestSellerEntity(
-        id: id??0,
+        id: id ?? '',
         name: name??'',
         imageUrl: imageUrl??'',
         currency: currency??'',
@@ -50,3 +50,4 @@ class ProductDto {
       );
     }
 }
+

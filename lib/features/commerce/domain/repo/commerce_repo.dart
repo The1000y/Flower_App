@@ -12,5 +12,9 @@ abstract interface class CommerceRepo {
   Future<BaseResponce<List<SectionEntity>>> getSection();
   Future<BaseResponce<List<OccasionEntity>>> getOccasions();
   Future<BaseResponce<List<ProductEntity>>> getProducts();
-  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1});
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
+    String occasionId, {
+    int page = 1,
+  });
 }
+

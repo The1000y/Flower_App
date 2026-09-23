@@ -17,7 +17,7 @@ void main() {
   });
 
   test('should call getOccasions on repository and return SuccessResponce with list of occasions', () async {
-    final tOccasions = [OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url')];
+    final tOccasions = [OccasionEntity(id: '1', name: 'Birthday', imageUrl: 'url')];
     when(() => mockCommerceRepo.getOccasions())
         .thenAnswer((_) async => SuccessResponce<List<OccasionEntity>>(tOccasions));
 
@@ -41,3 +41,4 @@ void main() {
     verifyNoMoreInteractions(mockCommerceRepo);
   });
 }
+

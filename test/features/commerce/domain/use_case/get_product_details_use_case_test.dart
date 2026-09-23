@@ -22,7 +22,7 @@ void main() {
   });
 
   final tProductEntity = ProductDetailsEntity(
-    id: 1,
+    id: '1',
     name: 'Test',
     imageUrl: '',
     currency: '',
@@ -36,16 +36,20 @@ void main() {
 
   test('should call getProductDetails from repository', () async {
     // arrange
-    when(mockRepository.getProductDetails(any))
+    when(mockRepository.getProductDetails('1'))
         .thenAnswer((_) async => SuccessResponce(tProductEntity));
 
     // act
-    final result = await useCase.execute(1);
+    final result = await useCase.execute('1');
 
     // assert
     expect(result, isA<SuccessResponce<ProductDetailsEntity>>());
     expect((result as SuccessResponce).data, tProductEntity);
-    verify(mockRepository.getProductDetails(1));
+    verify(mockRepository.getProductDetails('1'));
     verifyNoMoreInteractions(mockRepository);
   });
 }
+
+
+
+

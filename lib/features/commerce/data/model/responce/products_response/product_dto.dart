@@ -6,7 +6,7 @@ part 'product_dto.g.dart';
 @JsonSerializable()
 class ProductDto {
   @JsonKey(name: 'id')
-  final int id;
+  final String id;
 
   @JsonKey(name: 'name')
   final String name;
@@ -15,29 +15,29 @@ class ProductDto {
   final String imageUrl;
 
   @JsonKey(name: 'currency')
-  final String currency;
+  final String? currency;
 
   @JsonKey(name: 'price')
   final double price;
 
-  @JsonKey(name: 'originalPrice')
-  final double? originalPrice;
+  @JsonKey(name: 'discountedPrice')
+  final double? discountedPrice;
 
-  @JsonKey(name: 'discountPercentage')
-  final double? discountPercentage;
+  @JsonKey(name: 'discountPercent')
+  final double? discountPercent;
 
-  @JsonKey(name: 'status')
-  final String status;
+  @JsonKey(name: 'inStock')
+  final bool? inStock;
 
   ProductDto({
     required this.id,
     required this.name,
     required this.imageUrl,
-    required this.currency,
+    this.currency,
     required this.price,
-    this.originalPrice,
-    this.discountPercentage,
-    required this.status,
+    this.discountedPrice,
+    this.discountPercent,
+    this.inStock,
   });
 
   ProductEntity toDomain() {
@@ -45,11 +45,11 @@ class ProductDto {
       id: id,
       name: name,
       imageUrl: imageUrl,
-      currency: currency,
-      price: price,
-      originalPrice: originalPrice,
-      discountPercentage: discountPercentage,
-      status: status,
+      currency: currency ?? 'EGP',
+      price: discountedPrice ?? price,
+      originalPrice: discountedPrice != null ? price : null,
+      discountPercentage: discountPercent,
+      status: (inStock ?? true) ? 'In Stock' : 'Out of Stock',
     );
   }
 
