@@ -10,39 +10,52 @@ import 'package:mocktail/mocktail.dart';
 class MockProfileApiClient extends Mock implements ProfileApiClient {}
 
 void main() {
-  late ProfileRemoteDataSourceImpl dataSource;
   late MockProfileApiClient mockClient;
+  late ProfileRemoteDataSourceImpl dataSource;
 
   setUp(() {
     mockClient = MockProfileApiClient();
     dataSource = ProfileRemoteDataSourceImpl(mockClient);
   });
 
+  final dioError = DioException(requestOptions: RequestOptions(path: '/x'));
+
   group('getProfile', () {
-    test('returns SuccessResponce on valid response', () async {
-      final dto = GetProfileResponseDto(fullName: 'John Doe');
+    final dto = GetProfileResponseDto(
+      fullName: 'John Doe',
+      email: 'john@example.com',
+      phone: '01000000000',
+      gender: 'Male',
+    );
+
+    test('returns SuccessResponce holding the DTO from the client', () async {
       when(() => mockClient.getProfile()).thenAnswer((_) async => dto);
 
       final result = await dataSource.getProfile();
+
       expect(result, isA<SuccessResponce<GetProfileResponseDto>>());
+      expect((result as SuccessResponce<GetProfileResponseDto>).data, same(dto));
     });
 
-    test('returns ErrorResponce on DioException', () async {
-      when(() => mockClient.getProfile()).thenThrow(
-        DioException(
-          requestOptions: RequestOptions(path: ''),
-        ),
+    test('returns ErrorResponce when the client throws DioException', () async {
+      when(() => mockClient.getProfile()).thenThrow(dioError);
+
+      final result = await dataSource.getProfile();
+
+      expect(result, isA<ErrorResponce<GetProfileResponseDto>>());
+      expect((result as ErrorResponce<GetProfileResponseDto>).error, same(dioError));
+    });
+
+    test('returns ErrorResponce when the client throws another error', () async {
+      when(() => mockClient.getProfile()).thenThrow(StateError('boom'));
+
+      final result = await dataSource.getProfile();
+
+      expect(result, isA<ErrorResponce<GetProfileResponseDto>>());
+      expect(
+        (result as ErrorResponce<GetProfileResponseDto>).error.toString(),
+        contains('boom'),
       );
-
-      final result = await dataSource.getProfile();
-      expect(result, isA<ErrorResponce<GetProfileResponseDto>>());
-    });
-
-    test('returns ErrorResponce on other Exception', () async {
-      when(() => mockClient.getProfile()).thenThrow(Exception('Generic error'));
-
-      final result = await dataSource.getProfile();
-      expect(result, isA<ErrorResponce<GetProfileResponseDto>>());
     });
   });
 
@@ -54,40 +67,55 @@ void main() {
       gender: 'Male',
     );
 
-    test('returns SuccessResponce on successful update', () async {
-      when(() => mockClient.updateProfile(any(), any(), any(), any(), any()))
-          .thenAnswer((_) async => Future.value());
+    test('returns SuccessResponce and sends the DTO fields to the client', () async {
+      when(() => mockClient.updateProfile(
+        'John Doe',
+        'john@example.com',
+        '01000000000',
+        'Male',
+        null,
+      )).thenAnswer((_) async {});
 
       final result = await dataSource.updateProfile(requestDto);
 
       expect(result, isA<SuccessResponce<void>>());
       verify(() => mockClient.updateProfile(
-            requestDto.fullName,
-            requestDto.email,
-            requestDto.phone,
-            requestDto.gender,
-            requestDto.photo,
-          )).called(1);
+        'John Doe',
+        'john@example.com',
+        '01000000000',
+        'Male',
+        null,
+      )).called(1);
     });
 
-    test('returns ErrorResponce on DioException', () async {
-      when(() => mockClient.updateProfile(any(), any(), any(), any(), any()))
-          .thenThrow(
-        DioException(
-          requestOptions: RequestOptions(path: ''),
-        ),
-      );
+    test('returns ErrorResponce when the client throws DioException', () async {
+      when(() => mockClient.updateProfile(
+        'John Doe',
+        'john@example.com',
+        '01000000000',
+        'Male',
+        null,
+      )).thenThrow(dioError);
 
       final result = await dataSource.updateProfile(requestDto);
+
       expect(result, isA<ErrorResponce<void>>());
+      expect((result as ErrorResponce<void>).error, same(dioError));
     });
 
-    test('returns ErrorResponce on other Exception', () async {
-      when(() => mockClient.updateProfile(any(), any(), any(), any(), any()))
-          .thenThrow(Exception('Generic update error'));
+    test('returns ErrorResponce when the client throws another error', () async {
+      when(() => mockClient.updateProfile(
+        'John Doe',
+        'john@example.com',
+        '01000000000',
+        'Male',
+        null,
+      )).thenThrow(StateError('boom'));
 
       final result = await dataSource.updateProfile(requestDto);
+
       expect(result, isA<ErrorResponce<void>>());
+      expect((result as ErrorResponce<void>).error.toString(), contains('boom'));
     });
   });
 }

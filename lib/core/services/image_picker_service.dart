@@ -7,7 +7,9 @@ abstract interface class ImagePickerService {
 
 @LazySingleton(as: ImagePickerService)
 class ImagePickerServiceImpl implements ImagePickerService {
-  final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker;
+
+  ImagePickerServiceImpl(this._picker);
 
   @override
   Future<String?> pickFromGallery() async {
@@ -18,4 +20,10 @@ class ImagePickerServiceImpl implements ImagePickerService {
       return null;
     }
   }
+}
+
+@module
+abstract class ImagePickerModule {
+  @lazySingleton
+  ImagePicker get imagePicker => ImagePicker();
 }
