@@ -45,7 +45,6 @@ void main() {
           home: Scaffold(
             body: CartItem(
               item: item ?? buildItem(),
-              isLoading: isLoading,
               onDelete: onDelete,
               onQuantityChanged: onQuantityChanged,
             ),

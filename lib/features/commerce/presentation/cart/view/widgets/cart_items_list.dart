@@ -6,14 +6,15 @@ import 'cart_item.dart';
 
 class CartItemsList extends StatelessWidget {
   final List<CartItemEntity> items;
-  final Set<int> loadingProductIds;
   final void Function(String cartItemId) onDelete;
-  final void Function(String cartItemId, int newQuantity) onQuantityChanged;
+  final void Function(
+    String cartItemId,
+    int newQuantity,
+  ) onQuantityChanged;
 
   const CartItemsList({
     super.key,
     required this.items,
-    required this.loadingProductIds,
     required this.onDelete,
     required this.onQuantityChanged,
   });
@@ -21,24 +22,31 @@ class CartItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return  Center(child: Text(AppStrings.yourCartIsEmpty));
+      return const Center(
+        child: Text(AppStrings.yourCartIsEmpty),
+      );
     }
 
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
+
         return CartItem(
           item: item,
-          isLoading: loadingProductIds.contains(item.productId),
           onDelete: () => onDelete(item.id),
           onQuantityChanged: (delta) {
             final newQuantity = item.quantity + delta;
+
             if (newQuantity <= 0) {
               onDelete(item.id);
               return;
             }
-            onQuantityChanged(item.id, newQuantity);
+
+            onQuantityChanged(
+              item.id,
+              newQuantity,
+            );
           },
         );
       },
