@@ -47,4 +47,5 @@ class AppColors {
   static const Color success = Color(0xFF0CB359);
 
   static const Color lightPink = Color(0xFFF9ECF0);
+  static const Color lightGray = Color(0xFFEAEAEA);
 }

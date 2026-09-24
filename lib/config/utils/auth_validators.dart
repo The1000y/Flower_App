@@ -51,8 +51,8 @@ class AuthValidators {
     return null;
   }
 
-  static String? firstName(String? value) {
-    if (value == null || value.trim().isEmpty) return AppStrings.firstNameRequired;
+  static String? firstName(String? value, [String errorMessage  = AppStrings.firstNameRequired]) {
+    if (value == null || value.trim().isEmpty) return errorMessage;
     if (!RegExp(r'^[a-zA-Z]{2,30}$').hasMatch(value)) {
       return AppStrings.firstNameOnlyLetters;
     }
