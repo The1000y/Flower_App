@@ -1,4 +1,3 @@
-import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 
 sealed class CheckoutEvent {}
 
@@ -10,7 +9,7 @@ class GetEstimationTimeEvent extends CheckoutEvent {
 }
 
 class SelectPaymentMethodEvent extends CheckoutEvent {
-  final CheckoutPaymentMethod paymentMethod;
+  final String paymentMethod;
 
   SelectPaymentMethodEvent({required this.paymentMethod});
 }

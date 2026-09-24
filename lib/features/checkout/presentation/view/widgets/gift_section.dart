@@ -2,7 +2,6 @@ import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
@@ -26,7 +25,7 @@ class GiftSection extends StatelessWidget {
             previous.isGift != current.isGift ||
             previous.selectedPaymentMethod != current.selectedPaymentMethod,
         builder: (context, state) {
-          return state.selectedPaymentMethod == CheckoutPaymentMethod.cash
+          return state.selectedPaymentMethod =='COD'
               ? SizedBox.shrink()
               : Form(
                   key: formKey,

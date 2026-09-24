@@ -1,6 +1,5 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
-import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
@@ -16,9 +15,21 @@ class PaymentMethodSection extends StatelessWidget {
     var theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: BlocSelector<CheckoutCubit, CheckoutState, CheckoutPaymentMethod>(
-        selector: (state) => state.selectedPaymentMethod,
-        builder: (context, selected) {
+      child: BlocBuilder<CheckoutCubit, CheckoutState>(
+        buildWhen: (previous, current) =>
+            previous.checkoutDetailsState != current.checkoutDetailsState ||
+            previous.selectedPaymentMethod != current.selectedPaymentMethod,
+        builder: (context, state) {
+          if (state.checkoutDetailsState.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.checkoutDetailsState.errorMessage.isNotEmpty) {
+            return Center(child: Text(state.checkoutDetailsState.errorMessage));
+          }
+          if (state.checkoutDetailsState.data == null) {
+            return const Center(child: Text(AppStrings.somethingWentWrong));
+          }
+          final paymentList = state.checkoutDetailsState.data!.paymentMethods;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -30,27 +41,18 @@ class PaymentMethodSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _PaymentOptionTile(
-                title: AppStrings.cashOnDelivery,
-                value: CheckoutPaymentMethod.cash,
-                groupValue: selected,
-                onChanged: () => context.read<CheckoutCubit>().doEvent(
-                  SelectPaymentMethodEvent(
-                    paymentMethod: CheckoutPaymentMethod.cash,
+
+              for (var element in paymentList) ...[
+                _PaymentOptionTile(
+                  title: element.method,
+                  value: element.method,
+                  groupValue: state.selectedPaymentMethod,
+                  onChanged: () => context.read<CheckoutCubit>().doEvent(
+                    SelectPaymentMethodEvent(paymentMethod: element.method),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              _PaymentOptionTile(
-                title: AppStrings.creditCard,
-                value: CheckoutPaymentMethod.creditCard,
-                groupValue: selected,
-                onChanged: () => context.read<CheckoutCubit>().doEvent(
-                  SelectPaymentMethodEvent(
-                    paymentMethod: CheckoutPaymentMethod.creditCard,
-                  ),
-                ),
-              ),
+                const SizedBox(height: 16),
+              ],
             ],
           );
         },
@@ -68,8 +70,8 @@ class _PaymentOptionTile extends StatelessWidget {
   });
 
   final String title;
-  final CheckoutPaymentMethod value;
-  final CheckoutPaymentMethod groupValue;
+  final String value;
+  final String groupValue;
   final VoidCallback onChanged;
 
   @override
@@ -88,7 +90,7 @@ class _PaymentOptionTile extends StatelessWidget {
           ),
         ],
       ),
-      child: RadioListTile<CheckoutPaymentMethod>(
+      child: RadioListTile<String>(
         contentPadding: EdgeInsets.zero,
         controlAffinity: ListTileControlAffinity.trailing,
         activeColor: AppColors.pinkBase,

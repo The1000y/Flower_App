@@ -37,14 +37,10 @@ class DeliveryTimeSection extends StatelessWidget {
               ),
               BlocBuilder<CheckoutCubit, CheckoutState>(
                 buildWhen: (previous, current) =>
-                    previous.checkoutDetailsState !=
-                        current.checkoutDetailsState ||
                     previous.estimationTimeState != current.estimationTimeState,
                 builder: (context, state) {
                   final estimatedTime =
-                      state.estimationTimeState.data?.estimatedDeliveryAt ??
-                      state.checkoutDetailsState.data?.estimatedDeliveryAt ??
-                      '';
+                      state.estimationTimeState.data?.estimatedDeliveryAt ?? '';
                   return Text(
                     '${AppStrings.arriveByPrefix}$estimatedTime',
                     style: TextStyle(color: AppColors.success, fontSize: 16),

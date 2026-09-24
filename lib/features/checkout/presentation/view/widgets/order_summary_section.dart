@@ -20,24 +20,44 @@ class OrderSummarySection extends StatelessWidget {
                 previous.checkoutDetailsState != current.checkoutDetailsState,
             builder: (context, state) {
               final details = state.checkoutDetailsState.data;
+              final isLoading = state.checkoutDetailsState.isLoading;
+              if (state.checkoutDetailsState.errorMessage.isNotEmpty) {
+                return Center(
+                  child: Text(state.checkoutDetailsState.errorMessage),
+                );
+              }
+              if (!isLoading && details == null) {
+                return Center(child: Text(AppStrings.somethingWentWrong));
+              }
               return Column(
                 children: [
                   _SummaryRow(
                     label: AppStrings.subTotal,
-                    value: '${details?.subtotal ?? 0}${AppStrings.currencyUsd}',
+                    value: isLoading
+                        ? LoadingCircule()
+                        : Text('${details!.subtotal}${AppStrings.currencyUsd}'),
                   ),
                   const SizedBox(height: 8),
                   _SummaryRow(
                     label: AppStrings.deliveryFee,
-                    value:
-                        '${details?.deliveryFee ?? 0}${AppStrings.currencyUsd}',
+                    value: isLoading
+                        ? LoadingCircule()
+                        : Text(
+                            '${details!.deliveryFee}${AppStrings.currencyUsd}',
+                          ),
                   ),
                   const SizedBox(height: 12),
                   const Divider(height: 1, color: AppColors.white60),
                   const SizedBox(height: 12),
                   _SummaryRow(
                     label: AppStrings.total,
-                    value: '${details?.total ?? 0}${AppStrings.currencyUsd}',
+                    value: isLoading
+                        ? LoadingCircule()
+                        : Text(
+                            '${details!.total}${AppStrings.currencyUsd}',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
                     isTotal: true,
                   ),
                 ],
@@ -58,6 +78,19 @@ class OrderSummarySection extends StatelessWidget {
   }
 }
 
+class LoadingCircule extends StatelessWidget {
+  const LoadingCircule({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 20,
+      height: 20,
+      child: CircularProgressIndicator(strokeWidth: 2),
+    );
+  }
+}
+
 class _SummaryRow extends StatelessWidget {
   const _SummaryRow({
     required this.label,
@@ -66,7 +99,7 @@ class _SummaryRow extends StatelessWidget {
   });
 
   final String label;
-  final String value;
+  final Widget value;
   final bool isTotal;
 
   @override
@@ -80,7 +113,7 @@ class _SummaryRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: style),
-        Text(value, style: style),
+        value,
       ],
     );
   }

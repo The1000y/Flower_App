@@ -4,7 +4,6 @@ import 'package:flower_app/features/checkout/domain/entities/checkout_details_en
 import 'package:flower_app/features/checkout/domain/entities/estimation_time_entity.dart';
 import 'package:flower_app/features/checkout/domain/use_cases/estimation_time_use_case.dart';
 import 'package:flower_app/features/checkout/domain/use_cases/get_checkout_use_case.dart';
-import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +44,12 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       case SuccessResponce<CheckoutDetailsEntity>():
         emit(
           state.copyWith(
-            checkoutDetailsState: BaseState(
+            estimationTimeState: BaseState<EstimationTimeEntity>(
+              data: EstimationTimeEntity(
+                estimatedDeliveryAt: result.data.estimatedDeliveryAt,
+              ),
+            ),
+            checkoutDetailsState: BaseState<CheckoutDetailsEntity>(
               data: result.data,
               isLoading: false,
             ),
@@ -85,6 +89,6 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     }
   }
 
-  void _selectedPaymentMethod(CheckoutPaymentMethod paymentMethod) =>
+  void _selectedPaymentMethod(String paymentMethod) =>
       emit(state.copyWith(selectedPaymentMethod: paymentMethod));
 }
