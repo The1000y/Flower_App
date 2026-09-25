@@ -1,7 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/orders/domain/entities/my_orders_entity.dart';
 import 'package:flower_app/features/orders/domain/use_case/get_orders_usecase.dart';
 import 'package:flower_app/features/orders/presentation/manager/cubit/orders_cubit.dart';
+import 'package:flower_app/features/orders/presentation/manager/orders_intent.dart';
 import 'package:flower_app/features/orders/presentation/manager/orders_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -44,14 +46,16 @@ void main() {
   });
 
   blocTest<OrdersCubit, OrdersState>(
-    'emits loading and success states when fetchOrders succeeds on first page',
+    'emits loading and success states when FetchOrdersIntent succeeds on first page',
     build: () {
       when(() => mockGetOrdersUseCase(page: 1, limit: 10)).thenAnswer(
-        (_) async => [tActiveOrder, tCompletedOrder],
+        (_) async => SuccessResponce(
+          (activeOrders: [tActiveOrder], completedOrders: [tCompletedOrder]),
+        ),
       );
       return cubit;
     },
-    act: (cubit) => cubit.fetchOrders(),
+    act: (cubit) => cubit.doIntent(const FetchOrdersIntent()),
     expect: () => [
       const OrdersState(baseState: OrdersBaseState.loading, page: 1, hasReachedMax: false),
       const OrdersState(
@@ -67,10 +71,12 @@ void main() {
   );
 
   blocTest<OrdersCubit, OrdersState>(
-    'emits appended list on successful loadMore',
+    'emits appended list on successful loadMore via FetchOrdersIntent',
     build: () {
       when(() => mockGetOrdersUseCase(page: 2, limit: 10)).thenAnswer(
-        (_) async => [tActiveOrder],
+        (_) async => SuccessResponce(
+          (activeOrders: [tActiveOrder], completedOrders: <OrderEntity>[]),
+        ),
       );
       return cubit;
     },
@@ -80,7 +86,7 @@ void main() {
       activeOrders: [tActiveOrder],
       completedOrders: [tCompletedOrder],
     ),
-    act: (cubit) => cubit.fetchOrders(isLoadMore: true),
+    act: (cubit) => cubit.doIntent(const FetchOrdersIntent(isLoadMore: true)),
     expect: () => [
       const OrdersState(
         baseState: OrdersBaseState.success,
@@ -95,33 +101,75 @@ void main() {
   );
 
   blocTest<OrdersCubit, OrdersState>(
-    'emits error state on failure',
+    'emits navigateToTrack side effect on TrackOrderTappedIntent',
+    build: () => cubit,
+    act: (cubit) => cubit.doIntent(const TrackOrderTappedIntent('123')),
+    expect: () => [
+      const OrdersState(
+        sideEffect: OrdersSideEffect.navigateToTrack,
+        selectedOrderId: '123',
+      ),
+    ],
+  );
+
+  blocTest<OrdersCubit, OrdersState>(
+    'emits navigateToCart side effect on ReorderTappedIntent',
+    build: () => cubit,
+    act: (cubit) => cubit.doIntent(const ReorderTappedIntent('456')),
+    expect: () => [
+      const OrdersState(
+        sideEffect: OrdersSideEffect.navigateToCart,
+        selectedOrderId: '456',
+      ),
+    ],
+  );
+
+  blocTest<OrdersCubit, OrdersState>(
+    'resets side effect on ResetSideEffectIntent',
+    build: () => cubit,
+    seed: () => const OrdersState(
+      sideEffect: OrdersSideEffect.navigateToTrack,
+      selectedOrderId: '123',
+    ),
+    act: (cubit) => cubit.doIntent(const ResetSideEffectIntent()),
+    expect: () => [
+      const OrdersState(
+        sideEffect: OrdersSideEffect.none,
+        selectedOrderId: null,
+      ),
+    ],
+  );
+
+  blocTest<OrdersCubit, OrdersState>(
+    'emits error state when GetOrdersUseCase returns ErrorResponce',
     build: () {
-      when(() => mockGetOrdersUseCase(page: 1, limit: 10)).thenThrow(
-        Exception('Network Error'),
+      when(() => mockGetOrdersUseCase(page: 1, limit: 10)).thenAnswer(
+        (_) async => ErrorResponce(Exception('Network Error')),
       );
       return cubit;
     },
-    act: (cubit) => cubit.fetchOrders(),
+    act: (cubit) => cubit.doIntent(const FetchOrdersIntent()),
     expect: () => [
       const OrdersState(baseState: OrdersBaseState.loading, page: 1),
       const OrdersState(
         baseState: OrdersBaseState.error,
-        errorMessage: 'Exception: Network Error',
+        errorMessage: 'something went wrong, pls try again',
         page: 1,
       ),
     ],
   );
 
   blocTest<OrdersCubit, OrdersState>(
-    'sets hasReachedMax when API returns empty list',
+    'sets hasReachedMax when GetOrdersUseCase returns empty lists',
     build: () {
       when(() => mockGetOrdersUseCase(page: 1, limit: 10)).thenAnswer(
-        (_) async => [],
+        (_) async => SuccessResponce(
+          (activeOrders: <OrderEntity>[], completedOrders: <OrderEntity>[]),
+        ),
       );
       return cubit;
     },
-    act: (cubit) => cubit.fetchOrders(),
+    act: (cubit) => cubit.doIntent(const FetchOrdersIntent()),
     expect: () => [
       const OrdersState(baseState: OrdersBaseState.loading, page: 1),
       const OrdersState(

@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 
+
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -33,6 +34,7 @@ class FlowerApp extends StatelessWidget {
       theme: AppTheme.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
+
     );
   }
 }

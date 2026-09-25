@@ -1,5 +1,6 @@
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/orders/presentation/manager/cubit/orders_cubit.dart';
+import 'package:flower_app/features/orders/presentation/manager/orders_intent.dart';
 import 'package:flower_app/features/orders/presentation/manager/orders_state.dart';
 import 'package:flower_app/features/orders/presentation/view/widgets/orders_list_widget.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,10 @@ class MyOrdersView extends StatelessWidget {
       listener: (context, state) {
         if (state.sideEffect == OrdersSideEffect.navigateToTrack) {
           Navigator.pushNamed(context, Routes.trackOrder, arguments: state.selectedOrderId);
-          context.read<OrdersCubit>().resetSideEffect();
-        }else if (state.sideEffect == OrdersSideEffect.navigateToCart) {
+          context.read<OrdersCubit>().doIntent(const ResetSideEffectIntent());
+        } else if (state.sideEffect == OrdersSideEffect.navigateToCart) {
           Navigator.pushNamed(context, Routes.cart, arguments: state.selectedOrderId);
-          context.read<OrdersCubit>().resetSideEffect();
+          context.read<OrdersCubit>().doIntent(const ResetSideEffectIntent());
         }
       },
       builder: (context, state) {
@@ -52,16 +53,16 @@ class MyOrdersView extends StatelessWidget {
                           OrdersListWidget(
                             orders: state.activeOrders,
                             onActionPressed: (id) =>
-                                context.read<OrdersCubit>().trackOrderTapped(id),
+                                context.read<OrdersCubit>().doIntent(TrackOrderTappedIntent(id)),
                             onLoadMore: () =>
-                                context.read<OrdersCubit>().fetchOrders(isLoadMore: true),
+                                context.read<OrdersCubit>().doIntent(const FetchOrdersIntent(isLoadMore: true)),
                           ),
                           OrdersListWidget(
                             orders: state.completedOrders,
                             onActionPressed: (id) =>
-                                context.read<OrdersCubit>().reorderTapped(id),
+                                context.read<OrdersCubit>().doIntent(ReorderTappedIntent(id)),
                             onLoadMore: () =>
-                                context.read<OrdersCubit>().fetchOrders(isLoadMore: true),
+                                context.read<OrdersCubit>().doIntent(const FetchOrdersIntent(isLoadMore: true)),
                           ),
                         ],
                       ),

@@ -20,4 +20,6 @@ abstract class ApiStrings {
   static const String userAddresses = '/address/users/me/addresses';
 
   static const String ordersEndpoint = '/api/v1/orders';
+  static const String pageQuery = 'page';
+  static const String limitQuery = 'limit';
 }

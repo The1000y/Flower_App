@@ -19,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
 import '../../features/orders/presentation/manager/cubit/orders_cubit.dart';
+import '../../features/orders/presentation/manager/orders_intent.dart';
 import '../../features/orders/presentation/view/my_orders_view.dart';
 
 abstract class AppRoutes {
@@ -108,7 +109,7 @@ abstract class AppRoutes {
       case Routes.myOrders:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => getIt<OrdersCubit>()..fetchOrders(),
+            create: (_) => getIt<OrdersCubit>()..doIntent(const FetchOrdersIntent()),
             child: const MyOrdersView(),
           ),
         );

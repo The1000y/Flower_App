@@ -15,7 +15,7 @@ abstract class OrdersApiClient {
 
   @GET(ApiStrings.ordersEndpoint)
   Future<OrdersResponse> getOrders(
-    @Query("page") int page,
-    @Query("limit") int limit,
+    @Query(ApiStrings.pageQuery) int page,
+    @Query(ApiStrings.limitQuery) int limit,
   );
 }
