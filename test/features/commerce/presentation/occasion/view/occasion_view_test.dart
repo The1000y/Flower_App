@@ -12,7 +12,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockOccasionCubit extends MockCubit<OccasionState> implements OccasionCubit {}
+class MockOccasionCubit extends MockCubit<OccasionState>
+    implements OccasionCubit {}
 
 void main() {
   late MockOccasionCubit mockCubit;
@@ -49,7 +50,9 @@ void main() {
     );
   }
 
-  testWidgets('shows a loading indicator while occasions are loading', (tester) async {
+  testWidgets('shows a loading indicator while occasions are loading', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<OccasionState>.empty(),
@@ -63,7 +66,9 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('shows the error message when loading occasions fails', (tester) async {
+  testWidgets('shows the error message when loading occasions fails', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<OccasionState>.empty(),
@@ -77,13 +82,13 @@ void main() {
     expect(find.text('Something went wrong'), findsOneWidget);
   });
 
-  testWidgets('shows an empty-state message when there are no occasions', (tester) async {
+  testWidgets('shows an empty-state message when there are no occasions', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<OccasionState>.empty(),
-      initialState: const OccasionState(
-        occasionsState: BaseState(data: []),
-      ),
+      initialState: const OccasionState(occasionsState: BaseState(data: [])),
     );
 
     await pumpApp(tester, wrap());
@@ -91,7 +96,9 @@ void main() {
     expect(find.text('No occasions available right now.'), findsOneWidget);
   });
 
-  testWidgets('renders a tab per occasion when occasions are loaded', (tester) async {
+  testWidgets('renders a tab per occasion when occasions are loaded', (
+    tester,
+  ) async {
     final occasions = [
       OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url1'),
       OccasionEntity(id: 2, name: 'Wedding', imageUrl: 'url2'),

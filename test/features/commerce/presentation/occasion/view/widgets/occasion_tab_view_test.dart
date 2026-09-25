@@ -12,7 +12,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockOccasionCubit extends MockCubit<OccasionState> implements OccasionCubit {}
+class MockOccasionCubit extends MockCubit<OccasionState>
+    implements OccasionCubit {}
 
 void main() {
   late MockOccasionCubit mockCubit;
@@ -57,7 +58,9 @@ void main() {
     );
   }
 
-  testWidgets('shows a loading indicator while products are loading', (tester) async {
+  testWidgets('shows a loading indicator while products are loading', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<OccasionState>.empty(),
@@ -71,7 +74,9 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('shows the error message when loading products fails', (tester) async {
+  testWidgets('shows the error message when loading products fails', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<OccasionState>.empty(),
@@ -100,7 +105,9 @@ void main() {
     expect(find.text('Red Rose'), findsOneWidget);
   });
 
-  testWidgets('does not dispatch LoadMoreProducts when there is no next page', (tester) async {
+  testWidgets('does not dispatch LoadMoreProducts when there is no next page', (
+    tester,
+  ) async {
     final products = List.generate(
       20,
       (i) => ProductEntity(
@@ -130,45 +137,58 @@ void main() {
     );
 
     await pumpApp(tester, wrap());
-    await tester.fling(find.byType(CustomScrollView), const Offset(0, -3000), 3000);
+    await tester.fling(
+      find.byType(CustomScrollView),
+      const Offset(0, -3000),
+      3000,
+    );
     await tester.pumpAndSettle();
 
     verifyNever(() => mockCubit.handle(any(that: isA<LoadMoreProducts>())));
   });
 
-  testWidgets('dispatches LoadMoreProducts when scrolled near the bottom and hasNextPage is true', (tester) async {
-    final products = List.generate(
-      20,
-      (i) => ProductEntity(
-        id: i,
-        name: 'Product $i',
-        imageUrl: 'url',
-        currency: 'EGP',
-        price: 100,
-        status: 'Available',
-      ),
-    );
-
-    whenListen(
-      mockCubit,
-      const Stream<OccasionState>.empty(),
-      initialState: OccasionState(
-        productsState: BaseState<List<ProductEntity>>(data: products),
-        pagination: PaginationEntity(
-          page: 1,
-          pageSize: 20,
-          totalCount: 40,
-          totalPages: 2,
-          hasNextPage: true,
-          hasPreviousPage: false,
+  testWidgets(
+    'dispatches LoadMoreProducts when scrolled near the bottom and hasNextPage is true',
+    (tester) async {
+      final products = List.generate(
+        20,
+        (i) => ProductEntity(
+          id: i,
+          name: 'Product $i',
+          imageUrl: 'url',
+          currency: 'EGP',
+          price: 100,
+          status: 'Available',
         ),
-      ),
-    );
+      );
 
-    await pumpApp(tester, wrap());
-    await tester.fling(find.byType(CustomScrollView), const Offset(0, -3000), 3000);
-    await tester.pumpAndSettle();
+      whenListen(
+        mockCubit,
+        const Stream<OccasionState>.empty(),
+        initialState: OccasionState(
+          productsState: BaseState<List<ProductEntity>>(data: products),
+          pagination: PaginationEntity(
+            page: 1,
+            pageSize: 20,
+            totalCount: 40,
+            totalPages: 2,
+            hasNextPage: true,
+            hasPreviousPage: false,
+          ),
+        ),
+      );
 
-    verify(() => mockCubit.handle(any(that: isA<LoadMoreProducts>()))).called(greaterThanOrEqualTo(1));
-  });
+      await pumpApp(tester, wrap());
+      await tester.fling(
+        find.byType(CustomScrollView),
+        const Offset(0, -3000),
+        3000,
+      );
+      await tester.pumpAndSettle();
+
+      verify(
+        () => mockCubit.handle(any(that: isA<LoadMoreProducts>())),
+      ).called(greaterThanOrEqualTo(1));
+    },
+  );
 }

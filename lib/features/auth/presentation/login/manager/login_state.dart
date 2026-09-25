@@ -44,11 +44,11 @@ class LoginState extends BaseState<LoginEntity> {
 
   @override
   List<Object?> get props => [
-        ...super.props,
-        email,
-        password,
-        rememberMe,
-        loginSuccess,
-        obscurePassword,
-      ];
+    ...super.props,
+    email,
+    password,
+    rememberMe,
+    loginSuccess,
+    obscurePassword,
+  ];
 }

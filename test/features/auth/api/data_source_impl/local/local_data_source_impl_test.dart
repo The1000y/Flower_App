@@ -24,10 +24,7 @@ void main() {
         errorCode: 0,
         isSuccess: true,
         message: 'Operation completed successfully.',
-        data: Datadto(
-          expiresAtUtc: DateTime.now(),
-          resetToken: 'token123',
-        ),
+        data: Datadto(expiresAtUtc: DateTime.now(), resetToken: 'token123'),
       ),
     ),
   );
@@ -80,10 +77,7 @@ void main() {
             errorCode: 0,
             isSuccess: true,
             message: 'Operation completed successfully.',
-            data: Datadto(
-              expiresAtUtc: DateTime.now(),
-              resetToken: 'token123',
-            ),
+            data: Datadto(expiresAtUtc: DateTime.now(), resetToken: 'token123'),
           ),
         ),
       );
@@ -106,9 +100,8 @@ void main() {
           verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp),
         ),
       ).thenAnswer(
-        (_) async => ErrorResponce<VerifyOtpResponse>(
-          Exception('Invalid OTP or email'),
-        ),
+        (_) async =>
+            ErrorResponce<VerifyOtpResponse>(Exception('Invalid OTP or email')),
       );
 
       final result = await authRepoImpl.verifyOtp(email: email, otp: otp);

@@ -17,6 +17,7 @@ class CategoriesResponseDto {
     required this.errorCode,
   });
 
-  factory CategoriesResponseDto.fromJson(Map<String, dynamic> json) => _$CategoriesResponseDtoFromJson(json);
+  factory CategoriesResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$CategoriesResponseDtoFromJson(json);
   Map<String, dynamic> toJson() => _$CategoriesResponseDtoToJson(this);
 }

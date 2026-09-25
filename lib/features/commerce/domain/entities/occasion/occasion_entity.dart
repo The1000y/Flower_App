@@ -5,11 +5,11 @@ class OccasionEntity extends Equatable {
   final String name;
   final String imageUrl;
 
- const OccasionEntity({
+  const OccasionEntity({
     required this.id,
     required this.name,
     required this.imageUrl,
   });
   @override
-  List<Object> get props => [id,name,imageUrl];
+  List<Object> get props => [id, name, imageUrl];
 }
