@@ -57,6 +57,7 @@ flutter:
 
   assets:
     - assets/
+    - shorebird.yaml
     - assets/jsons/
     - .env
 
