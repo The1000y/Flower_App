@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/auth/presentation/register/manager/register_view_model.dart';
 import '../../features/auth/presentation/register/view/register_view.dart';
+import '../../features/orders/presentation/view/order_success_view.dart';
 import '../../features/orders/presentation/manager/cubit/orders_cubit.dart';
 import '../../features/orders/presentation/manager/orders_intent.dart';
 import '../../features/orders/presentation/view/my_orders_view.dart';
@@ -136,7 +137,10 @@ abstract class AppRoutes {
 
       // Tracking
       case Routes.orderSuccess:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        final orderId = settings.arguments as String?;
+        return MaterialPageRoute(
+          builder: (_) => OrderSuccessView(orderId: orderId),
+        );
 
       case Routes.trackOrder:
         return MaterialPageRoute(builder: (_) => const Placeholder());

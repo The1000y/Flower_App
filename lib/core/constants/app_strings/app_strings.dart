@@ -100,6 +100,7 @@ abstract class AppStrings {
   static const String tabActive = 'Active';
   static const String tabCompleted = 'Completed';
   static const String orderNumberPrefix = 'Order number# ';
+  static const String orderIdPrefix = 'Order number# ';
   static const String trackOrder = 'Track order';
   static const String deliveredOnPrefix = 'Delivered on ';
   static const String reorder = 'Reorder';
