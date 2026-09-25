@@ -4,6 +4,7 @@ import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DeliveryTimeSection extends StatelessWidget {
   const DeliveryTimeSection({super.key});
@@ -30,10 +31,10 @@ class DeliveryTimeSection extends StatelessWidget {
               const Icon(Icons.schedule, color: AppColors.black100),
               Text(
                 AppStrings.instant,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
+                style: theme.textTheme.titleMedium?..copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
               ),
               BlocBuilder<CheckoutCubit, CheckoutState>(
                 buildWhen: (previous, current) =>
@@ -41,10 +42,31 @@ class DeliveryTimeSection extends StatelessWidget {
                 builder: (context, state) {
                   final estimatedTime =
                       state.estimationTimeState.data?.estimatedDeliveryAt ?? '';
-                  return Text(
-                    '${AppStrings.arriveByPrefix}$estimatedTime',
-                    style: TextStyle(color: AppColors.success, fontSize: 16),
-                  );
+                  if (state.estimationTimeState.isLoading) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        height: 12,
+                        width: 200,
+                        color: Colors.white,
+                      ),
+                    );
+                  } else if (state
+                      .estimationTimeState
+                      .errorMessage
+                      .isNotEmpty) {
+                    return Text(state.estimationTimeState.errorMessage);
+                  } else {
+                    return Text(
+                      'Arrive by $estimatedTime',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: AppColors.success,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    );
+                  }
                 },
               ),
             ],

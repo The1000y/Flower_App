@@ -64,7 +64,7 @@ abstract class AppStrings {
   static const String bouquetInclude = 'Bouquet include';
   static const String checkoutTitle = 'Checkout';
   static const String deliveryTime = 'Delivery time';
-  static const String instant = 'Instant, ';
+  static const String instant = ' Instant, ';
   static const String arriveByPrefix = 'Arrive by ';
   static const String deliveryAddress = 'Delivery address';
   static const String addressTypeHome = 'Home';

@@ -54,6 +54,8 @@ dependencies:
   geocoding: 4.0.0
   flutter_dotenv: ^6.0.1
   collection: ^1.19.1
+  shimmer: ^4.0.0
+  material_ui: ^1.0.1
 
 
 
