@@ -51,7 +51,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_secure_storage_platform_interface: ^2.0.3
+  flutter_secure_storage_platform_interface: ^2.1.1
   mocktail: ^1.0.5
   mockito: ^5.5.0
   bloc_test: ^9.1.7

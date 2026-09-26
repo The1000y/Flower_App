@@ -43,24 +43,29 @@ void main() {
     errorCode: '',
   );
 
-  test('should return SuccessResponce with data when local data source is successful', () async {
-    // arrange
-    when(mockLocalDataSource.getProductDetails(any))
-        .thenAnswer((_) async => SuccessResponce(tResponseDto));
+  test(
+    'should return SuccessResponce with data when local data source is successful',
+    () async {
+      // arrange
+      when(
+        mockLocalDataSource.getProductDetails(any),
+      ).thenAnswer((_) async => SuccessResponce(tResponseDto));
 
-    // act
-    final result = await repository.getProductDetails(1);
+      // act
+      final result = await repository.getProductDetails(1);
 
-    // assert
-    expect(result, isA<SuccessResponce<ProductDetailsEntity>>());
-    verify(mockLocalDataSource.getProductDetails(1));
-  });
+      // assert
+      expect(result, isA<SuccessResponce<ProductDetailsEntity>>());
+      verify(mockLocalDataSource.getProductDetails(1));
+    },
+  );
 
   test('should return ErrorResponce when local data source fails', () async {
     // arrange
     final tException = Exception('error');
-    when(mockLocalDataSource.getProductDetails(any))
-        .thenAnswer((_) async => ErrorResponce(tException));
+    when(
+      mockLocalDataSource.getProductDetails(any),
+    ).thenAnswer((_) async => ErrorResponce(tException));
 
     // act
     final result = await repository.getProductDetails(1);

@@ -10,7 +10,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockOccasionCubit extends MockCubit<OccasionState> implements OccasionCubit {}
+class MockOccasionCubit extends MockCubit<OccasionState>
+    implements OccasionCubit {}
 
 void main() {
   late MockOccasionCubit mockCubit;
@@ -66,13 +67,16 @@ void main() {
     expect(find.text('Wedding'), findsOneWidget);
   });
 
-  testWidgets('tapping a tab dispatches LoadProductsForOccasion with the right id', (tester) async {
-    await pumpApp(tester, wrap());
+  testWidgets(
+    'tapping a tab dispatches LoadProductsForOccasion with the right id',
+    (tester) async {
+      await pumpApp(tester, wrap());
 
-    await tester.tap(find.text('Wedding'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Wedding'));
+      await tester.pumpAndSettle();
 
-    final captured = verify(() => mockCubit.handle(captureAny())).captured;
-    expect(captured.whereType<LoadProductsForOccasion>().last.occasionId, 2);
-  });
+      final captured = verify(() => mockCubit.handle(captureAny())).captured;
+      expect(captured.whereType<LoadProductsForOccasion>().last.occasionId, 2);
+    },
+  );
 }
