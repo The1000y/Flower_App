@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 /// [message] is nullable so callers (routes, notification service) can open
 /// the screen without a payload; the empty state is rendered here rather than
 /// by constructing a synthetic `RemoteMessage` at the call site.
-class NotifcationView extends StatelessWidget {
-  const NotifcationView({super.key, this.message});
+class NotificationView extends StatelessWidget {
+  const NotificationView({super.key, this.message});
 
   final RemoteMessage? message;
 

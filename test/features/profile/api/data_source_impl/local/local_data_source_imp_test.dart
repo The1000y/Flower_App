@@ -123,15 +123,55 @@ void main() {
       test(
         'tolerates a payload with unknown/missing optional fields',
         () async {
-          when(
-            () => mockStorage.getUser(),
-          ).thenAnswer((_) async => jsonEncode({'unrelated': 'value'}));
+          // Required fields are present; `photoUrl` is explicitly null and
+          // `extra` is an unknown key the model must ignore.
+          when(() => mockStorage.getUser()).thenAnswer(
+            (_) async => jsonEncode({
+              'id': 7,
+              'fullName': 'Nour Mohamed',
+              'email': 'nour@example.com',
+              'phoneNumber': '+201234567890',
+              'gender': 'female',
+              'role': 'user',
+              'status': 'active',
+              'photoUrl': null,
+              'extra': 'unknown',
+            }),
+          );
 
           final result = await dataSource.getProfile();
 
           expect(result, isA<SuccessResponce<UserDto>>());
+          final dto = (result as SuccessResponce<UserDto>).data;
+          expect(dto.photoUrl, isNull);
+          expect(dto.id, 7);
+          expect(dto.fullName, 'Nour Mohamed');
+          expect(dto.email, 'nour@example.com');
+          expect(dto.phoneNumber, '+201234567890');
+          expect(dto.gender, 'female');
+          expect(dto.role, 'user');
+          expect(dto.status, 'active');
         },
       );
+
+      test('defaults every missing field to null in the DTO', () async {
+        when(
+          () => mockStorage.getUser(),
+        ).thenAnswer((_) async => jsonEncode({'unrelated': 'value'}));
+
+        final result = await dataSource.getProfile();
+
+        expect(result, isA<SuccessResponce<UserDto>>());
+        final dto = (result as SuccessResponce<UserDto>).data;
+        expect(dto.id, isNull);
+        expect(dto.fullName, isNull);
+        expect(dto.email, isNull);
+        expect(dto.photoUrl, isNull);
+
+        // The repository is what applies the fallbacks, so it must not throw.
+        expect(dto.toUserEntity().id, 0);
+        expect(dto.toUserEntity().fullName, '');
+      });
 
       test('does not throw when the stored JSON is corrupted', () async {
         when(

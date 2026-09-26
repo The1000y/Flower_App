@@ -752,11 +752,11 @@ abstract class AppLocalizations {
   /// **'Logout'**
   String get logout;
 
-  /// No description provided for @usernotfound.
+  /// No description provided for @userNotFound.
   ///
   /// In en, this message translates to:
   /// **'User not found'**
-  String get usernotfound;
+  String get userNotFound;
 
   /// No description provided for @changeLanguageTitle.
   ///

@@ -339,7 +339,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get logout => 'تسجيل الخروج';
 
   @override
-  String get usernotfound => 'المستخدم غير موجود';
+  String get userNotFound => 'المستخدم غير موجود';
 
   @override
   String get changeLanguageTitle => 'تغيير اللغة';

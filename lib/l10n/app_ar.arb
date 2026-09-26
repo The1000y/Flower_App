@@ -109,7 +109,7 @@
   "aboutUs": "من نحن",
   "termsAndConditionsAlt": "الشروط والأحكام",
   "logout": "تسجيل الخروج",
-  "usernotfound": "المستخدم غير موجود",
+  "userNotFound": "المستخدم غير موجود",
   "changeLanguageTitle": "تغيير اللغة",
   "languageArabic": "العربية",
   "languageEnglish": "English",

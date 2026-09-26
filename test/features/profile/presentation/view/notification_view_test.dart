@@ -1,5 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flower_app/features/profile/presentation/view/notifcation_view.dart';
+import 'package:flower_app/features/profile/presentation/view/notification_view.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/notification_item.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ void main() {
     );
   }
 
-  group('NotifcationView', () {
+  group('NotificationView', () {
     testWidgets('renders the notification title and body', (tester) async {
       const message = RemoteMessage(
         notification: RemoteNotification(
@@ -24,7 +24,7 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(wrap(const NotifcationView(message: message)));
+      await tester.pumpWidget(wrap(const NotificationView(message: message)));
 
       expect(find.byType(NotificationItem), findsOneWidget);
       expect(find.text('Special Discount'), findsOneWidget);
@@ -39,7 +39,7 @@ void main() {
         notification: RemoteNotification(title: 'Hi', body: 'There'),
       );
 
-      await tester.pumpWidget(wrap(const NotifcationView(message: message)));
+      await tester.pumpWidget(wrap(const NotificationView(message: message)));
 
       expect(find.widgetWithText(AppBar, 'Notification'), findsOneWidget);
     });
@@ -51,7 +51,7 @@ void main() {
         notification: RemoteNotification(body: 'Body only'),
       );
 
-      await tester.pumpWidget(wrap(const NotifcationView(message: message)));
+      await tester.pumpWidget(wrap(const NotificationView(message: message)));
 
       expect(find.text('Notification'), findsWidgets);
       expect(find.text('Body only'), findsOneWidget);
@@ -62,7 +62,7 @@ void main() {
         notification: RemoteNotification(title: 'Title only'),
       );
 
-      await tester.pumpWidget(wrap(const NotifcationView(message: message)));
+      await tester.pumpWidget(wrap(const NotificationView(message: message)));
 
       expect(find.text('Title only'), findsOneWidget);
     });
@@ -70,7 +70,7 @@ void main() {
     testWidgets('shows the empty state when the message is null', (
       tester,
     ) async {
-      await tester.pumpWidget(wrap(const NotifcationView()));
+      await tester.pumpWidget(wrap(const NotificationView()));
 
       expect(find.byType(NotificationItem), findsNothing);
       expect(find.text('No notifications yet'), findsOneWidget);
@@ -81,7 +81,7 @@ void main() {
     ) async {
       const message = RemoteMessage(data: <String, dynamic>{'k': 'v'});
 
-      await tester.pumpWidget(wrap(const NotifcationView(message: message)));
+      await tester.pumpWidget(wrap(const NotificationView(message: message)));
 
       expect(find.byType(NotificationItem), findsNothing);
       expect(find.text('No notifications yet'), findsOneWidget);

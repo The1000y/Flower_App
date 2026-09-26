@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
@@ -68,6 +70,7 @@ void main() {
         phoneNumber: '+201234567890',
         gender: 'female',
         role: 'user',
+        photoUrl: 'https://example.com/nour.png',
         status: 'active',
       );
 
@@ -75,8 +78,38 @@ void main() {
 
       final raw = await service.getUser();
       expect(raw, isNotNull);
-      expect(raw, contains('nour@example.com'));
       expect(await readStorageValue(AppStrings.userData), raw);
+
+      // Deserialize instead of substring-matching, so every field is verified.
+      final decoded = jsonDecode(raw!) as Map<String, dynamic>;
+      expect(decoded, user.toJson());
+      expect(decoded['id'], 1);
+      expect(decoded['fullName'], 'Nour Mohamed');
+      expect(decoded['email'], 'nour@example.com');
+      expect(decoded['phoneNumber'], '+201234567890');
+      expect(decoded['gender'], 'female');
+      expect(decoded['role'], 'user');
+      expect(decoded['status'], 'active');
+      expect(decoded['photoUrl'], 'https://example.com/nour.png');
+    });
+
+    test('omits photoUrl from storage when the user has none', () async {
+      const user = UserEntity(
+        id: 2,
+        fullName: 'No Photo',
+        email: 'nophoto@example.com',
+        phoneNumber: '+201111111111',
+        gender: 'male',
+        role: 'user',
+        status: 'active',
+      );
+
+      await service.saveUser(user);
+
+      final decoded =
+          jsonDecode((await service.getUser())!) as Map<String, dynamic>;
+      expect(decoded.containsKey('photoUrl'), isFalse);
+      expect(decoded['email'], 'nophoto@example.com');
     });
 
     test('getUser returns null when no user was saved', () async {

@@ -23,7 +23,7 @@ class ProfileLocalDataSourceImp implements ProfileLocalDataSource {
     }
 
     if (response == null || response.isEmpty) {
-      return ErrorResponce<UserDto>(Exception(AppStrings.usernotfound));
+      return ErrorResponce<UserDto>(Exception(AppStrings.userNotFound));
     }
 
     // Corrupted secure-storage contents must not crash the app.
@@ -31,7 +31,7 @@ class ProfileLocalDataSourceImp implements ProfileLocalDataSource {
     try {
       final decoded = jsonDecode(response);
       if (decoded is! Map<String, dynamic>) {
-        return ErrorResponce<UserDto>(Exception(AppStrings.usernotfound));
+        return ErrorResponce<UserDto>(Exception(AppStrings.userNotFound));
       }
       jsonData = decoded;
     } on FormatException catch (error) {

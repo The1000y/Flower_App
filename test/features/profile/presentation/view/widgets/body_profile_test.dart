@@ -23,6 +23,7 @@ void main() {
   late int editTaps;
   late int notificationTaps;
   late int logoutTaps;
+  late List<bool> notificationsChanges;
 
   setUp(() async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -30,6 +31,7 @@ void main() {
     editTaps = 0;
     notificationTaps = 0;
     logoutTaps = 0;
+    notificationsChanges = <bool>[];
   });
 
   tearDown(() => localeCubit.close());
@@ -46,13 +48,18 @@ void main() {
     );
   }
 
-  ProfileBody buildBody({UserEntity? user = testUser}) {
+  ProfileBody buildBody({
+    UserEntity? user = testUser,
+    int? unreadNotificationsCount,
+  }) {
     return ProfileBody(
       user: user,
       onEditProfile: () => editTaps++,
       onNotification: () => notificationTaps++,
       onLanguage: () {},
       onLogout: () => logoutTaps++,
+      unreadNotificationsCount: unreadNotificationsCount,
+      onNotificationsChanged: notificationsChanges.add,
     );
   }
 
@@ -169,6 +176,48 @@ void main() {
       await tester.pump();
 
       expect(switchWidget(tester).value, isFalse);
+    });
+
+    testWidgets('reports the new value so the owner can persist it', (
+      tester,
+    ) async {
+      await tester.pumpWidget(wrap(buildBody()));
+
+      await tester.tap(find.byType(Switch));
+      await tester.pump();
+      expect(notificationsChanges, <bool>[false]);
+
+      await tester.tap(find.text('Notification'));
+      await tester.pump();
+      expect(notificationsChanges, <bool>[false, true]);
+    });
+  });
+
+  group('ProfileBody notification badge', () {
+    testWidgets('is hidden when no count is supplied', (tester) async {
+      await tester.pumpWidget(wrap(buildBody()));
+
+      expect(find.text('0'), findsNothing);
+      expect(find.text('3'), findsNothing);
+    });
+
+    testWidgets('is hidden when the count is zero', (tester) async {
+      await tester.pumpWidget(wrap(buildBody(unreadNotificationsCount: 0)));
+
+      expect(find.text('0'), findsNothing);
+    });
+
+    testWidgets('shows the supplied unread count', (tester) async {
+      await tester.pumpWidget(wrap(buildBody(unreadNotificationsCount: 7)));
+
+      expect(find.text('7'), findsOneWidget);
+    });
+
+    testWidgets('caps a very large count at 99+', (tester) async {
+      await tester.pumpWidget(wrap(buildBody(unreadNotificationsCount: 1234)));
+
+      expect(find.text('99+'), findsOneWidget);
+      expect(find.text('1234'), findsNothing);
     });
   });
 

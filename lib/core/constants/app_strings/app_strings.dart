@@ -113,7 +113,7 @@ abstract class AppStrings {
   static const String termsAndConditionsAlt =
       'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
   static const String logout = 'Logout';
-  static const String usernotfound = 'User not found';
+  static const String userNotFound = 'User not found';
   static const String unexpectedError =
       'Something went wrong. Please try again.';
 

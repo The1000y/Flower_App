@@ -24,11 +24,11 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        context.read<ProfileViewModel>().doIntent(GetProfileIntent());
-      }
-    });
+    // `read` is safe in initState (it does not register a dependency) and
+    // dispatching directly avoids the extra frame that `addPostFrameCallback`
+    // would introduce. The resulting state change is picked up by the
+    // `BlocBuilder` below when it subscribes on its own initState.
+    context.read<ProfileViewModel>().doIntent(GetProfileIntent());
   }
 
   @override

@@ -16,6 +16,28 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
   /// widget stays free of service-locator lookups and can be widget-tested.
   final ProfileViewModel? profileViewModel;
 
+  /// The profile tab, or an explicit placeholder when no view model was
+  /// supplied. Exposed for testing: the surrounding bar pulls cubits from the
+  /// service locator (HomeView, CategoriesView) and cannot be pumped in
+  /// isolation, but this expression can.
+  @visibleForTesting
+  static Widget resolveProfileTab(ProfileViewModel? viewModel) {
+    // `ProfileView` requires an ancestor `BlocProvider<ProfileViewModel>`. An
+    // eager `viewModel ?? context.read<ProfileViewModel>()` fallback would throw
+    // ProviderNotFoundException whenever the caller did not supply one, so the
+    // unavailable case renders an explicit placeholder instead.
+    if (viewModel == null) {
+      return const Scaffold(
+        body: Center(child: Text('Profile is unavailable')),
+      );
+    }
+
+    return BlocProvider<ProfileViewModel>.value(
+      value: viewModel,
+      child: const ProfileView(),
+    );
+  }
+
   final PersistentTabController controller = PersistentTabController(
     initialIndex: 0,
   );
@@ -25,10 +47,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
     final homeScreen = HomeView(controller: controller);
     final categoriesScreen = CategoriesView();
     final cartScreen = Placeholder();
-    final profileScreen = BlocProvider<ProfileViewModel>.value(
-      value: profileViewModel ?? context.read<ProfileViewModel>(),
-      child: const ProfileView(),
-    );
+    final profileScreen = resolveProfileTab(profileViewModel);
 
     return PersistentTabView(
       controller: controller,

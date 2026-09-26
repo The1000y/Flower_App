@@ -13,9 +13,10 @@ import 'package:flower_app/features/commerce/presentation/categories/view/catego
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_view_model.dart';
-import 'package:flower_app/features/profile/presentation/view/notifcation_view.dart';
+import 'package:flower_app/features/profile/presentation/view/notification_view.dart';
 import 'package:flower_app/features/profile/presentation/view/profile_view.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
+import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit_factory.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,12 +27,13 @@ import '../../features/auth/presentation/register/view/register_view.dart';
 abstract class AppRoutes {
   /// Builds a [Route] for [settings].
   ///
-  /// [profileViewModelFactory] is injected instead of resolved from the service
-  /// locator so route construction stays testable; it is only needed for the
-  /// routes that own a `ProfileViewModel`.
+  /// [profileViewModelFactory] and [searchCubitFactory] are injected instead of
+  /// resolved from the service locator so route construction stays testable;
+  /// they are only needed for the routes that own those dependencies.
   static Route<dynamic> onGenerateRoute(
     RouteSettings settings, {
     ProfileViewModelFactory? profileViewModelFactory,
+    SearchCubitFactory? searchCubitFactory,
   }) {
     switch (settings.name) {
       // Auth
@@ -99,9 +101,17 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const CategoriesView());
 
       case Routes.search:
+        final searchCubit = searchCubitFactory?.create();
+        if (searchCubit == null) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Search is unavailable')),
+            ),
+          );
+        }
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => getIt<SearchCubit>(),
+          builder: (_) => BlocProvider<SearchCubit>.value(
+            value: searchCubit,
             child: const SearchView(),
           ),
         );
@@ -134,15 +144,12 @@ abstract class AppRoutes {
         // The message may be absent (e.g. deep link without payload); the view
         // owns the empty-state defaults instead of the route generator.
         return MaterialPageRoute(
-          builder: (_) => NotifcationView(
+          builder: (_) => NotificationView(
             message: settings.arguments is RemoteMessage
                 ? settings.arguments as RemoteMessage
                 : null,
           ),
         );
-
-      case Routes.notifications:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       // Profile
       case Routes.profile:

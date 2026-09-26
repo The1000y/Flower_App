@@ -29,7 +29,7 @@ abstract class Routes {
   static const String orderDetails = '/order_details';
 
   // Notifications
-  static const String notifications = '/notifications';
+  static const String notification = '/notification';
 
   // Profile
   static const String profile = '/profile';
@@ -41,6 +41,4 @@ abstract class Routes {
   static const String orderSuccess = '/order_success';
   static const String trackOrder = '/track_order';
   static const String orderMap = '/order_map';
-
-  static const String  notification ="/notification";
 }

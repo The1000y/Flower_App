@@ -339,7 +339,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
-  String get usernotfound => 'User not found';
+  String get userNotFound => 'User not found';
 
   @override
   String get changeLanguageTitle => 'Change Language';

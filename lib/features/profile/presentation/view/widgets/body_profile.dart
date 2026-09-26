@@ -13,6 +13,14 @@ class ProfileBody extends StatefulWidget {
   final VoidCallback onLanguage;
   final VoidCallback onLogout;
 
+  /// Unread notification count driving the header badge. The badge is hidden
+  /// when this is null or zero instead of showing a stale hardcoded number.
+  final int? unreadNotificationsCount;
+
+  /// Invoked whenever the notification switch is toggled, so the owner can
+  /// persist the value. Local state is only updated optimistically.
+  final ValueChanged<bool>? onNotificationsChanged;
+
   const ProfileBody({
     super.key,
     required this.user,
@@ -20,6 +28,8 @@ class ProfileBody extends StatefulWidget {
     required this.onNotification,
     required this.onLanguage,
     required this.onLogout,
+    this.unreadNotificationsCount,
+    this.onNotificationsChanged,
   });
 
   @override
@@ -46,6 +56,28 @@ class _ProfileBodyState extends State<ProfileBody> {
       ),
     );
   }
+
+  /// Badge is capped at `99+` so an arbitrarily large count cannot distort the
+  /// header layout.
+  int get _badgeCount => widget.unreadNotificationsCount ?? 0;
+
+  String get _badgeLabel => _badgeCount > 99 ? '99+' : '$_badgeCount';
+
+  /// Both the switch and the tile tap route through here so the new value is
+  /// reported to the owner, which owns persistence. The local state flip is
+  /// optimistic; a failed write is surfaced by the owner reverting it.
+  void _setNotificationsEnabled(bool value) {
+    if (_notificationsEnabled == value) return;
+    setState(() => _notificationsEnabled = value);
+    widget.onNotificationsChanged?.call(value);
+  }
+
+  /// `Switch.onChanged` hands the new value, so it is forwarded directly.
+  void _toggleNotifications(bool value) => _setNotificationsEnabled(value);
+
+  /// `ProfileOptionTile.onTap` is a `VoidCallback`, so the tile tap flips the
+  /// current value instead of receiving a new one.
+  void _flipNotifications() => _setNotificationsEnabled(!_notificationsEnabled);
 
   Widget _buildHeader(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -85,32 +117,33 @@ class _ProfileBodyState extends State<ProfileBody> {
                   color: Colors.black87,
                 ),
               ),
-              Positioned(
-                right: 4,
-                top: 4,
-                child: Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 16,
-                    minHeight: 16,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold,
-                        height: 1,
+              if (_badgeCount > 0)
+                Positioned(
+                  right: 4,
+                  top: 4,
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Center(
+                      child: Text(
+                        _badgeLabel,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          height: 1,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ],
@@ -121,19 +154,20 @@ class _ProfileBodyState extends State<ProfileBody> {
   Widget _buildProfileInfo() {
     final name = widget.user?.fullName ?? '';
     final email = widget.user?.email ?? '';
+    // Resolved once into a local so the null-check and the usage cannot drift
+    // apart, and no force-unwraps are needed.
+    final photoUrl = widget.user?.photoUrl;
+    final hasPhoto = photoUrl != null && photoUrl.isNotEmpty;
 
     return Column(
       children: [
         CircleAvatar(
           radius: 38,
           backgroundColor: Colors.grey.shade200,
-          backgroundImage:
-              widget.user?.photoUrl != null && widget.user!.photoUrl!.isNotEmpty
-              ? NetworkImage(widget.user!.photoUrl!)
-              : null,
-          child: widget.user?.photoUrl == null || widget.user!.photoUrl!.isEmpty
-              ? const Icon(Icons.person, size: 40, color: Colors.grey)
-              : null,
+          backgroundImage: hasPhoto ? NetworkImage(photoUrl) : null,
+          child: hasPhoto
+              ? null
+              : const Icon(Icons.person, size: 40, color: Colors.grey),
         ),
         const SizedBox(height: 10),
         Row(
@@ -177,9 +211,6 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   Widget _buildProfileOptions(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentLanguageName = context
-        .watch<LocaleCubit>()
-        .currentLanguageName;
 
     return Column(
       children: [
@@ -207,11 +238,7 @@ class _ProfileBodyState extends State<ProfileBody> {
               child: Switch(
                 value: _notificationsEnabled,
                 activeThumbColor: AppColors.pinkBase,
-                onChanged: (val) {
-                  setState(() {
-                    _notificationsEnabled = val;
-                  });
-                },
+                onChanged: _toggleNotifications,
               ),
             ),
           ),
@@ -221,18 +248,24 @@ class _ProfileBodyState extends State<ProfileBody> {
             size: 20,
             color: Colors.grey,
           ),
-          onTap: () {
-            setState(() {
-              _notificationsEnabled = !_notificationsEnabled;
-            });
-          },
+          onTap: _flipNotifications,
         ),
         Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         ProfileOptionTile(
           icon: Icons.translate_outlined,
           title: l10n.language,
-          trailingText: currentLanguageName,
-          trailingTextColor: AppColors.pinkBase,
+          // Scoped rebuild: only the trailing text reacts to locale changes,
+          // instead of rebuilding the whole options column.
+          trailing: BlocBuilder<LocaleCubit, Locale>(
+            builder: (context, _) => Text(
+              context.watch<LocaleCubit>().currentLanguageName,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: AppColors.pinkBase,
+              ),
+            ),
+          ),
           onTap: widget.onLanguage,
         ),
         ProfileOptionTile(

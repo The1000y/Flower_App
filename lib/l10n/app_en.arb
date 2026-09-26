@@ -109,7 +109,7 @@
   "aboutUs": "About us",
   "termsAndConditionsAlt": "Terms & conditions",
   "logout": "Logout",
-  "usernotfound": "User not found",
+  "userNotFound": "User not found",
   "changeLanguageTitle": "Change Language",
   "languageArabic": "Arabic",
   "languageEnglish": "English",
