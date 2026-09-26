@@ -6,20 +6,13 @@ class ChangePasswordEntity extends Equatable {
   final String? message;
   final int? errorCode;
 
-
   const ChangePasswordEntity({
     this.data,
     this.isSuccess,
     this.message,
     this.errorCode,
-
   });
 
   @override
-  List<Object?> get props => [
-        data,
-        isSuccess,
-        message,
-        errorCode,
-      ];
+  List<Object?> get props => [data, isSuccess, message, errorCode];
 }

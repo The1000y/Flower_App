@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final bestSellerResponse = bestSellerResponseFromJson(jsonString);
-
 import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';

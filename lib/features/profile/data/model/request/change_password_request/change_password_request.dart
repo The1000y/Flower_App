@@ -3,26 +3,29 @@ import 'dart:convert';
 
 part 'change_password_request.g.dart';
 
-ChangePasswordRequest changePasswordRequestFromJson(String str) => ChangePasswordRequest.fromJson(json.decode(str));
+ChangePasswordRequest changePasswordRequestFromJson(String str) =>
+    ChangePasswordRequest.fromJson(json.decode(str));
 
-String changePasswordRequestToJson(ChangePasswordRequest data) => json.encode(data.toJson());
+String changePasswordRequestToJson(ChangePasswordRequest data) =>
+    json.encode(data.toJson());
 
 @JsonSerializable()
 class ChangePasswordRequest {
-@JsonKey(name: "currentPassword")
-final String currentPassword;
-@JsonKey(name: "newPassword")
-final String newPassword;
-@JsonKey(name: "confirmNewPassword")
-final String confirmNewPassword;
+  @JsonKey(name: "currentPassword")
+  final String currentPassword;
+  @JsonKey(name: "newPassword")
+  final String newPassword;
+  @JsonKey(name: "confirmNewPassword")
+  final String confirmNewPassword;
 
-ChangePasswordRequest({
-required this.currentPassword,
-required this.newPassword,
-required this.confirmNewPassword,
-});
+  ChangePasswordRequest({
+    required this.currentPassword,
+    required this.newPassword,
+    required this.confirmNewPassword,
+  });
 
-factory ChangePasswordRequest.fromJson(Map<String, dynamic> json) => _$ChangePasswordRequestFromJson(json);
+  factory ChangePasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$ChangePasswordRequestFromJson(json);
 
-Map<String, dynamic> toJson() => _$ChangePasswordRequestToJson(this);
+  Map<String, dynamic> toJson() => _$ChangePasswordRequestToJson(this);
 }

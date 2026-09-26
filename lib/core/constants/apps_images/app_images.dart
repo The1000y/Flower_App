@@ -5,3 +5,4 @@ abstract class AppImages {
   static const String error = 'assets/image_error.jpg';
   static const String iconMap = 'assets/Vector.png';
 }
+

@@ -5,6 +5,8 @@ import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
+import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
+import 'package:flower_app/features/profile/presentation/view/profile_home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
@@ -34,7 +36,10 @@ class PersistentBottomNavBarDemo extends StatelessWidget {
       value: getIt.get<AddressCubit>(),
       child: const CartView(),
     );
-    final profileScreen = Placeholder();
+    final profileScreen = BlocProvider(
+      create: (_) => getIt<ProfileViewModel>(),
+      child: const ProfileHomeView(),
+    );
 
     return PersistentTabView(
       controller: controller,

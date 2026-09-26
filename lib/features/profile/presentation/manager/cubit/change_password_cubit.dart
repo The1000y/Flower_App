@@ -10,7 +10,7 @@ import 'package:injectable/injectable.dart';
 @injectable
 class ChangePasswordCubit extends Cubit<ChangePasswordState> {
   ChangePasswordCubit(this._changePasswordUseCase)
-      : super(const ChangePasswordState());
+    : super(const ChangePasswordState());
 
   final ChangePasswordUseCase _changePasswordUseCase;
 
@@ -40,8 +40,6 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
         ),
       ),
     );
-
-
 
     final response = await _changePasswordUseCase.call(
       currentPassword: currentPassword,

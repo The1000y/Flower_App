@@ -7,6 +7,11 @@ class HandelErrorException {
   }
 
   String _hadelDioException(DioException error) {
+    final bodyMessage = _messageFromBody(error.response?.data);
+    if (bodyMessage != null && bodyMessage.isNotEmpty) {
+      return bodyMessage;
+    }
+
     switch (error.type) {
       case DioExceptionType.badCertificate:
         return 'badCertificate';
@@ -27,5 +32,18 @@ class HandelErrorException {
       case DioExceptionType.transformTimeout:
         return 'transformTimeout';
     }
+  }
+
+  String? _messageFromBody(dynamic data) {
+    if (data is Map) {
+      final error = data['error'] ?? data['message'] ?? data['details'];
+      if (error != null && error.toString().trim().isNotEmpty) {
+        return error.toString();
+      }
+    }
+    if (data is String && data.trim().isNotEmpty) {
+      return data;
+    }
+    return null;
   }
 }

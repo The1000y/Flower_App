@@ -18,7 +18,10 @@ import 'package:flower_app/features/commerce/presentation/occasion/view/occasion
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
+import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/view/change_password_view.dart';
+import 'package:flower_app/features/profile/presentation/view/profile_home_view.dart';
+import 'package:flower_app/features/profile/presentation/view/update_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,7 +41,6 @@ abstract class AppRoutes {
             child: const LoginView(),
           ),
         );
-
       case Routes.signUp:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -46,24 +48,19 @@ abstract class AppRoutes {
             child: const RegisterView(),
           ),
         );
-
       case Routes.forgotPassword:
         return MaterialPageRoute(builder: (_) => const ForgetPassword());
-
       case Routes.verificationCode:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (_) => VerificationView(email: args['email']),
         );
-
       case Routes.resetPassword:
         final args = settings.arguments as Map<String, dynamic>;
-
         return MaterialPageRoute(
           builder: (_) =>
               ResetPassword(email: args['email'], otpcode: args['otpcode']),
         );
-
       // Main Layout
       case Routes.mainLayout:
         return MaterialPageRoute(builder: (_) => const Placeholder());
@@ -83,24 +80,19 @@ abstract class AppRoutes {
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const BestsellerView());
-
       case Routes.productDetails:
         final productId = settings.arguments as int? ?? 0;
         return MaterialPageRoute(
           builder: (_) => ProductDetails(productId: productId),
         );
-
       case Routes.occasion:
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => const OccasionView(),
         );
-
       case Routes.categories:
         return MaterialPageRoute(builder: (_) => const CategoriesView());
-
       case Routes.search:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => getIt<SearchCubit>(),
@@ -122,7 +114,6 @@ abstract class AppRoutes {
 
       case Routes.checkout:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       case Routes.shippingAddress:
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
@@ -138,29 +129,29 @@ abstract class AppRoutes {
       // Orders
       case Routes.myOrders:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       case Routes.orderDetails:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       // Notifications
       case Routes.notifications:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       // Profile
       case Routes.profile:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
-      // return MaterialPageRoute(
-      //           builder: (_) => BlocProvider(
-      //             create: (_) => getIt<ProfileHomeViewModel>(),
-      //             child: const ProfileHomeView(),
-      //           ),
-      //         );
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ProfileViewModel>(),
+            child: const ProfileHomeView(),
+          ),
+        );
       case Routes.editProfile:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ProfileViewModel>(),
+            child: const UpdateProfileView(),
+          ),
+        );
 
       case Routes.changeLanguage:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       case Routes.changePassword:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -172,13 +163,10 @@ abstract class AppRoutes {
       // Tracking
       case Routes.orderSuccess:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       case Routes.trackOrder:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       case Routes.orderMap:
         return MaterialPageRoute(builder: (_) => const Placeholder());
-
       default:
         return MaterialPageRoute(
           builder: (_) =>

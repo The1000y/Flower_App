@@ -113,7 +113,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     label: AppStrings.newPasswordLabel,
                     hintText: AppStrings.passwordHint,
                     controller: _newPasswordController,
-                    validator: AuthValidators.strongPassword, // استخدام strongPassword هنا
+                    validator: AuthValidators
+                        .strongPassword, // استخدام strongPassword هنا
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                   ),

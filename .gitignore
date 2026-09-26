@@ -51,13 +51,18 @@ app.*.map.json
 *.mocks.dart
 *.gr.dart
 *.config.dart
-
-
-
-# .gitignore
+# Backend/local environment files
 .env
 .env.*
+!.env.example
 local.properties
 
+# Backend setup and local Docker files
+setup.sh
+docker-compose.prod.yml
 
+# Postman collection
+flowery_postman_collection.json
 
+.cursor/
+android/build/
