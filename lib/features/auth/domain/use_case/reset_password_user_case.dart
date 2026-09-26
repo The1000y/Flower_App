@@ -13,7 +13,11 @@ class ResetPasswordUserCase {
     required String otp,
     required String password,
   }) async {
-   BaseResponce<ResetPassswordEntity> responce = await authRepo.resetPassword(email: email, otp: otp, password: password);
+    BaseResponce<ResetPassswordEntity> responce = await authRepo.resetPassword(
+      email: email,
+      otp: otp,
+      password: password,
+    );
     return responce;
   }
 }

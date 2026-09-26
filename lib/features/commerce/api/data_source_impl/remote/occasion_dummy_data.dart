@@ -6,42 +6,42 @@ class OccasionDummyData {
       {
         "id": 1,
         "name": "Wedding",
-        "imageUrl": "https://cdn.flowery-app.com/occasions/wedding.jpg"
+        "imageUrl": "https://cdn.flowery-app.com/occasions/wedding.jpg",
       },
       {
         "id": 2,
         "name": "Graduation",
-        "imageUrl": "https://cdn.flowery-app.com/occasions/graduation.jpg"
+        "imageUrl": "https://cdn.flowery-app.com/occasions/graduation.jpg",
       },
       {
         "id": 3,
         "name": "Birthday",
-        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg"
+        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg",
       },
       {
         "id": 4,
         "name": "Birthday",
-        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg"
+        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg",
       },
       {
         "id": 5,
         "name": "Birthday",
-        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg"
+        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg",
       },
       {
         "id": 6,
         "name": "Birthday",
-        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg"
+        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg",
       },
       {
         "id": 7,
         "name": "Birthday",
-        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg"
+        "imageUrl": "https://cdn.flowery-app.com/occasions/birthday.jpg",
       },
     ],
     "isSuccess": true,
     "message": "",
-    "errorCode": "None"
+    "errorCode": "None",
   };
 
   static const Map<String, dynamic> products = {
@@ -55,27 +55,29 @@ class OccasionDummyData {
           "price": 600,
           "originalPrice": 800,
           "discountPercentage": 25,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 2,
           "name": "Pink Roses Bouquet",
-          "imageUrl": "https://loremflickr.com/600/600/pink,rose,bouquet?lock=102",
+          "imageUrl":
+              "https://loremflickr.com/600/600/pink,rose,bouquet?lock=102",
           "currency": "EGP",
           "price": 550,
           "originalPrice": 700,
           "discountPercentage": 21,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 3,
           "name": "White Roses Bouquet",
-          "imageUrl": "https://loremflickr.com/600/600/white,rose,bouquet?lock=103",
+          "imageUrl":
+              "https://loremflickr.com/600/600/white,rose,bouquet?lock=103",
           "currency": "EGP",
           "price": 500,
           "originalPrice": 650,
           "discountPercentage": 23,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 4,
@@ -85,17 +87,18 @@ class OccasionDummyData {
           "price": 650,
           "originalPrice": 800,
           "discountPercentage": 19,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 5,
           "name": "Sunflower Bouquet",
-          "imageUrl": "https://loremflickr.com/600/600/sunflower,bouquet?lock=105",
+          "imageUrl":
+              "https://loremflickr.com/600/600/sunflower,bouquet?lock=105",
           "currency": "EGP",
           "price": 700,
           "originalPrice": 900,
           "discountPercentage": 22,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 6,
@@ -105,7 +108,7 @@ class OccasionDummyData {
           "price": 750,
           "originalPrice": 950,
           "discountPercentage": 21,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 7,
@@ -115,7 +118,7 @@ class OccasionDummyData {
           "price": 450,
           "originalPrice": 550,
           "discountPercentage": 18,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 8,
@@ -125,7 +128,7 @@ class OccasionDummyData {
           "price": 600,
           "originalPrice": 750,
           "discountPercentage": 20,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 9,
@@ -135,7 +138,7 @@ class OccasionDummyData {
           "price": 700,
           "originalPrice": 850,
           "discountPercentage": 18,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 10,
@@ -145,7 +148,7 @@ class OccasionDummyData {
           "price": 550,
           "originalPrice": 700,
           "discountPercentage": 21,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 11,
@@ -155,27 +158,29 @@ class OccasionDummyData {
           "price": 500,
           "originalPrice": 650,
           "discountPercentage": 23,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 12,
           "name": "Decorative Vase",
-          "imageUrl": "https://loremflickr.com/600/600/decorative,vase?lock=206",
+          "imageUrl":
+              "https://loremflickr.com/600/600/decorative,vase?lock=206",
           "currency": "EGP",
           "price": 800,
           "originalPrice": 1000,
           "discountPercentage": 20,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 13,
           "name": "Luxury Flower Box",
-          "imageUrl": "https://loremflickr.com/600/600/flower,gift,box?lock=301",
+          "imageUrl":
+              "https://loremflickr.com/600/600/flower,gift,box?lock=301",
           "currency": "EGP",
           "price": 900,
           "originalPrice": 1100,
           "discountPercentage": 18,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 14,
@@ -185,27 +190,29 @@ class OccasionDummyData {
           "price": 1000,
           "originalPrice": 1250,
           "discountPercentage": 20,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 15,
           "name": "Pink Flower Box",
-          "imageUrl": "https://loremflickr.com/600/600/pink,flower,box?lock=303",
+          "imageUrl":
+              "https://loremflickr.com/600/600/pink,flower,box?lock=303",
           "currency": "EGP",
           "price": 850,
           "originalPrice": 1000,
           "discountPercentage": 15,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 16,
           "name": "Birthday Flower Box",
-          "imageUrl": "https://loremflickr.com/600/600/flowers,giftbox?lock=304",
+          "imageUrl":
+              "https://loremflickr.com/600/600/flowers,giftbox?lock=304",
           "currency": "EGP",
           "price": 950,
           "originalPrice": 1200,
           "discountPercentage": 21,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 17,
@@ -215,7 +222,7 @@ class OccasionDummyData {
           "price": 1200,
           "originalPrice": 1450,
           "discountPercentage": 17,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 18,
@@ -225,7 +232,7 @@ class OccasionDummyData {
           "price": 1100,
           "originalPrice": 1300,
           "discountPercentage": 15,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 19,
@@ -235,17 +242,18 @@ class OccasionDummyData {
           "price": 1500,
           "originalPrice": 1800,
           "discountPercentage": 17,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 20,
           "name": "Floral Necklace",
-          "imageUrl": "https://loremflickr.com/600/600/flower,necklace?lock=402",
+          "imageUrl":
+              "https://loremflickr.com/600/600/flower,necklace?lock=402",
           "currency": "EGP",
           "price": 1800,
           "originalPrice": 2200,
           "discountPercentage": 18,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 21,
@@ -255,37 +263,40 @@ class OccasionDummyData {
           "price": 1200,
           "originalPrice": 1500,
           "discountPercentage": 20,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 22,
           "name": "Floral Bracelet",
-          "imageUrl": "https://loremflickr.com/600/600/floral,bracelet?lock=404",
+          "imageUrl":
+              "https://loremflickr.com/600/600/floral,bracelet?lock=404",
           "currency": "EGP",
           "price": 1350,
           "originalPrice": 1600,
           "discountPercentage": 16,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 23,
           "name": "Flower Earrings",
-          "imageUrl": "https://loremflickr.com/600/600/flower,earrings?lock=405",
+          "imageUrl":
+              "https://loremflickr.com/600/600/flower,earrings?lock=405",
           "currency": "EGP",
           "price": 950,
           "originalPrice": 1200,
           "discountPercentage": 21,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 24,
           "name": "Elegant Jewelry Set",
-          "imageUrl": "https://loremflickr.com/600/600/floral,jewellery?lock=406",
+          "imageUrl":
+              "https://loremflickr.com/600/600/floral,jewellery?lock=406",
           "currency": "EGP",
           "price": 2200,
           "originalPrice": 2700,
           "discountPercentage": 19,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 25,
@@ -295,17 +306,18 @@ class OccasionDummyData {
           "price": 850,
           "originalPrice": 1050,
           "discountPercentage": 19,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 26,
           "name": "Luxury Gift Set",
-          "imageUrl": "https://loremflickr.com/600/600/gift,box,flowers?lock=502",
+          "imageUrl":
+              "https://loremflickr.com/600/600/gift,box,flowers?lock=502",
           "currency": "EGP",
           "price": 1200,
           "originalPrice": 1500,
           "discountPercentage": 20,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 27,
@@ -315,37 +327,40 @@ class OccasionDummyData {
           "price": 950,
           "originalPrice": 1200,
           "discountPercentage": 21,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 28,
           "name": "Birthday Gift",
-          "imageUrl": "https://loremflickr.com/600/600/birthday,gift,flowers?lock=504",
+          "imageUrl":
+              "https://loremflickr.com/600/600/birthday,gift,flowers?lock=504",
           "currency": "EGP",
           "price": 1100,
           "originalPrice": 1350,
           "discountPercentage": 18,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 29,
           "name": "Romantic Gift",
-          "imageUrl": "https://loremflickr.com/600/600/romantic,gift,flowers?lock=505",
+          "imageUrl":
+              "https://loremflickr.com/600/600/romantic,gift,flowers?lock=505",
           "currency": "EGP",
           "price": 1300,
           "originalPrice": 1600,
           "discountPercentage": 19,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 30,
           "name": "Premium Flower Gift",
-          "imageUrl": "https://loremflickr.com/600/600/premium,gift,flowers?lock=506",
+          "imageUrl":
+              "https://loremflickr.com/600/600/premium,gift,flowers?lock=506",
           "currency": "EGP",
           "price": 1500,
           "originalPrice": 1800,
           "discountPercentage": 17,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 31,
@@ -355,7 +370,7 @@ class OccasionDummyData {
           "price": 100,
           "originalPrice": 150,
           "discountPercentage": 33,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 32,
@@ -365,7 +380,7 @@ class OccasionDummyData {
           "price": 120,
           "originalPrice": 180,
           "discountPercentage": 33,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 33,
@@ -375,7 +390,7 @@ class OccasionDummyData {
           "price": 90,
           "originalPrice": 130,
           "discountPercentage": 31,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 34,
@@ -385,7 +400,7 @@ class OccasionDummyData {
           "price": 110,
           "originalPrice": 160,
           "discountPercentage": 31,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 35,
@@ -395,7 +410,7 @@ class OccasionDummyData {
           "price": 150,
           "originalPrice": 200,
           "discountPercentage": 25,
-          "status": "InStock"
+          "status": "InStock",
         },
         {
           "id": 36,
@@ -405,8 +420,8 @@ class OccasionDummyData {
           "price": 130,
           "originalPrice": 180,
           "discountPercentage": 28,
-          "status": "InStock"
-        }
+          "status": "InStock",
+        },
       ],
       "pagination": {
         "page": 1,
@@ -414,11 +429,11 @@ class OccasionDummyData {
         "totalCount": 36,
         "totalPages": 4,
         "hasNextPage": true,
-        "hasPreviousPage": false
-      }
+        "hasPreviousPage": false,
+      },
     },
     "isSuccess": true,
     "message": "",
-    "errorCode": "None"
+    "errorCode": "None",
   };
 }

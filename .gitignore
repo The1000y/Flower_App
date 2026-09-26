@@ -51,3 +51,13 @@ app.*.map.json
 *.mocks.dart
 *.gr.dart
 *.config.dart
+
+
+
+# .gitignore
+.env
+.env.*
+local.properties
+
+
+

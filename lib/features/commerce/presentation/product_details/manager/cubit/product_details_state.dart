@@ -1,4 +1,3 @@
-
 import '../../../../../../config/base/base_state.dart';
 import '../../../../domain/entities/product_details/product_details_entity.dart';
 

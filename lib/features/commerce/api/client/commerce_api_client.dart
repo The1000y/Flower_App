@@ -12,6 +12,6 @@ abstract class CommerceApiClient {
   @factoryMethod
   factory CommerceApiClient(Dio dio) = _CommerceApiClient;
 
-  @GET(ApiStrings.occasion)
+  @GET(ApiStrings.occasions)
   Future<OccasionsResponseDto> getOccasions();
 }

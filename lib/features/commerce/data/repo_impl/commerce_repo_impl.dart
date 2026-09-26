@@ -1,12 +1,16 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/section_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
@@ -14,6 +18,9 @@ import 'package:flower_app/features/commerce/domain/entities/products/pagination
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../domain/models/cart/add_cart_item_params.dart';
+import '../../domain/models/cart/update_cart_item_params.dart';
 
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
@@ -82,15 +89,76 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(int occasionId, {int page = 1}) async {
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
+    int occasionId, {
+    int page = 1,
+  }) async {
     final response = await remoteDataSource.getProducts(occasionId, page: page);
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
-        return SuccessResponce(PaginatedProducts(
-          items: response.data.products,
-          pagination: response.data.pagination,
-        ));
+        return SuccessResponce(
+          PaginatedProducts(
+            items: response.data.products,
+            pagination: response.data.pagination,
+          ),
+        );
       case ErrorResponce<ProductsResponseDto>():
+        return ErrorResponce(response.error);
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> addToCart(AddCartItemParams params) async {
+    final response = await localDataSource.addToCart(
+      AddCartItemRequestDto(
+        productId: params.productId,
+        quantity: params.quantity,
+      ),
+    );
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
+      case ErrorResponce<CartResponseDto>():
+        return ErrorResponce(response.error);
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> getCart() async {
+    final response = await localDataSource.getCart();
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
+      case ErrorResponce<CartResponseDto>():
+        return ErrorResponce(response.error);
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> removeCartItem(String cartItemId) async {
+    final response = await localDataSource.removeCartItem(cartItemId);
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
+      case ErrorResponce<CartResponseDto>():
+        return ErrorResponce(response.error);
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> updateCartItemQuantity(
+    String cartItemId,
+    UpdateCartItemParams params,
+  ) async {
+    final response = await localDataSource.updateCartItemQuantity(
+      cartItemId,
+      UpdateCartItemRequestDto(quantity: params.quantity),
+    );
+
+    switch (response) {
+      case SuccessResponce<CartResponseDto>():
+        return SuccessResponce(response.data.toDomain());
+      case ErrorResponce<CartResponseDto>():
         return ErrorResponce(response.error);
     }
   }

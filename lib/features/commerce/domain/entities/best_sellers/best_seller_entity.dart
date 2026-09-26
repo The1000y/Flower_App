@@ -10,7 +10,7 @@ class BestSellerEntity extends Equatable {
   final int originalPrice;
   final int discountPercentage;
   final String status;
-  
+
   const BestSellerEntity({
     required this.id,
     required this.name,

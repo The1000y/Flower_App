@@ -16,23 +16,33 @@ void main() {
     getOccasionsUseCase = GetOccasionsUseCase(mockCommerceRepo);
   });
 
-  test('should call getOccasions on repository and return SuccessResponce with list of occasions', () async {
-    final tOccasions = [OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url')];
-    when(() => mockCommerceRepo.getOccasions())
-        .thenAnswer((_) async => SuccessResponce<List<OccasionEntity>>(tOccasions));
+  test(
+    'should call getOccasions on repository and return SuccessResponce with list of occasions',
+    () async {
+      final tOccasions = [
+        OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url'),
+      ];
+      when(() => mockCommerceRepo.getOccasions()).thenAnswer(
+        (_) async => SuccessResponce<List<OccasionEntity>>(tOccasions),
+      );
 
-    final result = await getOccasionsUseCase.execute();
+      final result = await getOccasionsUseCase.execute();
 
-    expect(result, isA<SuccessResponce<List<OccasionEntity>>>());
-    expect((result as SuccessResponce<List<OccasionEntity>>).data, tOccasions);
-    verify(() => mockCommerceRepo.getOccasions()).called(1);
-    verifyNoMoreInteractions(mockCommerceRepo);
-  });
+      expect(result, isA<SuccessResponce<List<OccasionEntity>>>());
+      expect(
+        (result as SuccessResponce<List<OccasionEntity>>).data,
+        tOccasions,
+      );
+      verify(() => mockCommerceRepo.getOccasions()).called(1);
+      verifyNoMoreInteractions(mockCommerceRepo);
+    },
+  );
 
   test('should propagate ErrorResponce when repository fails', () async {
     final exception = Exception('Failed to get occasions');
-    when(() => mockCommerceRepo.getOccasions())
-        .thenAnswer((_) async => ErrorResponce<List<OccasionEntity>>(exception));
+    when(
+      () => mockCommerceRepo.getOccasions(),
+    ).thenAnswer((_) async => ErrorResponce<List<OccasionEntity>>(exception));
 
     final result = await getOccasionsUseCase.execute();
 

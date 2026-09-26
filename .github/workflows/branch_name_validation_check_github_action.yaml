@@ -1,0 +1,48 @@
+name: Branch Name Check
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-branch-name:
+    name: Validate Branch Name
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check branch name
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        run: |
+          echo "Checking branch name: $BRANCH_NAME"
+
+          if [[ "$BRANCH_NAME" =~ ^(feature|bugfix|hotfix|release|chore)/.+ ]]; then
+            echo "✅ Branch name follows the required convention."
+          else
+            echo "❌ Invalid branch name."
+            echo ""
+            echo "Expected format:"
+            echo "  feature/<description>"
+            echo "  bugfix/<description>"
+            echo "  hotfix/<description>"
+            echo "  release/<version>"
+            echo "  chore/<description>"
+            echo ""
+            echo "Allowed prefixes:"
+            echo "  feature  - New feature"
+            echo "  bugfix   - Bug fix"
+            echo "  hotfix   - Urgent production fix"
+            echo "  release  - Release preparation"
+            echo "  chore    - Maintenance tasks"
+            echo ""
+            echo "Examples:"
+            echo "  feature/product-details"
+            echo "  bugfix/login-validation"
+            echo "  hotfix/payment-crash"
+            echo "  release/v1.0.0"
+            echo "  chore/update-dependencies"
+            exit 1
+          fi

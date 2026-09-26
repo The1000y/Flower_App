@@ -56,9 +56,7 @@ class LocalDataSourceImpl implements LocalDataSource {
     }
 
     if (request.resetCode != dummyData['otp']) {
-      return ErrorResponce<ResetPasswordResponseDto>(
-        Exception('Invalid OTP'),
-      );
+      return ErrorResponce<ResetPasswordResponseDto>(Exception('Invalid OTP'));
     }
 
     if (request.newPassword.isEmpty) {
@@ -78,7 +76,8 @@ class LocalDataSourceImpl implements LocalDataSource {
       ),
     );
   }
-   @override
+
+  @override
   Future<BaseResponce<VerifyOtpResponse>> verifyOtp({
     required VerifyOtpRequest verifyOtpRequest,
   }) async {

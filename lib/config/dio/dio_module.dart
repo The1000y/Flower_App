@@ -1,5 +1,3 @@
-
-
 import 'package:dio/dio.dart';
 import 'package:flower_app/config/dio/auth_interceptor.dart';
 import 'package:injectable/injectable.dart';
@@ -19,8 +17,3 @@ abstract class DioModule {
     return dio;
   }
 }
-
-
-
-
-

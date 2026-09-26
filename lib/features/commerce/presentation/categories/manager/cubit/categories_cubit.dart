@@ -8,8 +8,8 @@ import '../../../../domain/use_case/get_categories_use_case.dart';
 import '../../../../domain/use_case/get_product_use_case.dart';
 import 'categories_event.dart';
 import 'categories_state.dart';
-@injectable
 
+@injectable
 class CategoriesCubit extends Cubit<CategoriesState> {
   CategoriesCubit(this.getCategoriesUseCase, this.getProductsUseCase)
     : super(CategoriesState());

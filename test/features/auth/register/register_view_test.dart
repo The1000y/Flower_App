@@ -1,8 +1,8 @@
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
-import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
+import 'package:flower_app/features/auth/presentation/register/view/widgets/register_custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -48,29 +48,35 @@ Finder _signUpButton() => find.widgetWithText(CustomButton, AppStrings.signUp);
 
 Future<void> _fillValidFields(WidgetTester tester) async {
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.firstNameLabel),
+    find.widgetWithText(RegisterCustomTextFormField, AppStrings.firstNameLabel),
     'John',
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.lastNameLabel),
+    find.widgetWithText(RegisterCustomTextFormField, AppStrings.lastNameLabel),
     'Doe',
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.emailLabel),
+    find.widgetWithText(RegisterCustomTextFormField, AppStrings.emailLabel),
     validEmail,
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
+    find.widgetWithText(RegisterCustomTextFormField, AppStrings.passwordLabel),
     validRegisterPassword,
   );
   await tester.enterText(
     find
-        .widgetWithText(CustomTextFormField, AppStrings.confirmPasswordLabel)
+        .widgetWithText(
+          RegisterCustomTextFormField,
+          AppStrings.confirmPasswordLabel,
+        )
         .first,
     validRegisterPassword,
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),
+    find.widgetWithText(
+      RegisterCustomTextFormField,
+      AppStrings.phoneNumberLabel,
+    ),
     '01012345678',
   );
   await tester.pump();
@@ -78,42 +84,58 @@ Future<void> _fillValidFields(WidgetTester tester) async {
 
 void main() {
   group('RegisterView widget', () {
-    testWidgets('renders all form fields and the sign up button', (tester) async {
+    testWidgets('renders all form fields and the sign up button', (
+      tester,
+    ) async {
       await _pumpRegister(tester, FakeAuthRepo());
 
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.firstNameLabel),
+        find.widgetWithText(
+          RegisterCustomTextFormField,
+          AppStrings.firstNameLabel,
+        ),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.lastNameLabel),
+        find.widgetWithText(
+          RegisterCustomTextFormField,
+          AppStrings.lastNameLabel,
+        ),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.emailLabel),
+        find.widgetWithText(RegisterCustomTextFormField, AppStrings.emailLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
+        find.widgetWithText(
+          RegisterCustomTextFormField,
+          AppStrings.passwordLabel,
+        ),
         findsOneWidget,
       );
       expect(
         find
             .widgetWithText(
-              CustomTextFormField,
+              RegisterCustomTextFormField,
               AppStrings.confirmPasswordLabel,
             )
             .first,
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),
+        find.widgetWithText(
+          RegisterCustomTextFormField,
+          AppStrings.phoneNumberLabel,
+        ),
         findsOneWidget,
       );
       expect(_signUpButton(), findsOneWidget);
     });
 
-    testWidgets('shows validation errors when fields are empty', (tester) async {
+    testWidgets('shows validation errors when fields are empty', (
+      tester,
+    ) async {
       await _pumpRegister(tester, FakeAuthRepo());
 
       await tester.ensureVisible(_signUpButton());
@@ -159,10 +181,7 @@ void main() {
       await tester.pump();
 
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(
-        find.text('something went wrong, pls try again'),
-        findsOneWidget,
-      );
+      expect(find.text('something went wrong, pls try again'), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 5));
     });

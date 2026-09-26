@@ -1,4 +1,3 @@
-
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -34,6 +33,5 @@ class OccasionsResponseDto {
   factory OccasionsResponseDto.fromJson(Map<String, dynamic> json) =>
       _$OccasionsResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$OccasionsResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$OccasionsResponseDtoToJson(this);
 }

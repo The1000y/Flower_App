@@ -1,9 +1,6 @@
 import 'package:equatable/equatable.dart';
-enum SectionType {
-  bestSeller,
-  category,
-  occasion,
-}
+
+enum SectionType { bestSeller, category, occasion }
 
 class SectionEntity extends Equatable {
   final int id;

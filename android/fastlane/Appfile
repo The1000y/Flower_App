@@ -1,0 +1,2 @@
+json_key_file("fastlane/flower-app-a1fed-firebase-adminsdk-fbsvc-57ce4620cb.json")
+package_name("com.example.flower_app")

@@ -52,9 +52,7 @@ void main() {
         expect(success.data.first.id, 1);
         expect(success.data.first.name, 'Red Rose');
 
-        verify(
-          () => mockCommerceRepo.getProducts(),
-        ).called(1);
+        verify(() => mockCommerceRepo.getProducts()).called(1);
       },
     );
 
@@ -63,9 +61,7 @@ void main() {
       () async {
         final exception = Exception('Failed to get products');
 
-        final response = ErrorResponce<List<ProductEntity>>(
-          exception,
-        );
+        final response = ErrorResponce<List<ProductEntity>>(exception);
 
         when(
           () => mockCommerceRepo.getProducts(),
@@ -80,9 +76,7 @@ void main() {
 
         expect(error.error, same(exception));
 
-        verify(
-          () => mockCommerceRepo.getProducts(),
-        ).called(1);
+        verify(() => mockCommerceRepo.getProducts()).called(1);
       },
     );
   });
