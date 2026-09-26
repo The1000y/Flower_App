@@ -5,6 +5,9 @@ import 'package:flower_app/features/profile/presentation/manager/profile_event.d
 import 'package:flower_app/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:injectable/injectable.dart';
+
+@injectable
 class ProfileViewModel extends Cubit<ProfileState> {
   final ShowProfileUsecase _getProfileUseCase;
 
@@ -15,17 +18,15 @@ class ProfileViewModel extends Cubit<ProfileState> {
     switch (intent) {
       case GetProfileIntent():
         _getProfile();
-
-      
       case EditProfileIntent():
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        // Handled via navigation
+        break;
       case NotificationIntent():
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        // Handled via navigation
+        break;
       case LogoutIntent():
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        // Handled via confirmation dialog
+        break;
     }
   }
 

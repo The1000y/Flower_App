@@ -8,6 +8,7 @@ class ProfileState extends BaseState<UserEntity> {
     super.data,
   });
 
+  @override
   ProfileState copyWith({
     String? errorMessage,
     bool? isLoading,

@@ -1,7 +1,11 @@
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
+import 'package:flower_app/features/profile/presentation/manager/profile_viewModel.dart';
+import 'package:flower_app/features/profile/presentation/view/profile_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../constants/app_strings/app_strings.dart';
@@ -17,7 +21,10 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
     final homeScreen = HomeView(controller: controller);
     final categoriesScreen = CategoriesView();
     final cartScreen = Placeholder();
-    final profileScreen = Placeholder();
+    final profileScreen = BlocProvider(
+      create: (_) => getIt<ProfileViewModel>(),
+      child: const ProfileView(),
+    );
 
     return PersistentTabView(
       controller: controller,

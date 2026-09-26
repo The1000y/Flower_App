@@ -1,16 +1,30 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_event.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_state.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_viewModel.dart';
+import 'package:flower_app/features/profile/presentation/view/widgets/body_profile.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/language.dart';
+import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flower_app/features/profile/presentation/view/widgets/body_profile.dart';
-import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/l10n/app_localizations.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<ProfileViewModel>().doIntent(GetProfileIntent());
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +32,16 @@ class ProfileView extends StatelessWidget {
       builder: (context, state) {
         if (state.isLoading) {
           return const Scaffold(
+            backgroundColor: Colors.white,
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        if (state.errorMessage.isNotEmpty) {
-          return Scaffold(body: Center(child: Text(state.errorMessage)));
+        if (state.errorMessage.isNotEmpty && state.data == null) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(child: Text(state.errorMessage)),
+          );
         }
 
         final user = state.data;
@@ -35,20 +53,17 @@ class ProfileView extends StatelessWidget {
               user: user,
               onEditProfile: () {
                 context.read<ProfileViewModel>().doIntent(EditProfileIntent());
-
-                context.push(Routes.editProfile);
+                Navigator.pushNamed(context, Routes.editProfile);
               },
               onNotification: () {
                 context.read<ProfileViewModel>().doIntent(NotificationIntent());
-
-                context.push(Routes.notification);
+                Navigator.pushNamed(context, Routes.notification);
               },
               onLanguage: () {
                 _showLanguageBottomSheet(context);
               },
               onLogout: () {
                 context.read<ProfileViewModel>().doIntent(LogoutIntent());
-
                 _showLogoutDialog(context);
               },
             ),
@@ -62,12 +77,13 @@ class ProfileView extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: const LanguageBottomSheet(),
         );
@@ -98,9 +114,6 @@ class ProfileView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-
-                // هنا لاحقًا تعمل ConfirmLogoutIntent
-                // لما تضيف logout use case.
               },
               child: Text(l10n.logout),
             ),
@@ -110,3 +123,4 @@ class ProfileView extends StatelessWidget {
     );
   }
 }
+

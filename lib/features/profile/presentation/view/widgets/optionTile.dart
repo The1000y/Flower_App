@@ -1,19 +1,24 @@
+import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 
-
 class ProfileOptionTile extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final Widget? leading;
   final String title;
   final Widget? trailing;
   final String? trailingText;
+  final Color? trailingTextColor;
   final VoidCallback onTap;
 
   const ProfileOptionTile({
-    required this.icon,
+    super.key,
+    this.icon,
+    this.leading,
     required this.title,
     required this.onTap,
     this.trailing,
     this.trailingText,
+    this.trailingTextColor,
   });
 
   @override
@@ -22,21 +27,27 @@ class ProfileOptionTile extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 16,
+          horizontal: 20,
           vertical: 14,
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 18,
-            ),
-            const SizedBox(width: 10),
+            if (leading != null)
+              leading!
+            else if (icon != null)
+              Icon(
+                icon,
+                size: 20,
+                color: Colors.black87,
+              ),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
                 ),
               ),
             ),
@@ -45,18 +56,21 @@ class ProfileOptionTile extends StatelessWidget {
             else if (trailingText != null)
               Text(
                 trailingText!,
-                style: const TextStyle(
-                  fontSize: 10,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: trailingTextColor ?? AppColors.pinkBase,
                 ),
               )
             else
               const Icon(
                 Icons.chevron_right,
-                size: 18,
+                size: 20,
+                color: Colors.grey,
               ),
           ],
         ),
       ),
     );
   }
-}
+}

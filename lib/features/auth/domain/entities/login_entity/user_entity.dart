@@ -18,4 +18,19 @@ class UserEntity {
     this.photoUrl,
     required this.status,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'gender': gender,
+      'role': role,
+      if (photoUrl != null) 'photoUrl': photoUrl,
+      'status': status,
+    };
+  }
+
+  Map<String, dynamic> toMap() => toJson();
 }

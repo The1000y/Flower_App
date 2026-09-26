@@ -1,11 +1,12 @@
 import 'package:flower_app/core/locale/locale_cubit.dart';
+import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/optionTile.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfileBody extends StatelessWidget {
+class ProfileBody extends StatefulWidget {
   final UserEntity? user;
   final VoidCallback onEditProfile;
   final VoidCallback onNotification;
@@ -13,6 +14,7 @@ class ProfileBody extends StatelessWidget {
   final VoidCallback onLogout;
 
   const ProfileBody({
+    super.key,
     required this.user,
     required this.onEditProfile,
     required this.onNotification,
@@ -21,17 +23,25 @@ class ProfileBody extends StatelessWidget {
   });
 
   @override
+  State<ProfileBody> createState() => _ProfileBodyState();
+}
+
+class _ProfileBodyState extends State<ProfileBody> {
+  bool _notificationsEnabled = true;
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
           _buildHeader(context),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           _buildProfileInfo(),
           const SizedBox(height: 20),
           _buildProfileOptions(context),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           _buildVersion(context),
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -41,30 +51,61 @@ class ProfileBody extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            l10n.floweryAppbarTitle,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          Row(
+            children: [
+              const Icon(
+                Icons.local_florist,
+                color: AppColors.pinkBase,
+                size: 22,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                l10n.floweryAppbarTitle,
+                style: const TextStyle(
+                  color: AppColors.pinkBase,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           GestureDetector(
-            onTap: onNotification,
+            onTap: widget.onNotification,
             child: Stack(
+              clipBehavior: Clip.none,
               children: [
-                const Icon(Icons.notifications_none_outlined, size: 26),
+                const Icon(
+                  Icons.notifications_none_outlined,
+                  size: 28,
+                  color: Colors.black87,
+                ),
                 Positioned(
-                  right: 0,
-                  top: 0,
+                  right: -2,
+                  top: -2,
                   child: Container(
-                    width: 7,
-                    height: 7,
+                    padding: const EdgeInsets.all(3),
                     decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        '3',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          height: 1,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -77,40 +118,53 @@ class ProfileBody extends StatelessWidget {
   }
 
   Widget _buildProfileInfo() {
+    final name = widget.user?.fullName.isNotEmpty == true
+        ? widget.user!.fullName
+        : 'Nour';
+    final email = widget.user?.email.isNotEmpty == true
+        ? widget.user!.email
+        : 'Nour_Mohamed@gmail.com';
+
     return Column(
       children: [
-        Stack(
-          clipBehavior: Clip.none,
+        CircleAvatar(
+          radius: 38,
+          backgroundColor: Colors.grey.shade200,
+          backgroundImage: widget.user?.photoUrl != null &&
+                  widget.user!.photoUrl!.isNotEmpty
+              ? NetworkImage(widget.user!.photoUrl!)
+              : null,
+          child: widget.user?.photoUrl == null || widget.user!.photoUrl!.isEmpty
+              ? const Icon(Icons.person, size: 40, color: Colors.grey)
+              : null,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircleAvatar(radius: 34, child: Icon(Icons.person, size: 32)),
-            Positioned(
-              right: -4,
-              bottom: -2,
-              child: GestureDetector(
-                onTap: onEditProfile,
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: const Icon(Icons.edit_outlined, size: 14),
-                ),
+            Text(
+              name,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(width: 6),
+            GestureDetector(
+              onTap: widget.onEditProfile,
+              child: const Icon(
+                Icons.edit_outlined,
+                size: 16,
+                color: Colors.black87,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 10),
-        Text(
-          user?.fullName ?? '',
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        ),
         const SizedBox(height: 4),
         Text(
-          user?.email ?? '',
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+          email,
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
         ),
       ],
     );
@@ -130,38 +184,51 @@ class ProfileBody extends StatelessWidget {
             // orders route
           },
         ),
-
         ProfileOptionTile(
-          icon: Icons.bookmark_border,
-          title: l10n.saveAddress,
+          icon: Icons.bookmark_border_outlined,
+          title: l10n.savedAddressTitle,
           onTap: () {
             // saved address route
           },
         ),
-
-        const Divider(height: 1),
-
+        Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         ProfileOptionTile(
-          icon: Icons.notifications_none_outlined,
-          title: l10n.notificationTitle,
-          trailing: Switch(
-            value: true,
-            onChanged: (_) {
-              // notification setting intent later
-            },
+          leading: SizedBox(
+            height: 24,
+            width: 40,
+            child: Transform.scale(
+              scale: 0.8,
+              child: Switch(
+                value: _notificationsEnabled,
+                activeThumbColor: AppColors.pinkBase,
+                onChanged: (val) {
+                  setState(() {
+                    _notificationsEnabled = val;
+                  });
+                },
+              ),
+            ),
           ),
-          onTap: onNotification,
+          title: l10n.notificationTitle,
+          trailing: const Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.grey,
+          ),
+          onTap: () {
+            setState(() {
+              _notificationsEnabled = !_notificationsEnabled;
+            });
+          },
         ),
-
-        const Divider(height: 1),
-
+        Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         ProfileOptionTile(
-          icon: Icons.language_outlined,
+          icon: Icons.translate_outlined,
           title: l10n.language,
           trailingText: currentLanguageName,
-          onTap: onLanguage,
+          trailingTextColor: AppColors.pinkBase,
+          onTap: widget.onLanguage,
         ),
-
         ProfileOptionTile(
           icon: Icons.info_outline,
           title: l10n.aboutUs,
@@ -169,7 +236,6 @@ class ProfileBody extends StatelessWidget {
             // about route
           },
         ),
-
         ProfileOptionTile(
           icon: Icons.description_outlined,
           title: l10n.termsAndConditionsAlt,
@@ -177,27 +243,30 @@ class ProfileBody extends StatelessWidget {
             // terms route
           },
         ),
-
-        const Divider(height: 1),
-
+        Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         ProfileOptionTile(
           icon: Icons.logout_outlined,
           title: l10n.logout,
-          onTap: onLogout,
+          trailing: const Icon(
+            Icons.logout_outlined,
+            size: 20,
+            color: Colors.black87,
+          ),
+          onTap: widget.onLogout,
         ),
       ],
     );
   }
 
   Widget _buildVersion(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Text(
-        l10n.versionProfile,
-        style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
+    return Text(
+      'v 6.3.0 - (446)',
+      style: TextStyle(
+        fontSize: 11,
+        color: Colors.grey.shade400,
+        fontWeight: FontWeight.w400,
       ),
     );
   }
 }
+
