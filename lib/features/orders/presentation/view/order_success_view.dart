@@ -20,14 +20,12 @@ class OrderSuccessView extends StatelessWidget {
       child: BlocListener<OrderSuccessCubit, OrderSuccessState>(
         listener: (context, state) {
           if (state.action == OrderSuccessAction.navigateToHome) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
+            Navigator.of(context,rootNavigator: true)..pushNamedAndRemoveUntil(
               Routes.home,
                   (route) => false,
             );
           } else if (state.action == OrderSuccessAction.navigateToTrackOrder) {
-            Navigator.pushNamed(
-              context,
+            Navigator.of(context, rootNavigator: true).pushNamed(
               Routes.trackOrder,
               arguments: state.orderId,
             );
@@ -47,8 +45,11 @@ class OrderSuccessView extends StatelessWidget {
               child: Scaffold(
                 appBar: AppBar(
                   leading: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios, color: AppColors.blackBase),
-                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.blackBase,
+                    ),
+                    onPressed: () => cubit.onHomeTap(),
                   ),
                   title: Text(
                     AppStrings.trackOrder,
@@ -62,7 +63,10 @@ class OrderSuccessView extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                 ),
                 body: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 24.h,
+                  ),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -78,7 +82,11 @@ class OrderSuccessView extends StatelessWidget {
                               color: AppColors.success.withOpacity(0.1),
                             ),
                             child: const Center(
-                              child: Icon(Icons.check_circle, color: AppColors.success, size: 60),
+                              child: Icon(
+                                Icons.check_circle,
+                                color: AppColors.success,
+                                size: 60,
+                              ),
                             ),
                           ),
                         ),
