@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RememberCustom extends StatelessWidget {
-  const RememberCustom({super.key});
+  const RememberCustom({
+    super.key,
+    
+  });
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +36,23 @@ class RememberCustom extends StatelessWidget {
                   RememberMeChanged(!state.rememberMe),
                 );
               },
-              child: Text(AppStrings.rememberMe),
+              child: Text(
+                AppStrings.rememberMe,
+              ),
             ),
 
             const Spacer(),
 
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, Routes.forgotPassword);
+                Navigator.pushNamed(
+                  context,
+                  Routes.forgotPassword,
+                );
               },
-              child: const Text(AppStrings.forgetPassword),
+              child: const Text(
+                AppStrings.forgetPassword,
+              ),
             ),
           ],
         );
@@ -50,4 +61,4 @@ class RememberCustom extends StatelessWidget {
   }
 }
 
-//spreate it and deny to rebulid it agin if any change in email or password
+//spreate it and deny to rebulid it agin if any change in email or password 

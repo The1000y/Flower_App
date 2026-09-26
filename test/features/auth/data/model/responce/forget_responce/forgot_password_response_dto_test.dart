@@ -1,4 +1,4 @@
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/forgot_password_response_dto.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/forget_password_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -36,22 +36,19 @@ void main() {
       expect(result['isSuccess'], true);
     });
 
-    test(
-      'should convert ForgotPasswordResponseDto to ForgetPasswordEntity correctly',
-      () {
-        final dto = ForgotPasswordResponseDto(
-          data: 'success',
-          message: 'Password reset email sent',
-          errorCode: '',
-          isSuccess: true,
-        );
+    test('should convert ForgotPasswordResponseDto to ForgetPasswordEntity correctly', () {
+      final dto = ForgotPasswordResponseDto(
+        data: 'success',
+        message: 'Password reset email sent',
+        errorCode: '',
+        isSuccess: true,
+      );
 
-        final result = dto.toDomain();
+      final result = dto.toDomain();
 
-        expect(result, isA<ForgetPasswordEntity>());
-        expect(result.isSuccess, true);
-        expect(result.message, 'Password reset email sent');
-      },
-    );
+      expect(result, isA<ForgetPasswordEntity>());
+      expect(result.isSuccess, true);
+      expect(result.message, 'Password reset email sent');
+    });
   });
 }

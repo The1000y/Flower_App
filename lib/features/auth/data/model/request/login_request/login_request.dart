@@ -9,12 +9,21 @@ String loginRequestToJson(LoginRequest data) => json.encode(data.toJson());
 
 @JsonSerializable()
 class LoginRequest {
-  @JsonKey(name: "email")
+  @JsonKey(name: 'email')
   String? email;
-  @JsonKey(name: "password")
+  @JsonKey(name: 'password')
   String? password;
+  @JsonKey(name: 'deviceId')
+  String? deviceId;
+  @JsonKey(name: 'fcmToken')
+  String? fcmToken;
 
-  LoginRequest({this.email, this.password});
+  LoginRequest({
+    this.email,
+    this.password,
+    this.deviceId,
+    this.fcmToken,
+  });
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>
       _$LoginRequestFromJson(json);

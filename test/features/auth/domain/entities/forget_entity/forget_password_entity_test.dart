@@ -8,5 +8,6 @@ void main() {
       expect(entity.isSuccess, true);
       expect(entity.message, 'success');
     });
+
   });
 }

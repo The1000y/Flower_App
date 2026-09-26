@@ -8,9 +8,6 @@ import 'package:flower_app/features/auth/data/model/request/forget_request/reset
 import 'package:flower_app/features/auth/data/model/request/forget_request/verify_otp_request.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/login_request.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/forget_password_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_passsword_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
@@ -21,32 +18,33 @@ import 'package:flower_app/features/auth/domain/entities/register_entity/registe
 import 'package:flower_app/features/auth/domain/repo/auth_repo.dart';
 import 'package:injectable/injectable.dart';
 
+import '../model/response/forget_response/forgot_password_response_dto.dart';
+import '../model/response/forget_response/reset_password_response_dto.dart';
+import '../model/response/forget_response/verify_otp_response.dart';
+
 @Injectable(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
-  final LocalDataSource _localDataSource;
   final RemoteDataSource _remoteDataSource;
   final SecureStorageService _secureStorage;
 
   AuthRepoImpl(
-    this._localDataSource,
-    this._remoteDataSource,
-    this._secureStorage,
-  );
+      LocalDataSource _,
+      this._remoteDataSource,
+      this._secureStorage,
+      );
 
   @override
   Future<BaseResponce<ForgetPasswordEntity>> forgetPassword({
     required String email,
   }) async {
-    final response = await _localDataSource.forgotPassword(
+    final response = await _remoteDataSource.forgotPassword(
       ForgotPasswordRequestDto(email: email),
     );
     return switch (response) {
-      SuccessResponce<ForgotPasswordResponseDto>() => SuccessResponce(
-        response.data.toDomain(),
-      ),
-      ErrorResponce<ForgotPasswordResponseDto>() => ErrorResponce(
-        response.error,
-      ),
+      SuccessResponce<ForgotPasswordResponseDto>() =>
+          SuccessResponce(response.data.toDomain()),
+      ErrorResponce<ForgotPasswordResponseDto>() =>
+          ErrorResponce(response.error),
     };
   }
 
@@ -56,20 +54,18 @@ class AuthRepoImpl implements AuthRepo {
     required String otp,
     required String password,
   }) async {
-    final response = await _localDataSource.resetPassword(
+    final response = await _remoteDataSource.resetPassword(
       ResetPasswordRequestDto(
-        email: email,
+        resetToken: otp,
         newPassword: password,
-        resetCode: otp,
+        confirmPassword: password,
       ),
     );
     return switch (response) {
-      SuccessResponce<ResetPasswordResponseDto>() => SuccessResponce(
-        response.data.toDomain(),
-      ),
-      ErrorResponce<ResetPasswordResponseDto>() => ErrorResponce(
-        response.error,
-      ),
+      SuccessResponce<ResetPasswordResponseDto>() =>
+          SuccessResponce(response.data.toDomain()),
+      ErrorResponce<ResetPasswordResponseDto>() =>
+          ErrorResponce(response.error),
     };
   }
 
@@ -78,32 +74,34 @@ class AuthRepoImpl implements AuthRepo {
     required String email,
     required String otp,
   }) async {
-    final response = await _localDataSource.verifyOtp(
+    final response = await _remoteDataSource.verifyOtp(
       verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp),
     );
     return switch (response) {
-      SuccessResponce<VerifyOtpResponse>() => SuccessResponce(
-        response.data.data!.toEntity(),
-      ),
+      SuccessResponce<VerifyOtpResponse>() =>
+          SuccessResponce(response.data.data!.toEntity()),
       ErrorResponce<VerifyOtpResponse>() => ErrorResponce(response.error),
     };
   }
 
   @override
   Future<BaseResponce<LoginEntity>> login(
-    LoginCredentials credentials, {
-    bool rememberMe = false,
-  }) async {
+      LoginCredentials credentials, {
+        bool rememberMe = false,
+      }) async {
     try {
       final response = await _remoteDataSource.login(
-        LoginRequest(email: credentials.email, password: credentials.password),
+        LoginRequest(
+          email: credentials.email,
+          password: credentials.password,
+          deviceId: 'flutter_customer_app',
+          fcmToken: 'dummy_fcm_token',
+        ),
       );
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.toLoginEntity();
-        if (rememberMe) {
-          await _secureStorage.saveAccessToken(login.accessToken);
-          await _secureStorage.saveRefreshToken(login.refreshToken);
-        }
+        await _secureStorage.saveAccessToken(login.accessToken);
+        await _secureStorage.saveRefreshToken(login.refreshToken);
         return SuccessResponce(login);
       }
       return ErrorResponce(
@@ -127,8 +125,8 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   Future<BaseResponce<RegisterEntity>> register(
-    RegisterRequestEntity entity,
-  ) async {
+      RegisterRequestEntity entity,
+      ) async {
     try {
       final request = RegisterRequest.fromEntity(entity);
       final response = await _remoteDataSource.register(request);

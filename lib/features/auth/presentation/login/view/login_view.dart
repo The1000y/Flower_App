@@ -12,7 +12,6 @@ import 'package:flower_app/features/auth/presentation/login/view/widgets/remembe
 import 'package:flower_app/features/auth/presentation/login/view/widgets/signup_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -120,7 +119,7 @@ class _LoginViewState extends State<LoginView> {
                       );
                     },
                   ),
-                  SizedBox(height: 16.h),
+                  const SizedBox(height: 16),
                   BlocBuilder<LoginViewModel, LoginState>(
                     buildWhen: (previous, current) =>
                         previous.obscurePassword != current.obscurePassword,
@@ -152,10 +151,10 @@ class _LoginViewState extends State<LoginView> {
                       );
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  const SizedBox(height: 12),
                   //rememberme
                   const RememberCustom(),
-                  SizedBox(height: 16.h),
+                  const SizedBox(height: 16),
                   BlocBuilder<LoginViewModel, LoginState>(
                     buildWhen: (previous, current) =>
                         previous.isLoading != current.isLoading,
@@ -169,14 +168,14 @@ class _LoginViewState extends State<LoginView> {
                       );
                     },
                   ),
-                  SizedBox(height: 16.h),
+                  const SizedBox(height: 16),
                   CustomOutlinedButton(
                     text: AppStrings.continueAsGuest,
                     onPressed: () {
                       Navigator.pushNamed(context, Routes.home);
                     },
                   ),
-                  SizedBox(height: 24.h),
+                  const SizedBox(height: 24),
                   SignupWidget(),
                 ],
               ),

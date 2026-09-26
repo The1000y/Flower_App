@@ -1,4 +1,4 @@
-import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
+import 'package:flower_app/features/auth/data/model/response/register_response/register_response.dart';
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 

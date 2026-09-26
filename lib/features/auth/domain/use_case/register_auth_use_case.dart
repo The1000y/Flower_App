@@ -10,9 +10,7 @@ class RegisterAuthUseCase {
   final AuthRepo _authRepo;
   RegisterAuthUseCase(this._authRepo);
 
-  Future<BaseResponce<RegisterEntity>> execute(
-    RegisterRequestEntity request,
-  ) async {
+  Future<BaseResponce<RegisterEntity>> execute(RegisterRequestEntity request) async {
     return await _authRepo.register(request);
   }
 }

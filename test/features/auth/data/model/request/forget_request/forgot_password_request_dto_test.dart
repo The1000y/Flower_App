@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ForgotPasswordRequestDto', () {
     test('should create ForgotPasswordRequestDto from JSON correctly', () {
-      final json = {'email': 'test@gmail.com'};
+      final json = {
+        'email': 'test@gmail.com',
+      };
 
       final result = ForgotPasswordRequestDto.fromJson(json);
 
@@ -12,7 +14,9 @@ void main() {
     });
 
     test('should convert ForgotPasswordRequestDto to JSON correctly', () {
-      const dto = ForgotPasswordRequestDto(email: 'test@gmail.com');
+      const dto = ForgotPasswordRequestDto(
+        email: 'test@gmail.com',
+      );
 
       final result = dto.toJson();
 

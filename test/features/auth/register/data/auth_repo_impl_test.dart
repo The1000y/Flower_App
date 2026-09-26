@@ -4,7 +4,7 @@ import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
-import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
+import 'package:flower_app/features/auth/data/model/response/register_response/register_response.dart';
 import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';
@@ -50,34 +50,34 @@ void main() {
     localDataSource = MockLocalDataSource();
     secureStorage = MockSecureStorageService();
 
-    repo = AuthRepoImpl(localDataSource, remoteDataSource, secureStorage);
+    repo = AuthRepoImpl(
+      localDataSource,
+      remoteDataSource,
+      secureStorage);
   });
 
   group('AuthRepoImpl.register', () {
-    test(
-      'returns SuccessResponce when remote registers successfully',
-      () async {
-        final response = RegisterResponse(
-          isSuccess: true,
-          errorCode: 200,
-          message: 'Registration successful',
-          data: true,
-        );
-        when(
-          () => remoteDataSource.register(any()),
-        ).thenAnswer((_) async => response);
+    test('returns SuccessResponce when remote registers successfully', () async {
+      final response = RegisterResponse(
+        isSuccess: true,
+        errorCode: 200,
+        message: 'Registration successful',
+        data: true,
+      );
+      when(() => remoteDataSource.register(any())).thenAnswer(
+        (_) async => response,
+      );
 
-        final result = await repo.register(entity);
+      final result = await repo.register(entity);
 
-        expect(result, isA<SuccessResponce<RegisterEntity>>());
-        final resultEntity = (result as SuccessResponce<RegisterEntity>).data;
-        expect(resultEntity.isSuccess, isTrue);
-        expect(resultEntity.errorCode, 200);
-        expect(resultEntity.message, 'Registration successful');
-        expect(resultEntity.data, isTrue);
-        verify(() => remoteDataSource.register(any())).called(1);
-      },
-    );
+      expect(result, isA<SuccessResponce<RegisterEntity>>());
+      final resultEntity = (result as SuccessResponce<RegisterEntity>).data;
+      expect(resultEntity.isSuccess, isTrue);
+      expect(resultEntity.errorCode, 200);
+      expect(resultEntity.message, 'Registration successful');
+      expect(resultEntity.data, isTrue);
+      verify(() => remoteDataSource.register(any())).called(1);
+    });
 
     test('returns ErrorResponce when remote registration fails', () async {
       final response = RegisterResponse(
@@ -86,9 +86,9 @@ void main() {
         message: 'Invalid data',
         data: false,
       );
-      when(
-        () => remoteDataSource.register(any()),
-      ).thenAnswer((_) async => response);
+      when(() => remoteDataSource.register(any())).thenAnswer(
+        (_) async => response,
+      );
 
       final result = await repo.register(entity);
 
@@ -108,9 +108,9 @@ void main() {
           message: null,
           data: false,
         );
-        when(
-          () => remoteDataSource.register(any()),
-        ).thenAnswer((_) async => response);
+        when(() => remoteDataSource.register(any())).thenAnswer(
+          (_) async => response,
+        );
 
         final result = await repo.register(entity);
 
@@ -141,9 +141,9 @@ void main() {
     test(
       'returns ErrorResponce when remote throws a generic exception',
       () async {
-        when(
-          () => remoteDataSource.register(any()),
-        ).thenThrow(Exception('boom'));
+        when(() => remoteDataSource.register(any())).thenThrow(
+          Exception('boom'),
+        );
 
         final result = await repo.register(entity);
 
