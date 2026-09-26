@@ -1,3 +1,4 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -67,7 +68,9 @@ class OrderSummarySection extends StatelessWidget {
           const SizedBox(height: 32),
           CustomButton(
             text: AppStrings.placeOrder,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.orderSuccess );
+            },
             isEnabled: true,
             enabledColor: AppColors.pinkBase,
           ),

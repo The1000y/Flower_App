@@ -48,7 +48,7 @@ class OrderSuccessView extends StatelessWidget {
                 appBar: AppBar(
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios, color: AppColors.blackBase),
-                    onPressed: () => cubit.onHomeTap(),
+                    onPressed: () => Navigator.pop(context),
                   ),
                   title: Text(
                     AppStrings.trackOrder,

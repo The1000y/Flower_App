@@ -23,17 +23,13 @@ void main() {
   });
 
   Future<void> pumpApp(WidgetTester tester) async {
-    // A wide surface is used on purpose: the section lays the schedule icon,
-    // the " Instant, " label and the estimated time out in a single unbounded
-    // Row, and the flutter_test font renders every glyph at the full font
-    // size, so a 375pt wide viewport overflows.
-    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.physicalSize = const Size(375, 812);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       ScreenUtilPlusInit(
-        designSize: const Size(800, 1400),
+        designSize: const Size(375, 812),
         child: MaterialApp(
           home: Scaffold(
             body: BlocProvider<CheckoutCubit>.value(
@@ -120,6 +116,7 @@ void main() {
         find.text('Arrive by ${CheckoutFixtures.tEstimatedDeliveryAt}'),
         findsOneWidget,
       );
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets(

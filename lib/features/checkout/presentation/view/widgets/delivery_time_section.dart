@@ -31,43 +31,53 @@ class DeliveryTimeSection extends StatelessWidget {
               const Icon(Icons.schedule, color: AppColors.black100),
               Text(
                 AppStrings.instant,
-                style: theme.textTheme.titleMedium?..copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
-              BlocBuilder<CheckoutCubit, CheckoutState>(
-                buildWhen: (previous, current) =>
-                    previous.estimationTimeState != current.estimationTimeState,
-                builder: (context, state) {
-                  final estimatedTime =
-                      state.estimationTimeState.data?.estimatedDeliveryAt ?? '';
-                  if (state.estimationTimeState.isLoading) {
-                    return Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        height: 12,
-                        width: 200,
-                        color: Colors.white,
-                      ),
-                    );
-                  } else if (state
-                      .estimationTimeState
-                      .errorMessage
-                      .isNotEmpty) {
-                    return Text(state.estimationTimeState.errorMessage);
-                  } else {
-                    return Text(
-                      'Arrive by $estimatedTime',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: AppColors.success,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                      ),
-                    );
-                  }
-                },
+              Expanded(
+                child: BlocBuilder<CheckoutCubit, CheckoutState>(
+                  buildWhen: (previous, current) =>
+                      previous.estimationTimeState !=
+                      current.estimationTimeState,
+                  builder: (context, state) {
+                    final estimatedTime =
+                        state.estimationTimeState.data?.estimatedDeliveryAt ??
+                        '';
+                    if (state.estimationTimeState.isLoading) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          height: 12,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
+                      );
+                    } else if (state
+                        .estimationTimeState
+                        .errorMessage
+                        .isNotEmpty) {
+                      return Text(
+                        state.estimationTimeState.errorMessage,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    } else {
+                      return Text(
+                        'Arrive by $estimatedTime',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: AppColors.success,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ],
           ),
