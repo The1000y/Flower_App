@@ -6,18 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-Future<void> main() async {
+void main()async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
   runApp(
     ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-
       minTextAdapt: true,
-
       splitScreenMode: true,
-
       child: const FlowerApp(),
     ),
   );
