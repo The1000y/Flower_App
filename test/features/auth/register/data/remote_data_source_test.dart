@@ -1,10 +1,12 @@
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
+
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../../../helpers/mock_auth_api_client.mocks.dart';
 
 void main() {
   group('RemoteDataSourceImpl.register', () {
-    final dataSource = RemoteDataSourceImpl();
+    final dataSource = RemoteDataSourceImpl(MockAuthApiClient());
 
     test('returns success for a valid request', () async {
       final response = await dataSource.register(
@@ -40,3 +42,5 @@ void main() {
     });
   });
 }
+
+

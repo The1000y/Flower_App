@@ -23,7 +23,7 @@ void main() {
       () async {
         final products = <ProductEntity>[
           ProductEntity(
-            id: 1,
+            id: '1',
             name: 'Red Rose',
             imageUrl: 'https://example.com/rose.png',
             currency: 'EGP',
@@ -87,3 +87,4 @@ void main() {
     );
   });
 }
+

@@ -39,7 +39,7 @@ class OccasionCubit extends Cubit<OccasionState> {
           occasionsState: state.occasionsState.copyWith(isLoading: false, data: response.data),
         ));
         if (response.data.isNotEmpty) {
-          int idToLoad = response.data.first.id;
+          String idToLoad = response.data.first.id;
           if (initialOccasionName != null) {
             try {
               final matchedOccasion = response.data.firstWhere(
@@ -58,7 +58,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     }
   }
 
-  Future<void> _loadProducts(int occasionId, {int page = 1}) async {
+  Future<void> _loadProducts(String occasionId, {int page = 1}) async {
     if (page == 1) {
       emit(state.copyWith(
         productsState: state.productsState.copyWith(isLoading: true, errorMessage: '', data: []),
@@ -100,3 +100,4 @@ class OccasionCubit extends Cubit<OccasionState> {
     }
   }
 }
+

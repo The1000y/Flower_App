@@ -19,12 +19,26 @@ class ForgotPasswordResponseDto {
     required this.errorCode,
     required this.isSuccess,
   });
+
   ForgetPasswordEntity toDomain() {
     return ForgetPasswordEntity(isSuccess: isSuccess, message: message);
   }
 
-  factory ForgotPasswordResponseDto.fromJson(Map<String, dynamic> json) =>
-      _$ForgotPasswordResponseDtoFromJson(json);
+  factory ForgotPasswordResponseDto.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('value')) {
+      final value = json['value'];
+      final message = value is Map
+          ? (value['message']?.toString() ?? '')
+          : value?.toString() ?? '';
+      return ForgotPasswordResponseDto(
+        data: message,
+        message: message,
+        errorCode: json['error']?.toString() ?? '0',
+        isSuccess: json['isSuccess'] == true,
+      );
+    }
+    return _$ForgotPasswordResponseDtoFromJson(json);
+  }
 
   Map<String, dynamic> toJson() => _$ForgotPasswordResponseDtoToJson(this);
 }

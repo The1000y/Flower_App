@@ -1,21 +1,11 @@
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'register_request.g.dart';
-
-@JsonSerializable()
 class RegisterRequest {
-  @JsonKey(name: "fullName")
   final String fullName;
-  @JsonKey(name: "email")
   final String email;
-  @JsonKey(name: "phoneNumber")
   final String phoneNumber;
-  @JsonKey(name: "gender")
   final int gender;
-  @JsonKey(name: "password")
   final String password;
-  @JsonKey(name: "confirmPassword")
   final String confirmPassword;
 
   RegisterRequest({
@@ -38,9 +28,43 @@ class RegisterRequest {
     );
   }
 
-  factory RegisterRequest.fromJson(Map<String, dynamic> json) => _$RegisterRequestFromJson(json);
+  factory RegisterRequest.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('firstName') || json.containsKey('lastName')) {
+      final firstName = json['firstName']?.toString() ?? '';
+      final lastName = json['lastName']?.toString() ?? '';
+      return RegisterRequest(
+        fullName: '$firstName $lastName'.trim(),
+        email: json['email'] as String,
+        phoneNumber: json['phoneNumber'] as String,
+        gender: _genderFromJson(json['gender']),
+        password: json['password'] as String,
+        confirmPassword: json['confirmPassword'] as String,
+      );
+    }
+    return RegisterRequest(
+      fullName: json['fullName'] as String,
+      email: json['email'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      gender: _genderFromJson(json['gender']),
+      password: json['password'] as String,
+      confirmPassword: json['confirmPassword'] as String,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$RegisterRequestToJson(this);
+  Map<String, dynamic> toJson() {
+    final parts = fullName.trim().split(RegExp(r'\s+'));
+    final firstName = parts.isNotEmpty ? parts.first : '';
+    final lastName = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'gender': gender == 1 ? 'Female' : 'Male',
+      'password': password,
+      'confirmPassword': confirmPassword,
+    };
+  }
 
   RegisterRequestEntity toRegisterRequestEntity() {
     return RegisterRequestEntity(
@@ -51,5 +75,12 @@ class RegisterRequest {
       password: password,
       confirmPassword: confirmPassword,
     );
+  }
+
+  static int _genderFromJson(dynamic value) {
+    if (value is num) return value.toInt();
+    final raw = value?.toString().toLowerCase() ?? '';
+    if (raw == 'female' || raw == '1') return 1;
+    return 0;
   }
 }
