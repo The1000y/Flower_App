@@ -159,5 +159,6 @@
   "registerError": "فشل التسجيل",
   "registerSuccess": "تم التسجيل بنجاح",
   "occasionTitle": "المناسبات",
-  "versionProfile": "v6.3.0 - 1.40.0"
+  "versionProfile": "v6.3.0 - 1.40.0",
+  "noNotificationsYet": "لا توجد إشعارات بعد"
 }

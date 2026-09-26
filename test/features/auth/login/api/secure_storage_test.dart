@@ -1,5 +1,6 @@
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
+import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -57,6 +58,39 @@ void main() {
         await readStorageValue(AppStrings.rememberedEmail),
         'user@example.com',
       );
+    });
+
+    test('saves and reads the user under the userData key', () async {
+      const user = UserEntity(
+        id: 1,
+        fullName: 'Nour Mohamed',
+        email: 'nour@example.com',
+        phoneNumber: '+201234567890',
+        gender: 'female',
+        role: 'user',
+        status: 'active',
+      );
+
+      await service.saveUser(user);
+
+      final raw = await service.getUser();
+      expect(raw, isNotNull);
+      expect(raw, contains('nour@example.com'));
+      expect(await readStorageValue(AppStrings.userData), raw);
+    });
+
+    test('getUser returns null when no user was saved', () async {
+      expect(await service.getUser(), isNull);
+    });
+
+    test('readKey reads an arbitrary key', () async {
+      await service.saveAccessToken('token123');
+
+      expect(await service.readKey(AppStrings.accessToken), 'token123');
+    });
+
+    test('readKey returns null for an unknown key', () async {
+      expect(await service.readKey('missing_key'), isNull);
     });
   });
 }

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NotificationItem extends StatelessWidget {
-  const NotificationItem({
-    super.key,
-    required this.title,
-    required this.body,
-  });
+  const NotificationItem({super.key, required this.title, required this.body});
 
   final String title;
   final String body;
@@ -14,16 +10,9 @@ class NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 18,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Color(0xFFE0E0E0),
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: Color(0xFFE0E0E0))),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

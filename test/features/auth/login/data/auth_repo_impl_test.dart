@@ -31,14 +31,35 @@ void main() {
       expect(await storage.getRefreshToken(), isNotNull);
     });
 
-    test('does not save tokens when remember me is false', () async {
+    // Tokens must be persisted regardless of `rememberMe`: authenticated API
+    // calls depend on them existing. The flag only controls email pre-filling,
+    // which LoginViewModel handles through the remember-email use cases.
+    test('saves tokens even when remember me is false', () async {
       final result = await repo.login(
         LoginCredentials(email: Dummy.email, password: Dummy.pass),
       );
 
       expect(result, isA<SuccessResponce>());
-      expect(await storage.getAccessToken(), isNull);
-      expect(await storage.getRefreshToken(), isNull);
+      expect(await storage.getAccessToken(), isNotNull);
+      expect(await storage.getRefreshToken(), isNotNull);
+    });
+
+    test('saves the user alongside the tokens', () async {
+      await repo.login(
+        LoginCredentials(email: Dummy.email, password: Dummy.pass),
+      );
+
+      expect(await storage.getUser(), isNotNull);
+    });
+
+    test('login does not touch the remembered email', () async {
+      await repo.login(
+        LoginCredentials(email: Dummy.email, password: Dummy.pass),
+        rememberMe: true,
+      );
+
+      // Remembered-email persistence is owned by LoginViewModel.
+      expect(await storage.getRememberedEmail(), isNull);
     });
 
     test('returns error for invalid credentials', () async {

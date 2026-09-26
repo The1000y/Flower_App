@@ -372,7 +372,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmLogoutSubtitle => 'Confirm logout!!';
 
   @override
-  String get actionCancel => 'Cancle';
+  String get actionCancel => 'Cancel';
 
   @override
   String get orderPlacedSuccess => 'Your order placed successfully!';
@@ -491,4 +491,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get versionProfile => 'v6.3.0 - 1.40.0';
+
+  @override
+  String get noNotificationsYet => 'No notifications yet';
 }

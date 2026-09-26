@@ -821,7 +821,7 @@ abstract class AppLocalizations {
   /// No description provided for @actionCancel.
   ///
   /// In en, this message translates to:
-  /// **'Cancle'**
+  /// **'Cancel'**
   String get actionCancel;
 
   /// No description provided for @orderPlacedSuccess.
@@ -1057,6 +1057,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'v6.3.0 - 1.40.0'**
   String get versionProfile;
+
+  /// No description provided for @noNotificationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotificationsYet;
 }
 
 class _AppLocalizationsDelegate

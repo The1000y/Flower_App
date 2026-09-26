@@ -2,11 +2,7 @@ import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 
 class ProfileState extends BaseState<UserEntity> {
-  const ProfileState({
-    super.isLoading,
-    super.errorMessage,
-    super.data,
-  });
+  const ProfileState({super.isLoading, super.errorMessage, super.data});
 
   @override
   ProfileState copyWith({

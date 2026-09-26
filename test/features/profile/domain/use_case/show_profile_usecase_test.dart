@@ -28,8 +28,9 @@ void main() {
 
   group('ShowProfileUsecase', () {
     test('returns SuccessResponce from repo on success', () async {
-      when(() => mockRepo.getProfile())
-          .thenAnswer((_) async => SuccessResponce(userEntity));
+      when(
+        () => mockRepo.getProfile(),
+      ).thenAnswer((_) async => SuccessResponce(userEntity));
 
       final result = await usecase.getProfile();
 
@@ -62,8 +63,9 @@ void main() {
     });
 
     test('calls repo exactly once', () async {
-      when(() => mockRepo.getProfile())
-          .thenAnswer((_) async => SuccessResponce(userEntity));
+      when(
+        () => mockRepo.getProfile(),
+      ).thenAnswer((_) async => SuccessResponce(userEntity));
 
       await usecase.getProfile();
 

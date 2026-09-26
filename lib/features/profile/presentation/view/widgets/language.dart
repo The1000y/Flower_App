@@ -76,7 +76,9 @@ class LanguageBottomSheet extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: selected ? AppColors.pinkBase.withValues(alpha: 0.3) : Colors.grey.shade200,
+            color: selected
+                ? AppColors.pinkBase.withValues(alpha: 0.3)
+                : Colors.grey.shade200,
             width: 1.2,
           ),
         ),

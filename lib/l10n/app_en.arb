@@ -120,7 +120,7 @@
   "currentPasswordHint": "Current password",
   "logoutDialogTitle": "LOGOUT",
   "confirmLogoutSubtitle": "Confirm logout!!",
-  "actionCancel": "Cancle",
+  "actionCancel": "Cancel",
   "orderPlacedSuccess": "Your order placed successfully!",
   "estimatedArrival": "Estimated arrival",
   "deliveryHeroSubtitle": "Is your delivery hero for today",
@@ -159,5 +159,6 @@
   "registerError": "Failed register",
   "registerSuccess": "Register successful",
   "occasionTitle": "Occasion",
-  "versionProfile": "v6.3.0 - 1.40.0"
+  "versionProfile": "v6.3.0 - 1.40.0",
+  "noNotificationsYet": "No notifications yet"
 }

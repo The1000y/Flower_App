@@ -1,7 +1,7 @@
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
-import 'package:flower_app/features/profile/presentation/view/widgets/optionTile.dart';
+import 'package:flower_app/features/profile/presentation/view/widgets/option_tile.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,44 +73,45 @@ class _ProfileBodyState extends State<ProfileBody> {
               ),
             ],
           ),
-          GestureDetector(
-            onTap: widget.onNotification,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                const Icon(
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              IconButton(
+                onPressed: widget.onNotification,
+                tooltip: l10n.notificationTitle,
+                icon: const Icon(
                   Icons.notifications_none_outlined,
                   size: 28,
                   color: Colors.black87,
                 ),
-                Positioned(
-                  right: -2,
-                  top: -2,
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        '3',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
-                          height: 1,
-                        ),
+              ),
+              Positioned(
+                right: 4,
+                top: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 16,
+                    minHeight: 16,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '3',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        height: 1,
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -118,20 +119,16 @@ class _ProfileBodyState extends State<ProfileBody> {
   }
 
   Widget _buildProfileInfo() {
-    final name = widget.user?.fullName.isNotEmpty == true
-        ? widget.user!.fullName
-        : 'Nour';
-    final email = widget.user?.email.isNotEmpty == true
-        ? widget.user!.email
-        : 'Nour_Mohamed@gmail.com';
+    final name = widget.user?.fullName ?? '';
+    final email = widget.user?.email ?? '';
 
     return Column(
       children: [
         CircleAvatar(
           radius: 38,
           backgroundColor: Colors.grey.shade200,
-          backgroundImage: widget.user?.photoUrl != null &&
-                  widget.user!.photoUrl!.isNotEmpty
+          backgroundImage:
+              widget.user?.photoUrl != null && widget.user!.photoUrl!.isNotEmpty
               ? NetworkImage(widget.user!.photoUrl!)
               : null,
           child: widget.user?.photoUrl == null || widget.user!.photoUrl!.isEmpty
@@ -142,18 +139,25 @@ class _ProfileBodyState extends State<ProfileBody> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              name,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Colors.black87,
+            Flexible(
+              child: Text(
+                name,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
               ),
             ),
             const SizedBox(width: 6),
-            GestureDetector(
-              onTap: widget.onEditProfile,
-              child: const Icon(
+            IconButton(
+              onPressed: widget.onEditProfile,
+              tooltip: AppLocalizations.of(context)!.editProfileTitle,
+              visualDensity: VisualDensity.compact,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+              icon: const Icon(
                 Icons.edit_outlined,
                 size: 16,
                 color: Colors.black87,
@@ -164,6 +168,7 @@ class _ProfileBodyState extends State<ProfileBody> {
         const SizedBox(height: 4),
         Text(
           email,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
         ),
       ],
@@ -172,8 +177,9 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   Widget _buildProfileOptions(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentLanguageName =
-        context.watch<LocaleCubit>().currentLanguageName;
+    final currentLanguageName = context
+        .watch<LocaleCubit>()
+        .currentLanguageName;
 
     return Column(
       children: [
@@ -269,4 +275,3 @@ class _ProfileBodyState extends State<ProfileBody> {
     );
   }
 }
-

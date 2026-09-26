@@ -1,7 +1,6 @@
-
-abstract class AppStrings{
-  static const String  userData = 'User';
- static const String loginTitle = 'Login';
+abstract class AppStrings {
+  static const String userData = 'User';
+  static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
   static const String emailError = 'This Email is not valid';
@@ -29,11 +28,14 @@ abstract class AppStrings{
   static const String termsLink = 'Terms&Conditions';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String passwordAppBarTitle = 'Password';
-  static const String forgetPasswordHeader = 'Forget password'; // Distinct from the "Forget password?" link
-  static const String forgetPasswordSubtitle = 'Please enter your email associated to your account';
+  static const String forgetPasswordHeader =
+      'Forget password'; // Distinct from the "Forget password?" link
+  static const String forgetPasswordSubtitle =
+      'Please enter your email associated to your account';
   static const String confirmButton = 'Confirm';
   static const String emailVerificationTitle = 'Email verification';
-  static const String emailVerificationSubtitle = 'Please enter your code that send to your email address';
+  static const String emailVerificationSubtitle =
+      'Please enter your code that send to your email address';
   static const String invalidCodeError = 'Invalid code';
   static const String didntReceiveCode = 'Didn\'t receive code? ';
   static const String resendLink = 'Resend';
@@ -112,6 +114,8 @@ abstract class AppStrings{
       'Terms & conditions'; // Slightly different spacing/ampersand from the Sign Up screen
   static const String logout = 'Logout';
   static const String usernotfound = 'User not found';
+  static const String unexpectedError =
+      'Something went wrong. Please try again.';
 
   static const String changeLanguageTitle = 'Change Language';
   static const String languageArabic = 'Arabic';
@@ -174,7 +178,6 @@ abstract class AppStrings{
   // Auth error / validation messages
   static const String registerError = 'Failed register';
   static const String registerSuccess = 'Register successful';
-  static const String  occasionTitle = 'Occasion';
-  static const String  versionProfile = 'v6.3.0 - 1.40.0';
-
+  static const String occasionTitle = 'Occasion';
+  static const String versionProfile = 'v6.3.0 - 1.40.0';
 }

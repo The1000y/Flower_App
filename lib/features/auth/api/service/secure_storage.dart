@@ -29,8 +29,14 @@ class SecureStorageService {
     );
   }
 
-  Future<String?> getUser([String? key]) async {
-    return _storage.read(key: key ?? AppStrings.userData);
+  /// Reads the persisted user data. Use [readKey] for arbitrary keys.
+  Future<String?> getUser() async {
+    return _storage.read(key: AppStrings.userData);
+  }
+
+  /// Reads an arbitrary key from secure storage.
+  Future<String?> readKey(String key) async {
+    return _storage.read(key: key);
   }
 
   Future<String?> getRefreshToken() async {

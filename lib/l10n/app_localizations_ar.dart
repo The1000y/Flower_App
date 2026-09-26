@@ -491,4 +491,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get versionProfile => 'v6.3.0 - 1.40.0';
+
+  @override
+  String get noNotificationsYet => 'لا توجد إشعارات بعد';
 }

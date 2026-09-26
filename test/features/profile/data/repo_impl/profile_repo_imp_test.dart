@@ -6,7 +6,8 @@ import 'package:flower_app/features/profile/data/repo_impl/profile_repo_imp.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockProfileLocalDataSource extends Mock implements ProfileLocalDataSource {}
+class MockProfileLocalDataSource extends Mock
+    implements ProfileLocalDataSource {}
 
 void main() {
   late MockProfileLocalDataSource mockDataSource;
@@ -29,20 +30,24 @@ void main() {
 
   group('ProfileRepoImp', () {
     group('getProfile - Success', () {
-      test('returns SuccessResponce<UserEntity> when data source succeeds',
-          () async {
-        when(() => mockDataSource.getProfile())
-            .thenAnswer((_) async => SuccessResponce(userDto));
+      test(
+        'returns SuccessResponce<UserEntity> when data source succeeds',
+        () async {
+          when(
+            () => mockDataSource.getProfile(),
+          ).thenAnswer((_) async => SuccessResponce(userDto));
 
-        final result = await repo.getProfile();
+          final result = await repo.getProfile();
 
-        expect(result, isA<SuccessResponce<UserEntity>>());
-        verify(() => mockDataSource.getProfile()).called(1);
-      });
+          expect(result, isA<SuccessResponce<UserEntity>>());
+          verify(() => mockDataSource.getProfile()).called(1);
+        },
+      );
 
       test('maps UserDto to UserEntity correctly', () async {
-        when(() => mockDataSource.getProfile())
-            .thenAnswer((_) async => SuccessResponce(userDto));
+        when(
+          () => mockDataSource.getProfile(),
+        ).thenAnswer((_) async => SuccessResponce(userDto));
 
         final result = await repo.getProfile();
         final success = result as SuccessResponce<UserEntity>;
@@ -67,8 +72,9 @@ void main() {
           status: 'active',
           photoUrl: null,
         );
-        when(() => mockDataSource.getProfile())
-            .thenAnswer((_) async => SuccessResponce(dtoNoPhoto));
+        when(
+          () => mockDataSource.getProfile(),
+        ).thenAnswer((_) async => SuccessResponce(dtoNoPhoto));
 
         final result = await repo.getProfile();
         final success = result as SuccessResponce<UserEntity>;

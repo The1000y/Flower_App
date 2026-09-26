@@ -32,7 +32,7 @@ void main() {
     group('getProfile - Success', () {
       test('returns SuccessResponce<UserDto> when valid JSON stored', () async {
         final jsonString = jsonEncode(validUserDto.toJson());
-        when(() => mockStorage.getUser(any())).thenAnswer((_) async => jsonString);
+        when(() => mockStorage.getUser()).thenAnswer((_) async => jsonString);
 
         final result = await dataSource.getProfile();
 
@@ -54,7 +54,7 @@ void main() {
           'photoUrl': 'https://example.com/photo.jpg',
           'status': 'active',
         });
-        when(() => mockStorage.getUser(any())).thenAnswer((_) async => jsonString);
+        when(() => mockStorage.getUser()).thenAnswer((_) async => jsonString);
 
         final result = await dataSource.getProfile();
 
@@ -67,7 +67,7 @@ void main() {
 
     group('getProfile - Errors', () {
       test('returns ErrorResponce when storage returns null', () async {
-        when(() => mockStorage.getUser(any())).thenAnswer((_) async => null);
+        when(() => mockStorage.getUser()).thenAnswer((_) async => null);
 
         final result = await dataSource.getProfile();
 
@@ -75,7 +75,7 @@ void main() {
       });
 
       test('returns ErrorResponce when storage returns empty string', () async {
-        when(() => mockStorage.getUser(any())).thenAnswer((_) async => '');
+        when(() => mockStorage.getUser()).thenAnswer((_) async => '');
 
         final result = await dataSource.getProfile();
 
@@ -83,8 +83,9 @@ void main() {
       });
 
       test('returns ErrorResponce when JSON is malformed', () async {
-        when(() => mockStorage.getUser(any()))
-            .thenAnswer((_) async => 'not_valid_json{{{');
+        when(
+          () => mockStorage.getUser(),
+        ).thenAnswer((_) async => 'not_valid_json{{{');
 
         final result = await dataSource.getProfile();
 
@@ -92,8 +93,50 @@ void main() {
       });
 
       test('returns ErrorResponce when storage throws', () async {
-        when(() => mockStorage.getUser(any()))
-            .thenThrow(Exception('Storage failure'));
+        when(
+          () => mockStorage.getUser(),
+        ).thenThrow(Exception('Storage failure'));
+
+        final result = await dataSource.getProfile();
+
+        expect(result, isA<ErrorResponce<UserDto>>());
+      });
+
+      test('returns ErrorResponce when the stored JSON is a list', () async {
+        when(() => mockStorage.getUser()).thenAnswer((_) async => '[1, 2, 3]');
+
+        final result = await dataSource.getProfile();
+
+        expect(result, isA<ErrorResponce<UserDto>>());
+      });
+
+      test('returns ErrorResponce when a field has the wrong type', () async {
+        when(() => mockStorage.getUser()).thenAnswer(
+          (_) async => jsonEncode({'id': 'not-a-number', 'fullName': 'Nour'}),
+        );
+
+        final result = await dataSource.getProfile();
+
+        expect(result, isA<ErrorResponce<UserDto>>());
+      });
+
+      test(
+        'tolerates a payload with unknown/missing optional fields',
+        () async {
+          when(
+            () => mockStorage.getUser(),
+          ).thenAnswer((_) async => jsonEncode({'unrelated': 'value'}));
+
+          final result = await dataSource.getProfile();
+
+          expect(result, isA<SuccessResponce<UserDto>>());
+        },
+      );
+
+      test('does not throw when the stored JSON is corrupted', () async {
+        when(
+          () => mockStorage.getUser(),
+        ).thenAnswer((_) async => '{"fullName": "Nour"');
 
         final result = await dataSource.getProfile();
 

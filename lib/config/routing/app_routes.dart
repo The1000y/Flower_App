@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/profile/presentation/manager/profile_view_model_factory.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
@@ -11,7 +12,7 @@ import 'package:flower_app/features/commerce/presentation/bestseller/view/bestse
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_viewModel.dart';
+import 'package:flower_app/features/profile/presentation/manager/profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/view/notifcation_view.dart';
 import 'package:flower_app/features/profile/presentation/view/profile_view.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
@@ -23,7 +24,15 @@ import '../../features/auth/presentation/register/manager/register_view_model.da
 import '../../features/auth/presentation/register/view/register_view.dart';
 
 abstract class AppRoutes {
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  /// Builds a [Route] for [settings].
+  ///
+  /// [profileViewModelFactory] is injected instead of resolved from the service
+  /// locator so route construction stays testable; it is only needed for the
+  /// routes that own a `ProfileViewModel`.
+  static Route<dynamic> onGenerateRoute(
+    RouteSettings settings, {
+    ProfileViewModelFactory? profileViewModelFactory,
+  }) {
     switch (settings.name) {
       // Auth
       case Routes.login:
@@ -65,7 +74,11 @@ abstract class AppRoutes {
 
       // Home
       case Routes.home:
-        return MaterialPageRoute(builder: (_) => PersistenBottomNavBarDemo());
+        final profileViewModel = profileViewModelFactory?.create();
+        return MaterialPageRoute(
+          builder: (_) =>
+              PersistenBottomNavBarDemo(profileViewModel: profileViewModel),
+        );
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const BestsellerView());
@@ -118,16 +131,14 @@ abstract class AppRoutes {
 
       // Notifications
       case Routes.notification:
-        final message = settings.arguments is RemoteMessage
-            ? settings.arguments as RemoteMessage
-            : const RemoteMessage(
-                notification: RemoteNotification(
-                  title: 'Notification',
-                  body: 'Welcome to Flowery!',
-                ),
-              );
+        // The message may be absent (e.g. deep link without payload); the view
+        // owns the empty-state defaults instead of the route generator.
         return MaterialPageRoute(
-          builder: (_) => NotifcationView(message: message),
+          builder: (_) => NotifcationView(
+            message: settings.arguments is RemoteMessage
+                ? settings.arguments as RemoteMessage
+                : null,
+          ),
         );
 
       case Routes.notifications:
@@ -136,10 +147,18 @@ abstract class AppRoutes {
       // Profile
       case Routes.profile:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => getIt<ProfileViewModel>(),
-            child: const ProfileView(),
-          ),
+          builder: (_) {
+            final viewModel = profileViewModelFactory?.create();
+            if (viewModel == null) {
+              return const Scaffold(
+                body: Center(child: Text('Profile is unavailable')),
+              );
+            }
+            return BlocProvider<ProfileViewModel>.value(
+              value: viewModel,
+              child: const ProfileView(),
+            );
+          },
         );
 
       case Routes.editProfile:
