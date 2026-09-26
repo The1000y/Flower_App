@@ -1,4 +1,4 @@
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/reset_password_response_dto.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_passsword_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 

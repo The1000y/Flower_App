@@ -18,108 +18,108 @@ import '../../features/auth/presentation/register/manager/register_view_model.da
 import '../../features/auth/presentation/register/view/register_view.dart';
 
 abstract class AppRoutes {
-static Route<dynamic> onGenerateRoute(RouteSettings settings) {
-switch (settings.name) {
-// Auth
-case Routes.login:
-return MaterialPageRoute(
-builder: (_) => BlocProvider(
-create: (_) => getIt<LoginViewModel>(),
-child: const LoginView(),
-),
-);
-case Routes.signUp:
-return MaterialPageRoute(
-builder: (_) => BlocProvider(
-create: (_) => getIt<RegisterViewModel>(),
-child: const RegisterView(),
-),
-);
-case Routes.forgotPassword:
-return MaterialPageRoute(builder: (_) => const ForgetPassword());
-case Routes.verificationCode:
-final args = settings.arguments as Map<String, dynamic>;
-return MaterialPageRoute(
-builder: (_) => VerificationView(email: args['email']),
-);
-case Routes.resetPassword:
-final args = settings.arguments as Map<String, dynamic>;
-return MaterialPageRoute(
-builder: (_) =>
-ResetPassword(email: args['email'], otpcode: args['otpcode']),
-);
-// Main Layout
-case Routes.mainLayout:
-return MaterialPageRoute(builder: (_) => const Placeholder());
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      // Auth
+      case Routes.login:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<LoginViewModel>(),
+            child: const LoginView(),
+          ),
+        );
+      case Routes.signUp:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<RegisterViewModel>(),
+            child: const RegisterView(),
+          ),
+        );
+      case Routes.forgotPassword:
+        return MaterialPageRoute(builder: (_) => const ForgetPassword());
+      case Routes.verificationCode:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => VerificationView(email: args['email']),
+        );
+      case Routes.resetPassword:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) =>
+              ResetPassword(email: args['email'], otpcode: args['otpcode']),
+        );
+      // Main Layout
+      case Routes.mainLayout:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
-// Home
-case Routes.home:
-return MaterialPageRoute(builder: (_) => PersistenBottomNavBarDemo());
-case Routes.bestSeller:
-return MaterialPageRoute(builder: (_) => const BestsellerView());
-case Routes.productDetails:
-final productId = settings.arguments as int? ?? 0;
-return MaterialPageRoute(
-builder: (_) => ProductDetails(productId: productId),
-);
-case Routes.occasion:
-return MaterialPageRoute(
-settings: settings,
-builder: (_) => const OccasionView(),
-);
-case Routes.categories:
-return MaterialPageRoute(builder: (_) => const CategoriesView());
-case Routes.search:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-return MaterialPageRoute(
-builder: (_) => BlocProvider(
-create: (_) => getIt<SearchCubit>(),
-child: const SearchView(),
-),
-);
+      // Home
+      case Routes.home:
+        return MaterialPageRoute(builder: (_) => PersistenBottomNavBarDemo());
+      case Routes.bestSeller:
+        return MaterialPageRoute(builder: (_) => const BestsellerView());
+      case Routes.productDetails:
+        final productId = settings.arguments as int? ?? 0;
+        return MaterialPageRoute(
+          builder: (_) => ProductDetails(productId: productId),
+        );
+      case Routes.occasion:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const OccasionView(),
+        );
+      case Routes.categories:
+        return MaterialPageRoute(builder: (_) => const CategoriesView());
+      case Routes.search:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<SearchCubit>(),
+            child: const SearchView(),
+          ),
+        );
 
-// Cart & Checkout
-case Routes.cart:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.checkout:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.shippingAddress:
-return MaterialPageRoute(builder: (_) => const Placeholder());
+      // Cart & Checkout
+      case Routes.cart:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.checkout:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.shippingAddress:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
-case Routes.savedAddresses:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.addAddress:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-// Orders
-case Routes.myOrders:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.orderDetails:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-// Notifications
-case Routes.notifications:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-// Profile
-case Routes.profile:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.editProfile:
-return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.savedAddresses:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.addAddress:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      // Orders
+      case Routes.myOrders:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.orderDetails:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      // Notifications
+      case Routes.notifications:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      // Profile
+      case Routes.profile:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.editProfile:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
-case Routes.changeLanguage:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.changePassword:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-// Tracking
-case Routes.orderSuccess:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.trackOrder:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-case Routes.orderMap:
-return MaterialPageRoute(builder: (_) => const Placeholder());
-default:
-return MaterialPageRoute(
-builder: (_) =>
-const Scaffold(body: Center(child: Text('Route Not Found'))),
-);
+      case Routes.changeLanguage:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.changePassword:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      // Tracking
+      case Routes.orderSuccess:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.trackOrder:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      case Routes.orderMap:
+        return MaterialPageRoute(builder: (_) => const Placeholder());
+      default:
+        return MaterialPageRoute(
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('Route Not Found'))),
+        );
+    }
   }
-}
 }

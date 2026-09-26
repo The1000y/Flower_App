@@ -19,6 +19,12 @@ abstract class ApiStrings {
   static const String nearestStore = '/address/api/stores/nearest-store';
   static const String userAddresses = '/address/users/me/addresses';
   // Profile
+  // Profile
   static const String getProfile = '/api/users/GetProfile';
   static const String updateProfile = '/api/users/UpdateProfile';
+  static const String fullNameKey = 'FullName';
+  static const String emailKey = 'Email';
+  static const String phoneKey = 'Phone';
+  static const String genderKey = 'Gender';
+  static const String photoKey = 'Photo';
 }

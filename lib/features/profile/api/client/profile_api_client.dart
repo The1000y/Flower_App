@@ -18,10 +18,10 @@ abstract class ProfileApiClient {
   @PUT(ApiStrings.updateProfile)
   @MultiPart()
   Future<void> updateProfile(
-      @Query('FullName') String fullName,
-      @Query('Email') String email,
-      @Query('Phone') String phone,
-      @Query('Gender') String gender,
-      @Part(name: 'Photo') MultipartFile? photo,
+      @Query(ApiStrings.fullNameKey) String fullName,
+      @Query(ApiStrings.emailKey) String email,
+      @Query(ApiStrings.phoneKey) String phone,
+      @Query(ApiStrings.genderKey) String gender,
+      @Part(name: ApiStrings.photoKey) MultipartFile? photo,
       );
 }

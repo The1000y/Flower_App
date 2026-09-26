@@ -4,7 +4,7 @@ import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
-import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
+import 'package:flower_app/features/auth/data/model/response/register_response/register_response.dart';
 import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';

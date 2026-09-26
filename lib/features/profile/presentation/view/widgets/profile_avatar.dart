@@ -20,15 +20,18 @@ class ProfileAvatar extends StatelessWidget {
       builder: (context, state) {
         final pickedPath = state.pickedImagePath;
         final photoUrl = state.profileState.data?.photoUrl;
-        final ImageProvider? image = pickedPath != null
-            ? FileImage(File(pickedPath))
-            : (photoUrl != null && photoUrl.isNotEmpty ? NetworkImage(photoUrl) : null);
 
         return GestureDetector(
           onTap: () => context.read<ProfileViewModel>().doEvent(PickProfileImageEvent()),
           child: Stack(
             children: [
-              CircleAvatar(radius: 40.r, backgroundImage: image),
+              ClipOval(
+                child: SizedBox(
+                  width: 80.r,
+                  height: 80.r,
+                  child: _buildImage(pickedPath, photoUrl),
+                ),
+              ),
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -42,6 +45,35 @@ class ProfileAvatar extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildImage(String? pickedPath, String? photoUrl) {
+    if (pickedPath != null) {
+      return Image.file(
+        File(pickedPath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _placeholder(),
+      );
+    }
+    if (photoUrl != null && photoUrl.isNotEmpty) {
+      return Image.network(
+        photoUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _placeholder(),
+        loadingBuilder: (context, child, progress) {
+          if (progress == null) return child;
+          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+        },
+      );
+    }
+    return _placeholder();
+  }
+
+  Widget _placeholder() {
+    return ColoredBox(
+      color: AppColors.grayDark.withValues(alpha: 0.1),
+      child: Icon(Icons.person, size: 40.sp, color: AppColors.grayDark),
     );
   }
 }
