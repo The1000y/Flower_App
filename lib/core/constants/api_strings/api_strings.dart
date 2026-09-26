@@ -1,7 +1,9 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class ApiStrings {
-  static String baseUrl = dotenv.env['BASE_URL'] ?? 'Api not found';
+  static const String occasion = '/occasion';
+  static const String changePassword = '/users/me/change-password';
+ static String baseUrl = dotenv.env['BASE_URL'] ?? 'Api not found';
 
   static const String login = '/auth/login';
   static const String register = '/auth/register';

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
-
 import 'core/locale/locale_cubit.dart';
 
 Future<void> main() async {
