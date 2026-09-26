@@ -40,7 +40,7 @@ class FetchUserAddressesEvent extends AddressEvents {}
 
 class SelectAddressEvent extends AddressEvents {
   final AddressEntity selectedAddress;
-  SelectAddressEvent({required this.selectedAddress});
+  SelectAddressEvent({required this.selectedAddress, required String addressId});
 }
 
 class DeselectAddressEvent extends AddressEvents {}

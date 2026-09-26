@@ -25,3 +25,39 @@ class ErrorResponce<T> extends BaseResponce<T> {
 
 
 
+
+// error responce hold only string message and we handle it in catch 
+/*
+static String handle(Object error) {
+  if (error is DioException) {
+    final data = error.response?.data;
+
+    if (data is Map<String, dynamic>) {
+      final model = ErrorResponseModel.fromJson(data);
+
+      if (model.message != null && model.message!.isNotEmpty) {
+        return model.message!;
+      }
+    }
+
+    // مفيش رسالة من الباك
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+        return 'Connection timeout';
+
+      case DioExceptionType.connectionError:
+        return 'No internet connection';
+
+      case DioExceptionType.badResponse:
+        return 'Server error';
+
+      default:
+        return 'Something went wrong';
+    }
+  }
+
+  return 'Something went wrong';
+}
+*/
+
+

@@ -54,6 +54,7 @@ abstract class AppStrings {
   static const String navProfile = 'Profile';
   static const String navcategories = 'Categories';
   static const String currencyEGP = 'EGP';
+  static const String currencyUsd = '\$';
   static const String bloomSubtitle = 'Bloom with our exquisite best sellers';
   static const String statusLabel = 'Status: ';
   static const String addToCart = 'Add to cart';
@@ -63,7 +64,8 @@ abstract class AppStrings {
   static const String bouquetInclude = 'Bouquet include';
   static const String checkoutTitle = 'Checkout';
   static const String deliveryTime = 'Delivery time';
-  static const String instant = 'Instant, ';
+  static const String instant = ' Instant, ';
+  static const String arriveByPrefix = 'Arrive by ';
   static const String deliveryAddress = 'Delivery address';
   static const String addressTypeHome = 'Home';
   static const String addressTypeOffice = 'Office';
@@ -75,6 +77,8 @@ abstract class AppStrings {
   static const String nameLabel = 'Name';
   static const String enterNameHint = 'Enter the name';
   static const String enterPhoneHintAlt = 'Enter the phone number';
+  static const String noSavedAddresses = 'No saved addresses';
+  static const String giftNameValidation = 'Enter your name';
   static const String subTotal = 'Sub Total';
   static const String deliveryFee = 'Delivery Fee';
   static const String total = 'Total';
@@ -200,4 +204,5 @@ abstract class AppStrings {
   static const String lat = 'lat';
   static const String lng = 'lng';
   static const String addressId = 'addressId';
+  
 }
