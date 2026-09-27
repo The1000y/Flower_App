@@ -49,7 +49,7 @@ void main() {
 
         expect(success.data, products);
         expect(success.data.length, 1);
-        expect(success.data.first.id, 1);
+        expect(success.data.first.id, '1');
         expect(success.data.first.name, 'Red Rose');
 
         verify(() => mockCommerceRepo.getProducts()).called(1);
@@ -81,4 +81,3 @@ void main() {
     );
   });
 }
-

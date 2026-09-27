@@ -76,6 +76,7 @@
   static const String enterNameHint = 'Enter the name';
   static const String enterPhoneHintAlt = 'Enter the phone number';
   static const String subTotal = 'Sub Total';
+  static const String subtotal = 'Sub Total';
   static const String deliveryFee = 'Delivery Fee';
   static const String total = 'Total';
   static const String placeOrder = 'Place order';

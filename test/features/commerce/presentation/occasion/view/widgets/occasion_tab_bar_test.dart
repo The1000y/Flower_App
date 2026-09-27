@@ -76,8 +76,10 @@ void main() {
       await tester.pumpAndSettle();
 
       final captured = verify(() => mockCubit.handle(captureAny())).captured;
-      expect(captured.whereType<LoadProductsForOccasion>().last.occasionId, 2);
+      expect(
+        captured.whereType<LoadProductsForOccasion>().last.occasionId,
+        '2',
+      );
     },
   );
 }
-

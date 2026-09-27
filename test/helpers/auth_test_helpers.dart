@@ -1,6 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/features/auth/api/client/auth_api_client.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/local/local_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
@@ -23,7 +24,17 @@ import 'package:flower_app/features/auth/domain/use_case/save_remembered_email_u
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'mock_auth_api_client.mocks.dart';
+import 'package:flower_app/features/auth/data/model/data_dto.dart';
+import 'package:flower_app/features/auth/data/model/request/forget_request/forgot_password_request_dto.dart';
+import 'package:flower_app/features/auth/data/model/request/forget_request/reset_password_request_dto.dart';
+import 'package:flower_app/features/auth/data/model/request/forget_request/verify_otp_request.dart';
+import 'package:flower_app/features/auth/data/model/request/login_request/login_request.dart';
+import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
+import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
+import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
+import 'package:flower_app/features/auth/data/model/response/login_response/login_response.dart';
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
 import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
 
@@ -143,7 +154,7 @@ final SecureStorageService _storage = SecureStorageService(
 AuthRepoImpl buildPasswordRecoveryRepo(LocalDataSource localDataSource) {
   return AuthRepoImpl(
     localDataSource,
-    RemoteDataSourceImpl(MockAuthApiClient()),
+    RemoteDataSourceImpl(FakeAuthApiClient()),
     SecureStorageService(const FlutterSecureStorage()),
   );
 }
@@ -180,5 +191,61 @@ Future<String?> readStorageValue(String key) async {
   return storage.read(key: key);
 }
 
+class FakeAuthApiClient implements AuthApiClient {
+  FakeAuthApiClient({
+    this.loginResponse,
+    this.loginError,
+    this.registerResponse,
+  });
 
+  final LoginResponse? loginResponse;
+  final Object? loginError;
+  final RegisterResponse? registerResponse;
+  LoginRequest? lastLoginRequest;
 
+  @override
+  Future<LoginResponse> login(LoginRequest request) async {
+    lastLoginRequest = request;
+
+    final error = loginError;
+    if (error != null) {
+      throw error;
+    }
+
+    return loginResponse ??
+        LoginResponse(
+          isSuccess: true,
+          errorCode: 200,
+          message: 'Login successful.',
+          data: LoginDataDto(
+            accessToken: 'access-token',
+            refreshToken: 'refresh-token',
+            expiresIn: 3600,
+          ),
+        );
+  }
+
+  @override
+  Future<RegisterResponse> register(RegisterRequest request) async =>
+      registerResponse ??
+      RegisterResponse(
+        isSuccess: true,
+        errorCode: 200,
+        message: 'Registration successful',
+        data: true,
+      );
+
+  @override
+  Future<ForgotPasswordResponseDto> forgotPassword(
+    ForgotPasswordRequestDto request,
+  ) => throw UnimplementedError();
+
+  @override
+  Future<VerifyOtpResponse> verifyOtp(VerifyOtpRequest request) =>
+      throw UnimplementedError();
+
+  @override
+  Future<ResetPasswordResponseDto> resetPassword(
+    ResetPasswordRequestDto request,
+  ) => throw UnimplementedError();
+}

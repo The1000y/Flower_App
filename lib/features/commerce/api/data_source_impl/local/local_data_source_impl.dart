@@ -1,6 +1,7 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_Dto.dart' as best_seller;
+import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart'
+    as best_seller;
 import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_item_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
@@ -29,6 +30,11 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
       'White Roses Bouquet',
       'https://loremflickr.com/600/600/white,rose,bouquet?lock=103',
       500,
+    ),
+    4: _LocalProduct(
+      'Pink Tulips Bouquet',
+      'https://loremflickr.com/600/600/pink,tulip,bouquet?lock=104',
+      650,
     ),
   };
 
@@ -175,8 +181,7 @@ class LocalDataSourceImpl implements CommerceLocalDataSource {
 
     _cartItems.add(
       CartItemResponseDto(
-        id:
-            'cart-item-${request.productId}-${DateTime.now().millisecondsSinceEpoch}',
+        id: 'cart-item-${request.productId}-${DateTime.now().millisecondsSinceEpoch}',
         productId: request.productId,
         productName: product.name,
         productImageUrl: product.imageUrl,

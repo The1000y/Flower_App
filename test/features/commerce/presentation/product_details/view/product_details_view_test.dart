@@ -42,8 +42,8 @@ void main() {
     when(mockCubit.close()).thenAnswer((_) async {});
 
     mocktail.when(() => mockCartCubit.state).thenReturn(
-          const CartState(
-            data: CartEntity(
+          CartState(
+        data: CartEntity(
               items: [],
               subtotal: 0,
               total: 0,
