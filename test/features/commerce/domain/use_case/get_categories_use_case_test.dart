@@ -24,7 +24,7 @@ void main() {
         // Arrange
         final categories = <CategoryEntity>[
           CategoryEntity(
-            id: 1,
+            id: '1',
             name: 'Roses',
             iconUrl: 'https://example.com/rose.png',
           ),
@@ -85,3 +85,4 @@ void main() {
     );
   });
 }
+

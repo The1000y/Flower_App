@@ -14,6 +14,9 @@ import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/car
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
+import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
+import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
+import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,7 +75,7 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const BestsellerView());
 
       case Routes.productDetails:
-        final productId = settings.arguments as int? ?? 0;
+        final productId = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (_) => ProductDetails(productId: productId),
         );
@@ -100,10 +103,11 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.savedAddresses:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(builder: (_) => const SavedAddressView());
 
       case Routes.addAddress:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        final editingAddress = settings.arguments as AddressEntity?;
+        return MaterialPageRoute(builder: (_) => AddressView(editingAddress: editingAddress));
 
       // Orders
       case Routes.myOrders:
@@ -147,3 +151,6 @@ abstract class AppRoutes {
     }
   }
 }
+
+
+

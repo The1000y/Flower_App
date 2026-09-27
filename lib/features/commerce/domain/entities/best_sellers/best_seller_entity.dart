@@ -2,7 +2,7 @@
 import 'package:equatable/equatable.dart';
 
 class BestSellerEntity extends Equatable {
-  final int id;
+  final String id;
   final String name;
   final String imageUrl;
   final String currency;
@@ -34,3 +34,4 @@ class BestSellerEntity extends Equatable {
     status,
   ];
 }
+

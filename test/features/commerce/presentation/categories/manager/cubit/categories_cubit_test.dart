@@ -42,7 +42,7 @@ void main() {
       build: () {
         final categories = <CategoryEntity>[
           CategoryEntity(
-            id: 1,
+            id: '1',
             name: 'Roses',
             iconUrl: 'https://example.com/rose.png',
           ),
@@ -68,7 +68,7 @@ void main() {
             isLoading: false,
             data: [
               CategoryEntity(
-                id: 1,
+                id: '1',
                 name: 'Roses',
                 iconUrl: 'https://example.com/rose.png',
               ),
@@ -120,7 +120,7 @@ void main() {
       build: () {
         final products = <ProductEntity>[
           ProductEntity(
-            id: 1,
+            id: '1',
             name: 'Red Rose',
             imageUrl: 'https://example.com/rose.png',
             currency: 'EGP',
@@ -151,7 +151,7 @@ void main() {
             isLoading: false,
             data: [
               ProductEntity(
-                id: 1,
+                id: '1',
                 name: 'Red Rose',
                 imageUrl: 'https://example.com/rose.png',
                 currency: 'EGP',

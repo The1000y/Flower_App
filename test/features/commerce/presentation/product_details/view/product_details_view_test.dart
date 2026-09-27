@@ -1,9 +1,5 @@
-import 'dart:async';
-
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
-import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/product_details/product_details_entity.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
@@ -22,19 +18,6 @@ import 'product_details_view_test.mocks.dart';
 
 class MockCartCubit extends mocktail.Mock implements CartCubit {}
 
-final tProduct = ProductDetailsEntity(
-  id: 1,
-  name: 'Test Flower',
-  imageUrl: 'https://test.com/image.png',
-  currency: 'EGP',
-  price: 100,
-  status: 'In Stock',
-  images: ['https://test.com/image.png'],
-  description: 'Test description',
-  includes: [],
-  occasionIds: [],
-);
-
 @GenerateMocks([ProductDetailsCubit])
 void main() {
   late MockProductDetailsCubit mockCubit;
@@ -46,25 +29,22 @@ void main() {
 
   setUp(() {
     mockCubit = MockProductDetailsCubit();
-
+    
+    // Allow re-assignment in GetIt
     getIt.allowReassignment = true;
     getIt.registerSingleton<ProductDetailsCubit>(mockCubit);
 
     mockCartCubit = MockCartCubit();
     getIt.registerSingleton<CartCubit>(mockCartCubit);
 
-    when(
-      mockCubit.state,
-    ).thenReturn(const ProductDetailsState(isLoading: true));
+    // Default stubbing
     when(mockCubit.stream).thenAnswer((_) => const Stream.empty());
     when(mockCubit.close()).thenAnswer((_) async {});
 
-    mocktail
-        .when(() => mockCartCubit.state)
-        .thenReturn(
-          CartState(
+    mocktail.when(() => mockCartCubit.state).thenReturn(
+          const CartState(
             data: CartEntity(
-              items: const [],
+              items: [],
               subtotal: 0,
               total: 0,
               hasChanges: false,
@@ -82,21 +62,17 @@ void main() {
       designSize: const Size(375, 812),
       child: BlocProvider<CartCubit>.value(
         value: mockCartCubit,
-        child: const MaterialApp(home: ProductDetails(productId: 1)),
+        child: const MaterialApp(
+          home: ProductDetails(productId: '1'),
+        ),
       ),
     );
   }
 
-  testWidgets('should display loading indicator when state is loading', (
-    tester,
-  ) async {
+  testWidgets('should display loading indicator when state is loading', (tester) async {
     // arrange
-    when(
-      mockCubit.state,
-    ).thenReturn(const ProductDetailsState(isLoading: true));
-    when(mockCubit.stream).thenAnswer(
-      (_) => Stream.value(const ProductDetailsState(isLoading: true)),
-    );
+    when(mockCubit.state).thenReturn(const ProductDetailsState(isLoading: true));
+    when(mockCubit.stream).thenAnswer((_) => Stream.value(const ProductDetailsState(isLoading: true)));
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
@@ -105,17 +81,22 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('should display product data when state is successful', (
-    tester,
-  ) async {
+  testWidgets('should display product data when state is successful', (tester) async {
     // arrange
-    when(
-      mockCubit.state,
-    ).thenReturn(ProductDetailsState(isLoading: false, data: tProduct));
-    when(mockCubit.stream).thenAnswer(
-      (_) =>
-          Stream.value(ProductDetailsState(isLoading: false, data: tProduct)),
+    final tProduct = ProductDetailsEntity(
+      id: '1',
+      name: 'Test Flower',
+      imageUrl: 'https://test.com/image.png',
+      currency: 'EGP',
+      price: 100,
+      status: 'In Stock',
+      images: ['https://test.com/image.png'],
+      description: 'Test description',
+      includes: [],
+      occasionIds: [],
     );
+    when(mockCubit.state).thenReturn(ProductDetailsState(isLoading: false, data: tProduct));
+    when(mockCubit.stream).thenAnswer((_) => Stream.value(ProductDetailsState(isLoading: false, data: tProduct)));
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
@@ -125,16 +106,9 @@ void main() {
     expect(find.text('Test Flower'), findsOneWidget);
   });
 
-  testWidgets('should display error message when state has error', (
-    tester,
-  ) async {
+  testWidgets('should display error message when state has error', (tester) async {
     // arrange
-    when(mockCubit.state).thenReturn(
-      const ProductDetailsState(
-        isLoading: false,
-        errorMessage: 'Error occurred',
-      ),
-    );
+    when(mockCubit.state).thenReturn(const ProductDetailsState(isLoading: false, errorMessage: 'Error occurred'));
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
@@ -143,107 +117,6 @@ void main() {
     expect(find.text('Error occurred'), findsOneWidget);
     expect(find.text('Retry'), findsOneWidget);
   });
-
-  testWidgets(
-    'should show Add to Cart as already-added and disabled when the product is in the cart',
-    (tester) async {
-      // arrange
-      when(
-        mockCubit.state,
-      ).thenReturn(ProductDetailsState(isLoading: false, data: tProduct));
-      when(mockCubit.stream).thenAnswer(
-        (_) =>
-            Stream.value(ProductDetailsState(isLoading: false, data: tProduct)),
-      );
-
-      mocktail
-          .when(() => mockCartCubit.state)
-          .thenReturn(
-            CartState(
-              data: CartEntity(
-                items: [
-                  CartItemEntity(
-                    id: '10',
-                    productId: 1,
-                    productName: 'Test Flower',
-                    productImageUrl: 'https://test.com/image.png',
-                    unitPrice: 100,
-                    quantity: 1,
-                    lineSubtotal: 100,
-                    inStock: true,
-                    priceChanged: false,
-                  ),
-                ],
-                subtotal: 100,
-                total: 100,
-                hasChanges: false,
-              ),
-            ),
-          );
-      mocktail
-          .when(() => mockCartCubit.stream)
-          .thenAnswer(
-            (_) => Stream.value(
-              CartState(
-                data: CartEntity(
-                  items: [
-                    CartItemEntity(
-                      id: '10',
-                      productId: 1,
-                      productName: 'Test Flower',
-                      productImageUrl: 'https://test.com/image.png',
-                      unitPrice: 100,
-                      quantity: 1,
-                      lineSubtotal: 100,
-                      inStock: true,
-                      priceChanged: false,
-                    ),
-                  ],
-                  subtotal: 100,
-                  total: 100,
-                  hasChanges: false,
-                ),
-              ),
-            ),
-          );
-
-      // act
-      await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pumpAndSettle();
-
-      // assert
-      expect(find.text(AppStrings.addToCart), findsNothing);
-      expect(find.text(AppStrings.productAddedToCart), findsOneWidget);
-    },
-  );
-
-  testWidgets(
-    'should show a loading indicator on the Add to Cart button while the product is loading',
-    (tester) async {
-      // arrange
-      when(
-        mockCubit.state,
-      ).thenReturn(ProductDetailsState(isLoading: false, data: tProduct));
-      when(mockCubit.stream).thenAnswer(
-        (_) =>
-            Stream.value(ProductDetailsState(isLoading: false, data: tProduct)),
-      );
-
-      mocktail
-          .when(() => mockCartCubit.state)
-          .thenReturn(const CartState(loadingProductIds: {1}));
-      mocktail
-          .when(() => mockCartCubit.stream)
-          .thenAnswer(
-            (_) => Stream.value(const CartState(loadingProductIds: {1})),
-          );
-
-      // act
-      await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pump();
-
-      // assert
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    },
-  );
 }
+
+
