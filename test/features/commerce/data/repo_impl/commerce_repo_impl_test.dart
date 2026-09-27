@@ -35,7 +35,7 @@ void main() {
   late CommerceRepoImpl commerceRepo;
 
   setUpAll(() {
-    registerFallbackValue(AddCartItemRequestDto(productId: 0, quantity: 0));
+    registerFallbackValue(AddCartItemRequestDto(productId: '', quantity: 0));
     registerFallbackValue(UpdateCartItemRequestDto(quantity: 0));
   });
 
@@ -296,7 +296,7 @@ void main() {
         items: [
           CartItemResponseDto(
             id: 'item-1',
-            productId: 1,
+            productId: '1',
             productName: 'Rose Bouquet',
             productImageUrl: 'https://example.com/rose.jpg',
             unitPrice: 200,
@@ -317,9 +317,9 @@ void main() {
       statusCode: '200',
     );
 
-    test('getCart maps the local datasource response', () async {
+    test('getCart maps the remote datasource response', () async {
       when(
-        () => mockLocalDataSource.getCart(),
+        () => mockRemoteDataSource.getCart(),
       ).thenAnswer((_) async => SuccessResponce(responseDto));
 
       final result = await commerceRepo.getCart();
@@ -328,11 +328,11 @@ void main() {
       final cart = (result as SuccessResponce<CartEntity>).data;
       expect(cart.items.single.productName, 'Rose Bouquet');
       expect(cart.total, 420);
-      verify(() => mockLocalDataSource.getCart()).called(1);
+      verify(() => mockRemoteDataSource.getCart()).called(1);
     });
 
     test('getCart returns datasource errors', () async {
-      when(() => mockLocalDataSource.getCart()).thenAnswer(
+      when(() => mockRemoteDataSource.getCart()).thenAnswer(
         (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
       );
 
@@ -343,88 +343,119 @@ void main() {
 
     test('addToCart maps the response and passes request values', () async {
       when(
-        () => mockLocalDataSource.addToCart(any()),
+        () => mockRemoteDataSource.addCartItem(any()),
       ).thenAnswer((_) async => SuccessResponce(responseDto));
 
       final result = await commerceRepo.addToCart(
-        const AddCartItemParams(productId: 7, quantity: 3),
+        const AddCartItemParams(productId: '7', quantity: 3),
       );
 
       expect(result, isA<SuccessResponce<CartEntity>>());
       final request =
           verify(
-                () => mockLocalDataSource.addToCart(captureAny()),
+                () => mockRemoteDataSource.addCartItem(captureAny()),
               ).captured.single
               as AddCartItemRequestDto;
-      expect(request.productId, 7);
+      expect(request.productId, '7');
       expect(request.quantity, 3);
     });
 
     test('addToCart returns datasource errors', () async {
-      when(() => mockLocalDataSource.addToCart(any())).thenAnswer(
+      when(() => mockRemoteDataSource.addCartItem(any())).thenAnswer(
         (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
       );
 
       final result = await commerceRepo.addToCart(
-        const AddCartItemParams(productId: 7, quantity: 3),
+        const AddCartItemParams(productId: '7', quantity: 3),
       );
 
       expect(result, isA<ErrorResponce<CartEntity>>());
     });
 
-    test('updateCartItemQuantity passes id and quantity', () async {
+    test('updateCartItemQuantity is keyed by the product id', () async {
       when(
-        () => mockLocalDataSource.updateCartItemQuantity(any(), any()),
+        () => mockRemoteDataSource.updateCartItemQuantity(any(), any()),
       ).thenAnswer((_) async => SuccessResponce(responseDto));
 
       final result = await commerceRepo.updateCartItemQuantity(
-        'item-1',
+        '7',
         const UpdateCartItemParams(quantity: 5),
       );
 
       expect(result, isA<SuccessResponce<CartEntity>>());
       final captured = verify(
-        () => mockLocalDataSource.updateCartItemQuantity(
+        () => mockRemoteDataSource.updateCartItemQuantity(
           captureAny(),
           captureAny(),
         ),
       ).captured;
-      expect(captured[0], 'item-1');
+      expect(captured[0], '7');
       expect((captured[1] as UpdateCartItemRequestDto).quantity, 5);
     });
 
     test('updateCartItemQuantity returns datasource errors', () async {
       when(
-        () => mockLocalDataSource.updateCartItemQuantity(any(), any()),
+        () => mockRemoteDataSource.updateCartItemQuantity(any(), any()),
       ).thenAnswer(
         (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
       );
 
       final result = await commerceRepo.updateCartItemQuantity(
-        'item-1',
+        '7',
         const UpdateCartItemParams(quantity: 5),
       );
 
       expect(result, isA<ErrorResponce<CartEntity>>());
     });
 
-    test('removeCartItem passes id and maps the response', () async {
+    test('removeCartItem passes the cart line id and maps the response', () async {
       when(
-        () => mockLocalDataSource.removeCartItem('item-1'),
+        () => mockRemoteDataSource.removeCartItem('item-1'),
       ).thenAnswer((_) async => SuccessResponce(responseDto));
 
       final result = await commerceRepo.removeCartItem('item-1');
 
       expect(result, isA<SuccessResponce<CartEntity>>());
-      verify(() => mockLocalDataSource.removeCartItem('item-1')).called(1);
+      verify(() => mockRemoteDataSource.removeCartItem('item-1')).called(1);
     });
 
     test('removeCartItem returns datasource errors', () async {
-      when(() => mockLocalDataSource.removeCartItem('item-1')).thenAnswer(
+      when(() => mockRemoteDataSource.removeCartItem('item-1')).thenAnswer(
         (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
       );
 
       final result = await commerceRepo.removeCartItem('item-1');
+
+      expect(result, isA<ErrorResponce<CartEntity>>());
+    });
+
+    test('clearCart maps the remote datasource response', () async {
+      when(() => mockRemoteDataSource.clearCart()).thenAnswer(
+        (_) async => SuccessResponce(
+          CartResponseDto(
+            data: CartDataDto(
+              items: const [],
+              subtotal: 0,
+              total: 0,
+              hasChanges: false,
+            ),
+          ),
+        ),
+      );
+
+      final result = await commerceRepo.clearCart();
+
+      expect(result, isA<SuccessResponce<CartEntity>>());
+      expect((result as SuccessResponce<CartEntity>).data.items, isEmpty);
+      verify(() => mockRemoteDataSource.clearCart()).called(1);
+    });
+
+    test('clearCart returns datasource errors', () async {
+      when(() => mockRemoteDataSource.clearCart()).thenAnswer(
+        (_) async => ErrorResponce<CartResponseDto>(Exception('failed')),
+      );
+
+      final result = await commerceRepo.clearCart();
 
       expect(result, isA<ErrorResponce<CartEntity>>());
     });

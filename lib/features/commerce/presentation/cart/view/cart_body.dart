@@ -75,10 +75,11 @@ class CartBody extends StatelessWidget {
                         ),
                       );
                 },
-                onQuantityChanged: (cartItemId, newQuantity) {
+                onQuantityChanged: (cartItemId, productId, newQuantity) {
                   context.read<CartCubit>().doEvent(
                         UpdateCartItemEvent(
                           cartItemId: cartItemId,
+                          productId: productId,
                           quantity: newQuantity,
                         ),
                       );

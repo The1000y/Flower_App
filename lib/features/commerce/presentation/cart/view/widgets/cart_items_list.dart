@@ -3,14 +3,11 @@ import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_enti
 import 'package:flutter/material.dart';
 
 import 'cart_item.dart';
-
 class CartItemsList extends StatelessWidget {
   final List<CartItemEntity> items;
   final void Function(String cartItemId) onDelete;
-  final void Function(
-    String cartItemId,
-    int newQuantity,
-  ) onQuantityChanged;
+  final void Function(String cartItemId, String productId, int newQuantity)
+  onQuantityChanged;
 
   const CartItemsList({
     super.key,
@@ -45,6 +42,7 @@ class CartItemsList extends StatelessWidget {
 
             onQuantityChanged(
               item.id,
+              item.productId,
               newQuantity,
             );
           },

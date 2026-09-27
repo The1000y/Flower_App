@@ -24,7 +24,8 @@ class CartItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocSelector<CartCubit, CartState, bool>(
       selector: (state) {
-        return state.isProductLoading(item.productId);
+        return state.isItemBusy(item.productId) ||
+            state.isItemRemoving(item.id);
       },
       builder: (context, isLoading) {
         return Padding(

@@ -15,11 +15,11 @@ class UpdateCartItemUseCase {
   });
 
   Future<BaseResponce<CartEntity>> call(
-    String cartItemId,
+    String productId,
     UpdateCartItemParams params,
   ) async {
     return await commerceRepo.updateCartItemQuantity(
-      cartItemId,
+      productId,
       params,
     );
   }

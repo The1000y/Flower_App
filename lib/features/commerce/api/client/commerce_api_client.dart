@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/core/constants/api_strings/api_strings.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/categories_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/home_sections_response.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasions_response_dto.dart';
@@ -40,4 +43,22 @@ abstract class CommerceApiClient {
     @Query('page') int page,
     @Query('pageSize') int pageSize,
   );
+
+  @GET(ApiStrings.cart)
+  Future<CartResponseDto> getCart();
+
+  @POST(ApiStrings.cartItems)
+  Future<CartResponseDto> addCartItem(@Body() AddCartItemRequestDto request);
+
+  @PATCH('${ApiStrings.cartItemsByProduct}/{productId}')
+  Future<CartResponseDto> updateCartItemQuantity(
+    @Path('productId') String productId,
+    @Body() UpdateCartItemRequestDto request,
+  );
+
+  @DELETE('${ApiStrings.cartItemById}/{id}')
+  Future<CartResponseDto> removeCartItem(@Path('id') String cartItemId);
+
+  @DELETE(ApiStrings.cart)
+  Future<CartResponseDto> clearCart();
 }

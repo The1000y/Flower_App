@@ -13,7 +13,7 @@ class MockCartCubit extends MockCubit<CartState> implements CartCubit {}
 
 CartItemEntity buildItem({
   String id = 'item-1',
-  int productId = 1,
+  String productId = '1',
   String name = 'Red Roses Bouquet',
   int quantity = 2,
   double unitPrice = 200,
@@ -50,7 +50,9 @@ void main() {
       cubit,
       const Stream<CartState>.empty(),
       initialState: CartState(
-        loadingProductIds: isLoading ? {entity.productId} : const {},
+        itemLoadings: isLoading
+            ? {CartItemLoading(id: entity.productId, action: CartItemAction.update)}
+            : const {},
       ),
     );
 

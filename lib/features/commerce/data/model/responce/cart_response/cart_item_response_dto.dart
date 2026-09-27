@@ -4,11 +4,16 @@ import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_enti
 
 part 'cart_item_response_dto.g.dart';
 
+/// The backend may serialise `productId` as either a number or a string
+/// depending on the catalogue it was created from, so accept both.
+String cartIdFromJson(Object? value) => value?.toString() ?? '';
+
 @JsonSerializable()
 class CartItemResponseDto {
   final String id;
 
-  final int productId;
+  @JsonKey(fromJson: cartIdFromJson)
+  final String productId;
 
   final String productName;
 
@@ -42,19 +47,18 @@ class CartItemResponseDto {
   factory CartItemResponseDto.fromJson(Map<String, dynamic> json) =>
       _$CartItemResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$CartItemResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$CartItemResponseDtoToJson(this);
 
   CartItemEntity toDomain() => CartItemEntity(
-        id: id,
-        productId: productId,
-        productName: productName,
-        productImageUrl: productImageUrl,
-        unitPrice: unitPrice,
-        quantity: quantity,
-        lineSubtotal: lineSubtotal,
-        inStock: inStock,
-        availableStock: availableStock,
-        priceChanged: priceChanged,
-      );
+    id: id,
+    productId: productId,
+    productName: productName,
+    productImageUrl: productImageUrl,
+    unitPrice: unitPrice,
+    quantity: quantity,
+    lineSubtotal: lineSubtotal,
+    inStock: inStock,
+    availableStock: availableStock,
+    priceChanged: priceChanged,
+  );
 }

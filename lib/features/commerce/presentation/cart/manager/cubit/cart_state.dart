@@ -1,50 +1,91 @@
-  import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
-  import '../../../../domain/entities/cart/cart_entity.dart';
+import '../../../../domain/entities/cart/cart_entity.dart';
 
-  class CartState extends Equatable {
-    final bool isLoading;
-    final String errorMessage;
-    final CartEntity? data;
-    final bool addToCartSuccess;
-    final Set<int> loadingProductIds;
+enum CartItemAction { add, update, remove }
 
-    const CartState({
-      this.isLoading = false,
-      this.errorMessage = '',
-      this.data,
-      this.addToCartSuccess = false,
-      this.loadingProductIds = const {},
-    });
+/// Identifies a single in-flight cart operation so that adding, updating and
+/// removing are tracked independently per item.
+class CartItemLoading extends Equatable {
+  /// The catalogue product id for [CartItemAction.add] and
+  /// [CartItemAction.update], the cart line id for [CartItemAction.remove].
+  final String id;
+  final CartItemAction action;
 
-    CartEntity get cart =>
-        data ??
-        CartEntity(items: const [], subtotal: 0, total: 0, hasChanges: false);
+  const CartItemLoading({required this.id, required this.action});
 
-    bool isProductLoading(int productId) => loadingProductIds.contains(productId);
+  @override
+  List<Object?> get props => [id, action];
+}
 
-    CartState copyWith({
-      bool? isLoading,
-      String? errorMessage,
-      CartEntity? data,
-      bool? addToCartSuccess,
-      Set<int>? loadingProductIds,
-    }) {
-      return CartState(
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage ?? this.errorMessage,
-        data: data ?? this.data,
-        addToCartSuccess: addToCartSuccess ?? this.addToCartSuccess,
-        loadingProductIds: loadingProductIds ?? this.loadingProductIds,
-      );
-    }
+class CartState extends Equatable {
+  /// Whole-cart loading, used by the initial fetch only.
+  final bool isLoading;
 
-    @override
-    List<Object?> get props => [
-      isLoading,
-      errorMessage,
-      data,
-      addToCartSuccess,
-      loadingProductIds,
-    ];
+  /// Whole-cart loading for the clear-cart operation.
+  final bool isClearingCart;
+
+  final String errorMessage;
+  final CartEntity? data;
+  final bool addToCartSuccess;
+  final Set<CartItemLoading> itemLoadings;
+
+  const CartState({
+    this.isLoading = false,
+    this.isClearingCart = false,
+    this.errorMessage = '',
+    this.data,
+    this.addToCartSuccess = false,
+    this.itemLoadings = const {},
+  });
+
+  CartEntity get cart =>
+      data ??
+      CartEntity(items: const [], subtotal: 0, total: 0, hasChanges: false);
+
+  bool isProductLoading(String productId) => itemLoadings.contains(
+    CartItemLoading(id: productId, action: CartItemAction.add),
+  );
+
+  bool isItemUpdating(String productId) => itemLoadings.contains(
+    CartItemLoading(id: productId, action: CartItemAction.update),
+  );
+
+  bool isItemRemoving(String cartItemId) => itemLoadings.contains(
+    CartItemLoading(id: cartItemId, action: CartItemAction.remove),
+  );
+
+  /// True while any operation is pending for the given catalogue product.
+  bool isItemBusy(String productId) => itemLoadings.any(
+    (loading) =>
+        loading.id == productId && loading.action != CartItemAction.remove,
+  );
+
+  CartState copyWith({
+    bool? isLoading,
+    bool? isClearingCart,
+    String? errorMessage,
+    CartEntity? data,
+    bool? addToCartSuccess,
+    Set<CartItemLoading>? itemLoadings,
+  }) {
+    return CartState(
+      isLoading: isLoading ?? this.isLoading,
+      isClearingCart: isClearingCart ?? this.isClearingCart,
+      errorMessage: errorMessage ?? this.errorMessage,
+      data: data ?? this.data,
+      addToCartSuccess: addToCartSuccess ?? this.addToCartSuccess,
+      itemLoadings: itemLoadings ?? this.itemLoadings,
+    );
   }
+
+  @override
+  List<Object?> get props => [
+    isLoading,
+    isClearingCart,
+    errorMessage,
+    data,
+    addToCartSuccess,
+    itemLoadings,
+  ];
+}

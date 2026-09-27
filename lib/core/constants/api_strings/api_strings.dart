@@ -14,6 +14,12 @@ abstract class ApiStrings {
   static const String occasions = '/catalog/occasions';
   static const String products = '/catalog/products';
 
+  // Cart
+  static const String cart = '/cart/cart';
+  static const String cartItems = '/api/v1/cart/items';
+  static const String cartItemsByProduct = '/cart/api/cart/items';
+  static const String cartItemById = '/cart/cart/items';
+
   // Address & Store Coverage
   static const String areas = '/address/api/areas';
   static const String nearestStore = '/address/api/stores/nearest-store';

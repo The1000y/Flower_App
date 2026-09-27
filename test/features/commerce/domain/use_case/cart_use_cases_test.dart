@@ -4,6 +4,7 @@ import 'package:flower_app/features/commerce/domain/models/cart/add_cart_item_pa
 import 'package:flower_app/features/commerce/domain/models/cart/update_cart_item_params.dart';
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:flower_app/features/commerce/domain/use_case/add_cart_item_use_case.dart';
+import 'package:flower_app/features/commerce/domain/use_case/clear_cart_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_cart_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/remove_cart_item_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/update_cart_item_use_case.dart';
@@ -22,7 +23,7 @@ void main() {
   );
 
   setUpAll(() {
-    registerFallbackValue(const AddCartItemParams(productId: 0, quantity: 0));
+    registerFallbackValue(const AddCartItemParams(productId: '', quantity: 0));
     registerFallbackValue(const UpdateCartItemParams(quantity: 0));
   });
 
@@ -48,7 +49,7 @@ void main() {
   });
 
   test('AddCartItemUseCase forwards item parameters and result', () async {
-    const params = AddCartItemParams(productId: 5, quantity: 2);
+    const params = AddCartItemParams(productId: '5', quantity: 2);
     final response = SuccessResponce<CartEntity>(cart);
     when(() => repository.addToCart(params)).thenAnswer((_) async => response);
 
@@ -61,7 +62,7 @@ void main() {
   });
 
   test('AddCartItemUseCase returns repository errors', () async {
-    const params = AddCartItemParams(productId: 5, quantity: 2);
+    const params = AddCartItemParams(productId: '5', quantity: 2);
     final response = ErrorResponce<CartEntity>(Exception('failed'));
     when(() => repository.addToCart(params)).thenAnswer((_) async => response);
 
@@ -72,31 +73,31 @@ void main() {
     expect(result, same(response));
   });
 
-  test('UpdateCartItemUseCase forwards id, parameters, and result', () async {
+  test('UpdateCartItemUseCase forwards the product id, parameters, and result', () async {
     const params = UpdateCartItemParams(quantity: 4);
     final response = SuccessResponce<CartEntity>(cart);
     when(
-      () => repository.updateCartItemQuantity('item-1', params),
+      () => repository.updateCartItemQuantity('5', params),
     ).thenAnswer((_) async => response);
 
     final result = await UpdateCartItemUseCase(
       commerceRepo: repository,
-    ).call('item-1', params);
+    ).call('5', params);
 
     expect(result, same(response));
-    verify(() => repository.updateCartItemQuantity('item-1', params)).called(1);
+    verify(() => repository.updateCartItemQuantity('5', params)).called(1);
   });
 
   test('UpdateCartItemUseCase returns repository errors', () async {
     const params = UpdateCartItemParams(quantity: 4);
     final response = ErrorResponce<CartEntity>(Exception('failed'));
     when(
-      () => repository.updateCartItemQuantity('item-1', params),
+      () => repository.updateCartItemQuantity('5', params),
     ).thenAnswer((_) async => response);
 
     final result = await UpdateCartItemUseCase(
       commerceRepo: repository,
-    ).call('item-1', params);
+    ).call('5', params);
 
     expect(result, same(response));
   });
@@ -124,6 +125,25 @@ void main() {
     final result = await RemoveCartItemUseCase(
       commerceRepo: repository,
     ).call('item-1');
+
+    expect(result, same(response));
+  });
+
+  test('ClearCartUseCase returns the repository result', () async {
+    final response = SuccessResponce<CartEntity>(cart);
+    when(() => repository.clearCart()).thenAnswer((_) async => response);
+
+    final result = await ClearCartUseCase(commerceRepo: repository).call();
+
+    expect(result, same(response));
+    verify(() => repository.clearCart()).called(1);
+  });
+
+  test('ClearCartUseCase returns repository errors', () async {
+    final response = ErrorResponce<CartEntity>(Exception('failed'));
+    when(() => repository.clearCart()).thenAnswer((_) async => response);
+
+    final result = await ClearCartUseCase(commerceRepo: repository).call();
 
     expect(result, same(response));
   });

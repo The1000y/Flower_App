@@ -1,6 +1,6 @@
 class CartItemEntity {
   final String id;
-  final int productId;
+  final String productId;
   final String productName;
   final String productImageUrl;
   final double unitPrice;

@@ -1,4 +1,4 @@
-﻿import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
@@ -84,7 +84,7 @@ void main() {
       items: [
         CartItemEntity(
           id: 'item-1',
-          productId: 1,
+          productId: '1',
           productName: 'Red Roses Bouquet',
           productImageUrl: 'https://example.com/rose.jpg',
           unitPrice: 200,
@@ -111,7 +111,7 @@ void main() {
       items: [
         CartItemEntity(
           id: 'item-1',
-          productId: 1,
+          productId: '1',
           productName: 'Red Roses Bouquet',
           productImageUrl: 'https://example.com/rose.jpg',
           unitPrice: 200,
@@ -122,7 +122,7 @@ void main() {
         ),
         CartItemEntity(
           id: 'item-2',
-          productId: 2,
+          productId: '2',
           productName: 'White Tulips Bouquet',
           productImageUrl: 'https://example.com/tulips.jpg',
           unitPrice: 100,
@@ -140,7 +140,12 @@ void main() {
 
     await pumpApp(
       tester,
-      CartState(data: cart, loadingProductIds: {1}),
+      CartState(
+        data: cart,
+        itemLoadings: {
+          const CartItemLoading(id: '1', action: CartItemAction.update),
+        },
+      ),
     );
 
     // Both items remain visible (no full-page loading).

@@ -293,7 +293,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       padding: EdgeInsets.all(16.w),
                       child: BlocBuilder<CartCubit, CartState>(
                         builder: (context, cartState) {
-                          final productId = int.tryParse(product.id) ?? 0;
+                          final productId = product.id;
 
                           final isAdded = cartState.cart.items.any(
                             (item) => item.productId == productId,
