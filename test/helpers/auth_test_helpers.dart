@@ -35,6 +35,8 @@ import 'package:flower_app/features/auth/data/model/responce/forget_responce/res
 import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
 import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
 import 'package:flower_app/features/auth/data/model/response/login_response/login_response.dart';
+import 'package:flower_app/features/auth/data/model/request/refresh_token_request/refresh_token_request_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/refresh_token_response/refresh_token_response_dto.dart';
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
 import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
 
@@ -196,12 +198,22 @@ class FakeAuthApiClient implements AuthApiClient {
     this.loginResponse,
     this.loginError,
     this.registerResponse,
+    this.refreshResponse,
+    this.refreshError,
+    this.refreshDelay = Duration.zero,
   });
 
   final LoginResponse? loginResponse;
   final Object? loginError;
   final RegisterResponse? registerResponse;
+  final RefreshTokenResponseDto? refreshResponse;
+  final Object? refreshError;
+
+  /// Keeps a refresh in flight so concurrent callers can be exercised.
+  final Duration refreshDelay;
   LoginRequest? lastLoginRequest;
+  RefreshTokenRequestDto? lastRefreshRequest;
+  int refreshCallCount = 0;
 
   @override
   Future<LoginResponse> login(LoginRequest request) async {
@@ -234,6 +246,26 @@ class FakeAuthApiClient implements AuthApiClient {
         message: 'Registration successful',
         data: true,
       );
+
+  @override
+  Future<RefreshTokenResponseDto> refreshToken(
+    RefreshTokenRequestDto request,
+  ) async {
+    refreshCallCount++;
+    lastRefreshRequest = request;
+
+    if (refreshDelay > Duration.zero) {
+      await Future<void>.delayed(refreshDelay);
+    }
+
+    final error = refreshError;
+    if (error != null) {
+      throw error;
+    }
+
+    return refreshResponse ??
+        const RefreshTokenResponseDto(accessToken: 'new-access-token');
+  }
 
   @override
   Future<ForgotPasswordResponseDto> forgotPassword(
