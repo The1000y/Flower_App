@@ -59,14 +59,13 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _checkSession() async {
-    final token = await getIt<SecureStorageService>().getAccessToken();
+    final secureStorage = getIt<SecureStorageService>();
+
+    await secureStorage.clear();
+
     if (!mounted) return;
 
-    if (token != null && token.isNotEmpty) {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (_) => false);
-    } else {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (_) => false);
-    }
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (_) => false);
 
     setState(() {
       _checked = true;
