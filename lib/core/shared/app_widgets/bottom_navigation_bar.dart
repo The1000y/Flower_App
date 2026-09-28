@@ -1,43 +1,19 @@
+import 'package:flower_app/core/shared/app_widgets/profile_tab.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_view_model.dart';
-import 'package:flower_app/features/profile/presentation/view/profile_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../constants/app_strings/app_strings.dart';
 
 class PersistenBottomNavBarDemo extends StatelessWidget {
-  PersistenBottomNavBarDemo({super.key, this.profileViewModel});
+  PersistenBottomNavBarDemo({super.key});
 
-  /// Resolved by the caller (the route generator) and injected here, so this
-  /// widget stays free of service-locator lookups and can be widget-tested.
-  final ProfileViewModel? profileViewModel;
-
-  /// The profile tab, or an explicit placeholder when no view model was
-  /// supplied. Exposed for testing: the surrounding bar pulls cubits from the
-  /// service locator (HomeView, CategoriesView) and cannot be pumped in
-  /// isolation, but this expression can.
-  @visibleForTesting
-  static Widget resolveProfileTab(ProfileViewModel? viewModel) {
-    // `ProfileView` requires an ancestor `BlocProvider<ProfileViewModel>`. An
-    // eager `viewModel ?? context.read<ProfileViewModel>()` fallback would throw
-    // ProviderNotFoundException whenever the caller did not supply one, so the
-    // unavailable case renders an explicit placeholder instead.
-    if (viewModel == null) {
-      return const Scaffold(
-        body: Center(child: Text('Profile is unavailable')),
-      );
-    }
-
-    return BlocProvider<ProfileViewModel>.value(
-      value: viewModel,
-      child: const ProfileView(),
-    );
-  }
-
+  /// Shared by the tabs so switching back to one keeps its state, matching the
+  /// behaviour of the surrounding `HomeView`/`CategoriesView` screens. Not
+  /// `const`-constructible: [PersistentTabController] is a mutable object, so it
+  /// is created once per instance rather than per build.
   final PersistentTabController controller = PersistentTabController(
     initialIndex: 0,
   );
@@ -45,9 +21,9 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeScreen = HomeView(controller: controller);
-    final categoriesScreen = CategoriesView();
-    final cartScreen = Placeholder();
-    final profileScreen = resolveProfileTab(profileViewModel);
+    final categoriesScreen = const CategoriesView();
+    final cartScreen = const Placeholder();
+    final profileScreen = const ProfileTab();
 
     return PersistentTabView(
       controller: controller,
@@ -55,7 +31,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
         PersistentTabConfig(
           screen: homeScreen,
           item: ItemConfig(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             title: AppStrings.navHome,
             activeForegroundColor: AppColors.pinkBase,
           ),
@@ -63,7 +39,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
         PersistentTabConfig(
           screen: categoriesScreen,
           item: ItemConfig(
-            icon: Icon(Icons.category),
+            icon: const Icon(Icons.category),
             title: AppStrings.navcategories,
             activeForegroundColor: AppColors.pinkBase,
           ),
@@ -71,7 +47,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
         PersistentTabConfig(
           screen: cartScreen,
           item: ItemConfig(
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             title: AppStrings.navCart,
             activeForegroundColor: AppColors.pinkBase,
           ),
@@ -79,7 +55,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
         PersistentTabConfig(
           screen: profileScreen,
           item: ItemConfig(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             title: AppStrings.navProfile,
             activeForegroundColor: AppColors.pinkBase,
           ),

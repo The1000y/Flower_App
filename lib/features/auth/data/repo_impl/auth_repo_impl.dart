@@ -104,11 +104,20 @@ class AuthRepoImpl implements AuthRepo {
           await _secureStorage.saveUser(login.user!);
         }
         // Tokens are always persisted: authenticated API calls depend on them
-        // being present in storage. `rememberMe` only controls whether the
-        // email is pre-filled on the next login, which is handled by
-        // LoginViewModel through SaveRememberedEmailUseCase.
+        // being present in storage.
         await _secureStorage.saveAccessToken(login.accessToken);
         await _secureStorage.saveRefreshToken(login.refreshToken);
+
+        // `rememberMe` only controls whether the email is pre-filled on the
+        // next login. It is applied here, next to the other storage writes, so
+        // the policy lives in one place instead of being duplicated by every
+        // caller of `login`.
+        if (rememberMe) {
+          await _secureStorage.saveRememberedEmail(credentials.email);
+        } else {
+          await _secureStorage.deleteRememberedEmail();
+        }
+
         return SuccessResponce(login);
       }
       return ErrorResponce(

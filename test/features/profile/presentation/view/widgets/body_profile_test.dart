@@ -1,3 +1,4 @@
+import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/body_profile.dart';
@@ -238,7 +239,7 @@ void main() {
       await tester.pumpWidget(wrap(buildBody()));
       expect(find.text('English'), findsOneWidget);
 
-      await localeCubit.changeLocale(const Locale('ar'));
+      await localeCubit.changeLanguage(AppLanguage.arabic);
       await tester.pump();
 
       expect(find.text('العربية'), findsOneWidget);

@@ -1,149 +1,41 @@
 import 'dart:async';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flower_app/config/routing/routes.dart';
-import 'package:flutter/material.dart';
+import 'package:flower_app/core/services/notification_navigator.dart';
 import 'package:injectable/injectable.dart';
 
-/// Instance-level view of the message streams we depend on.
+/// Application-level notification handling.
 ///
-/// `FirebaseMessaging.onMessage` / `onMessageOpenedApp` are static-only getters
-/// on the plugin, so they cannot be swapped in a test. This gateway wraps them
-/// behind instance members, letting [FirebaseNotificationService] take a single
-/// injectable collaborator and keeping the statics confined to one file.
-abstract class FirebaseMessagingGateway {
-  Stream<RemoteMessage> get onMessage;
-
-  Stream<RemoteMessage> get onMessageOpenedApp;
-
-  Future<RemoteMessage?> getInitialMessage();
-
-  Future<NotificationSettings> requestPermission();
-
-  Future<String?> getToken();
-}
-
-@LazySingleton(as: FirebaseMessagingGateway)
-class FirebaseMessagingGatewayImpl implements FirebaseMessagingGateway {
-  FirebaseMessagingGatewayImpl(this._messaging);
-
-  final FirebaseMessaging _messaging;
-
-  @override
-  Stream<RemoteMessage> get onMessage => FirebaseMessaging.onMessage;
-
-  @override
-  Stream<RemoteMessage> get onMessageOpenedApp =>
-      FirebaseMessaging.onMessageOpenedApp;
-
-  @override
-  Future<RemoteMessage?> getInitialMessage() => _messaging.getInitialMessage();
-
-  @override
-  Future<NotificationSettings> requestPermission() =>
-      _messaging.requestPermission(alert: true, badge: true, sound: true);
-
-  @override
-  Future<String?> getToken() => _messaging.getToken();
-}
-
-abstract class NotificationService {
-  Future<void> initialize();
-
-  Future<void> handleBackground(RemoteMessage? message);
-
-  /// Releases the stream subscriptions held by [initialize]. Safe to call more
-  /// than once; implementations must make it idempotent.
-  Future<void> dispose();
+/// Deliberately free of Firebase specifics (those live in
+/// `FirebaseMessagingService`) and of navigation (the navigation intent is
+/// published on [NotificationNavigator] and carried out by the presentation
+/// layer). [message] is intentionally `Object`: a remote payload today, a local
+/// notification or a deep link later, without changing this contract.
+abstract interface class NotificationService {
+  /// Records/presents [message] and publishes it as a navigation intent.
+  /// Never throws; a notification must not be able to crash the app.
+  Future<void> handleMessage(Object? message);
 }
 
 @LazySingleton(as: NotificationService)
-class FirebaseNotificationService implements NotificationService {
-  FirebaseNotificationService(this._gateway, this._navKey);
+class AppNotificationService implements NotificationService {
+  AppNotificationService(this._navigator);
 
-  final FirebaseMessagingGateway _gateway;
-  final GlobalKey<NavigatorState> _navKey;
-
-  final List<StreamSubscription<RemoteMessage>> _subscriptions = [];
-
-  bool _initialized = false;
+  final NotificationNavigator _navigator;
 
   @override
-  Future<void> initialize() async {
-    if (_initialized) return;
-    _initialized = true;
-
-    try {
-      await _gateway.requestPermission();
-      final token = await _gateway.getToken();
-      debugPrint('FCM Token: $token');
-    } catch (e) {
-      debugPrint('Error requesting FCM permission/token: $e');
-    }
-
-    // Subscriptions are retained so [dispose] can cancel them; re-initializing
-    // without a dispose would otherwise stack duplicate listeners.
-    _subscriptions.add(_gateway.onMessage.listen(_onForegroundMessage));
-    _subscriptions.add(
-      _gateway.onMessageOpenedApp.listen(
-        (message) => unawaited(handleBackground(message)),
-      ),
-    );
-
-    unawaited(_handleInitialMessage());
-  }
-
-  /// Reads the message that launched the app, if any.
-  ///
-  /// Wrapped in its own try/catch because `getInitialMessage` can throw
-  /// *synchronously* (e.g. a plugin-side platform error), which a
-  /// `Future.catchError` chained on the returned future would never see and
-  /// would therefore escape as an unhandled error.
-  Future<void> _handleInitialMessage() async {
-    try {
-      await handleBackground(await _gateway.getInitialMessage());
-    } catch (e) {
-      debugPrint('Error reading initial message: $e');
-    }
-  }
-
-  void _onForegroundMessage(RemoteMessage message) {
-    // TODO: Show a local notification or in-app banner if needed.
-    debugPrint('Foreground message: ${message.messageId}');
-  }
-
-  @override
-  Future<void> handleBackground(RemoteMessage? message) async {
+  Future<void> handleMessage(Object? message) async {
     if (message == null) return;
 
     try {
-      // The navigator may not be attached yet (early startup / rebuild), so the
-      // current state is dereferenced safely instead of force-unwrapped.
-      // `pushNamed` completes when the pushed route is *popped*, so its future
-      // is intentionally not awaited here.
-      unawaited(
-        _navKey.currentState?.pushNamed(
-              Routes.notification,
-              arguments: message,
-            ) ??
-            Future<void>.value(),
-      );
+      _navigator.openNotification(message);
     } catch (e) {
-      debugPrint('Error handling background message: $e');
+      // The navigator not being ready (early startup / rebuild) is an expected
+      // condition here, not a programming error; log and drop the intent.
+      _navigator.dropPending();
     }
   }
 
-  @override
-  Future<void> dispose() async {
-    _initialized = false;
-
-    final subscriptions = List<StreamSubscription<RemoteMessage>>.from(
-      _subscriptions,
-    );
-    _subscriptions.clear();
-
-    for (final subscription in subscriptions) {
-      await subscription.cancel();
-    }
-  }
+  /// Releases anything held by the service. Kept for symmetry with
+  /// `FirebaseMessagingService` and safe to call more than once.
+  Future<void> dispose() async {}
 }

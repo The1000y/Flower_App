@@ -1,17 +1,16 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flower_app/features/profile/domain/use_case/show_profile_usecase.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_view_model.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_view_model_factory.dart';
 import 'package:flower_app/features/profile/presentation/view/notification_view.dart';
-import 'package:flower_app/features/profile/presentation/view/profile_view.dart';
 import 'package:flower_app/features/search/domain/usecases/search_products_use_case.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
-import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit_factory.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -19,34 +18,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class _FakeProfileViewModelFactory implements ProfileViewModelFactory {
-  _FakeProfileViewModelFactory(this._viewModel);
-
-  final ProfileViewModel _viewModel;
-
-  int createCount = 0;
-
-  @override
-  ProfileViewModel create() {
-    createCount++;
-    return _viewModel;
-  }
-}
-
-class _FakeSearchCubitFactory implements SearchCubitFactory {
-  _FakeSearchCubitFactory(this._cubit);
-
-  final SearchCubit _cubit;
-
-  int createCount = 0;
-
-  @override
-  SearchCubit create() {
-    createCount++;
-    return _cubit;
-  }
-}
 
 class MockRemoteMessage extends Mock implements RemoteMessage {}
 
@@ -65,16 +36,9 @@ ProfileViewModel buildProfileViewModel() {
 }
 
 void main() {
-  Route<dynamic> build(
-    String name, {
-    Object? arguments,
-    ProfileViewModelFactory? factory,
-    SearchCubitFactory? searchFactory,
-  }) {
+  Route<dynamic> build(String name, {Object? arguments}) {
     return AppRoutes.onGenerateRoute(
       RouteSettings(name: name, arguments: arguments),
-      profileViewModelFactory: factory,
-      searchCubitFactory: searchFactory,
     );
   }
 
@@ -98,41 +62,22 @@ void main() {
     );
   }
 
-  group('AppRoutes profile route', () {
-    testWidgets('resolves the ProfileViewModel from the injected factory', (
-      tester,
-    ) async {
-      final viewModel = buildProfileViewModel();
-      addTearDown(viewModel.close);
-      final factory = _FakeProfileViewModelFactory(viewModel);
-
-      await pumpRoute(tester, build(Routes.profile, factory: factory));
-      await tester.pump();
-
-      expect(factory.createCount, 1);
+  group('AppRoutes route generator', () {
+    test('no longer takes factory parameters', () {
+      // The factories were removed so the container is consulted in one place.
+      // This is a compile-time guarantee: `onGenerateRoute` takes only the
+      // settings, so a caller cannot reintroduce a factory seam.
+      expect(
+        AppRoutes.onGenerateRoute,
+        isA<Route<Object?> Function(RouteSettings)>(),
+      );
     });
 
-    testWidgets('renders the profile view for the profile route', (
-      tester,
-    ) async {
-      final viewModel = buildProfileViewModel();
-      addTearDown(viewModel.close);
-      final factory = _FakeProfileViewModelFactory(viewModel);
-
-      await pumpRoute(tester, build(Routes.profile, factory: factory));
-      await tester.pump();
-
-      expect(find.byType(ProfileView), findsOneWidget);
-    });
-
-    testWidgets('renders a placeholder when no factory is supplied', (
-      tester,
-    ) async {
-      await pumpRoute(tester, build(Routes.profile));
-      await tester.pump();
-
-      expect(find.byType(ProfileView), findsNothing);
-      expect(find.text('Profile is unavailable'), findsOneWidget);
+    test('has no case for the profile route', () {
+      // The profile is a bottom-navigation tab, not a pushed route. An unknown
+      // name must therefore fall through to the "not found" page.
+      final route = build(Routes.profile);
+      expect(route, isA<MaterialPageRoute<Object?>>());
     });
   });
 
@@ -174,34 +119,38 @@ void main() {
   });
 
   group('AppRoutes search route', () {
-    testWidgets('provides the SearchCubit supplied by the factory', (
-      tester,
-    ) async {
-      final cubit = SearchCubit(MockSearchProductsUseCase());
-      addTearDown(cubit.close);
-      final factory = _FakeSearchCubitFactory(cubit);
+    // The cubit is owned by the `BlocProvider` the route creates, so the
+    // container is reset rather than unregistered to avoid disposing twice.
+    setUp(
+      () => getIt.registerSingleton<SearchCubit>(
+        SearchCubit(MockSearchProductsUseCase()),
+      ),
+    );
+    tearDown(() => getIt.reset());
 
-      await pumpRoute(tester, build(Routes.search, searchFactory: factory));
+    testWidgets('resolves the SearchCubit from the container', (tester) async {
+      await pumpRoute(tester, build(Routes.search));
       await tester.pump();
 
-      expect(factory.createCount, 1);
+      expect(find.byType(SearchView), findsOneWidget);
       // Read through the built tree to confirm the cubit is actually provided
       // to SearchView, not merely created.
-      expect(find.byType(SearchView), findsOneWidget);
       final provided = BlocProvider.of<SearchCubit>(
         tester.element(find.byType(SearchView)),
         listen: false,
       );
-      expect(provided, same(cubit));
+      expect(provided, same(getIt<SearchCubit>()));
     });
 
-    testWidgets('renders a placeholder when no factory is supplied', (
+    testWidgets('renders no "unavailable" placeholder any more', (
       tester,
     ) async {
+      // The placeholder only existed because the route could not resolve its
+      // cubit. The container lookup cannot fail, so the guard is gone.
       await pumpRoute(tester, build(Routes.search));
       await tester.pump();
 
-      expect(find.text('Search is unavailable'), findsOneWidget);
+      expect(find.text('Search is unavailable'), findsNothing);
     });
   });
 
@@ -210,6 +159,34 @@ void main() {
       await pumpRoute(tester, build('/does-not-exist'));
 
       expect(find.text('Route Not Found'), findsOneWidget);
+    });
+
+    testWidgets(
+      'renders a "Route Not Found" page for the removed profile route',
+      (tester) async {
+        await pumpRoute(tester, build(Routes.profile));
+
+        expect(find.text('Route Not Found'), findsOneWidget);
+      },
+    );
+  });
+
+  group('AppLanguage', () {
+    test('exposes a locale for each language', () {
+      expect(AppLanguage.english.locale.languageCode, 'en');
+      expect(AppLanguage.arabic.locale.languageCode, 'ar');
+    });
+
+    test('answers isArabic without a string comparison at the call site', () {
+      expect(AppLanguage.arabic.isArabic, isTrue);
+      expect(AppLanguage.english.isArabic, isFalse);
+    });
+
+    test('resolves persisted codes and falls back for unknown values', () {
+      expect(AppLanguage.fromLanguageCode('ar'), AppLanguage.arabic);
+      expect(AppLanguage.fromLanguageCode('en'), AppLanguage.english);
+      expect(AppLanguage.fromLanguageCode('fr'), AppLanguage.english);
+      expect(AppLanguage.fromLanguageCode(null), AppLanguage.english);
     });
   });
 }

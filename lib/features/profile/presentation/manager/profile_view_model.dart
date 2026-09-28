@@ -1,5 +1,4 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flower_app/features/profile/domain/use_case/show_profile_usecase.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_event.dart';
@@ -9,9 +8,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class ProfileViewModel extends Cubit<ProfileState> {
-  final ShowProfileUsecase _getProfileUseCase;
-
   ProfileViewModel(this._getProfileUseCase) : super(const ProfileState());
+
+  final ShowProfileUsecase _getProfileUseCase;
 
   void doIntent(ProfileIntent intent) {
     switch (intent) {
@@ -30,36 +29,44 @@ class ProfileViewModel extends Cubit<ProfileState> {
   }
 
   Future<void> _getProfile() async {
-    emit(state.copyWith(isLoading: true, errorMessage: ''));
+    emit(
+      state.copyWith(
+        baseState: state.baseState.copyWith(
+          isLoading: true,
+          // Cleared on entry so a retry does not show the previous failure while
+          // it is still in flight.
+          errorMessage: '',
+        ),
+      ),
+    );
 
-    try {
-      final result = await _getProfileUseCase.getProfile();
+    // `getProfile()` reports failures as an `ErrorResponce` value, so there is
+    // no `try/catch` here: an unexpected throw would be a bug in the data
+    // layer's contract rather than a recoverable state, and hiding it behind a
+    // generic message made real bugs invisible.
+    final result = await _getProfileUseCase.getProfile();
 
-      switch (result) {
-        case SuccessResponce<UserEntity>():
-          emit(
-            state.copyWith(
+    switch (result) {
+      case SuccessResponce<UserEntity>():
+        emit(
+          state.copyWith(
+            baseState: state.baseState.copyWith(
               isLoading: false,
               errorMessage: '',
               data: result.data,
             ),
-          );
+          ),
+        );
 
-        case ErrorResponce<UserEntity>():
-          emit(
-            state.copyWith(isLoading: false, errorMessage: result.errorMessage),
-          );
-      }
-    } catch (error) {
-      // An unexpected throw must not leave the cubit stuck in the loading state.
-      emit(
-        state.copyWith(
-          isLoading: false,
-          errorMessage: error is Exception
-              ? error.toString()
-              : AppStrings.unexpectedError,
-        ),
-      );
+      case ErrorResponce<UserEntity>():
+        emit(
+          state.copyWith(
+            baseState: state.baseState.copyWith(
+              isLoading: false,
+              errorMessage: result.errorMessage,
+            ),
+          ),
+        );
     }
   }
 }

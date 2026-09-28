@@ -1,12 +1,26 @@
+import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
+import 'package:flower_app/features/profile/presentation/view/widgets/notification_switch_tile.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/option_tile.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfileBody extends StatefulWidget {
+class ProfileBody extends StatelessWidget {
+  const ProfileBody({
+    super.key,
+    required this.user,
+    required this.onEditProfile,
+    required this.onNotification,
+    required this.onLanguage,
+    required this.onLogout,
+    this.unreadNotificationsCount,
+    this.notificationsEnabled = true,
+    this.onNotificationsChanged,
+  });
+
   final UserEntity? user;
   final VoidCallback onEditProfile;
   final VoidCallback onNotification;
@@ -17,27 +31,19 @@ class ProfileBody extends StatefulWidget {
   /// when this is null or zero instead of showing a stale hardcoded number.
   final int? unreadNotificationsCount;
 
+  /// Value of the notifications switch. The owner holds it so the value can be
+  /// persisted; [NotificationSwitchTile] only mirrors it optimistically.
+  final bool notificationsEnabled;
+
   /// Invoked whenever the notification switch is toggled, so the owner can
-  /// persist the value. Local state is only updated optimistically.
+  /// persist the value.
   final ValueChanged<bool>? onNotificationsChanged;
 
-  const ProfileBody({
-    super.key,
-    required this.user,
-    required this.onEditProfile,
-    required this.onNotification,
-    required this.onLanguage,
-    required this.onLogout,
-    this.unreadNotificationsCount,
-    this.onNotificationsChanged,
-  });
+  /// Badge is capped at `99+` so an arbitrarily large count cannot distort the
+  /// header layout.
+  int get _badgeCount => unreadNotificationsCount ?? 0;
 
-  @override
-  State<ProfileBody> createState() => _ProfileBodyState();
-}
-
-class _ProfileBodyState extends State<ProfileBody> {
-  bool _notificationsEnabled = true;
+  String get _badgeLabel => _badgeCount > 99 ? '99+' : '$_badgeCount';
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +52,7 @@ class _ProfileBodyState extends State<ProfileBody> {
         children: [
           _buildHeader(context),
           const SizedBox(height: 16),
-          _buildProfileInfo(),
+          _buildProfileInfo(context),
           const SizedBox(height: 20),
           _buildProfileOptions(context),
           const SizedBox(height: 24),
@@ -56,28 +62,6 @@ class _ProfileBodyState extends State<ProfileBody> {
       ),
     );
   }
-
-  /// Badge is capped at `99+` so an arbitrarily large count cannot distort the
-  /// header layout.
-  int get _badgeCount => widget.unreadNotificationsCount ?? 0;
-
-  String get _badgeLabel => _badgeCount > 99 ? '99+' : '$_badgeCount';
-
-  /// Both the switch and the tile tap route through here so the new value is
-  /// reported to the owner, which owns persistence. The local state flip is
-  /// optimistic; a failed write is surfaced by the owner reverting it.
-  void _setNotificationsEnabled(bool value) {
-    if (_notificationsEnabled == value) return;
-    setState(() => _notificationsEnabled = value);
-    widget.onNotificationsChanged?.call(value);
-  }
-
-  /// `Switch.onChanged` hands the new value, so it is forwarded directly.
-  void _toggleNotifications(bool value) => _setNotificationsEnabled(value);
-
-  /// `ProfileOptionTile.onTap` is a `VoidCallback`, so the tile tap flips the
-  /// current value instead of receiving a new one.
-  void _flipNotifications() => _setNotificationsEnabled(!_notificationsEnabled);
 
   Widget _buildHeader(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -109,7 +93,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             clipBehavior: Clip.none,
             children: [
               IconButton(
-                onPressed: widget.onNotification,
+                onPressed: onNotification,
                 tooltip: l10n.notificationTitle,
                 icon: const Icon(
                   Icons.notifications_none_outlined,
@@ -151,12 +135,12 @@ class _ProfileBodyState extends State<ProfileBody> {
     );
   }
 
-  Widget _buildProfileInfo() {
-    final name = widget.user?.fullName ?? '';
-    final email = widget.user?.email ?? '';
+  Widget _buildProfileInfo(BuildContext context) {
+    final name = user?.fullName ?? '';
+    final email = user?.email ?? '';
     // Resolved once into a local so the null-check and the usage cannot drift
     // apart, and no force-unwraps are needed.
-    final photoUrl = widget.user?.photoUrl;
+    final photoUrl = user?.photoUrl;
     final hasPhoto = photoUrl != null && photoUrl.isNotEmpty;
 
     return Column(
@@ -186,7 +170,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
             const SizedBox(width: 6),
             IconButton(
-              onPressed: widget.onEditProfile,
+              onPressed: onEditProfile,
               tooltip: AppLocalizations.of(context)!.editProfileTitle,
               visualDensity: VisualDensity.compact,
               padding: EdgeInsets.zero,
@@ -229,36 +213,20 @@ class _ProfileBodyState extends State<ProfileBody> {
           },
         ),
         Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
-        ProfileOptionTile(
-          leading: SizedBox(
-            height: 24,
-            width: 40,
-            child: Transform.scale(
-              scale: 0.8,
-              child: Switch(
-                value: _notificationsEnabled,
-                activeThumbColor: AppColors.pinkBase,
-                onChanged: _toggleNotifications,
-              ),
-            ),
-          ),
+        NotificationSwitchTile(
           title: l10n.notificationTitle,
-          trailing: const Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.grey,
-          ),
-          onTap: _flipNotifications,
+          value: notificationsEnabled,
+          onChanged: onNotificationsChanged,
         ),
         Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         ProfileOptionTile(
           icon: Icons.translate_outlined,
           title: l10n.language,
-          // Scoped rebuild: only the trailing text reacts to locale changes,
+          // Scoped rebuild: only the trailing text reacts to a language change,
           // instead of rebuilding the whole options column.
-          trailing: BlocBuilder<LocaleCubit, Locale>(
-            builder: (context, _) => Text(
-              context.watch<LocaleCubit>().currentLanguageName,
+          trailing: BlocBuilder<LocaleCubit, AppLanguage>(
+            builder: (context, language) => Text(
+              language.nativeName,
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -266,7 +234,7 @@ class _ProfileBodyState extends State<ProfileBody> {
               ),
             ),
           ),
-          onTap: widget.onLanguage,
+          onTap: onLanguage,
         ),
         ProfileOptionTile(
           icon: Icons.info_outline,
@@ -291,7 +259,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             size: 20,
             color: Colors.black87,
           ),
-          onTap: widget.onLogout,
+          onTap: onLogout,
         ),
       ],
     );

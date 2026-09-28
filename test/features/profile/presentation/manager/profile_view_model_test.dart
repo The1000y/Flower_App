@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_responce.dart';
+import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flower_app/features/profile/domain/use_case/show_profile_usecase.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_event.dart';
@@ -9,6 +10,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockShowProfileUsecase extends Mock implements ShowProfileUsecase {}
+
+/// Convenience constructors mirroring the old named parameters, so the
+/// expectations below stay readable while [ProfileState] holds a single
+/// [BaseState] member.
+ProfileState stateWith({
+  bool isLoading = false,
+  String errorMessage = '',
+  UserEntity? data,
+}) => ProfileState(
+  baseState: BaseState<UserEntity>(
+    isLoading: isLoading,
+    errorMessage: errorMessage,
+    data: data,
+  ),
+);
 
 void main() {
   late MockShowProfileUsecase mockUsecase;
@@ -33,6 +49,44 @@ void main() {
     viewModel.close();
   });
 
+  group('ProfileState', () {
+    test('initial state has correct defaults', () {
+      const state = ProfileState();
+
+      expect(state.isLoading, isFalse);
+      expect(state.errorMessage, '');
+      expect(state.data, isNull);
+    });
+
+    test('delegates isLoading/errorMessage/data to the held BaseState', () {
+      final state = stateWith(
+        isLoading: true,
+        errorMessage: 'boom',
+        data: userEntity,
+      );
+
+      expect(state.baseState.isLoading, isTrue);
+      expect(state.baseState.errorMessage, 'boom');
+      expect(state.isLoading, isTrue);
+      expect(state.errorMessage, 'boom');
+      expect(state.data, userEntity);
+    });
+
+    test('two states with the same BaseState are equal', () {
+      expect(stateWith(data: userEntity), stateWith(data: userEntity));
+      expect(
+        stateWith(data: userEntity),
+        isNot(stateWith(isLoading: true, data: userEntity)),
+      );
+    });
+
+    test('copyWith keeps the existing BaseState when none is given', () {
+      final state = stateWith(data: userEntity);
+
+      expect(state.copyWith(), state);
+    });
+  });
+
   group('ProfileViewModel initial state', () {
     test('initial state has correct defaults', () {
       expect(viewModel.state.isLoading, false);
@@ -52,8 +106,8 @@ void main() {
       },
       act: (vm) => vm.doIntent(GetProfileIntent()),
       expect: () => [
-        const ProfileState(isLoading: true),
-        const ProfileState(isLoading: false, data: userEntity),
+        stateWith(isLoading: true),
+        stateWith(isLoading: false, data: userEntity),
       ],
     );
 
@@ -68,7 +122,7 @@ void main() {
       },
       act: (vm) => vm.doIntent(GetProfileIntent()),
       expect: () => [
-        const ProfileState(isLoading: true),
+        stateWith(isLoading: true),
         predicate<ProfileState>(
           (s) => !s.isLoading && s.errorMessage.isNotEmpty,
         ),
@@ -106,16 +160,21 @@ void main() {
     );
   });
 
-  group('Unexpected failures', () {
+  group('Error reporting', () {
+    // Failures are values, not throws: `ProfileRepoImp.getProfile` converts a
+    // throw into an `ErrorResponce`, so the view model handles exactly one
+    // error shape.
     blocTest<ProfileViewModel, ProfileState>(
-      'emits an error state when the usecase throws',
+      'reports a repository error without throwing',
       build: () {
-        when(() => mockUsecase.getProfile()).thenThrow(Exception('boom'));
+        when(
+          () => mockUsecase.getProfile(),
+        ).thenAnswer((_) async => ErrorResponce<UserEntity>(Exception('boom')));
         return ProfileViewModel(mockUsecase);
       },
       act: (vm) => vm.doIntent(GetProfileIntent()),
       expect: () => [
-        const ProfileState(isLoading: true),
+        stateWith(isLoading: true),
         predicate<ProfileState>(
           (s) => !s.isLoading && s.errorMessage.isNotEmpty,
         ),
@@ -130,7 +189,7 @@ void main() {
         ).thenAnswer((_) async => SuccessResponce(userEntity));
         return ProfileViewModel(mockUsecase);
       },
-      seed: () => const ProfileState(errorMessage: 'Previous failure'),
+      seed: () => stateWith(errorMessage: 'Previous failure'),
       act: (vm) => vm.doIntent(GetProfileIntent()),
       verify: (vm) {
         expect(vm.state.errorMessage, isEmpty);
@@ -170,7 +229,7 @@ void main() {
     blocTest<ProfileViewModel, ProfileState>(
       'non-fetching intents preserve the existing state',
       build: () => ProfileViewModel(mockUsecase),
-      seed: () => const ProfileState(data: userEntity),
+      seed: () => stateWith(data: userEntity),
       act: (vm) async {
         vm.doIntent(EditProfileIntent());
         vm.doIntent(NotificationIntent());

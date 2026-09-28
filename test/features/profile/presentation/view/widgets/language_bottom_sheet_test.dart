@@ -1,3 +1,4 @@
+import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/language.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
@@ -44,7 +45,7 @@ void main() {
   });
 
   testWidgets('marks Arabic as selected for the ar locale', (tester) async {
-    await localeCubit.changeLocale(const Locale('ar'));
+    await localeCubit.changeLanguage(AppLanguage.arabic);
 
     await tester.pumpWidget(wrap());
 
@@ -62,7 +63,7 @@ void main() {
   });
 
   testWidgets('switches back to English', (tester) async {
-    await localeCubit.changeLocale(const Locale('ar'));
+    await localeCubit.changeLanguage(AppLanguage.arabic);
     await tester.pumpWidget(wrap());
 
     await tester.tap(find.text('English'));
@@ -74,7 +75,7 @@ void main() {
   testWidgets('renders Arabic labels when the app locale is Arabic', (
     tester,
   ) async {
-    await localeCubit.changeLocale(const Locale('ar'));
+    await localeCubit.changeLanguage(AppLanguage.arabic);
 
     await tester.pumpWidget(wrap(locale: const Locale('ar')));
 

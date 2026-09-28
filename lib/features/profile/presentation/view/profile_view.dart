@@ -33,37 +33,33 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileViewModel, ProfileState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+    // The scaffold is built once, outside the builder, and only the contents
+    // of its body depend on the state. Rebuilding the whole scaffold for every
+    // state change re-created the app bar, the safe area and the scroll
+    // position on each transition.
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: BlocBuilder<ProfileViewModel, ProfileState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        // Full-screen error only when there is nothing to show; otherwise the
-        // error is surfaced as a banner on top of the (possibly stale) data so
-        // it is never silently swallowed.
-        if (state.errorMessage.isNotEmpty && state.data == null) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(child: Text(state.errorMessage)),
-          );
-        }
+            // Full-screen error only when there is nothing to show; otherwise
+            // the error is surfaced as a banner on top of the (possibly stale)
+            // data so it is never silently swallowed.
+            if (state.errorMessage.isNotEmpty && state.data == null) {
+              return Center(child: Text(state.errorMessage));
+            }
 
-        final user = state.data;
-
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Column(
+            return Column(
               children: [
                 if (state.errorMessage.isNotEmpty)
                   _ProfileErrorBanner(message: state.errorMessage),
                 Expanded(
                   child: ProfileBody(
-                    user: user,
+                    user: state.data,
                     onEditProfile: () {
                       context.read<ProfileViewModel>().doIntent(
                         EditProfileIntent(),
@@ -76,17 +72,15 @@ class _ProfileViewState extends State<ProfileView> {
                       );
                       Navigator.pushNamed(context, Routes.notification);
                     },
-                    onLanguage: () {
-                      _showLanguageBottomSheet(context);
-                    },
+                    onLanguage: () => _showLanguageBottomSheet(context),
                     onLogout: () => _showLogoutDialog(context),
                   ),
                 ),
               ],
-            ),
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 

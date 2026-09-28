@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
@@ -15,6 +16,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MockProfileViewModel extends MockCubit<ProfileState>
     implements ProfileViewModel {}
+
+/// Convenience constructor mirroring the old named parameters so the
+/// expectations below stay readable while [ProfileState] holds a single
+/// [BaseState] member.
+ProfileState stateWith({
+  bool isLoading = false,
+  String errorMessage = '',
+  UserEntity? data,
+}) => ProfileState(
+  baseState: BaseState<UserEntity>(
+    isLoading: isLoading,
+    errorMessage: errorMessage,
+    data: data,
+  ),
+);
 
 void main() {
   late MockProfileViewModel mockViewModel;
@@ -80,7 +96,7 @@ void main() {
   testWidgets('renders loading indicator when isLoading is true', (
     tester,
   ) async {
-    await tester.pumpWidget(wrapWidget(const ProfileState(isLoading: true)));
+    await tester.pumpWidget(wrapWidget(stateWith(isLoading: true)));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
@@ -88,7 +104,7 @@ void main() {
   testWidgets('renders user profile info and options when data is present', (
     tester,
   ) async {
-    await tester.pumpWidget(wrapWidget(const ProfileState(data: testUser)));
+    await tester.pumpWidget(wrapWidget(stateWith(data: testUser)));
     await tester.pump();
 
     expect(find.text('Nour Mohamed'), findsOneWidget);
@@ -104,7 +120,7 @@ void main() {
     'renders error message when errorMessage is present and data is null',
     (tester) async {
       await tester.pumpWidget(
-        wrapWidget(const ProfileState(errorMessage: 'Failed to load profile')),
+        wrapWidget(stateWith(errorMessage: 'Failed to load profile')),
       );
       await tester.pump();
 
@@ -116,9 +132,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      wrapWidget(
-        const ProfileState(data: testUser, errorMessage: 'Refresh failed'),
-      ),
+      wrapWidget(stateWith(data: testUser, errorMessage: 'Refresh failed')),
     );
     await tester.pump();
 
@@ -128,7 +142,7 @@ void main() {
   });
 
   testWidgets('dispatches GetProfileIntent upon mounting', (tester) async {
-    await tester.pumpWidget(wrapWidget(const ProfileState(data: testUser)));
+    await tester.pumpWidget(wrapWidget(stateWith(data: testUser)));
     await tester.pump();
 
     verify(
@@ -139,7 +153,7 @@ void main() {
   group('logout flow', () {
     Future<void> openLogoutDialog(WidgetTester tester) async {
       useTallSurface(tester);
-      await tester.pumpWidget(wrapWidget(const ProfileState(data: testUser)));
+      await tester.pumpWidget(wrapWidget(stateWith(data: testUser)));
       await tester.pump();
 
       await tester.tap(find.text('Logout'));
@@ -204,7 +218,7 @@ void main() {
     testWidgets('tapping the edit icon dispatches EditProfileIntent', (
       tester,
     ) async {
-      await tester.pumpWidget(wrapWidget(const ProfileState(data: testUser)));
+      await tester.pumpWidget(wrapWidget(stateWith(data: testUser)));
       await tester.pump();
 
       await tester.tap(find.byIcon(Icons.edit_outlined));
@@ -220,7 +234,7 @@ void main() {
     testWidgets('tapping the bell dispatches NotificationIntent', (
       tester,
     ) async {
-      await tester.pumpWidget(wrapWidget(const ProfileState(data: testUser)));
+      await tester.pumpWidget(wrapWidget(stateWith(data: testUser)));
       await tester.pump();
 
       await tester.tap(find.byIcon(Icons.notifications_none_outlined));
@@ -235,7 +249,7 @@ void main() {
   group('language flow', () {
     testWidgets('tapping Language opens the bottom sheet', (tester) async {
       useTallSurface(tester);
-      await tester.pumpWidget(wrapWidget(const ProfileState(data: testUser)));
+      await tester.pumpWidget(wrapWidget(stateWith(data: testUser)));
       await tester.pump();
 
       await tester.tap(find.text('Language'));
@@ -249,7 +263,7 @@ void main() {
     testWidgets('edit icon pushes Routes.editProfile', (tester) async {
       final observer = _RouteNameObserver();
       await tester.pumpWidget(
-        wrapWidget(const ProfileState(data: testUser), observer: observer),
+        wrapWidget(stateWith(data: testUser), observer: observer),
       );
       await tester.pump();
 
@@ -262,7 +276,7 @@ void main() {
     testWidgets('bell icon pushes Routes.notification', (tester) async {
       final observer = _RouteNameObserver();
       await tester.pumpWidget(
-        wrapWidget(const ProfileState(data: testUser), observer: observer),
+        wrapWidget(stateWith(data: testUser), observer: observer),
       );
       await tester.pump();
 

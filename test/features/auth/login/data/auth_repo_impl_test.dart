@@ -33,7 +33,7 @@ void main() {
 
     // Tokens must be persisted regardless of `rememberMe`: authenticated API
     // calls depend on them existing. The flag only controls email pre-filling,
-    // which LoginViewModel handles through the remember-email use cases.
+    // which this repository applies next to the other storage writes.
     test('saves tokens even when remember me is false', () async {
       final result = await repo.login(
         LoginCredentials(email: Dummy.email, password: Dummy.pass),
@@ -52,15 +52,27 @@ void main() {
       expect(await storage.getUser(), isNotNull);
     });
 
-    test('login does not touch the remembered email', () async {
+    test('remembers the email when remember me is true', () async {
       await repo.login(
         LoginCredentials(email: Dummy.email, password: Dummy.pass),
         rememberMe: true,
       );
 
-      // Remembered-email persistence is owned by LoginViewModel.
-      expect(await storage.getRememberedEmail(), isNull);
+      expect(await storage.getRememberedEmail(), Dummy.email);
     });
+
+    test(
+      'forgets a previously remembered email when remember me is false',
+      () async {
+        await storage.saveRememberedEmail('old@example.com');
+
+        await repo.login(
+          LoginCredentials(email: Dummy.email, password: Dummy.pass),
+        );
+
+        expect(await storage.getRememberedEmail(), isNull);
+      },
+    );
 
     test('returns error for invalid credentials', () async {
       final result = await repo.login(

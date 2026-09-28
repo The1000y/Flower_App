@@ -1,22 +1,18 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_view_model_factory.dart';
+import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
-import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/view/notification_view.dart';
-import 'package:flower_app/features/profile/presentation/view/profile_view.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
-import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit_factory.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,14 +23,12 @@ import '../../features/auth/presentation/register/view/register_view.dart';
 abstract class AppRoutes {
   /// Builds a [Route] for [settings].
   ///
-  /// [profileViewModelFactory] and [searchCubitFactory] are injected instead of
-  /// resolved from the service locator so route construction stays testable;
-  /// they are only needed for the routes that own those dependencies.
-  static Route<dynamic> onGenerateRoute(
-    RouteSettings settings, {
-    ProfileViewModelFactory? profileViewModelFactory,
-    SearchCubitFactory? searchCubitFactory,
-  }) {
+  /// Route-owned view models and cubits are resolved from the container here,
+  /// the same place the other dependencies come from, and handed to
+  /// `BlocProvider` so each route gets a fresh instance that is closed with the
+  /// route. `Routes.profile` is intentionally absent: the profile is a tab of
+  /// [PersistenBottomNavBarDemo], so it is never pushed as a standalone route.
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       // Auth
       case Routes.login:
@@ -76,11 +70,7 @@ abstract class AppRoutes {
 
       // Home
       case Routes.home:
-        final profileViewModel = profileViewModelFactory?.create();
-        return MaterialPageRoute(
-          builder: (_) =>
-              PersistenBottomNavBarDemo(profileViewModel: profileViewModel),
-        );
+        return MaterialPageRoute(builder: (_) => PersistenBottomNavBarDemo());
 
       case Routes.bestSeller:
         return MaterialPageRoute(builder: (_) => const BestsellerView());
@@ -101,17 +91,9 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const CategoriesView());
 
       case Routes.search:
-        final searchCubit = searchCubitFactory?.create();
-        if (searchCubit == null) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
-              body: Center(child: Text('Search is unavailable')),
-            ),
-          );
-        }
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SearchCubit>.value(
-            value: searchCubit,
+          builder: (_) => BlocProvider<SearchCubit>(
+            create: (_) => getIt<SearchCubit>(),
             child: const SearchView(),
           ),
         );
@@ -149,23 +131,6 @@ abstract class AppRoutes {
                 ? settings.arguments as RemoteMessage
                 : null,
           ),
-        );
-
-      // Profile
-      case Routes.profile:
-        return MaterialPageRoute(
-          builder: (_) {
-            final viewModel = profileViewModelFactory?.create();
-            if (viewModel == null) {
-              return const Scaffold(
-                body: Center(child: Text('Profile is unavailable')),
-              );
-            }
-            return BlocProvider<ProfileViewModel>.value(
-              value: viewModel,
-              child: const ProfileView(),
-            );
-          },
         );
 
       case Routes.editProfile:

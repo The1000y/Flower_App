@@ -1,3 +1,4 @@
+import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 
 class NotificationItem extends StatelessWidget {
@@ -12,7 +13,7 @@ class NotificationItem extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFE0E0E0))),
+        border: Border(bottom: BorderSide(color: AppColors.divider)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

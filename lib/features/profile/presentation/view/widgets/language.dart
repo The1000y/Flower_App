@@ -1,3 +1,4 @@
+import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
@@ -10,8 +11,12 @@ class LanguageBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final localeCubit = context.watch<LocaleCubit>();
-    final isArabic = localeCubit.state.languageCode == 'ar';
+    final localeCubit = context.read<LocaleCubit>();
+
+    // The selected language is a property of the cubit's state, so the check
+    // mark needs no `watch` of its own: the sheet is rebuilt by the provider
+    // above it and only reads the current value here.
+    final selected = localeCubit.state;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -37,26 +42,22 @@ class LanguageBottomSheet extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        _languageItem(
-          context: context,
-          label: l10n.languageArabic,
-          selected: isArabic,
-          onTap: () {
-            localeCubit.changeLocale(const Locale('ar'));
-            Navigator.pop(context);
-          },
-        ),
-        const SizedBox(height: 12),
-        _languageItem(
-          context: context,
-          label: l10n.languageEnglish,
-          selected: !isArabic,
-          onTap: () {
-            localeCubit.changeLocale(const Locale('en'));
-            Navigator.pop(context);
-          },
-        ),
-        const SizedBox(height: 16),
+        for (final language in AppLanguage.values) ...[
+          _languageItem(
+            context: context,
+            label: switch (language) {
+              AppLanguage.arabic => l10n.languageArabic,
+              AppLanguage.english => l10n.languageEnglish,
+            },
+            selected: language == selected,
+            onTap: () {
+              localeCubit.changeLanguage(language);
+              Navigator.pop(context);
+            },
+          ),
+          const SizedBox(height: 12),
+        ],
+        const SizedBox(height: 4),
       ],
     );
   }

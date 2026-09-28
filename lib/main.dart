@@ -6,10 +6,11 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/network/firebase_options.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
-import 'package:flower_app/core/services/notification_service.dart';
+import 'package:flower_app/core/services/firebase_messaging_service.dart';
+import 'package:flower_app/core/shared/app_widgets/notification_navigation_listener.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_view_model_factory.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,41 +49,29 @@ void main() async {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: FlowerApp(
-        localeCubit: localeCubit,
-        navKey: getIt<GlobalKey<NavigatorState>>(),
-        // Resolved here, at the composition root, and passed down explicitly.
-        onGenerateRoute: (settings) => AppRoutes.onGenerateRoute(
-          settings,
-          profileViewModelFactory: getIt<ProfileViewModelFactory>(),
-        ),
-      ),
+      child: FlowerApp(localeCubit: localeCubit),
     ),
   );
 }
 
 Future<void> _initializeNotifications() async {
   try {
-    await getIt<NotificationService>().initialize();
+    await getIt<FirebaseMessagingService>().initialize();
   } catch (e) {
     debugPrint('Failed to initialize notifications: $e');
   }
 }
 
 class FlowerApp extends StatelessWidget {
-  const FlowerApp({
-    super.key,
-    required this.localeCubit,
-    required this.navKey,
-    required this.onGenerateRoute,
-  });
+  FlowerApp({super.key, required this.localeCubit})
+    : // Owned here, in the app root, and handed to the single widget that needs
+      // to navigate ([NotificationNavigationListener]). Nothing in the
+      // notification pipeline resolves it from the container.
+      _navigatorKey = GlobalKey<NavigatorState>();
 
   final LocaleCubit localeCubit;
-  final GlobalKey<NavigatorState> navKey;
 
-  /// Route generator whose dependencies are already resolved at the composition
-  /// root, so [AppRoutes] itself performs no service-locator lookups.
-  final Route<dynamic> Function(RouteSettings) onGenerateRoute;
+  final GlobalKey<NavigatorState> _navigatorKey;
 
   @override
   Widget build(BuildContext context) {
@@ -90,18 +79,22 @@ class FlowerApp extends StatelessWidget {
     // the container instead of closing it when the widget tree is disposed.
     return BlocProvider<LocaleCubit>.value(
       value: localeCubit,
-      child: BlocBuilder<LocaleCubit, Locale>(
-        builder: (context, locale) {
+      child: BlocBuilder<LocaleCubit, AppLanguage>(
+        builder: (context, language) {
           return MaterialApp(
-            navigatorKey: navKey,
-            onGenerateRoute: onGenerateRoute,
+            navigatorKey: _navigatorKey,
+            onGenerateRoute: AppRoutes.onGenerateRoute,
             initialRoute: Routes.login,
-            locale: locale,
+            locale: language.locale,
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             theme: AppTheme.lightThem,
             debugShowCheckedModeBanner: false,
             title: 'Flower App',
+            builder: (context, child) => NotificationNavigationListener(
+              navigatorKey: _navigatorKey,
+              child: child ?? const SizedBox.shrink(),
+            ),
           );
         },
       ),

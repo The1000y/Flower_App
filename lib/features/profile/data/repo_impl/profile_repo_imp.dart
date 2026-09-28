@@ -5,19 +5,27 @@ import 'package:flower_app/features/profile/domain/repo/profile_repo.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: ProfileRepo)
-class ProfileRepoImp extends ProfileRepo {
+class ProfileRepoImp implements ProfileRepo {
+  ProfileRepoImp(this.profData);
+
   final ProfileLocalDataSource profData;
 
-  ProfileRepoImp(this.profData);
   @override
   Future<BaseResponce<UserEntity>> getProfile() async {
-    final userData = await profData.getProfile();
+    // The data source throws on storage failures; translating them here keeps
+    // the "failures are values" contract of [BaseResponce] intact for every
+    // caller, and means no caller has to defend against a throw.
+    try {
+      final userData = await profData.getProfile();
 
-    switch (userData) {
-      case SuccessResponce():
-        return SuccessResponce(userData.data.toUserEntity());
-      case ErrorResponce():
-        return ErrorResponce(userData.error);
+      return switch (userData) {
+        SuccessResponce() => SuccessResponce(userData.data.toUserEntity()),
+        ErrorResponce() => ErrorResponce(userData.error),
+      };
+    } catch (error) {
+      return ErrorResponce(
+        error is Exception ? error : Exception(error.toString()),
+      );
     }
   }
 }

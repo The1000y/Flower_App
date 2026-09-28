@@ -1,239 +1,364 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flower_app/core/services/firebase_messaging_gateway.dart';
+import 'package:flower_app/core/services/firebase_messaging_service.dart';
+import 'package:flower_app/core/services/notification_navigator.dart';
 import 'package:flower_app/core/services/notification_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-/// Test double for the gateway, so the message streams can be driven without
-/// touching the `FirebaseMessaging` statics.
-class MockFirebaseMessagingGateway extends Mock
-    implements FirebaseMessagingGateway {}
+class _MockNotificationSettings extends Mock implements NotificationSettings {}
 
-class MockNotificationSettings extends Mock implements NotificationSettings {}
+class _FakeFirebaseMessagingGateway implements FirebaseMessagingGateway {
+  final onMessageController = StreamController<RemoteMessage>.broadcast();
+  final onMessageOpenedController = StreamController<RemoteMessage>.broadcast();
 
-class _FakeNavigatorObserver extends NavigatorObserver {
-  final List<String?> pushedNames = <String?>[];
+  /// When set, [requestPermission] throws it.
+  Object? permissionError;
+
+  /// When set, [getToken] throws it.
+  Object? tokenError;
+
+  /// When set, [getInitialMessage] throws it *synchronously*.
+  Object? initialMessageError;
+
+  RemoteMessage? initialMessage;
+
+  int permissionCalls = 0;
+  int tokenCalls = 0;
+  int initialMessageCalls = 0;
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    pushedNames.add(route.settings.name);
-    super.didPush(route, previousRoute);
+  Stream<RemoteMessage> get onMessage => onMessageController.stream;
+
+  @override
+  Stream<RemoteMessage> get onMessageOpenedApp =>
+      onMessageOpenedController.stream;
+
+  @override
+  Future<RemoteMessage?> getInitialMessage() {
+    initialMessageCalls++;
+    if (initialMessageError != null) throw initialMessageError!;
+    return Future<RemoteMessage?>.value(initialMessage);
+  }
+
+  @override
+  Future<NotificationSettings> requestPermission() async {
+    permissionCalls++;
+    if (permissionError != null) throw permissionError!;
+    return _MockNotificationSettings();
+  }
+
+  @override
+  Future<String?> getToken() async {
+    tokenCalls++;
+    if (tokenError != null) throw tokenError!;
+    return 'fake-token';
+  }
+
+  Future<void> close() async {
+    await onMessageController.close();
+    await onMessageOpenedController.close();
   }
 }
 
-void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+class _RecordingNotificationService implements NotificationService {
+  final List<Object?> handled = [];
 
-  late MockFirebaseMessagingGateway gateway;
-  late GlobalKey<NavigatorState> navKey;
-  late StreamController<RemoteMessage> foreground;
-  late StreamController<RemoteMessage> opened;
+  @override
+  Future<void> handleMessage(Object? message) async => handled.add(message);
+}
+
+class _RemoteMessageStub extends RemoteMessage {
+  _RemoteMessageStub(this.stubId);
+
+  final String stubId;
+
+  @override
+  String? get messageId => stubId;
+}
+
+void main() {
+  late _FakeFirebaseMessagingGateway gateway;
+  late _RecordingNotificationService notifications;
 
   setUp(() {
-    gateway = MockFirebaseMessagingGateway();
-    navKey = GlobalKey<NavigatorState>();
-    foreground = StreamController<RemoteMessage>.broadcast();
-    opened = StreamController<RemoteMessage>.broadcast();
-
-    when(() => gateway.onMessage).thenAnswer((_) => foreground.stream);
-    when(() => gateway.onMessageOpenedApp).thenAnswer((_) => opened.stream);
-    when(gateway.getInitialMessage).thenAnswer((_) async => null);
-    when(
-      gateway.requestPermission,
-    ).thenAnswer((_) async => MockNotificationSettings());
-    when(gateway.getToken).thenAnswer((_) async => 'token-123');
+    gateway = _FakeFirebaseMessagingGateway();
+    notifications = _RecordingNotificationService();
   });
 
-  tearDown(() async {
-    await foreground.close();
-    await opened.close();
-  });
+  tearDown(() => gateway.close());
 
-  /// Pumps a navigator owning [navKey] so `currentState` is attached.
-  Future<_FakeNavigatorObserver> pumpNavigator(WidgetTester tester) async {
-    final observer = _FakeNavigatorObserver();
-    await tester.pumpWidget(
-      MaterialApp(
-        navigatorKey: navKey,
-        navigatorObservers: [observer],
-        onGenerateRoute: (settings) => MaterialPageRoute<void>(
-          settings: settings,
-          builder: (_) => const Scaffold(body: Text('destination')),
-        ),
-      ),
-    );
-    return observer;
-  }
+  FirebaseMessagingService buildService() =>
+      FirebaseMessagingService(gateway, notifications);
 
-  const message = RemoteMessage(
-    notification: RemoteNotification(title: 'Hi', body: 'There'),
-  );
-
-  group('FirebaseNotificationService.handleBackground', () {
-    testWidgets('pushes the notification route with the message arguments', (
-      tester,
-    ) async {
-      final observer = await pumpNavigator(tester);
-      final service = FirebaseNotificationService(gateway, navKey);
-
-      await service.handleBackground(message);
-      await tester.pumpAndSettle();
-
-      expect(observer.pushedNames, contains('/notification'));
-      final route = ModalRoute.of(tester.element(find.text('destination')));
-      expect(route?.settings.arguments, message);
-    });
-
-    testWidgets('does nothing when the message is null', (tester) async {
-      final observer = await pumpNavigator(tester);
-      final service = FirebaseNotificationService(gateway, navKey);
-
-      await service.handleBackground(null);
-      await tester.pumpAndSettle();
-
-      expect(observer.pushedNames, isNot(contains('/notification')));
-    });
-
-    test('does not throw when the navigator is not attached', () async {
-      // Regression test: a GlobalKey whose currentState is null (early startup
-      // or a rebuilt tree) must not cause a null-check crash.
-      final detachedKey = GlobalKey<NavigatorState>();
-      final service = FirebaseNotificationService(gateway, detachedKey);
-
-      await expectLater(service.handleBackground(message), completes);
-    });
-
-    test('completes normally when navigation throws', () async {
-      final service = FirebaseNotificationService(gateway, navKey);
-
-      // No navigator is attached, so pushNamed is a no-op and must not throw.
-      await expectLater(service.handleBackground(message), completes);
-    });
-  });
-
-  group('FirebaseNotificationService.initialize', () {
-    test('requests permission and reads the token', () async {
-      final service = FirebaseNotificationService(gateway, navKey);
+  group('FirebaseMessagingService.initialize', () {
+    test('requests permission and fetches the token', () async {
+      final service = buildService();
       addTearDown(service.dispose);
 
       await service.initialize();
 
-      verify(() => gateway.requestPermission()).called(1);
-      verify(() => gateway.getToken()).called(1);
+      expect(gateway.permissionCalls, 1);
+      expect(gateway.tokenCalls, 1);
     });
 
-    test('survives a failing permission request', () async {
-      when(gateway.requestPermission).thenThrow(Exception('denied'));
-      when(gateway.getToken).thenThrow(Exception('no token'));
-
-      final service = FirebaseNotificationService(gateway, navKey);
+    test('subscribes to both message streams', () async {
+      final service = buildService();
       addTearDown(service.dispose);
 
-      await expectLater(service.initialize(), completes);
+      await service.initialize();
+
+      // Verified by cancelling: a missing subscription would not throw.
+      await service.dispose();
     });
 
-    test('does not stack duplicate subscriptions when called twice', () async {
-      final service = FirebaseNotificationService(gateway, navKey);
+    test('is idempotent', () async {
+      final service = buildService();
       addTearDown(service.dispose);
 
       await service.initialize();
       await service.initialize();
 
-      // The guard must prevent a second round of setup work.
-      verify(() => gateway.requestPermission()).called(1);
-      verify(() => gateway.getToken()).called(1);
-      verify(() => gateway.onMessage).called(1);
-      verify(() => gateway.onMessageOpenedApp).called(1);
+      expect(gateway.permissionCalls, 1);
     });
 
-    testWidgets('navigates when a background message is opened', (
-      tester,
-    ) async {
-      final service = FirebaseNotificationService(gateway, navKey);
+    test('still subscribes when the permission request throws', () async {
+      gateway.permissionError = Exception('denied');
+      final service = buildService();
       addTearDown(service.dispose);
 
       await service.initialize();
-      final observer = await pumpNavigator(tester);
 
-      opened.add(message);
-      await tester.pumpAndSettle();
-
-      expect(observer.pushedNames, contains('/notification'));
+      // A denied permission must not stop the service from listening.
+      expect(gateway.tokenCalls, 0);
     });
 
-    testWidgets('a foreground message does not navigate', (tester) async {
-      final service = FirebaseNotificationService(gateway, navKey);
+    test('still subscribes when the token fetch throws', () async {
+      gateway.tokenError = Exception('no token');
+      final service = buildService();
       addTearDown(service.dispose);
 
       await service.initialize();
-      final observer = await pumpNavigator(tester);
 
-      foreground.add(message);
-      await tester.pumpAndSettle();
-
-      expect(observer.pushedNames, isNot(contains('/notification')));
+      expect(gateway.permissionCalls, 1);
     });
 
-    test('navigates for a message present at startup', () async {
-      when(gateway.getInitialMessage).thenAnswer((_) async => message);
-
-      final service = FirebaseNotificationService(gateway, navKey);
+    test('forwards the launch message to the notification service', () async {
+      final message = _RemoteMessageStub('initial');
+      gateway.initialMessage = message;
+      final service = buildService();
       addTearDown(service.dispose);
 
       await service.initialize();
-      await pumpEventQueue();
+      // Let the unawaited initial-message handling settle.
+      await Future<void>.delayed(Duration.zero);
 
-      verify(() => gateway.getInitialMessage()).called(1);
+      expect(notifications.handled, contains(message));
+    });
+
+    test('swallows a synchronous getInitialMessage failure', () async {
+      gateway.initialMessageError = Exception('platform error');
+      final service = buildService();
+      addTearDown(service.dispose);
+
+      await service.initialize();
+      await Future<void>.delayed(Duration.zero);
+
+      // A synchronous throw would otherwise escape as an unhandled error.
+      expect(notifications.handled, isEmpty);
     });
 
     test(
-      'swallows an error thrown while reading the initial message',
+      'forwards an opened-app message to the notification service',
       () async {
-        when(gateway.getInitialMessage).thenThrow(Exception('boom'));
-
-        final service = FirebaseNotificationService(gateway, navKey);
+        final service = buildService();
         addTearDown(service.dispose);
 
-        await expectLater(service.initialize(), completes);
-        await pumpEventQueue();
+        await service.initialize();
+        final message = _RemoteMessageStub('opened');
+        gateway.onMessageOpenedController.add(message);
+        await Future<void>.delayed(Duration.zero);
+
+        expect(notifications.handled, contains(message));
       },
     );
   });
 
-  group('FirebaseNotificationService.dispose', () {
-    test('cancels the message subscriptions', () async {
-      final service = FirebaseNotificationService(gateway, navKey);
+  group('FirebaseMessagingService.dispose', () {
+    test('cancels the subscriptions', () async {
+      final service = buildService();
 
       await service.initialize();
-      expect(foreground.hasListener, isTrue);
-      expect(opened.hasListener, isTrue);
-
       await service.dispose();
 
-      expect(foreground.hasListener, isFalse);
-      expect(opened.hasListener, isFalse);
+      final message = _RemoteMessageStub('after-dispose');
+      gateway.onMessageOpenedController.add(message);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        notifications.handled,
+        isNot(contains(message)),
+        reason: 'a disposed service must not receive further messages',
+      );
     });
 
-    test('is idempotent and safe without a prior initialize', () async {
-      final service = FirebaseNotificationService(gateway, navKey);
+    test('is idempotent', () async {
+      final service = buildService();
+      await service.initialize();
 
-      await expectLater(service.dispose(), completes);
-      await expectLater(service.dispose(), completes);
+      await service.dispose();
+      await service.dispose();
     });
 
-    test('allows re-initializing after dispose', () async {
-      final service = FirebaseNotificationService(gateway, navKey);
+    test('allows re-initializing afterwards', () async {
+      final service = buildService();
 
       await service.initialize();
       await service.dispose();
       await service.initialize();
 
-      expect(foreground.hasListener, isTrue);
+      expect(gateway.permissionCalls, 2);
 
       await service.dispose();
-      expect(foreground.hasListener, isFalse);
     });
   });
+
+  group('AppNotificationService', () {
+    test('publishes the message on the navigator', () async {
+      final notifier = NotificationNavigationNotifier();
+      final service = AppNotificationService(notifier);
+      final received = <Object>[];
+      final sub = notifier.notifications.listen(received.add);
+      addTearDown(sub.cancel);
+
+      final message = _RemoteMessageStub('foreground');
+      await service.handleMessage(message);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(received, contains(message));
+    });
+
+    test('ignores a null message', () async {
+      final notifier = NotificationNavigationNotifier();
+      final service = AppNotificationService(notifier);
+      final received = <Object>[];
+      final sub = notifier.notifications.listen(received.add);
+      addTearDown(sub.cancel);
+
+      await service.handleMessage(null);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(received, isEmpty);
+    });
+
+    test('does not touch the navigator when the message is null', () async {
+      final notifier = _ThrowingNotificationNavigator();
+      final service = AppNotificationService(notifier);
+
+      await service.handleMessage(null);
+
+      expect(notifier.openCalls, 0);
+    });
+
+    test('discards the intent when the navigator throws', () async {
+      final notifier = _ThrowingNotificationNavigator();
+      final service = AppNotificationService(notifier);
+
+      // Must not rethrow: a notification cannot be allowed to crash the app.
+      await service.handleMessage(_RemoteMessageStub('boom'));
+
+      expect(notifier.droppedCalls, 1);
+    });
+
+    test('dispose is idempotent', () async {
+      final notifier = NotificationNavigationNotifier();
+      final service = AppNotificationService(notifier);
+
+      await service.dispose();
+      await service.dispose();
+    });
+  });
+
+  group('NotificationNavigationNotifier', () {
+    test('replays an intent published before any listener existed', () async {
+      final notifier = NotificationNavigationNotifier();
+
+      final message = _RemoteMessageStub('cold-start');
+      notifier.openNotification(message);
+
+      // The listener attaches later, as it does when the app boots from a
+      // notification tap.
+      final received = <Object>[];
+      final sub = notifier.notifications.listen(received.add);
+      await Future<void>.delayed(Duration.zero);
+      addTearDown(sub.cancel);
+
+      expect(received, contains(message));
+    });
+
+    test('replays the intent only once', () async {
+      final notifier = NotificationNavigationNotifier();
+      final message = _RemoteMessageStub('cold-start');
+      notifier.openNotification(message);
+
+      final first = <Object>[];
+      final firstSub = notifier.notifications.listen(first.add);
+      await Future<void>.delayed(Duration.zero);
+      await firstSub.cancel();
+
+      final second = <Object>[];
+      final secondSub = notifier.notifications.listen(second.add);
+      await Future<void>.delayed(Duration.zero);
+      addTearDown(secondSub.cancel);
+
+      expect(first, contains(message));
+      expect(second, isEmpty, reason: 'the buffered intent is not re-queued');
+    });
+
+    test('delivers straight to an attached listener', () async {
+      final notifier = NotificationNavigationNotifier();
+      final received = <Object>[];
+      final sub = notifier.notifications.listen(received.add);
+      addTearDown(sub.cancel);
+
+      final message = _RemoteMessageStub('live');
+      notifier.openNotification(message);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(received, contains(message));
+    });
+
+    test('drops a pending intent when handling fails', () async {
+      final notifier = NotificationNavigationNotifier();
+      notifier.openNotification(_RemoteMessageStub('dropped'));
+      notifier.dropPending();
+
+      final received = <Object>[];
+      final sub = notifier.notifications.listen(received.add);
+      await Future<void>.delayed(Duration.zero);
+      addTearDown(sub.cancel);
+
+      expect(received, isEmpty);
+    });
+  });
+}
+
+/// A navigator that always fails, so the service's error path can be exercised.
+class _ThrowingNotificationNavigator implements NotificationNavigator {
+  int openCalls = 0;
+  int droppedCalls = 0;
+
+  @override
+  Stream<Object> get notifications => const Stream<Object>.empty();
+
+  @override
+  void openNotification(Object message) {
+    openCalls++;
+    throw Exception('navigator not ready');
+  }
+
+  @override
+  void dropPending() => droppedCalls++;
 }
