@@ -1,6 +1,5 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
-import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
@@ -15,6 +14,9 @@ void main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
+
+  await getIt<SecureStorageService>().clear();
+
   runApp(
     ScreenUtilPlusInit(
       designSize: const Size(375, 812),
@@ -35,53 +37,13 @@ class FlowerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      home: const AuthGate(),
+      home: BlocProvider(
+        create: (_) => getIt<LoginViewModel>(),
+        child: const LoginView(),
+      ),
       theme: AppTheme.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
-    );
-  }
-}
-
-class AuthGate extends StatefulWidget {
-  const AuthGate({super.key});
-
-  @override
-  State<AuthGate> createState() => _AuthGateState();
-}
-
-class _AuthGateState extends State<AuthGate> {
-  bool _checked = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkSession();
-  }
-
-  Future<void> _checkSession() async {
-    final secureStorage = getIt<SecureStorageService>();
-
-    await secureStorage.clear();
-
-    if (!mounted) return;
-
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (_) => false);
-
-    setState(() {
-      _checked = true;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_checked) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    return BlocProvider(
-      create: (_) => getIt<LoginViewModel>(),
-      child: const LoginView(),
     );
   }
 }
