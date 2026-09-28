@@ -2,6 +2,7 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
@@ -78,6 +79,9 @@ class _AuthGateState extends State<AuthGate> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return const LoginView();
+    return BlocProvider(
+      create: (_) => getIt<LoginViewModel>(),
+      child: const LoginView(),
+    );
   }
 }
