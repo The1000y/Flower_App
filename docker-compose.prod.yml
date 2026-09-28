@@ -101,6 +101,7 @@ services:
   identity-api:
     image: ${DOCKER_USERNAME:-hossammokhtar}/flower-identity-api:latest
     container_name: flower_identity_api
+    user: "root"
     restart: unless-stopped
     depends_on:
       sqlserver:
@@ -211,11 +212,13 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+    env_file:
+      - secrets
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=FlowersPaymentDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
-      Paymob__BaseUrl: ${PAYMOB_BASE_URL:-https://accept.paymob.com/api/}
+      Paymob__BaseUrl: ${PAYMOB_BASE_URL:-https://accept.paymob.com/}
       Paymob__ApiKey: ${PAYMOB_API_KEY:-}
       Paymob__SecretKey: ${PAYMOB_SECRET_KEY:-}
       Paymob__PublicKey: ${PAYMOB_PUBLIC_KEY:-}

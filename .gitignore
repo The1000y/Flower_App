@@ -52,5 +52,6 @@ app.*.map.json
 *.gr.dart
 *.config.dart
 .env 
+secrets
 
 android/build/
