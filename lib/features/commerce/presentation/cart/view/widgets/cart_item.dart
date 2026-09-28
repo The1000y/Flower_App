@@ -1,4 +1,3 @@
-
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
@@ -22,20 +21,34 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<CartCubit, CartState, bool>(
+    return BlocSelector<
+      CartCubit,
+      CartState,
+      ({CartItemEntity item, bool isLoading})
+    >(
       selector: (state) {
-        return state.isItemBusy(item.productId) ||
-            state.isItemRemoving(item.id);
+        final currentItem = state.data?.items.firstWhere(
+          (cartItem) =>
+              cartItem.id == item.id || cartItem.productId == item.productId,
+          orElse: () => item,
+        );
+
+        return (
+          item: currentItem ?? item,
+          isLoading:
+              state.isItemBusy(item.productId) || state.isItemRemoving(item.id),
+        );
       },
-      builder: (context, isLoading) {
+      builder: (context, view) {
+        final currentItem = view.item;
+        final isLoading = view.isLoading;
+
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey.shade300,
-              ),
+              border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8.0.r),
             ),
             child: Row(
@@ -43,15 +56,12 @@ class CartItem extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: Image.network(
-                    item.productImageUrl,
+                    currentItem.productImageUrl,
                     width: 80.w,
                     height: 80.h,
                     fit: BoxFit.cover,
                     errorBuilder: (_, _, _) => const Center(
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 60,
-                      ),
+                      child: Icon(Icons.image_not_supported, size: 60),
                     ),
                   ),
                 ),
@@ -60,44 +70,36 @@ class CartItem extends StatelessWidget {
 
                 Expanded(
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  item.productName,
+                                  currentItem.productName,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   maxLines: 2,
-                                  overflow:
-                                      TextOverflow.ellipsis,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
 
                                 Text(
-                                  '${AppStrings.currencyEGP}${item.unitPrice.toStringAsFixed(2)}',
+                                  '${AppStrings.currencyEGP}${currentItem.unitPrice.toStringAsFixed(2)}',
                                 ),
                               ],
                             ),
                           ),
 
                           IconButton(
-                            onPressed:
-                                isLoading ? null : onDelete,
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
+                            onPressed: isLoading ? null : onDelete,
+                            icon: const Icon(Icons.delete, color: Colors.red),
                           ),
                         ],
                       ),
@@ -106,7 +108,7 @@ class CartItem extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              '${AppStrings.currencyEGP}${item.lineSubtotal.toStringAsFixed(2)}',
+                              '${AppStrings.currencyEGP}${currentItem.lineSubtotal.toStringAsFixed(2)}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -132,23 +134,17 @@ class CartItem extends StatelessWidget {
                               onPressed: () {
                                 onQuantityChanged(-1);
                               },
-                              icon: const Icon(
-                                Icons.remove,
-                              ),
+                              icon: const Icon(Icons.remove),
                               visualDensity: VisualDensity.compact,
                             ),
 
-                            Text(
-                              item.quantity.toString(),
-                            ),
+                            Text(currentItem.quantity.toString()),
 
                             IconButton(
                               onPressed: () {
                                 onQuantityChanged(1);
                               },
-                              icon: const Icon(
-                                Icons.add,
-                              ),
+                              icon: const Icon(Icons.add),
                               visualDensity: VisualDensity.compact,
                             ),
                           ],
@@ -165,4 +161,3 @@ class CartItem extends StatelessWidget {
     );
   }
 }
-

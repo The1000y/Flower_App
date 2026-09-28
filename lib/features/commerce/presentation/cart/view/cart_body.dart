@@ -1,4 +1,3 @@
-
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
@@ -8,14 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-
 class CartBody extends StatelessWidget {
   final VoidCallback onRetry;
 
-  const CartBody({
-    super.key,
-    required this.onRetry,
-  });
+  const CartBody({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +18,12 @@ class CartBody extends StatelessWidget {
       buildWhen: (previous, current) {
         return previous.isLoading != current.isLoading ||
             previous.errorMessage != current.errorMessage ||
-            previous.data != current.data;
+            previous.data != current.data ||
+            previous.itemLoadings != current.itemLoadings;
       },
       builder: (context, state) {
         if (state.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (state.errorMessage.isNotEmpty) {
@@ -53,15 +47,13 @@ class CartBody extends StatelessWidget {
         final subtotal =
             cart?.items.fold<double>(
               0,
-              (previousValue, item) =>
-                  previousValue + item.lineSubtotal,
+              (previousValue, item) => previousValue + item.lineSubtotal,
             ) ??
             0.0;
 
         final totalPrice = cart?.total ?? 0.0;
 
-        final deliveryFee =
-            totalPrice > subtotal ? totalPrice - subtotal : 0.0;
+        final deliveryFee = totalPrice > subtotal ? totalPrice - subtotal : 0.0;
 
         return Column(
           children: [
@@ -70,19 +62,17 @@ class CartBody extends StatelessWidget {
                 items: cart?.items ?? [],
                 onDelete: (cartItemId) {
                   context.read<CartCubit>().doEvent(
-                        RemoveCartItemEvent(
-                          cartItemId: cartItemId,
-                        ),
-                      );
+                    RemoveCartItemEvent(cartItemId: cartItemId),
+                  );
                 },
                 onQuantityChanged: (cartItemId, productId, newQuantity) {
                   context.read<CartCubit>().doEvent(
-                        UpdateCartItemEvent(
-                          cartItemId: cartItemId,
-                          productId: productId,
-                          quantity: newQuantity,
-                        ),
-                      );
+                    UpdateCartItemEvent(
+                      cartItemId: cartItemId,
+                      productId: productId,
+                      quantity: newQuantity,
+                    ),
+                  );
                 },
               ),
             ),
@@ -90,14 +80,11 @@ class CartBody extends StatelessWidget {
             SizedBox(height: 20.h),
 
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         AppStrings.subtotal,
@@ -117,8 +104,7 @@ class CartBody extends StatelessWidget {
                   ),
 
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         AppStrings.deliveryFee,
@@ -140,8 +126,7 @@ class CartBody extends StatelessWidget {
                   SizedBox(height: 10.h),
 
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         AppStrings.total,
@@ -183,4 +168,3 @@ class CartBody extends StatelessWidget {
     );
   }
 }
-

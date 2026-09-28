@@ -156,18 +156,39 @@ class CartCubit extends Cubit<CartState> {
 
     switch (result) {
       case SuccessResponce<CartEntity>():
-        emit(
-          state.copyWith(
-            data: result.data,
-            itemLoadings: updatedLoadings,
-            errorMessage: '',
-          ),
-        );
+        await _applyQuantityUpdate(updatedLoadings);
         break;
 
       case ErrorResponce<CartEntity>():
         emit(state.copyWith(itemLoadings: updatedLoadings));
         break;
+    }
+  }
+
+  /// The quantity route answers with a reduced line that omits the product
+  /// name, image and stock, so its payload cannot replace the rendered cart.
+  /// The mutation response is therefore only the success signal, and the
+  /// authoritative cart is re-read to update the screen. The read is silent -
+  /// [isLoading] stays false - so a +/- tap never shows a whole-cart spinner.
+  ///
+  /// If that read fails the cart on screen is left untouched rather than
+  /// replaced by the incomplete payload, which would blank the item details.
+  Future<void> _applyQuantityUpdate(
+    Set<CartItemLoading> updatedLoadings,
+  ) async {
+    final refreshed = await getCartUseCase.call();
+
+    switch (refreshed) {
+      case ErrorResponce<CartEntity>():
+        emit(state.copyWith(itemLoadings: updatedLoadings));
+      case SuccessResponce<CartEntity>(:final data):
+        emit(
+          state.copyWith(
+            data: data,
+            itemLoadings: updatedLoadings,
+            errorMessage: '',
+          ),
+        );
     }
   }
 

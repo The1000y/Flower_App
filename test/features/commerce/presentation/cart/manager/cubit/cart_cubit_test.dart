@@ -63,6 +63,28 @@ void main() {
     hasChanges: false,
   );
 
+  /// Stands in for the authoritative cart re-read after a quantity change,
+  /// deliberately a different instance from the one the mutation answers with.
+  final refreshedCart = CartEntity(
+    items: [
+      CartItemEntity(
+        id: 'item-1',
+        productId: '1',
+        productName: 'Rose Bouquet',
+        productImageUrl: 'https://example.com/rose.jpg',
+        unitPrice: 200,
+        quantity: 4,
+        lineSubtotal: 800,
+        inStock: true,
+        priceChanged: false,
+      ),
+    ],
+    subtotal: 800,
+    deliveryFee: 20,
+    total: 820,
+    hasChanges: false,
+  );
+
   setUpAll(() {
     registerFallbackValue(const AddCartItemParams(productId: '', quantity: 0));
     registerFallbackValue(const UpdateCartItemParams(quantity: 0));
@@ -81,9 +103,31 @@ void main() {
       removeCartItemUseCase: removeCartItemUseCase,
       clearCartUseCase: clearCartUseCase,
     );
+    // A successful quantity change re-reads the cart, so the fetch is stubbed
+    // by default and overridden by the tests that care about its outcome.
+    when(
+      () => getCartUseCase.call(),
+    ).thenAnswer((_) async => SuccessResponce(cart));
   });
 
   tearDown(() => cubit.close());
+
+  /// `doEvent` is fire-and-forget, so the emitted states are used to know when
+  /// the item operation has settled.
+  Future<void> runSettled(CartEvent event) async {
+    final settled = expectLater(
+      cubit.stream,
+      emitsThrough(
+        isA<CartState>().having(
+          (state) => state.itemLoadings,
+          'itemLoadings',
+          isEmpty,
+        ),
+      ),
+    );
+    cubit.doEvent(event);
+    await settled;
+  }
 
   test('has an empty initial state', () {
     expect(cubit.state.isLoading, isFalse);
@@ -179,6 +223,9 @@ void main() {
     when(
       () => updateCartItemUseCase.call(any(), any()),
     ).thenAnswer((_) async => SuccessResponce(cart));
+    when(
+      () => getCartUseCase.call(),
+    ).thenAnswer((_) async => SuccessResponce(refreshedCart));
 
     final emitted = expectLater(
       cubit.stream,
@@ -186,7 +233,11 @@ void main() {
         isA<CartState>().having((state) => state.itemLoadings, 'itemLoadings', {
           updating('1'),
         }),
-        isA<CartState>().having((state) => state.data, 'data', same(cart)),
+        isA<CartState>().having(
+          (state) => state.data,
+          'data',
+          same(refreshedCart),
+        ),
       ]),
     );
     cubit.doEvent(
@@ -198,6 +249,80 @@ void main() {
       () => updateCartItemUseCase.call('1', captureAny()),
     ).captured;
     expect((invocation.single as UpdateCartItemParams).quantity, 4);
+  });
+
+  test('re-reads the cart so the new quantity shows up immediately', () async {
+    when(
+      () => updateCartItemUseCase.call(any(), any()),
+    ).thenAnswer((_) async => SuccessResponce(cart));
+    when(
+      () => getCartUseCase.call(),
+    ).thenAnswer((_) async => SuccessResponce(refreshedCart));
+
+    await runSettled(
+      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 4),
+    );
+
+    verify(() => getCartUseCase.call()).called(1);
+    expect(cubit.state.data, same(refreshedCart));
+    expect(cubit.state.data!.items.single.quantity, 4);
+  });
+
+  test('does not show a whole-cart spinner while re-reading', () async {
+    when(
+      () => updateCartItemUseCase.call(any(), any()),
+    ).thenAnswer((_) async => SuccessResponce(cart));
+    when(
+      () => getCartUseCase.call(),
+    ).thenAnswer((_) async => SuccessResponce(refreshedCart));
+
+    final emitted = expectLater(
+      cubit.stream,
+      emitsInOrder([
+        isA<CartState>().having((state) => state.isLoading, 'loading', isFalse),
+        isA<CartState>().having((state) => state.isLoading, 'loading', isFalse),
+      ]),
+    );
+    cubit.doEvent(
+      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 4),
+    );
+
+    await emitted;
+  });
+
+  test('keeps the cart on screen when the re-read fails', () async {
+    when(
+      () => getCartUseCase.call(),
+    ).thenAnswer((_) async => SuccessResponce(cart));
+    when(
+      () => updateCartItemUseCase.call(any(), any()),
+    ).thenAnswer((_) async => SuccessResponce(cart));
+
+    await runSettled(GetCartItemsEvent());
+    final before = cubit.state.data;
+
+    when(() => getCartUseCase.call()).thenAnswer(
+      (_) async => ErrorResponce<CartEntity>(Exception('refetch failed')),
+    );
+
+    await runSettled(
+      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 4),
+    );
+
+    expect(cubit.state.data, same(before));
+    expect(cubit.state.itemLoadings, isEmpty);
+  });
+
+  test('does not re-read the cart when the update itself fails', () async {
+    when(() => updateCartItemUseCase.call(any(), any())).thenAnswer(
+      (_) async => ErrorResponce<CartEntity>(Exception('update failed')),
+    );
+
+    await runSettled(
+      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 4),
+    );
+
+    verifyNever(() => getCartUseCase.call());
   });
 
   test('removes an item using the cart line id', () async {

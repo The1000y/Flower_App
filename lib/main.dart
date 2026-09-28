@@ -2,6 +2,8 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
+import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
+import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,10 +34,51 @@ class FlowerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.login,
+      home: const AuthGate(),
       theme: AppTheme.lightThem,
       debugShowCheckedModeBanner: false,
       title: 'Flower App',
     );
+  }
+}
+
+class AuthGate extends StatefulWidget {
+  const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  bool _checked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSession();
+  }
+
+  Future<void> _checkSession() async {
+    final token = await getIt<SecureStorageService>().getAccessToken();
+    if (!mounted) return;
+
+    if (token != null && token.isNotEmpty) {
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (_) => false);
+    } else {
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (_) => false);
+    }
+
+    setState(() {
+      _checked = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_checked) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    return const LoginView();
   }
 }
