@@ -13,7 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'auth_repo-impl_test.mocks.dart';
+import 'auth_repo_impl_test.mocks.dart';
 
 @GenerateMocks([RemoteDataSource, LocalDataSource])
 void main() {

@@ -48,7 +48,7 @@ class ProductCard extends StatelessWidget {
                 arguments: id,
               );
             },
-            child: Container(
+            child: SizedBox(
               height: 150.h,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.r),

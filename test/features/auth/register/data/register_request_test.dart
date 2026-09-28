@@ -4,13 +4,26 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const fullName = 'John Doe';
+  const firstName = 'John';
+  const lastName = 'Doe';
   const email = 'john@example.com';
   const phoneNumber = '01012345678';
   const gender = 1;
+  const genderText = 'Female';
   const password = 'P@ssw0rd';
   const confirmPassword = 'P@ssw0rd';
 
   const json = <String, dynamic>{
+    'firstName': firstName,
+    'lastName': lastName,
+    'email': email,
+    'phoneNumber': phoneNumber,
+    'gender': genderText,
+    'password': password,
+    'confirmPassword': confirmPassword,
+  };
+
+  const legacyJson = <String, dynamic>{
     'fullName': fullName,
     'email': email,
     'phoneNumber': phoneNumber,
@@ -44,10 +57,31 @@ void main() {
       expect(request.confirmPassword, confirmPassword);
     });
 
+    test('fromJson still accepts the legacy fullName shape', () {
+      final request = RegisterRequest.fromJson(legacyJson);
+
+      expect(request.fullName, fullName);
+      expect(request.email, email);
+      expect(request.gender, gender);
+    });
+
     test('toJson round-trips through fromJson', () {
       final request = RegisterRequest.fromJson(json);
 
       expect(request.toJson(), json);
+    });
+
+    test('toJson maps a male gender to the api value', () {
+      final request = RegisterRequest(
+        fullName: fullName,
+        email: email,
+        phoneNumber: phoneNumber,
+        gender: 0,
+        password: password,
+        confirmPassword: confirmPassword,
+      );
+
+      expect(request.toJson()['gender'], 'Male');
     });
 
     test('toRegisterEntityRequest maps fields to the entity', () {
@@ -70,7 +104,7 @@ void main() {
       expect(entity.password, password);
       expect(entity.confirmPassword, confirmPassword);
     });
-  test('fromEntity maps the entity fields to the DTO', () {
+    test('fromEntity maps the entity fields to the DTO', () {
       final entity = RegisterRequestEntity(
         fullName: fullName,
         email: email,

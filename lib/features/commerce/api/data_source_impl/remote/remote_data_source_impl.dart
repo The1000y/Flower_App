@@ -1,5 +1,8 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
@@ -59,6 +62,48 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
         return SuccessResponce(response);
       }
       return ErrorResponce(Exception(response.message));
+    } catch (e) {
+      return ErrorResponce(e is Exception ? e : Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<BaseResponce<CartResponseDto>> getCart() async =>
+      _cartCall(() => commerceApi.getCart());
+
+  @override
+  Future<BaseResponce<CartResponseDto>> addCartItem(
+    AddCartItemRequestDto request,
+  ) async => _cartCall(() => commerceApi.addCartItem(request));
+
+  @override
+  Future<BaseResponce<CartResponseDto>> updateCartItemQuantity(
+    String productId,
+    UpdateCartItemRequestDto request,
+  ) async => _cartCall(
+    () => commerceApi.updateCartItemQuantity(productId, request),
+  );
+
+  @override
+  Future<BaseResponce<CartResponseDto>> removeCartItem(
+    String cartItemId,
+  ) async => _cartCall(() => commerceApi.removeCartItem(cartItemId));
+
+  @override
+  Future<BaseResponce<CartResponseDto>> clearCart() async =>
+      _cartCall(() => commerceApi.clearCart());
+
+  Future<BaseResponce<CartResponseDto>> _cartCall(
+    Future<CartResponseDto> Function() call,
+  ) async {
+    try {
+      final response = await call();
+      if (response.isSuccess) {
+        return SuccessResponce(response);
+      }
+      return ErrorResponce(
+        Exception(response.message ?? 'Cart request failed'),
+      );
     } catch (e) {
       return ErrorResponce(e is Exception ? e : Exception(e.toString()));
     }

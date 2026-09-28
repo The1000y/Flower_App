@@ -24,9 +24,12 @@ void main() {
       'returns SuccessResponce with best sellers when repository call succeeds',
       () async {
         // Arrange
-        final tSuccess =
-            SuccessResponce<List<BestSellerEntity>>(CommerceFixtures.tBestSellers);
-        when(mockCommerceRepo.getBestSeller()).thenAnswer((_) async => tSuccess);
+        final tSuccess = SuccessResponce<List<BestSellerEntity>>(
+          CommerceFixtures.tBestSellers,
+        );
+        when(
+          mockCommerceRepo.getBestSeller(),
+        ).thenAnswer((_) async => tSuccess);
 
         // Act
         final result = await useCase.call();
@@ -46,8 +49,9 @@ void main() {
       'returns ErrorResponce with message when repository call fails',
       () async {
         // Arrange
-        final tError =
-            ErrorResponce<List<BestSellerEntity>>(Exception('network error'));
+        final tError = ErrorResponce<List<BestSellerEntity>>(
+          Exception('network error'),
+        );
         when(mockCommerceRepo.getBestSeller()).thenAnswer((_) async => tError);
 
         // Act

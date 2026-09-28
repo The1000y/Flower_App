@@ -21,8 +21,6 @@ class ForgetPassword extends StatefulWidget {
   State<ForgetPassword> createState() => _ForgetPasswordState();
 }
 
-ForgetPasswordCubit viewModel = getIt.get<ForgetPasswordCubit>();
-
 class _ForgetPasswordState extends State<ForgetPassword> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -30,7 +28,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => viewModel,
+      create: (context) => getIt.get<ForgetPasswordCubit>(),
       child: Scaffold(
         appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
         body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
@@ -87,7 +85,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       text: AppStrings.confirmButton,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          viewModel.doEvent(
+                          context.read<ForgetPasswordCubit>().doEvent(
                             ForgetBassEvent(email: _emailController.text),
                           );
                           Navigator.pushNamed(

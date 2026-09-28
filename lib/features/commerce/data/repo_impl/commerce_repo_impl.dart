@@ -1,11 +1,15 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
+import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/categories_response/category_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/home_response/section_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/occasion_response/occasion_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/products_response/products_response_dto.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
+import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/categories/categories_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/section_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/occasion/occasion_entity.dart';
@@ -13,6 +17,9 @@ import 'package:flower_app/features/commerce/domain/entities/products/pagination
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/commerce/domain/repo/commerce_repo.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../domain/models/cart/add_cart_item_params.dart';
+import '../../domain/models/cart/update_cart_item_params.dart';
 
 @Injectable(as: CommerceRepo)
 class CommerceRepoImpl implements CommerceRepo {
@@ -39,7 +46,16 @@ class CommerceRepoImpl implements CommerceRepo {
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
         final data = response.data.products.map((element) {
-          return BestSellerEntity(id: element.id , name: element.name , imageUrl: element.imageUrl , currency: element.currency , price: element.price.toInt() , originalPrice: element.originalPrice?.toInt() ?? 0, discountPercentage: element.discountPercentage?.toInt() ?? 0, status: element.status );
+          return BestSellerEntity(
+            id: element.id,
+            name: element.name,
+            imageUrl: element.imageUrl,
+            currency: element.currency,
+            price: element.price.toInt(),
+            originalPrice: element.originalPrice?.toInt() ?? 0,
+            discountPercentage: element.discountPercentage?.toInt() ?? 0,
+            status: element.status,
+          );
         }).toList();
         return SuccessResponce<List<BestSellerEntity>>(data);
 
@@ -82,17 +98,77 @@ class CommerceRepoImpl implements CommerceRepo {
   }
 
   @override
-  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(String occasionId, {int page = 1}) async {
-    final response = await remoteDataSource.getProducts(occasionId: occasionId, page: page);
+  Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
+    String occasionId, {
+    int page = 1,
+  }) async {
+    final response = await remoteDataSource.getProducts(
+      occasionId: occasionId,
+      page: page,
+    );
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
-        return SuccessResponce(PaginatedProducts(
-          items: response.data.products,
-          pagination: response.data.pagination,
-        ));
+        return SuccessResponce(
+          PaginatedProducts(
+            items: response.data.products,
+            pagination: response.data.pagination,
+          ),
+        );
       case ErrorResponce<ProductsResponseDto>():
         return ErrorResponce(response.error);
     }
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> addToCart(AddCartItemParams params) async {
+    final response = await remoteDataSource.addCartItem(
+      AddCartItemRequestDto(
+        productId: params.productId,
+        quantity: params.quantity,
+      ),
+    );
+    return _toCartResponse(response);
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> getCart() async {
+    final response = await remoteDataSource.getCart();
+    return _toCartResponse(response);
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> removeCartItem(String cartItemId) async {
+    final response = await remoteDataSource.removeCartItem(cartItemId);
+    return _toCartResponse(response);
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> updateCartItemQuantity(
+    String productId,
+    UpdateCartItemParams params,
+  ) async {
+    final response = await remoteDataSource.updateCartItemQuantity(
+      productId,
+      UpdateCartItemRequestDto(quantity: params.quantity),
+    );
+    return _toCartResponse(response);
+  }
+
+  @override
+  Future<BaseResponce<CartEntity>> clearCart() async {
+    final response = await remoteDataSource.clearCart();
+    return _toCartResponse(response);
+  }
+
+  BaseResponce<CartEntity> _toCartResponse(
+    BaseResponce<CartResponseDto> response,
+  ) {
+    return switch (response) {
+      SuccessResponce<CartResponseDto>() => SuccessResponce(
+        response.data.toDomain(),
+      ),
+      ErrorResponce<CartResponseDto>() => ErrorResponce(response.error),
+    };
   }
 }
 

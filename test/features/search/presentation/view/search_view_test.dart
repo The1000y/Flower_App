@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
@@ -143,7 +144,7 @@ void main() {
 
     await pumpApp(tester, wrap(state));
 
-    expect(find.text('No results found'), findsOneWidget);
+    expect(find.text(AppStrings.noResult), findsOneWidget);
   });
 
   testWidgets('does not dispatch a search event before the debounce delay elapses', (tester) async {

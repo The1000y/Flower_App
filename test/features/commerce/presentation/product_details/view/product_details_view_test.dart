@@ -1,19 +1,27 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/product_details/product_details_entity.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_state.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart' as mocktail;
 
 import 'product_details_view_test.mocks.dart';
+
+class MockCartCubit extends mocktail.Mock implements CartCubit {}
 
 @GenerateMocks([ProductDetailsCubit])
 void main() {
   late MockProductDetailsCubit mockCubit;
+  late MockCartCubit mockCartCubit;
 
   setUpAll(() {
     // Initializing ScreenUtil for widget tests
@@ -26,16 +34,37 @@ void main() {
     getIt.allowReassignment = true;
     getIt.registerSingleton<ProductDetailsCubit>(mockCubit);
 
+    mockCartCubit = MockCartCubit();
+    getIt.registerSingleton<CartCubit>(mockCartCubit);
+
     // Default stubbing
     when(mockCubit.stream).thenAnswer((_) => const Stream.empty());
     when(mockCubit.close()).thenAnswer((_) async {});
+
+    mocktail.when(() => mockCartCubit.state).thenReturn(
+          CartState(
+        data: CartEntity(
+              items: [],
+              subtotal: 0,
+              total: 0,
+              hasChanges: false,
+            ),
+          ),
+        );
+    mocktail
+        .when(() => mockCartCubit.stream)
+        .thenAnswer((_) => const Stream.empty());
+    mocktail.when(() => mockCartCubit.close()).thenAnswer((_) async {});
   });
 
   Widget createWidgetUnderTest() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-      child: const MaterialApp(
-        home: ProductDetails(productId: '1'),
+      child: BlocProvider<CartCubit>.value(
+        value: mockCartCubit,
+        child: const MaterialApp(
+          home: ProductDetails(productId: '1'),
+        ),
       ),
     );
   }
