@@ -1,3 +1,4 @@
+import 'package:flower_app/core/shared/app_widgets/app_navigation.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/checkout/presentation/view/checkout_view.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
@@ -9,9 +10,7 @@ import '../../constants/app_strings/app_strings.dart';
 
 class PersistenBottomNavBarDemo extends StatelessWidget {
   PersistenBottomNavBarDemo({super.key});
-  final PersistentTabController controller = PersistentTabController(
-    initialIndex: 0,
-  );
+  final PersistentTabController controller = AppNavigation.controller;
 
   @override
   Widget build(BuildContext context) {

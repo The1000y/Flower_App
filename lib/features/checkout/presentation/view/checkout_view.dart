@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/shared/app_widgets/app_navigation.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -11,6 +12,7 @@ import 'package:flower_app/features/checkout/presentation/view/widgets/gift_sect
 // import 'package:flower_app/features/checkout/presentation/view/widgets/gift_section.dart';
 import 'package:flower_app/features/checkout/presentation/view/widgets/order_summary_section.dart';
 import 'package:flower_app/features/checkout/presentation/view/widgets/payment_method_section.dart';
+import 'package:flower_app/features/payment/presentation/widget/manager/cubit/place_order_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -32,9 +34,11 @@ class _CheckoutViewState extends State<CheckoutView> {
           create: (context) =>
               getIt.get<CheckoutCubit>()..doEvent(GetCheckoutEvent()),
         ),
+
         BlocProvider.value(
           value: getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
         ),
+        BlocProvider(create: (context) =>  getIt.get<PlaceOrderCubit>()),
       ],
 
       child: Scaffold(
@@ -42,13 +46,15 @@ class _CheckoutViewState extends State<CheckoutView> {
         appBar: AppBar(
           backgroundColor: AppColors.whiteBase,
           elevation: 0,
-          scrolledUnderElevation:0,
+          scrolledUnderElevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_new,
               color: AppColors.blackBase,
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => {
+              AppNavigation.controller.jumpToTab(0),
+            }
           ),
           titleSpacing: 0,
           title: Text(
@@ -86,9 +92,9 @@ class _CheckoutViewState extends State<CheckoutView> {
                 color: AppColors.lightGray,
               ),
               const SizedBox(height: 24),
-               GiftSection(formKey: giftFormKey),
+              GiftSection(formKey: giftFormKey),
               const SizedBox(height: 24),
-              const OrderSummarySection(),
+               OrderSummarySection(formKey: giftFormKey),
             ],
           ),
         ),

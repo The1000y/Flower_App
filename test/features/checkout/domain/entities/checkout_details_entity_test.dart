@@ -17,6 +17,8 @@ void main() {
       expect(entity.isGift, isFalse);
       expect(entity.giftRecipientName, 'Mona Ahmed');
       expect(entity.giftRecipientPhone, '01012345678');
+      expect(entity.cartId, CheckoutFixtures.tCartId);
+      expect(entity.addressId, CheckoutFixtures.tAddressId);
     });
 
     test('states with identical values are equal', () {
@@ -51,9 +53,11 @@ void main() {
       const entity = CheckoutFixtures.tCheckoutDetailsEntity;
 
       // Assert
-      expect(entity.props.length, 8);
+      expect(entity.props.length, 10);
       expect(entity.props, contains(entity.subtotal));
       expect(entity.props, contains(entity.giftRecipientPhone));
+      expect(entity.props, contains(entity.cartId));
+      expect(entity.props, contains(entity.addressId));
     });
   });
 

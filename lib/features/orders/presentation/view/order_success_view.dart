@@ -20,7 +20,7 @@ class OrderSuccessView extends StatelessWidget {
       child: BlocListener<OrderSuccessCubit, OrderSuccessState>(
         listener: (context, state) {
           if (state.action == OrderSuccessAction.navigateToHome) {
-            Navigator.of(context,rootNavigator: true)..pushNamedAndRemoveUntil(
+            Navigator.of(context,rootNavigator: true).pushNamedAndRemoveUntil(
               Routes.home,
                   (route) => false,
             );

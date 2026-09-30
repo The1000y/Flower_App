@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   retrofit: ^4.9.0
-  json_annotation: ^4.9.0
+  json_annotation: ^4.12.0
   dio: ^5.11.0
   injectable: ^3.0.0
   equatable: ^2.0.7
