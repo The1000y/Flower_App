@@ -13,9 +13,6 @@ class LanguageBottomSheet extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final localeCubit = context.read<LocaleCubit>();
 
-    // The selected language is a property of the cubit's state, so the check
-    // mark needs no `watch` of its own: the sheet is rebuilt by the provider
-    // above it and only reads the current value here.
     final selected = localeCubit.state;
 
     return Column(

@@ -12,9 +12,6 @@ class ProfileRepoImp implements ProfileRepo {
 
   @override
   Future<BaseResponce<UserEntity>> getProfile() async {
-    // The data source throws on storage failures; translating them here keeps
-    // the "failures are values" contract of [BaseResponce] intact for every
-    // caller, and means no caller has to defend against a throw.
     try {
       final userData = await profData.getProfile();
 

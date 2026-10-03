@@ -17,13 +17,10 @@ class ProfileViewModel extends Cubit<ProfileState> {
       case GetProfileIntent():
         _getProfile();
       case EditProfileIntent():
-        // Handled via navigation
         break;
       case NotificationIntent():
-        // Handled via navigation
         break;
       case LogoutIntent():
-        // Handled via confirmation dialog
         break;
     }
   }
@@ -31,19 +28,10 @@ class ProfileViewModel extends Cubit<ProfileState> {
   Future<void> _getProfile() async {
     emit(
       state.copyWith(
-        baseState: state.baseState.copyWith(
-          isLoading: true,
-          // Cleared on entry so a retry does not show the previous failure while
-          // it is still in flight.
-          errorMessage: '',
-        ),
+        baseState: state.baseState.copyWith(isLoading: true, errorMessage: ''),
       ),
     );
 
-    // `getProfile()` reports failures as an `ErrorResponce` value, so there is
-    // no `try/catch` here: an unexpected throw would be a bug in the data
-    // layer's contract rather than a recoverable state, and hiding it behind a
-    // generic message made real bugs invisible.
     final result = await _getProfileUseCase.getProfile();
 
     switch (result) {

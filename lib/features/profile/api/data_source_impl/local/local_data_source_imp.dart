@@ -26,7 +26,6 @@ class ProfileLocalDataSourceImp implements ProfileLocalDataSource {
       return ErrorResponce<UserDto>(Exception(AppStrings.userNotFound));
     }
 
-    // Corrupted secure-storage contents must not crash the app.
     final Map<String, dynamic> jsonData;
     try {
       final decoded = jsonDecode(response);

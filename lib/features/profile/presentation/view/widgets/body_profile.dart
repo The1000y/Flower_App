@@ -27,20 +27,12 @@ class ProfileBody extends StatelessWidget {
   final VoidCallback onLanguage;
   final VoidCallback onLogout;
 
-  /// Unread notification count driving the header badge. The badge is hidden
-  /// when this is null or zero instead of showing a stale hardcoded number.
   final int? unreadNotificationsCount;
 
-  /// Value of the notifications switch. The owner holds it so the value can be
-  /// persisted; [NotificationSwitchTile] only mirrors it optimistically.
   final bool notificationsEnabled;
 
-  /// Invoked whenever the notification switch is toggled, so the owner can
-  /// persist the value.
   final ValueChanged<bool>? onNotificationsChanged;
 
-  /// Badge is capped at `99+` so an arbitrarily large count cannot distort the
-  /// header layout.
   int get _badgeCount => unreadNotificationsCount ?? 0;
 
   String get _badgeLabel => _badgeCount > 99 ? '99+' : '$_badgeCount';
@@ -138,8 +130,7 @@ class ProfileBody extends StatelessWidget {
   Widget _buildProfileInfo(BuildContext context) {
     final name = user?.fullName ?? '';
     final email = user?.email ?? '';
-    // Resolved once into a local so the null-check and the usage cannot drift
-    // apart, and no force-unwraps are needed.
+
     final photoUrl = user?.photoUrl;
     final hasPhoto = photoUrl != null && photoUrl.isNotEmpty;
 
@@ -201,16 +192,12 @@ class ProfileBody extends StatelessWidget {
         ProfileOptionTile(
           icon: Icons.receipt_long_outlined,
           title: l10n.myOrdersTitle,
-          onTap: () {
-            // orders route
-          },
+          onTap: () {},
         ),
         ProfileOptionTile(
           icon: Icons.bookmark_border_outlined,
           title: l10n.savedAddressTitle,
-          onTap: () {
-            // saved address route
-          },
+          onTap: () {},
         ),
         Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         NotificationSwitchTile(
@@ -222,8 +209,7 @@ class ProfileBody extends StatelessWidget {
         ProfileOptionTile(
           icon: Icons.translate_outlined,
           title: l10n.language,
-          // Scoped rebuild: only the trailing text reacts to a language change,
-          // instead of rebuilding the whole options column.
+
           trailing: BlocBuilder<LocaleCubit, AppLanguage>(
             builder: (context, language) => Text(
               language.nativeName,
@@ -239,16 +225,12 @@ class ProfileBody extends StatelessWidget {
         ProfileOptionTile(
           icon: Icons.info_outline,
           title: l10n.aboutUs,
-          onTap: () {
-            // about route
-          },
+          onTap: () {},
         ),
         ProfileOptionTile(
           icon: Icons.description_outlined,
           title: l10n.termsAndConditionsAlt,
-          onTap: () {
-            // terms route
-          },
+          onTap: () {},
         ),
         Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         ProfileOptionTile(

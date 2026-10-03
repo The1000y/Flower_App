@@ -1,8 +1,6 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 
-/// Only the constant part of the trailing style is hoisted; the colour stays a
-/// parameter because the caller supplies it per tile.
 const TextStyle _trailingTextStyleTemplate = TextStyle(
   fontSize: 13,
   fontWeight: FontWeight.w500,
@@ -59,8 +57,7 @@ class ProfileOptionTile extends StatelessWidget {
             else if (trailingText != null)
               Text(
                 trailingText!,
-                // The colour is dynamic, so only the constant part of the style
-                // can be `const`.
+
                 style: _trailingTextStyle(
                   trailingTextColor ?? AppColors.pinkBase,
                 ),

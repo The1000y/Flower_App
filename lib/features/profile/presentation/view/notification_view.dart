@@ -3,11 +3,6 @@ import 'package:flower_app/features/profile/presentation/view/widgets/notificati
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// Single-notification screen.
-///
-/// [message] is nullable so callers (routes, notification service) can open
-/// the screen without a payload; the empty state is rendered here rather than
-/// by constructing a synthetic `RemoteMessage` at the call site.
 class NotificationView extends StatelessWidget {
   const NotificationView({super.key, this.message});
 

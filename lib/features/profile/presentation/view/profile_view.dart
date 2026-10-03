@@ -9,7 +9,6 @@ import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Key for the logout confirmation dialog, used by tests to assert the flow.
 @visibleForTesting
 const Key logoutDialogKey = Key('logout-dialog');
 
@@ -24,19 +23,12 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    // `read` is safe in initState (it does not register a dependency) and
-    // dispatching directly avoids the extra frame that `addPostFrameCallback`
-    // would introduce. The resulting state change is picked up by the
-    // `BlocBuilder` below when it subscribes on its own initState.
+
     context.read<ProfileViewModel>().doIntent(GetProfileIntent());
   }
 
   @override
   Widget build(BuildContext context) {
-    // The scaffold is built once, outside the builder, and only the contents
-    // of its body depend on the state. Rebuilding the whole scaffold for every
-    // state change re-created the app bar, the safe area and the scroll
-    // position on each transition.
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -46,9 +38,6 @@ class _ProfileViewState extends State<ProfileView> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            // Full-screen error only when there is nothing to show; otherwise
-            // the error is surfaced as a banner on top of the (possibly stale)
-            // data so it is never silently swallowed.
             if (state.errorMessage.isNotEmpty && state.data == null) {
               return Center(child: Text(state.errorMessage));
             }
@@ -85,8 +74,6 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void _showLanguageBottomSheet(BuildContext context) {
-    // The sheet is pushed on the root navigator, so the inherited providers are
-    // out of scope. The existing instance is re-provided explicitly.
     final localeCubit = context.read<LocaleCubit>();
 
     showModalBottomSheet(
@@ -144,14 +131,10 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void _confirmLogout() {
-    // The navigation/clearing side of logout is not implemented yet; the
-    // intent is still dispatched so the flow is observable and testable.
     context.read<ProfileViewModel>().doIntent(LogoutIntent());
   }
 }
 
-/// Inline, non-blocking error surface used when the profile could not be
-/// refreshed but previously loaded data is still available.
 class _ProfileErrorBanner extends StatelessWidget {
   const _ProfileErrorBanner({required this.message});
 
