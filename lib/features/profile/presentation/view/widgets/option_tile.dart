@@ -1,41 +1,54 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-/// A single row in the profile options list (orders, addresses, logout, ...).
+const TextStyle _trailingTextStyleTemplate = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w500,
+);
+
+TextStyle _trailingTextStyle(Color color) =>
+    _trailingTextStyleTemplate.copyWith(color: color);
+
 class ProfileOptionTile extends StatelessWidget {
+  final IconData? icon;
+  final Widget? leading;
+  final String title;
+  final Widget? trailing;
+  final String? trailingText;
+  final Color? trailingTextColor;
+  final VoidCallback onTap;
+
   const ProfileOptionTile({
     super.key,
-    required this.icon,
+    this.icon,
+    this.leading,
     required this.title,
     required this.onTap,
     this.trailing,
     this.trailingText,
+    this.trailingTextColor,
   });
-
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-  final Widget? trailing;
-  final String? trailingText;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         child: Row(
           children: [
-            Icon(icon, size: 20.sp, color: AppColors.blackBase),
-            SizedBox(width: 12.w),
+            if (leading != null)
+              leading!
+            else if (icon != null)
+              Icon(icon, size: 20, color: Colors.black87),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.blackBase,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
                 ),
               ),
             ),
@@ -44,10 +57,13 @@ class ProfileOptionTile extends StatelessWidget {
             else if (trailingText != null)
               Text(
                 trailingText!,
-                style: TextStyle(fontSize: 12.sp, color: AppColors.white90),
+
+                style: _trailingTextStyle(
+                  trailingTextColor ?? AppColors.pinkBase,
+                ),
               )
             else
-              Icon(Icons.chevron_right, size: 20.sp, color: AppColors.white90),
+              const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
           ],
         ),
       ),

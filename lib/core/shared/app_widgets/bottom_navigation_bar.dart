@@ -1,4 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/core/shared/app_widgets/profile_tab.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
@@ -7,14 +12,14 @@ import 'package:flower_app/features/commerce/presentation/home/manager/cubit/hom
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/view/profile_home_view.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../constants/app_strings/app_strings.dart';
 
-class PersistentBottomNavBarDemo extends StatelessWidget {
-  PersistentBottomNavBarDemo({super.key, this.onCartTabSelected});
+class PersistenBottomNavBarDemo extends StatelessWidget {
+  PersistenBottomNavBarDemo({
+    super.key,
+    this.onCartTabSelected,
+  });
 
   final VoidCallback? onCartTabSelected;
 
@@ -26,16 +31,23 @@ class PersistentBottomNavBarDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeScreen = MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: getIt.get<HomeCubit>()),
-        BlocProvider.value(value: getIt.get<AddressCubit>()),
+        BlocProvider.value(
+          value: getIt.get<HomeCubit>(),
+        ),
+        BlocProvider.value(
+          value: getIt.get<AddressCubit>(),
+        ),
       ],
       child: HomeView(controller: controller),
     );
+
     final categoriesScreen = CategoriesView();
+
     final cartScreen = BlocProvider.value(
       value: getIt.get<AddressCubit>(),
       child: const CartView(),
     );
+
     final profileScreen = BlocProvider(
       create: (_) => getIt<ProfileViewModel>(),
       child: const ProfileHomeView(),

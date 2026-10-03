@@ -1,4 +1,6 @@
 abstract class AppStrings {
+  static const String userData = 'User';
+
   // Auth
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
@@ -188,8 +190,7 @@ abstract class AppStrings {
   static const String addYourAddress = 'Add Your Address';
   static const String addressAddedSuccess =
       'Address added successfully';
-  static const String addressUpdatedSuccess =
-      'Address updated';
+  static const String addressUpdatedSuccess = 'Address updated';
 
   static const String addressAddFailedServer =
       'Something went wrong. Please try again later.';
@@ -215,8 +216,6 @@ abstract class AppStrings {
   static const String deliveredOnPrefix = 'Delivered on ';
   static const String reorder = 'Reorder';
 
-  static const String orderPlacedSuccess =
-      'Your order placed successfully!';
   static const String estimatedArrival = 'Estimated arrival';
   static const String deliveryHeroSubtitle =
       'Is your delivery hero for today';
@@ -236,6 +235,8 @@ abstract class AppStrings {
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
+  static const String orderPlacedSuccess =
+      'Your order placed successfully!';
 
   // Profile
   static const String profileUpdated = 'Profile updated';
@@ -269,9 +270,17 @@ abstract class AppStrings {
   static const String termsAndConditionsAlt =
       'Terms & conditions';
 
+  // Logout
   static const String logout = 'Logout';
   static const String logoutDialogTitle = 'LOGOUT';
   static const String confirmLogoutSubtitle = 'Confirm logout!!';
   static const String actionCancel = 'Cancle';
-}
 
+  // General Errors
+  static const String userNotFound = 'User not found';
+  static const String unexpectedError =
+      'Something went wrong. Please try again.';
+
+  // App Version
+  static const String versionProfile = 'v6.3.0 - 1.40.0';
+}

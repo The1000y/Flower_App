@@ -1,279 +1,241 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/core/services/image_picker_service.dart';
-import 'package:flower_app/features/profile/domain/entities/change_password_entity.dart';
-import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
-import 'package:flower_app/features/profile/domain/repo/profile_repo.dart';
-import 'package:flower_app/features/profile/domain/use_case/get_profile_use_case.dart';
-import 'package:flower_app/features/profile/domain/use_case/update_profile_use_case.dart';
-import 'package:flower_app/features/profile/presentation/manager/cubit/profile_event.dart';
-import 'package:flower_app/features/profile/presentation/manager/cubit/profile_state.dart';
-import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
+import 'package:flower_app/config/base/base_state.dart';
+import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
+import 'package:flower_app/features/profile/domain/use_case/show_profile_usecase.dart';
+import 'package:flower_app/features/profile/presentation/manager/profile_event.dart';
+import 'package:flower_app/features/profile/presentation/manager/profile_state.dart';
+import 'package:flower_app/features/profile/presentation/manager/profile_view_model.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
-class FakeProfileRepo implements ProfileRepo {
-  final BaseResponce<ProfileEntity> getProfileResponse;
-  final BaseResponce<ProfileEntity> updateProfileResponse;
+class MockShowProfileUsecase extends Mock implements ShowProfileUsecase {}
 
-  FakeProfileRepo({
-    required this.getProfileResponse,
-    required this.updateProfileResponse,
-  });
 
-  @override
-  Future<BaseResponce<ProfileEntity>> getProfile() async => getProfileResponse;
-
-  @override
-  Future<BaseResponce<ProfileEntity>> updateProfile(
-    ProfileEntity profile,
-  ) async => updateProfileResponse;
-
-  @override
-  Future<BaseResponce<ChangePasswordEntity>> changePassword({
-    required String currentPassword,
-    required String newPassword,
-    required String confirmPassword,
-  }) async =>
-      SuccessResponce<ChangePasswordEntity>(const ChangePasswordEntity(data: true));
-}
-
-class FakeImagePickerService implements ImagePickerService {
-  String? imagePathToReturn;
-
-  FakeImagePickerService({this.imagePathToReturn});
-
-  @override
-  Future<String?> pickFromGallery() async => imagePathToReturn;
-}
+ProfileState stateWith({
+  bool isLoading = false,
+  String errorMessage = '',
+  UserEntity? data,
+}) => ProfileState(
+  baseState: BaseState<UserEntity>(
+    isLoading: isLoading,
+    errorMessage: errorMessage,
+    data: data,
+  ),
+);
 
 void main() {
-  late GetProfileUseCase getProfileUseCase;
-  late UpdateProfileUseCase updateProfileUseCase;
-  late FakeImagePickerService fakeImagePickerService;
+  late MockShowProfileUsecase mockUsecase;
   late ProfileViewModel viewModel;
 
-  final profileEntity = const ProfileEntity(
-    firstName: 'Sara',
-    lastName: 'Ahmed',
-    email: 'sara.ahmed@example.com',
-    phoneNumber: '+201000000000',
-    gender: 'Female',
+  const userEntity = UserEntity(
+    id: 1,
+    fullName: 'Nour Mohamed',
+    email: 'nour@example.com',
+    phoneNumber: '+201234567890',
+    gender: 'female',
+    role: 'user',
+    status: 'active',
   );
 
-  setUp(() {});
-
-  test('Initial state is const ProfileState()', () {
-    final fakeRepo = FakeProfileRepo(
-      getProfileResponse: SuccessResponce(profileEntity),
-      updateProfileResponse: SuccessResponce(profileEntity),
-    );
-    getProfileUseCase = GetProfileUseCase(fakeRepo);
-    updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-    fakeImagePickerService = FakeImagePickerService();
-    viewModel = ProfileViewModel(
-      getProfileUseCase,
-      updateProfileUseCase,
-      fakeImagePickerService,
-    );
-
-    expect(viewModel.state, equals(const ProfileState()));
+  setUp(() {
+    mockUsecase = MockShowProfileUsecase();
+    viewModel = ProfileViewModel(mockUsecase);
   });
 
-  test(
-    'FetchProfileEvent with success: profileState goes isLoading true, then isLoading false with data',
-    () async {
-      final fakeRepo = FakeProfileRepo(
-        getProfileResponse: SuccessResponce(profileEntity),
-        updateProfileResponse: SuccessResponce(profileEntity),
-      );
-      getProfileUseCase = GetProfileUseCase(fakeRepo);
-      updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      fakeImagePickerService = FakeImagePickerService();
-      viewModel = ProfileViewModel(
-        getProfileUseCase,
-        updateProfileUseCase,
-        fakeImagePickerService,
-      );
+  tearDown(() {
+    viewModel.close();
+  });
 
-      final emitted = expectLater(
-        viewModel.stream,
-        emitsInOrder([
-          isA<ProfileState>().having(
-            (state) => state.profileState.isLoading,
-            'isLoading',
-            true,
-          ),
-          isA<ProfileState>()
-              .having((state) => state.profileState.isLoading, 'isLoading', false)
-              .having((state) => state.profileState.data, 'data', profileEntity),
-        ]),
+  group('ProfileState', () {
+    test('initial state has correct defaults', () {
+      const state = ProfileState();
+
+      expect(state.isLoading, isFalse);
+      expect(state.errorMessage, '');
+      expect(state.data, isNull);
+    });
+
+    test('delegates isLoading/errorMessage/data to the held BaseState', () {
+      final state = stateWith(
+        isLoading: true,
+        errorMessage: 'boom',
+        data: userEntity,
       );
 
-      viewModel.doEvent(FetchProfileEvent());
-      await emitted;
-    },
-  );
+      expect(state.baseState.isLoading, isTrue);
+      expect(state.baseState.errorMessage, 'boom');
+      expect(state.isLoading, isTrue);
+      expect(state.errorMessage, 'boom');
+      expect(state.data, userEntity);
+    });
 
-  test(
-    'FetchProfileEvent with error: profileState ends with isLoading false and a non-null errorMessage',
-    () async {
-      final fakeRepo = FakeProfileRepo(
-        getProfileResponse: ErrorResponce(Exception('fetch error')),
-        updateProfileResponse: SuccessResponce(profileEntity),
+    test('two states with the same BaseState are equal', () {
+      expect(stateWith(data: userEntity), stateWith(data: userEntity));
+      expect(
+        stateWith(data: userEntity),
+        isNot(stateWith(isLoading: true, data: userEntity)),
       );
-      getProfileUseCase = GetProfileUseCase(fakeRepo);
-      updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      fakeImagePickerService = FakeImagePickerService();
-      viewModel = ProfileViewModel(
-        getProfileUseCase,
-        updateProfileUseCase,
-        fakeImagePickerService,
-      );
+    });
 
-      final emitted = expectLater(
-        viewModel.stream,
-        emitsInOrder([
-          isA<ProfileState>().having(
-            (state) => state.profileState.isLoading,
-            'isLoading',
-            true,
-          ),
-          isA<ProfileState>()
-              .having((state) => state.profileState.isLoading, 'isLoading', false)
-              .having(
-                (state) => state.profileState.errorMessage,
-                'errorMessage',
-                isNotNull,
-              ),
-        ]),
-      );
+    test('copyWith keeps the existing BaseState when none is given', () {
+      final state = stateWith(data: userEntity);
 
-      viewModel.doEvent(FetchProfileEvent());
-      await emitted;
-    },
-  );
+      expect(state.copyWith(), state);
+    });
+  });
 
-  test('PickProfileImageEvent: pickedImagePath is updated', () async {
-    final fakeRepo = FakeProfileRepo(
-      getProfileResponse: SuccessResponce(profileEntity),
-      updateProfileResponse: SuccessResponce(profileEntity),
-    );
-    getProfileUseCase = GetProfileUseCase(fakeRepo);
-    updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-    fakeImagePickerService = FakeImagePickerService(
-      imagePathToReturn: 'path/to/image.png',
-    );
-    viewModel = ProfileViewModel(
-      getProfileUseCase,
-      updateProfileUseCase,
-      fakeImagePickerService,
+  group('ProfileViewModel initial state', () {
+    test('initial state has correct defaults', () {
+      expect(viewModel.state.isLoading, false);
+      expect(viewModel.state.errorMessage, '');
+      expect(viewModel.state.data, isNull);
+    });
+  });
+
+  group('GetProfileIntent', () {
+    blocTest<ProfileViewModel, ProfileState>(
+      'emits [loading=true, loading=false with data] on success',
+      build: () {
+        when(
+          () => mockUsecase.getProfile(),
+        ).thenAnswer((_) async => SuccessResponce(userEntity));
+        return ProfileViewModel(mockUsecase);
+      },
+      act: (vm) => vm.doIntent(GetProfileIntent()),
+      expect: () => [
+        stateWith(isLoading: true),
+        stateWith(isLoading: false, data: userEntity),
+      ],
     );
 
-    final emitted = expectLater(
-      viewModel.stream,
-      emitsInOrder([
-        isA<ProfileState>().having(
-          (state) => state.pickedImagePath,
-          'pickedImagePath',
-          'path/to/image.png',
+    blocTest<ProfileViewModel, ProfileState>(
+      'emits [loading=true, loading=false with error] on failure',
+      build: () {
+        when(() => mockUsecase.getProfile()).thenAnswer(
+          (_) async =>
+              ErrorResponce<UserEntity>(Exception('Profile not found')),
+        );
+        return ProfileViewModel(mockUsecase);
+      },
+      act: (vm) => vm.doIntent(GetProfileIntent()),
+      expect: () => [
+        stateWith(isLoading: true),
+        predicate<ProfileState>(
+          (s) => !s.isLoading && s.errorMessage.isNotEmpty,
         ),
-      ]),
+      ],
     );
 
-    viewModel.doEvent(PickProfileImageEvent());
-    await emitted;
+    blocTest<ProfileViewModel, ProfileState>(
+      'sets data with correct user info on success',
+      build: () {
+        when(
+          () => mockUsecase.getProfile(),
+        ).thenAnswer((_) async => SuccessResponce(userEntity));
+        return ProfileViewModel(mockUsecase);
+      },
+      act: (vm) => vm.doIntent(GetProfileIntent()),
+      verify: (vm) {
+        expect(vm.state.data?.fullName, 'Nour Mohamed');
+        expect(vm.state.data?.email, 'nour@example.com');
+        expect(vm.state.data?.id, 1);
+      },
+    );
+
+    blocTest<ProfileViewModel, ProfileState>(
+      'calls usecase exactly once per GetProfileIntent',
+      build: () {
+        when(
+          () => mockUsecase.getProfile(),
+        ).thenAnswer((_) async => SuccessResponce(userEntity));
+        return ProfileViewModel(mockUsecase);
+      },
+      act: (vm) => vm.doIntent(GetProfileIntent()),
+      verify: (_) {
+        verify(() => mockUsecase.getProfile()).called(1);
+      },
+    );
   });
 
-  test(
-    'UpdateProfileEvent with success: updateProfileState ends with the returned data',
-    () async {
-      final updatedEntity = const ProfileEntity(
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phoneNumber: '+201000000000',
-        gender: 'Male',
-      );
+  group('Error reporting', () {
+    // Failures are values, not throws: `ProfileRepoImp.getProfile` converts a
+    // throw into an `ErrorResponce`, so the view model handles exactly one
+    // error shape.
+    blocTest<ProfileViewModel, ProfileState>(
+      'reports a repository error without throwing',
+      build: () {
+        when(
+          () => mockUsecase.getProfile(),
+        ).thenAnswer((_) async => ErrorResponce<UserEntity>(Exception('boom')));
+        return ProfileViewModel(mockUsecase);
+      },
+      act: (vm) => vm.doIntent(GetProfileIntent()),
+      expect: () => [
+        stateWith(isLoading: true),
+        predicate<ProfileState>(
+          (s) => !s.isLoading && s.errorMessage.isNotEmpty,
+        ),
+      ],
+    );
 
-      final fakeRepo = FakeProfileRepo(
-        getProfileResponse: SuccessResponce(profileEntity),
-        updateProfileResponse: SuccessResponce(updatedEntity),
-      );
-      getProfileUseCase = GetProfileUseCase(fakeRepo);
-      updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      fakeImagePickerService = FakeImagePickerService();
-      viewModel = ProfileViewModel(
-        getProfileUseCase,
-        updateProfileUseCase,
-        fakeImagePickerService,
-      );
+    blocTest<ProfileViewModel, ProfileState>(
+      'clears a previous error message on a successful refetch',
+      build: () {
+        when(
+          () => mockUsecase.getProfile(),
+        ).thenAnswer((_) async => SuccessResponce(userEntity));
+        return ProfileViewModel(mockUsecase);
+      },
+      seed: () => stateWith(errorMessage: 'Previous failure'),
+      act: (vm) => vm.doIntent(GetProfileIntent()),
+      verify: (vm) {
+        expect(vm.state.errorMessage, isEmpty);
+        expect(vm.state.data, userEntity);
+      },
+    );
+  });
 
-      final emitted = expectLater(
-        viewModel.stream,
-        emitsInOrder([
-          isA<ProfileState>().having(
-            (state) => state.updateProfileState.isLoading,
-            'isLoading',
-            true,
-          ),
-          isA<ProfileState>()
-              .having(
-                (state) => state.updateProfileState.isLoading,
-                'isLoading',
-                false,
-              )
-              .having(
-                (state) => state.updateProfileState.data,
-                'data',
-                updatedEntity,
-              ),
-        ]),
-      );
+  group('Non-fetching intents', () {
+    
+    blocTest<ProfileViewModel, ProfileState>(
+      'EditProfileIntent does not emit and does not fetch',
+      build: () => ProfileViewModel(mockUsecase),
+      act: (vm) => vm.doIntent(EditProfileIntent()),
+      expect: () => [],
+      verify: (_) => verifyNever(() => mockUsecase.getProfile()),
+    );
 
-      viewModel.doEvent(UpdateProfileEvent(profile: updatedEntity));
-      await emitted;
-    },
-  );
+    blocTest<ProfileViewModel, ProfileState>(
+      'NotificationIntent does not emit and does not fetch',
+      build: () => ProfileViewModel(mockUsecase),
+      act: (vm) => vm.doIntent(NotificationIntent()),
+      expect: () => [],
+      verify: (_) => verifyNever(() => mockUsecase.getProfile()),
+    );
 
-  test(
-    'UpdateProfileEvent with error: updateProfileState ends with an errorMessage',
-    () async {
-      final fakeRepo = FakeProfileRepo(
-        getProfileResponse: SuccessResponce(profileEntity),
-        updateProfileResponse: ErrorResponce(Exception('update error')),
-      );
-      getProfileUseCase = GetProfileUseCase(fakeRepo);
-      updateProfileUseCase = UpdateProfileUseCase(fakeRepo);
-      fakeImagePickerService = FakeImagePickerService();
-      viewModel = ProfileViewModel(
-        getProfileUseCase,
-        updateProfileUseCase,
-        fakeImagePickerService,
-      );
+    blocTest<ProfileViewModel, ProfileState>(
+      'LogoutIntent does not emit and does not fetch',
+      build: () => ProfileViewModel(mockUsecase),
+      act: (vm) => vm.doIntent(LogoutIntent()),
+      expect: () => [],
+      verify: (_) => verifyNever(() => mockUsecase.getProfile()),
+    );
 
-      final emitted = expectLater(
-        viewModel.stream,
-        emitsInOrder([
-          isA<ProfileState>().having(
-            (state) => state.updateProfileState.isLoading,
-            'isLoading',
-            true,
-          ),
-          isA<ProfileState>()
-              .having(
-                (state) => state.updateProfileState.isLoading,
-                'isLoading',
-                false,
-              )
-              .having(
-                (state) => state.updateProfileState.errorMessage,
-                'errorMessage',
-                isNotNull,
-              ),
-        ]),
-      );
-
-      viewModel.doEvent(UpdateProfileEvent(profile: profileEntity));
-      await emitted;
-    },
-  );
+    blocTest<ProfileViewModel, ProfileState>(
+      'non-fetching intents preserve the existing state',
+      build: () => ProfileViewModel(mockUsecase),
+      seed: () => stateWith(data: userEntity),
+      act: (vm) async {
+        vm.doIntent(EditProfileIntent());
+        vm.doIntent(NotificationIntent());
+        vm.doIntent(LogoutIntent());
+      },
+      verify: (vm) {
+        expect(vm.state.data, userEntity);
+        expect(vm.state.isLoading, isFalse);
+        expect(vm.state.errorMessage, isEmpty);
+      },
+    );
+  });
 }

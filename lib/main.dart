@@ -1,44 +1,112 @@
-import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/config/routing/app_routes.dart';
+import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/config/network/firebase_options.dart';
+import 'package:flower_app/config/routing/app_routes.dart';
+import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/locale/app_language.dart';
+import 'package:flower_app/core/locale/locale_cubit.dart';
+import 'package:flower_app/core/services/firebase_messaging_service.dart';
+import 'package:flower_app/core/shared/app_widgets/notification_navigation_listener.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
+import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
-import 'core/locale/locale_cubit.dart';
 
-Future<void> main() async {
-  await dotenv.load(fileName: ".env");
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(
+  RemoteMessage message,
+) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  debugPrint('Background message: ${message.messageId}');
+}
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
+
+  await dotenv.load(fileName: '.env');
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseMessaging.onBackgroundMessage(
+    firebaseMessagingBackgroundHandler,
+  );
+
+  await configureDependencies();
+
+  final localeCubit = getIt<LocaleCubit>();
+
+  try {
+    await localeCubit.load();
+  } catch (e) {
+    debugPrint('Failed to restore locale: $e');
+  }
+
+  unawaited(_initializeNotifications());
+
   runApp(
     ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-
       minTextAdapt: true,
-
       splitScreenMode: true,
-
-      child: const FlowerApp(),
+      child: FlowerApp(
+        localeCubit: localeCubit,
+      ),
     ),
   );
 }
 
+Future<void> _initializeNotifications() async {
+  try {
+    await getIt<FirebaseMessagingService>().initialize();
+  } catch (e) {
+    debugPrint('Failed to initialize notifications: $e');
+  }
+}
+
 class FlowerApp extends StatelessWidget {
-  const FlowerApp({super.key});
+  FlowerApp({
+    super.key,
+    required this.localeCubit,
+  }) : _navigatorKey = GlobalKey<NavigatorState>();
+
+  final LocaleCubit localeCubit;
+  final GlobalKey<NavigatorState> _navigatorKey;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LocaleCubit>(
-      create: (_) => getIt<LocaleCubit>(),
-      child: MaterialApp(
-        onGenerateRoute: AppRoutes.onGenerateRoute,
-        theme: AppTheme.lightThem,
-        debugShowCheckedModeBanner: false,
-        title: 'Flower App',
-        // localizationsDelegates: AppLocalizations.localizationsDelegates,
-        // supportedLocales: AppLocalizations.supportedLocales,
+    return BlocProvider<LocaleCubit>.value(
+      value: localeCubit,
+      child: BlocBuilder<LocaleCubit, AppLanguage>(
+        builder: (context, language) {
+          return MaterialApp(
+            navigatorKey: _navigatorKey,
+            onGenerateRoute: AppRoutes.onGenerateRoute,
+            initialRoute: Routes.login,
+            locale: language.locale,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates:
+                AppLocalizations.localizationsDelegates,
+            theme: AppTheme.lightThem,
+            debugShowCheckedModeBanner: false,
+            title: 'Flower App',
+            builder: (context, child) {
+              return NotificationNavigationListener(
+                navigatorKey: _navigatorKey,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
+          );
+        },
       ),
     );
   }
