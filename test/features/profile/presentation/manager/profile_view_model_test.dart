@@ -11,9 +11,7 @@ import 'package:mocktail/mocktail.dart';
 
 class MockShowProfileUsecase extends Mock implements ShowProfileUsecase {}
 
-/// Convenience constructors mirroring the old named parameters, so the
-/// expectations below stay readable while [ProfileState] holds a single
-/// [BaseState] member.
+
 ProfileState stateWith({
   bool isLoading = false,
   String errorMessage = '',
@@ -199,9 +197,7 @@ void main() {
   });
 
   group('Non-fetching intents', () {
-    // These intents exist so the view can express user actions; navigation and
-    // logout side effects are owned by the view layer, so the view model must
-    // leave the state untouched and must not call the use case.
+    
     blocTest<ProfileViewModel, ProfileState>(
       'EditProfileIntent does not emit and does not fetch',
       build: () => ProfileViewModel(mockUsecase),

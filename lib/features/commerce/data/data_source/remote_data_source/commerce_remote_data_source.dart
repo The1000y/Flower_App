@@ -5,6 +5,9 @@ import 'package:flower_app/features/commerce/data/model/responce/products_respon
 
 abstract interface class CommerceRemoteDataSource {
   Future<BaseResponce<List<OccasionDto>>> getOccasions();
-  Future<BaseResponce<ProductsResponseDto>> getProducts(int occasionId, {int page = 1});
+  Future<BaseResponce<ProductsResponseDto>> getProducts(
+    int occasionId, {
+    int page = 1,
+  });
   Future<BaseResponce<List<CategoriesResponseDto>>> getCategories();
 }

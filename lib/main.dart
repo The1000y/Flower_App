@@ -14,34 +14,43 @@ import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 @pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+Future<void> firebaseMessagingBackgroundHandler(
+  RemoteMessage message,
+) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   debugPrint('Background message: ${message.messageId}');
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  await dotenv.load(fileName: '.env');
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseMessaging.onBackgroundMessage(
+    firebaseMessagingBackgroundHandler,
+  );
 
   await configureDependencies();
 
-  // Restore the persisted language before the first frame so the app never
-  // flashes the wrong locale. LocaleCubit falls back to English on failure, and
-  // the guard keeps a storage error from aborting startup.
   final localeCubit = getIt<LocaleCubit>();
+
   try {
     await localeCubit.load();
   } catch (e) {
     debugPrint('Failed to restore locale: $e');
   }
 
-  // Requesting notification permission and fetching the FCM token can be slow,
-  // so it runs alongside the first frame instead of blocking it. Errors are
-  // logged inside the service and cannot crash the app.
   unawaited(_initializeNotifications());
 
   runApp(
@@ -49,7 +58,9 @@ void main() async {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: FlowerApp(localeCubit: localeCubit),
+      child: FlowerApp(
+        localeCubit: localeCubit,
+      ),
     ),
   );
 }
@@ -63,20 +74,16 @@ Future<void> _initializeNotifications() async {
 }
 
 class FlowerApp extends StatelessWidget {
-  FlowerApp({super.key, required this.localeCubit})
-    : // Owned here, in the app root, and handed to the single widget that needs
-      // to navigate ([NotificationNavigationListener]). Nothing in the
-      // notification pipeline resolves it from the container.
-      _navigatorKey = GlobalKey<NavigatorState>();
+  FlowerApp({
+    super.key,
+    required this.localeCubit,
+  }) : _navigatorKey = GlobalKey<NavigatorState>();
 
   final LocaleCubit localeCubit;
-
   final GlobalKey<NavigatorState> _navigatorKey;
 
   @override
   Widget build(BuildContext context) {
-    // `.value` keeps ownership (and disposal) of the DI-managed singleton with
-    // the container instead of closing it when the widget tree is disposed.
     return BlocProvider<LocaleCubit>.value(
       value: localeCubit,
       child: BlocBuilder<LocaleCubit, AppLanguage>(
@@ -87,14 +94,17 @@ class FlowerApp extends StatelessWidget {
             initialRoute: Routes.login,
             locale: language.locale,
             supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates:
+                AppLocalizations.localizationsDelegates,
             theme: AppTheme.lightThem,
             debugShowCheckedModeBanner: false,
             title: 'Flower App',
-            builder: (context, child) => NotificationNavigationListener(
-              navigatorKey: _navigatorKey,
-              child: child ?? const SizedBox.shrink(),
-            ),
+            builder: (context, child) {
+              return NotificationNavigationListener(
+                navigatorKey: _navigatorKey,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
           );
         },
       ),

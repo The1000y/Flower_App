@@ -43,8 +43,9 @@ void main() {
   blocTest<ProductDetailsCubit, ProductDetailsState>(
     'emits [loading: true, loading: false, data: tProductEntity] when getProductDetails is successful',
     build: () {
-      when(mockUseCase.execute(any))
-          .thenAnswer((_) async => SuccessResponce(tProductEntity));
+      when(
+        mockUseCase.execute(any),
+      ).thenAnswer((_) async => SuccessResponce(tProductEntity));
       return cubit;
     },
     act: (cubit) => cubit.getProductDetails(1),
@@ -60,14 +61,18 @@ void main() {
   blocTest<ProductDetailsCubit, ProductDetailsState>(
     'emits [loading: true, loading: false, errorMessage: "error"] when getProductDetails fails',
     build: () {
-      when(mockUseCase.execute(any))
-          .thenAnswer((_) async => ErrorResponce(Exception('error')));
+      when(
+        mockUseCase.execute(any),
+      ).thenAnswer((_) async => ErrorResponce(Exception('error')));
       return cubit;
     },
     act: (cubit) => cubit.getProductDetails(1),
     expect: () => [
       const ProductDetailsState(isLoading: true, errorMessage: ''),
-      const ProductDetailsState(isLoading: false, errorMessage: 'something went wrong, pls try again'),
+      const ProductDetailsState(
+        isLoading: false,
+        errorMessage: 'something went wrong, pls try again',
+      ),
     ],
   );
 }

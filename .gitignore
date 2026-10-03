@@ -58,3 +58,18 @@ app.*.map.json
 /ios/Runner/GoogleService-Info.plist
 /lib/config/network/firebase_options.dart
 /macos/Runner/GoogleService-Info.plist
+# Backend/local environment files
+.env
+.env.*
+!.env.example
+local.properties
+
+# Backend setup and local Docker files
+setup.sh
+docker-compose.prod.yml
+
+# Postman collection
+flowery_postman_collection.json
+
+.cursor/
+android/build/

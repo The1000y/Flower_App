@@ -11,9 +11,9 @@ import '../navigation/categories_navigation.dart';
 import '../manager/cubit/categories_cubit.dart';
 import '../manager/cubit/categories_event.dart';
 import '../manager/cubit/categories_state.dart';
-import 'widgets/buildSortItemfFilter.dart';
-import 'widgets/filterView.dart';
-import 'widgets/tabBarView_widget.dart';
+import 'widgets/build_sort_item_filter.dart';
+import 'widgets/filter_view.dart';
+import 'widgets/tab_bar_view_widget.dart';
 
 class CategoriesView extends StatelessWidget {
   const CategoriesView({super.key, this.initialCategoryIndex});
@@ -196,7 +196,7 @@ class _CategoriesContentState extends State<_CategoriesContent>
                   controller: tabController,
                   children: [
                     for (final category in categories)
-                      TabbarviewWidget(
+                      TabBarViewWidget(
                         category: category.name,
                         products: products,
                         searchQuery: searchController.text,

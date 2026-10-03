@@ -30,11 +30,11 @@ void main() {
   });
 
   HomeCubit buildCubit() => HomeCubit(
-        mockGetCategoriesUseCase,
-        mockGetBestSellerUseCase,
-        mockGetSectionsUseCase,
-        mockGetOccasionsUseCase,
-      );
+    mockGetCategoriesUseCase,
+    mockGetBestSellerUseCase,
+    mockGetSectionsUseCase,
+    mockGetOccasionsUseCase,
+  );
 
   group('HomeCubit', () {
     test('initial state is loading for every section', () {
@@ -52,13 +52,16 @@ void main() {
         act: (cubit) => cubit.doEvent(GetCategoriesEvent()),
         setUp: () {
           when(mockGetCategoriesUseCase.call()).thenAnswer(
-            (_) async =>
-                SuccessResponce<List<CategoryEntity>>(CommerceFixtures.tCategories),
+            (_) async => SuccessResponce<List<CategoryEntity>>(
+              CommerceFixtures.tCategories,
+            ),
           );
         },
         expect: () => [
           const HomeState(),
-          HomeState(categoriesState: BaseState(data: CommerceFixtures.tCategories)),
+          HomeState(
+            categoriesState: BaseState(data: CommerceFixtures.tCategories),
+          ),
         ],
         verify: (_) {
           verify(mockGetCategoriesUseCase.call()).called(1);
@@ -72,13 +75,15 @@ void main() {
         build: buildCubit,
         act: (cubit) => cubit.doEvent(GetCategoriesEvent()),
         setUp: () {
-          final tError =
-              ErrorResponce<List<CategoryEntity>>(Exception('server error'));
+          final tError = ErrorResponce<List<CategoryEntity>>(
+            Exception('server error'),
+          );
           when(mockGetCategoriesUseCase.call()).thenAnswer((_) async => tError);
         },
         expect: () {
-          final tError =
-              ErrorResponce<List<CategoryEntity>>(Exception('server error'));
+          final tError = ErrorResponce<List<CategoryEntity>>(
+            Exception('server error'),
+          );
           return [
             const HomeState(),
             HomeState(
@@ -97,8 +102,7 @@ void main() {
         act: (cubit) => cubit.doEvent(GetBestSellerEvent()),
         setUp: () {
           when(mockGetBestSellerUseCase.call()).thenAnswer(
-            (_) async =>
-                SuccessResponce(CommerceFixtures.tBestSellers),
+            (_) async => SuccessResponce(CommerceFixtures.tBestSellers),
           );
         },
         expect: () => [
@@ -119,13 +123,15 @@ void main() {
         build: buildCubit,
         act: (cubit) => cubit.doEvent(GetBestSellerEvent()),
         setUp: () {
-          final tError =
-              ErrorResponce<List<BestSellerEntity>>(Exception('network error'));
+          final tError = ErrorResponce<List<BestSellerEntity>>(
+            Exception('network error'),
+          );
           when(mockGetBestSellerUseCase.call()).thenAnswer((_) async => tError);
         },
         expect: () {
-          final tError =
-              ErrorResponce<List<BestSellerEntity>>(Exception('network error'));
+          final tError = ErrorResponce<List<BestSellerEntity>>(
+            Exception('network error'),
+          );
           return [
             const HomeState(),
             HomeState(
@@ -152,8 +158,9 @@ void main() {
             (_) async => SuccessResponce(CommerceFixtures.tBestSellers),
           );
           when(mockGetCategoriesUseCase.call()).thenAnswer(
-            (_) async =>
-                SuccessResponce<List<CategoryEntity>>(CommerceFixtures.tCategories),
+            (_) async => SuccessResponce<List<CategoryEntity>>(
+              CommerceFixtures.tCategories,
+            ),
           );
         },
         expect: () => [
@@ -161,18 +168,24 @@ void main() {
           const HomeState(),
           // Sections loaded (already sorted & active via the use case).
           const HomeState(
-            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
+            sectionsState: BaseState(
+              data: CommerceFixtures.tActiveSortedSections,
+            ),
           ),
           // Best sellers loaded for the active best-seller section.
           const HomeState(
             bestSellerState: BaseState(data: CommerceFixtures.tBestSellers),
-            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
+            sectionsState: BaseState(
+              data: CommerceFixtures.tActiveSortedSections,
+            ),
           ),
           // Categories loaded for the active category section.
           const HomeState(
             categoriesState: BaseState(data: CommerceFixtures.tCategories),
             bestSellerState: BaseState(data: CommerceFixtures.tBestSellers),
-            sectionsState: BaseState(data: CommerceFixtures.tActiveSortedSections),
+            sectionsState: BaseState(
+              data: CommerceFixtures.tActiveSortedSections,
+            ),
           ),
         ],
         verify: (_) {
@@ -189,13 +202,15 @@ void main() {
         build: buildCubit,
         act: (cubit) => cubit.doEvent(GetSectionEvent()),
         setUp: () {
-          final tError =
-              ErrorResponce<List<SectionEntity>>(Exception('server error'));
+          final tError = ErrorResponce<List<SectionEntity>>(
+            Exception('server error'),
+          );
           when(mockGetSectionsUseCase.call()).thenAnswer((_) async => tError);
         },
         expect: () {
-          final tError =
-              ErrorResponce<List<SectionEntity>>(Exception('server error'));
+          final tError = ErrorResponce<List<SectionEntity>>(
+            Exception('server error'),
+          );
           return [
             const HomeState(),
             HomeState(
@@ -223,7 +238,9 @@ void main() {
         },
         expect: () => [
           const HomeState(),
-          HomeState(occasionState: BaseState(data: CommerceFixtures.tOccasions)),
+          HomeState(
+            occasionState: BaseState(data: CommerceFixtures.tOccasions),
+          ),
         ],
         verify: (_) => verify(mockGetOccasionsUseCase.call()).called(1),
       );

@@ -1,9 +1,8 @@
 import 'package:flower_app/config/base/base_responce.dart';
+
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/local/local_data_source_impl.dart';
-import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
-import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/forget_password_entity.dart';
@@ -48,9 +47,9 @@ class FakeAuthRepo implements AuthRepo {
 
   @override
   Future<BaseResponce<LoginEntity>> login(
-    LoginCredentials credentials, {
-    bool rememberMe = false,
-  }) async {
+      LoginCredentials credentials, {
+        bool rememberMe = false,
+      }) async {
     lastLoginRequest = credentials;
     lastRememberMe = rememberMe;
 
@@ -74,8 +73,8 @@ class FakeAuthRepo implements AuthRepo {
 
   @override
   Future<BaseResponce<RegisterEntity>> register(
-    RegisterRequestEntity request,
-  ) async {
+      RegisterRequestEntity request,
+      ) async {
     lastRegisterRequest = request;
 
     if (shouldSucceed) {
@@ -136,18 +135,10 @@ final SecureStorageService _storage = SecureStorageService(
   const FlutterSecureStorage(),
 );
 
-AuthRepoImpl buildPasswordRecoveryRepo(LocalDataSource localDataSource) {
-  return AuthRepoImpl(
-    localDataSource,
-    RemoteDataSourceImpl(),
-    SecureStorageService(const FlutterSecureStorage()),
-  );
-}
-
 AuthRepoImpl buildLoginRepo(
-  RemoteDataSource remoteDataSource,
-  SecureStorageService secureStorage,
-) {
+    RemoteDataSource remoteDataSource,
+    SecureStorageService secureStorage,
+    ) {
   return AuthRepoImpl(LocalDataSourceImpl(), remoteDataSource, secureStorage);
 }
 
@@ -170,3 +161,5 @@ Future<String?> readStorageValue(String key) async {
 
   return storage.read(key: key);
 }
+
+
