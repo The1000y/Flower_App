@@ -1,6 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
-import 'package:flower_app/features/profile/domain/use_case/show_profile_usecase.dart';
+import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
+import 'package:flower_app/features/profile/domain/use_case/get_profile_use_case.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_event.dart';
 import 'package:flower_app/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +10,7 @@ import 'package:injectable/injectable.dart';
 class ProfileViewModel extends Cubit<ProfileState> {
   ProfileViewModel(this._getProfileUseCase) : super(const ProfileState());
 
-  final ShowProfileUsecase _getProfileUseCase;
+  final GetProfileUseCase _getProfileUseCase;
 
   void doIntent(ProfileIntent intent) {
     switch (intent) {
@@ -32,10 +32,10 @@ class ProfileViewModel extends Cubit<ProfileState> {
       ),
     );
 
-    final result = await _getProfileUseCase.getProfile();
+    final result = await _getProfileUseCase.call();
 
     switch (result) {
-      case SuccessResponce<UserEntity>():
+      case SuccessResponce<ProfileEntity>():
         emit(
           state.copyWith(
             baseState: state.baseState.copyWith(
@@ -46,7 +46,7 @@ class ProfileViewModel extends Cubit<ProfileState> {
           ),
         );
 
-      case ErrorResponce<UserEntity>():
+      case ErrorResponce<ProfileEntity>():
         emit(
           state.copyWith(
             baseState: state.baseState.copyWith(

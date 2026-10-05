@@ -1,4 +1,4 @@
-```dartimport 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -94,7 +94,7 @@ abstract class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<CartCubit>(),
-            child: PersistentBottomNavBarDemo(
+            child: PersistenBottomNavBarDemo(
               onCartTabSelected: () {
                 getIt<CartCubit>().doEvent(
                   CartRefreshRequestedEvent(),
@@ -195,12 +195,7 @@ abstract class AppRoutes {
                 : null,
           ),
         );
-
-      case Routes.notifications:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
-
+        
       // Profile
       case Routes.profile:
         return MaterialPageRoute(

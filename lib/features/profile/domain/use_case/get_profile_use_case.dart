@@ -9,5 +9,7 @@ class GetProfileUseCase {
 
   GetProfileUseCase(this.profileRepo);
 
-  Future<BaseResponce<ProfileEntity>> call() => profileRepo.getProfile();
+  Future<BaseResponce<ProfileEntity>> call() {
+    return profileRepo.getProfile();
+  }
 }

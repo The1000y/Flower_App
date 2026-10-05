@@ -88,7 +88,7 @@ class _ProfileHomeViewState extends State<ProfileHomeView> {
             onEditProfile: () =>
                 Navigator.pushNamed(context, Routes.editProfile),
             onNotification: () =>
-                Navigator.pushNamed(context, Routes.notifications),
+                Navigator.pushNamed(context, Routes.notification),
             onLanguage: () =>
                 Navigator.pushNamed(context, Routes.changeLanguage),
             onLogout: () => _confirmLogout(context),

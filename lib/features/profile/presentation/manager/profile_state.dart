@@ -1,20 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
+import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
 
 class ProfileState extends Equatable {
-  const ProfileState({BaseState<UserEntity>? baseState})
-    : baseState = baseState ?? const BaseState<UserEntity>();
+  const ProfileState({BaseState<ProfileEntity>? baseState})
+    : baseState = baseState ?? const BaseState<ProfileEntity>();
 
-  final BaseState<UserEntity> baseState;
+  final BaseState<ProfileEntity> baseState;
 
   bool get isLoading => baseState.isLoading;
 
   String get errorMessage => baseState.errorMessage;
 
-  UserEntity? get data => baseState.data;
+  ProfileEntity? get data => baseState.data;
 
-  ProfileState copyWith({BaseState<UserEntity>? baseState}) {
+  ProfileState copyWith({BaseState<ProfileEntity>? baseState}) {
     return ProfileState(baseState: baseState ?? this.baseState);
   }
 

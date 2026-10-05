@@ -1,5 +1,7 @@
 name: flower_app
+
 description: "A new Flutter project."
+
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -10,6 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   cupertino_icons: ^1.0.8
   retrofit: ^4.9.0
   json_annotation: ^4.12.0
@@ -24,7 +27,7 @@ dependencies:
   google_fonts: ^8.2.0
   pinput: ^6.0.2
   cached_network_image: ^4.0.0
-  firebase_core: ^4.14.0
+  firebase_core: ^4.15.0
   firebase_messaging: ^16.6.0
   flutter_dotenv: ^6.0.1
   image_picker: ^1.1.2
@@ -37,11 +40,11 @@ dependencies:
   intl: any
   flutter_localizations:
     sdk: flutter
-  firebase_core: ^4.15.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
   retrofit_generator: ^10.0.1
   build_runner: ^2.6.0
   json_serializable: ^6.10.0
@@ -78,6 +81,7 @@ flutter_native_splash:
   image: "assets/splash_logo.png"
   android: true
   ios: true
+
   android_12:
     image: "assets/splash_logo.png"
     icon_background_color: "#F9ECF0"
