@@ -8,6 +8,9 @@ import 'package:flower_app/features/auth/data/model/request/forget_request/reset
 import 'package:flower_app/features/auth/data/model/request/forget_request/verify_otp_request.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/login_request.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/forgot_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/reset_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/verify_otp_response.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/forget_password_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/reset_passsword_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
@@ -18,20 +21,15 @@ import 'package:flower_app/features/auth/domain/entities/register_entity/registe
 import 'package:flower_app/features/auth/domain/repo/auth_repo.dart';
 import 'package:injectable/injectable.dart';
 
-import '../model/response/forget_response/forgot_password_response_dto.dart';
-import '../model/response/forget_response/reset_password_response_dto.dart';
-import '../model/response/forget_response/verify_otp_response.dart';
-
 @Injectable(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
   final RemoteDataSource _remoteDataSource;
   final SecureStorageService _secureStorage;
 
   AuthRepoImpl(
-      LocalDataSource _,
-      this._remoteDataSource,
-      this._secureStorage,
-      );
+    this._remoteDataSource,
+    this._secureStorage,
+  );
 
   @override
   Future<BaseResponce<ForgetPasswordEntity>> forgetPassword({
@@ -40,11 +38,12 @@ class AuthRepoImpl implements AuthRepo {
     final response = await _remoteDataSource.forgotPassword(
       ForgotPasswordRequestDto(email: email),
     );
+
     return switch (response) {
       SuccessResponce<ForgotPasswordResponseDto>() =>
-          SuccessResponce(response.data.toDomain()),
+        SuccessResponce(response.data.toDomain()),
       ErrorResponce<ForgotPasswordResponseDto>() =>
-          ErrorResponce(response.error),
+        ErrorResponce(response.error),
     };
   }
 
@@ -61,11 +60,12 @@ class AuthRepoImpl implements AuthRepo {
         confirmPassword: password,
       ),
     );
+
     return switch (response) {
       SuccessResponce<ResetPasswordResponseDto>() =>
-          SuccessResponce(response.data.toDomain()),
+        SuccessResponce(response.data.toDomain()),
       ErrorResponce<ResetPasswordResponseDto>() =>
-          ErrorResponce(response.error),
+        ErrorResponce(response.error),
     };
   }
 
@@ -75,20 +75,25 @@ class AuthRepoImpl implements AuthRepo {
     required String otp,
   }) async {
     final response = await _remoteDataSource.verifyOtp(
-      verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp),
+      verifyOtpRequest: VerifyOtpRequest(
+        email: email,
+        otp: otp,
+      ),
     );
+
     return switch (response) {
       SuccessResponce<VerifyOtpResponse>() =>
-          SuccessResponce(response.data.data!.toEntity()),
-      ErrorResponce<VerifyOtpResponse>() => ErrorResponce(response.error),
+        SuccessResponce(response.data.data!.toEntity()),
+      ErrorResponce<VerifyOtpResponse>() =>
+        ErrorResponce(response.error),
     };
   }
 
   @override
   Future<BaseResponce<LoginEntity>> login(
-      LoginCredentials credentials, {
-        bool rememberMe = false,
-      }) async {
+    LoginCredentials credentials, {
+    bool rememberMe = false,
+  }) async {
     try {
       final response = await _remoteDataSource.login(
         LoginRequest(
@@ -98,49 +103,71 @@ class AuthRepoImpl implements AuthRepo {
           fcmToken: 'dummy_fcm_token',
         ),
       );
+
       if (response.isSuccess == true && response.data != null) {
         final login = response.data!.toLoginEntity();
-        await _secureStorage.saveAccessToken(login.accessToken);
-        await _secureStorage.saveRefreshToken(login.refreshToken);
+
+        await _secureStorage.saveAccessToken(
+          login.accessToken,
+        );
+
+        await _secureStorage.saveRefreshToken(
+          login.refreshToken,
+        );
+
         return SuccessResponce(login);
       }
+
       return ErrorResponce(
-        Exception(response.message ?? AppStrings.loginFailed),
+        Exception(
+          response.message ?? AppStrings.loginFailed,
+        ),
       );
     } catch (error) {
       return ErrorResponce(
-        error is Exception ? error : Exception(error.toString()),
+        error is Exception
+            ? error
+            : Exception(error.toString()),
       );
     }
   }
 
   @override
-  Future<String?> getRememberedEmail() => _secureStorage.getRememberedEmail();
+  Future<String?> getRememberedEmail() =>
+      _secureStorage.getRememberedEmail();
+
   @override
   Future<void> saveRememberedEmail(String email) =>
       _secureStorage.saveRememberedEmail(email);
+
   @override
   Future<void> deleteRememberedEmail() =>
       _secureStorage.deleteRememberedEmail();
 
   @override
   Future<BaseResponce<RegisterEntity>> register(
-      RegisterRequestEntity entity,
-      ) async {
+    RegisterRequestEntity entity,
+  ) async {
     try {
       final request = RegisterRequest.fromEntity(entity);
       final response = await _remoteDataSource.register(request);
 
       if (response.isSuccess == true) {
-        return SuccessResponce(response.toRegisterEntity());
+        return SuccessResponce(
+          response.toRegisterEntity(),
+        );
       }
 
       return ErrorResponce(
-        Exception(response.message ?? AppStrings.registerError),
+        Exception(
+          response.message ?? AppStrings.registerError,
+        ),
       );
     } catch (error) {
       return ErrorResponce(
-        error is Exception ? error : Exception(error.toString()),
+        error is Exception
+            ? error
+            : Exception(error.toString()),
       );
     }
   }

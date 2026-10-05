@@ -51,6 +51,13 @@ app.*.map.json
 *.mocks.dart
 *.gr.dart
 *.config.dart
+
+# Firebase credentials (contain project API keys - never commit these).
+# Commit the adjacent *.example templates instead; see README.md.
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/lib/config/network/firebase_options.dart
+/macos/Runner/GoogleService-Info.plist
 # Backend/local environment files
 .env
 .env.*

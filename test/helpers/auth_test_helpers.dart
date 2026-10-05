@@ -13,11 +13,9 @@ import 'package:flower_app/features/auth/domain/entities/login_entity/login_enti
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_entity.dart';
 import 'package:flower_app/features/auth/domain/entities/register_entity/register_request_entity.dart';
 import 'package:flower_app/features/auth/domain/repo/auth_repo.dart';
-import 'package:flower_app/features/auth/domain/use_case/delete_remembered_email_use_case.dart';
 import 'package:flower_app/features/auth/domain/use_case/load_remembered_email_use_case.dart';
 import 'package:flower_app/features/auth/domain/use_case/login_usecase.dart';
 import 'package:flower_app/features/auth/domain/use_case/register_auth_use_case.dart';
-import 'package:flower_app/features/auth/domain/use_case/save_remembered_email_use_case.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -145,12 +143,7 @@ AuthRepoImpl buildLoginRepo(
 }
 
 LoginViewModel buildLoginViewModel(FakeAuthRepo repo) {
-  return LoginViewModel(
-    LoginUseCase(repo),
-    LoadRememberedEmailUseCase(repo),
-    SaveRememberedEmailUseCase(repo),
-    DeleteRememberedEmailUseCase(repo),
-  );
+  return LoginViewModel(LoginUseCase(repo), LoadRememberedEmailUseCase(repo));
 }
 
 RegisterViewModel buildRegisterViewModel(FakeAuthRepo repo) {

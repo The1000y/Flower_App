@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "98.0.0"
+  _flutterfire_internals:
+    dependency: transitive
+    description:
+      name: _flutterfire_internals
+      sha256: f6966125633a34f82d9be2ee895b755cff3554087b1d00a9eb884e5947f4bca9
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.77"
   analyzer:
     dependency: transitive
     description:
@@ -345,35 +353,51 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  file_selector_linux:
-    dependency: transitive
+  firebase_core:
+    dependency: "direct main"
     description:
-      name: file_selector_linux
-      sha256: da76400e7872ce7637ffdce12749ec24169c25f6195c28372208e65a24bcd2ab
+      name: firebase_core
+      sha256: "2343710d8a164e3157a5e2fbb00663503c669be4aa06185311df48626760fdf1"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.4+1"
-  file_selector_macos:
+    version: "4.14.0"
+  firebase_core_platform_interface:
     dependency: transitive
     description:
-      name: file_selector_macos
-      sha256: d57c62362766b5e7ae739448650b66c6aab7a68ba7ecc65e04018652645ae0f4
+      name: firebase_core_platform_interface
+      sha256: "9bfbc85faca09346471ac56fbcee00757ebcfd85887c6f602764eff0001902d8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.5+1"
-  file_selector_platform_interface:
+    version: "8.1.1"
+  firebase_core_web:
     dependency: transitive
     description:
-      name: file_selector_platform_interface
-      sha256: "35e0bd61ebcdb91a3505813b055b09b79dfdc7d0aee9c09a7ba59ae4bb13dc85"
+      name: firebase_core_web
+      sha256: de1e678209a0c974d8aa4cff39f17d61d2dc263aa64993168360f9be4efb8e91
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.0"
-  file_selector_windows:
+    version: "3.11.0"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      sha256: "31feb5db1fcbdececefd0feb5520013b7cb5d362018008c2889e7ae7e0da4dcb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "16.6.0"
+  firebase_messaging_platform_interface:
     dependency: transitive
     description:
-      name: file_selector_windows
-      sha256: fbefc5fb92c6d3cbe8d284a2cd971b593bb07d2cd6da8557b81a862250b4acec
+      name: firebase_messaging_platform_interface
+      sha256: f9707e185b8ce1155d58e7e29348245072d99981f899fa8d3214abb2652c4ccb
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.10.0"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      sha256: "311b16c75fc645c7a70c9ade38908abb12310dfce449fc3d3cee1771f196351e"
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+6"
@@ -401,6 +425,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.12.0"
+    version: "4.2.5"
   fixnum:
     dependency: transitive
     description:
@@ -1325,14 +1350,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
-  sanitize_html:
-    dependency: transitive
-    description:
-      name: sanitize_html
-      sha256: "60257e2b8fd8b13b7c755065c2639a6c800031bb5bd3e30a007fc6739c77b2e1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
   shared_preferences:
     dependency: "direct main"
     description:

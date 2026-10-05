@@ -42,6 +42,9 @@ class AppColors {
   static const Color gray = Color(0xFF5F6368);
   static const Color grayDark = Color(0xFF535353);
 
+  /// Hairline used to separate list rows.
+  static const Color divider = Color(0xFFE0E0E0);
+
   static const Color error = Color(0xFFCC1010);
 
   static const Color success = Color(0xFF0CB359);

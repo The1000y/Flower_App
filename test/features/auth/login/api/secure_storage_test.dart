@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
+import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -57,6 +60,70 @@ void main() {
         await readStorageValue(AppStrings.rememberedEmail),
         'user@example.com',
       );
+    });
+
+    test('saves and reads the user under the userData key', () async {
+      const user = UserEntity(
+        id: 1,
+        fullName: 'Nour Mohamed',
+        email: 'nour@example.com',
+        phoneNumber: '+201234567890',
+        gender: 'female',
+        role: 'user',
+        photoUrl: 'https://example.com/nour.png',
+        status: 'active',
+      );
+
+      await service.saveUser(user);
+
+      final raw = await service.getUser();
+      expect(raw, isNotNull);
+      expect(await readStorageValue(AppStrings.userData), raw);
+
+      // Deserialize instead of substring-matching, so every field is verified.
+      final decoded = jsonDecode(raw!) as Map<String, dynamic>;
+      expect(decoded, user.toJson());
+      expect(decoded['id'], 1);
+      expect(decoded['fullName'], 'Nour Mohamed');
+      expect(decoded['email'], 'nour@example.com');
+      expect(decoded['phoneNumber'], '+201234567890');
+      expect(decoded['gender'], 'female');
+      expect(decoded['role'], 'user');
+      expect(decoded['status'], 'active');
+      expect(decoded['photoUrl'], 'https://example.com/nour.png');
+    });
+
+    test('omits photoUrl from storage when the user has none', () async {
+      const user = UserEntity(
+        id: 2,
+        fullName: 'No Photo',
+        email: 'nophoto@example.com',
+        phoneNumber: '+201111111111',
+        gender: 'male',
+        role: 'user',
+        status: 'active',
+      );
+
+      await service.saveUser(user);
+
+      final decoded =
+          jsonDecode((await service.getUser())!) as Map<String, dynamic>;
+      expect(decoded.containsKey('photoUrl'), isFalse);
+      expect(decoded['email'], 'nophoto@example.com');
+    });
+
+    test('getUser returns null when no user was saved', () async {
+      expect(await service.getUser(), isNull);
+    });
+
+    test('readKey reads an arbitrary key', () async {
+      await service.saveAccessToken('token123');
+
+      expect(await service.readKey(AppStrings.accessToken), 'token123');
+    });
+
+    test('readKey returns null for an unknown key', () async {
+      expect(await service.readKey('missing_key'), isNull);
     });
   });
 }

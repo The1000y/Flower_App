@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
@@ -18,6 +20,23 @@ class SecureStorageService {
 
   Future<void> saveRefreshToken(String token) async {
     await _storage.write(key: AppStrings.refreshToken, value: token);
+  }
+
+  Future<void> saveUser(UserEntity user) async {
+    await _storage.write(
+      key: AppStrings.userData,
+      value: jsonEncode(user.toJson()),
+    );
+  }
+
+  /// Reads the persisted user data. Use [readKey] for arbitrary keys.
+  Future<String?> getUser() async {
+    return _storage.read(key: AppStrings.userData);
+  }
+
+  /// Reads an arbitrary key from secure storage.
+  Future<String?> readKey(String key) async {
+    return _storage.read(key: key);
   }
 
   Future<String?> getRefreshToken() async {
