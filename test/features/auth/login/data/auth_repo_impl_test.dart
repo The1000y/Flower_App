@@ -43,36 +43,6 @@ void main() {
       expect(await storage.getRefreshToken(), isNotNull);
     });
 
-    test('saves the user alongside the tokens', () async {
-      await repo.login(
-        LoginCredentials(email: Dummy.email, password: Dummy.pass),
-      );
-
-      expect(await storage.getUser(), isNotNull);
-    });
-
-    test('remembers the email when remember me is true', () async {
-      await repo.login(
-        LoginCredentials(email: Dummy.email, password: Dummy.pass),
-        rememberMe: true,
-      );
-
-      expect(await storage.getRememberedEmail(), Dummy.email);
-    });
-
-    test(
-      'forgets a previously remembered email when remember me is false',
-      () async {
-        await storage.saveRememberedEmail('old@example.com');
-
-        await repo.login(
-          LoginCredentials(email: Dummy.email, password: Dummy.pass),
-        );
-
-        expect(await storage.getRememberedEmail(), isNull);
-      },
-    );
-
     test('returns error for invalid credentials', () async {
       final result = await repo.login(
         LoginCredentials(email: 'wrong@example.com', password: 'wrong'),

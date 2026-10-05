@@ -1,6 +1,6 @@
 import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
+import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/body_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,14 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../helpers/app_localizations_test_helper.dart';
 
-const testUser = UserEntity(
-  id: 1,
-  fullName: 'Nour Mohamed',
+const testProfile = ProfileEntity(
+  firstName: 'Nour',
+  lastName: 'Mohamed',
   email: 'nour@example.com',
   phoneNumber: '+201234567890',
   gender: 'female',
-  role: 'user',
-  status: 'active',
 );
 
 void main() {
@@ -50,11 +48,11 @@ void main() {
   }
 
   ProfileBody buildBody({
-    UserEntity? user = testUser,
+    ProfileEntity? profile = testProfile,
     int? unreadNotificationsCount,
   }) {
     return ProfileBody(
-      user: user,
+      profile: profile,
       onEditProfile: () => editTaps++,
       onNotification: () => notificationTaps++,
       onLanguage: () {},
@@ -65,36 +63,35 @@ void main() {
   }
 
   group('ProfileBody profile info', () {
-    testWidgets('renders the name and email from the user', (tester) async {
+    testWidgets('renders the name and email from the profile', (tester) async {
       await tester.pumpWidget(wrap(buildBody()));
 
       expect(find.text('Nour Mohamed'), findsOneWidget);
       expect(find.text('nour@example.com'), findsOneWidget);
     });
 
-    testWidgets('renders empty strings when the user is null', (tester) async {
-      await tester.pumpWidget(wrap(buildBody(user: null)));
+    testWidgets('renders empty strings when the profile is null', (
+      tester,
+    ) async {
+      await tester.pumpWidget(wrap(buildBody(profile: null)));
 
-      // No hardcoded placeholder data may leak into the UI.
       expect(find.text('Nour'), findsNothing);
       expect(find.text('Nour_Mohamed@gmail.com'), findsNothing);
       expect(find.byType(Text), findsWidgets);
     });
 
-    testWidgets('renders empty strings for a user with blank fields', (
+    testWidgets('renders empty strings for a profile with blank fields', (
       tester,
     ) async {
-      const blankUser = UserEntity(
-        id: 0,
-        fullName: '',
+      const blankProfile = ProfileEntity(
+        firstName: '',
+        lastName: '',
         email: '',
         phoneNumber: '',
         gender: '',
-        role: '',
-        status: '',
       );
 
-      await tester.pumpWidget(wrap(buildBody(user: blankUser)));
+      await tester.pumpWidget(wrap(buildBody(profile: blankProfile)));
 
       expect(find.text('Nour'), findsNothing);
       expect(find.text('Nour_Mohamed@gmail.com'), findsNothing);

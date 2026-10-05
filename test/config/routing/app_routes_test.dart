@@ -1,13 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/app_routes.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
-import 'package:flower_app/features/profile/domain/use_case/show_profile_usecase.dart';
-import 'package:flower_app/features/profile/presentation/manager/profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/view/notification_view.dart';
 import 'package:flower_app/features/search/domain/usecases/search_products_use_case.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
@@ -21,19 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MockRemoteMessage extends Mock implements RemoteMessage {}
 
-class MockShowProfileUsecase extends Mock implements ShowProfileUsecase {}
-
 class MockSearchProductsUseCase extends Mock implements SearchProductsUseCase {}
-
-/// A real [ProfileViewModel] backed by a stubbed use case, so the route can be
-/// pumped without a full cubit mock.
-ProfileViewModel buildProfileViewModel() {
-  final usecase = MockShowProfileUsecase();
-  when(
-    () => usecase.getProfile(),
-  ).thenAnswer((_) async => ErrorResponce<UserEntity>(Exception('no profile')));
-  return ProfileViewModel(usecase);
-}
 
 void main() {
   Route<dynamic> build(String name, {Object? arguments}) {
@@ -73,9 +57,7 @@ void main() {
       );
     });
 
-    test('has no case for the profile route', () {
-      // The profile is a bottom-navigation tab, not a pushed route. An unknown
-      // name must therefore fall through to the "not found" page.
+    test('has a case for the profile route', () {
       final route = build(Routes.profile);
       expect(route, isA<MaterialPageRoute<Object?>>());
     });
@@ -162,9 +144,9 @@ void main() {
     });
 
     testWidgets(
-      'renders a "Route Not Found" page for the removed profile route',
+      'renders a "Route Not Found" page for an unmapped profile sub-route',
       (tester) async {
-        await pumpRoute(tester, build(Routes.profile));
+        await pumpRoute(tester, build('${Routes.profile}/unknown'));
 
         expect(find.text('Route Not Found'), findsOneWidget);
       },

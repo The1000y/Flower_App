@@ -65,31 +65,27 @@ void main() {
     });
 
     test(
-      'LoadRememberedEmail restores saved email and sets rememberMe when email empty',
-      () async {
-        useInMemorySecureStorage({'remembered_email': 'saved@example.com'});
-        final viewModel = buildLoginViewModel(FakeAuthRepo());
+        'LoadRememberedEmail restores saved email and sets rememberMe when email empty',
+        () async {
+      useInMemorySecureStorage({'remembered_email': 'saved@example.com'});
+      final viewModel = buildLoginViewModel(FakeAuthRepo());
 
-        await viewModel.handle(LoadRememberedEmail());
+      await viewModel.handle(LoadRememberedEmail());
 
-        expect(viewModel.state.email, 'saved@example.com');
-        expect(viewModel.state.rememberMe, isTrue);
-      },
-    );
+      expect(viewModel.state.email, 'saved@example.com');
+      expect(viewModel.state.rememberMe, isTrue);
+    });
 
-    test(
-      'LoadRememberedEmail does not overwrite already typed email',
-      () async {
-        useInMemorySecureStorage({'remembered_email': 'old@example.com'});
-        final viewModel = buildLoginViewModel(FakeAuthRepo());
+    test('LoadRememberedEmail does not overwrite already typed email', () async {
+      useInMemorySecureStorage({'remembered_email': 'old@example.com'});
+      final viewModel = buildLoginViewModel(FakeAuthRepo());
 
-        viewModel.handle(EmailChanged(validEmail));
-        await viewModel.handle(LoadRememberedEmail());
+      viewModel.handle(EmailChanged(validEmail));
+      await viewModel.handle(LoadRememberedEmail());
 
-        expect(viewModel.state.email, validEmail);
-        expect(viewModel.state.rememberMe, isFalse);
-      },
-    );
+      expect(viewModel.state.email, validEmail);
+      expect(viewModel.state.rememberMe, isFalse);
+    });
 
     test('LoadRememberedEmail does nothing when no saved email', () async {
       final harness = _Harness();
@@ -113,7 +109,7 @@ void main() {
       expect(state.data, isNotNull);
     });
 
-    test('login does not persist the email itself', () async {
+    test('login success with rememberMe saves email to storage', () async {
       useInMemorySecureStorage();
       final viewModel = buildLoginViewModel(FakeAuthRepo());
 
@@ -123,8 +119,19 @@ void main() {
 
       await viewModel.handle(LoginPressed());
 
-      // Remembered-email persistence is owned by AuthRepoImpl, so the view
-      // model must not write it as well.
+      expect(await readStorageValue('remembered_email'), validEmail);
+    });
+
+    test('login success without rememberMe deletes saved email', () async {
+      useInMemorySecureStorage({'remembered_email': 'old@example.com'});
+      final viewModel = buildLoginViewModel(FakeAuthRepo());
+
+      viewModel.handle(EmailChanged(validEmail));
+      viewModel.handle(PasswordChanged(validPassword));
+      viewModel.handle(RememberMeChanged(false));
+
+      await viewModel.handle(LoginPressed());
+
       expect(await readStorageValue('remembered_email'), isNull);
     });
 

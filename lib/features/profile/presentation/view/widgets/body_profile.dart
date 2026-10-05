@@ -1,7 +1,6 @@
 import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/features/auth/domain/entities/login_entity/user_entity.dart';
 import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/notification_switch_tile.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/option_tile.dart';
@@ -12,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ProfileBody extends StatelessWidget {
   const ProfileBody({
     super.key,
-    this.user,
+    this.profile,
     required this.onEditProfile,
     required this.onNotification,
     required this.onLanguage,
@@ -20,10 +19,8 @@ class ProfileBody extends StatelessWidget {
     this.unreadNotificationsCount,
     this.notificationsEnabled = true,
     this.onNotificationsChanged,
-    this.profile,
   });
 
-  final UserEntity? user;
   final ProfileEntity? profile;
   final VoidCallback onEditProfile;
   final VoidCallback onNotification;
@@ -41,21 +38,15 @@ class ProfileBody extends StatelessWidget {
   String get _badgeLabel => _badgeCount > 99 ? '99+' : '$_badgeCount';
 
   String get _displayName {
-    final fullName = user?.fullName;
-    if (fullName != null && fullName.trim().isNotEmpty) return fullName;
-
     final profileName =
         '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}'.trim();
     return profileName;
   }
 
-  String get _displayEmail {
-    final email = user?.email ?? profile?.email;
-    return email ?? '';
-  }
+  String get _displayEmail => profile?.email ?? '';
 
   String? get _displayPhotoUrl {
-    final photoUrl = user?.photoUrl ?? profile?.photoUrl;
+    final photoUrl = profile?.photoUrl;
     if (photoUrl == null || photoUrl.trim().isEmpty) return null;
     return photoUrl;
   }
