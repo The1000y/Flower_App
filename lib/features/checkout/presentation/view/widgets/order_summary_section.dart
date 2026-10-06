@@ -8,9 +8,10 @@ import 'package:flower_app/features/checkout/presentation/manager/checkout_payme
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
 import 'package:flower_app/features/payment/domain/entities/param/place_order_param.dart';
-import 'package:flower_app/features/payment/presentation/widget/manager/cubit/place_order_cubit.dart';
-import 'package:flower_app/features/payment/presentation/widget/manager/cubit/place_order_event.dart';
-import 'package:flower_app/features/payment/presentation/widget/manager/cubit/place_order_state.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_cubit.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_event.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_state.dart';
+import 'package:flower_app/features/payment/presentation/web_view_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -90,17 +91,26 @@ class OrderSummarySection extends StatelessWidget {
                 );
                 return;
               }
-
               if (state.placeOrderState.data?.sessionUrl == null) {
                 Navigator.pushReplacementNamed(context, Routes.orderSuccess);
                 return;
               }
-              // كارد ← WebView (لسه هنعمله)
-              if(state.placeOrderState.data?.sessionUrl != null) {
-                log(
-                'sessionUrl: ${state.placeOrderState.data!.sessionUrl}',
-              );
-              return;
+              if (state.placeOrderState.data?.sessionUrl != null) {
+                log('sessionUrl: ${state.placeOrderState.data!.sessionUrl}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<PlaceOrderCubit>(),
+                      child: WebViewPayment(
+                        cancelUrl: state.placeOrderState.data?.cancelUrl ?? '',
+                        successUrl: state.placeOrderState.data?.successUrl ?? '',
+                        sessionUrl: state.placeOrderState.data?.sessionUrl ?? '',
+                      ),
+                    ),
+                  ),
+                );
+                return;
               }
             },
             builder: (context, state) {

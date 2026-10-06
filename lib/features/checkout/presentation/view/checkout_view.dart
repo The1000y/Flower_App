@@ -12,7 +12,7 @@ import 'package:flower_app/features/checkout/presentation/view/widgets/gift_sect
 // import 'package:flower_app/features/checkout/presentation/view/widgets/gift_section.dart';
 import 'package:flower_app/features/checkout/presentation/view/widgets/order_summary_section.dart';
 import 'package:flower_app/features/checkout/presentation/view/widgets/payment_method_section.dart';
-import 'package:flower_app/features/payment/presentation/widget/manager/cubit/place_order_cubit.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';

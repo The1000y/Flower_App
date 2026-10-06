@@ -2,8 +2,8 @@ import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/payment/domain/entities/param/place_order_param.dart';
 import 'package:flower_app/features/payment/domain/entities/place_order_entity.dart';
 import 'package:flower_app/features/payment/domain/use_case/place_order_use_case.dart';
-import 'package:flower_app/features/payment/presentation/widget/manager/cubit/place_order_event.dart';
-import 'package:flower_app/features/payment/presentation/widget/manager/cubit/place_order_state.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_event.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_state.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';

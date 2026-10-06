@@ -32,7 +32,7 @@ class PlaceOrderDto {
   @JsonKey(name: "expiresAt")
   DateTime? expiresAt;
   @JsonKey(name: "amount")
-  int? amount;
+  double? amount;
   @JsonKey(name: "currency")
   String? currency;
   @JsonKey(name: "estimatedDeliveryAt")
@@ -59,8 +59,17 @@ class PlaceOrderDto {
 
   PlaceOrderEntity toEntity() {
     return PlaceOrderEntity(
+      orderId: orderId,
+      status: status,
+      gateway: gateway,
       sessionId: sessionId,
       sessionUrl: sessionUrl,
+      successUrl: successUrl,
+      cancelUrl: cancelUrl,
+      expiresAt: expiresAt,
+      amount: amount,
+      currency: currency,
+      estimatedDeliveryAt: estimatedDeliveryAt,
       message: '',
     );
   }
