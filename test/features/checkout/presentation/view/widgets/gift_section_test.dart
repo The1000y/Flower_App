@@ -233,10 +233,13 @@ void main() {
       await pumpApp(tester);
 
       // Assert
+      // TODO(flutter-app): the `Form` stays mounted for COD so the shared
+      // form key keeps validating, only its content collapses.
       expect(find.byType(SizedBox), findsOneWidget);
       expect(find.byType(Switch), findsNothing);
       expect(find.text(AppStrings.itIsAGift), findsNothing);
-      expect(find.byType(Form), findsNothing);
+      expect(find.byType(TextFormField), findsNothing);
+      expect(find.byType(Form), findsOneWidget);
     });
 
     testWidgets('keeps the section visible for a non COD payment method', (
@@ -278,7 +281,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert
-      expect(find.byType(Form), findsNothing);
+      // TODO(flutter-app): the `Form` stays mounted for COD so the shared
+      // form key keeps validating, only its content collapses.
+      expect(find.byType(Form), findsOneWidget);
+      expect(find.byType(Switch), findsNothing);
+      expect(find.byType(TextFormField), findsNothing);
     });
   });
 }
