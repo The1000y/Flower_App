@@ -23,7 +23,7 @@ void main() {
       () async {
         final products = <ProductEntity>[
           ProductEntity(
-            id: 1,
+            id: '1',
             name: 'Red Rose',
             imageUrl: 'https://example.com/rose.png',
             currency: 'EGP',
@@ -49,7 +49,7 @@ void main() {
 
         expect(success.data, products);
         expect(success.data.length, 1);
-        expect(success.data.first.id, 1);
+        expect(success.data.first.id, '1');
         expect(success.data.first.name, 'Red Rose');
 
         verify(() => mockCommerceRepo.getProducts()).called(1);

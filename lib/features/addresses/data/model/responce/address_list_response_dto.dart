@@ -7,22 +7,23 @@ part 'address_list_response_dto.g.dart';
 @JsonSerializable()
 class AddressListResponseDto {
   @JsonKey(name: 'data')
-  final List<AddressDto> data;
+  final List<AddressDto>? data;
   @JsonKey(name: 'isSuccess')
-  final bool isSuccess;
+  final bool? isSuccess;
   @JsonKey(name: 'message')
-  final String message;
+  final String? message;
   @JsonKey(name: 'errorCode')
-  final String errorCode;
+  final String? errorCode;
 
   AddressListResponseDto({
-    required this.data,
-    required this.isSuccess,
-    required this.message,
-    required this.errorCode,
+    this.data,
+    this.isSuccess,
+    this.message,
+    this.errorCode,
   });
 
-  List<AddressEntity> toDomain() => data.map((e) => e.toDomain()).toList();
+  List<AddressEntity> toDomain() =>
+      (data ?? []).map((e) => e.toDomain()).toList();
 
   factory AddressListResponseDto.fromJson(Map<String, dynamic> json) =>
       _$AddressListResponseDtoFromJson(json);

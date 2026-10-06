@@ -11,11 +11,16 @@ import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/core/services/firebase_messaging_service.dart';
 import 'package:flower_app/core/shared/app_widgets/notification_navigation_listener.dart';
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
+import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+
+final GlobalKey<NavigatorState> _navigatorKey =
+    GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(
@@ -58,8 +63,19 @@ void main() async {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: FlowerApp(
-        localeCubit: localeCubit,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<CartCubit>(
+            create: (_) => getIt<CartCubit>(),
+          ),
+          BlocProvider<LoginViewModel>(
+            create: (_) => getIt<LoginViewModel>(),
+          ),
+          BlocProvider<LocaleCubit>.value(
+            value: localeCubit,
+          ),
+        ],
+        child: const FlowerApp(),
       ),
     ),
   );
@@ -74,40 +90,31 @@ Future<void> _initializeNotifications() async {
 }
 
 class FlowerApp extends StatelessWidget {
-  FlowerApp({
-    super.key,
-    required this.localeCubit,
-  }) : _navigatorKey = GlobalKey<NavigatorState>();
-
-  final LocaleCubit localeCubit;
-  final GlobalKey<NavigatorState> _navigatorKey;
+  const FlowerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LocaleCubit>.value(
-      value: localeCubit,
-      child: BlocBuilder<LocaleCubit, AppLanguage>(
-        builder: (context, language) {
-          return MaterialApp(
-            navigatorKey: _navigatorKey,
-            onGenerateRoute: AppRoutes.onGenerateRoute,
-            initialRoute: Routes.login,
-            locale: language.locale,
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates:
-                AppLocalizations.localizationsDelegates,
-            theme: AppTheme.lightThem,
-            debugShowCheckedModeBanner: false,
-            title: 'Flower App',
-            builder: (context, child) {
-              return NotificationNavigationListener(
-                navigatorKey: _navigatorKey,
-                child: child ?? const SizedBox.shrink(),
-              );
-            },
-          );
-        },
-      ),
+    return BlocBuilder<LocaleCubit, AppLanguage>(
+      builder: (context, language) {
+        return MaterialApp(
+          navigatorKey: _navigatorKey,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+          initialRoute: Routes.login,
+          locale: language.locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates:
+              AppLocalizations.localizationsDelegates,
+          theme: AppTheme.lightThem,
+          debugShowCheckedModeBanner: false,
+          title: 'Flower App',
+          builder: (context, child) {
+            return NotificationNavigationListener(
+              navigatorKey: _navigatorKey,
+              child: child ?? const SizedBox.shrink(),
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -24,7 +24,7 @@ void main() {
         // Arrange
         final categories = <CategoryEntity>[
           CategoryEntity(
-            id: 1,
+            id: '1',
             name: 'Roses',
             iconUrl: 'https://example.com/rose.png',
           ),
@@ -48,7 +48,7 @@ void main() {
 
         expect(success.data, categories);
         expect(success.data.length, 1);
-        expect(success.data.first.id, 1);
+        expect(success.data.first.id, '1');
         expect(success.data.first.name, 'Roses');
         expect(success.data.first.iconUrl, 'https://example.com/rose.png');
 

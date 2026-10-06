@@ -8,7 +8,7 @@ import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
-import 'package:flower_app/features/addresses/presentation/view/add_address/address_view.dart';
+import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
 
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
@@ -20,11 +20,11 @@ import 'package:flower_app/features/auth/presentation/register/manager/register_
 import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
+import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
-import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
 
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_cubit.dart';
@@ -38,13 +38,8 @@ import 'package:flower_app/features/search/presentation/manger/cubit/search_cubi
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
 
 abstract class AppRoutes {
-  /// Builds a [Route] for [settings].
-  ///
-  /// Route-owned view models and cubits are resolved from the container here.
-  /// BlocProvider handles their lifecycle.
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // Auth
       case Routes.login:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -83,13 +78,11 @@ abstract class AppRoutes {
           ),
         );
 
-      // Main Layout
       case Routes.mainLayout:
         return MaterialPageRoute(
           builder: (_) => const Placeholder(),
         );
 
-      // Home
       case Routes.home:
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
@@ -110,7 +103,7 @@ abstract class AppRoutes {
         );
 
       case Routes.productDetails:
-        final productId = settings.arguments as int? ?? 0;
+        final productId = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (_) => ProductDetails(
             productId: productId,
@@ -136,7 +129,6 @@ abstract class AppRoutes {
           ),
         );
 
-      // Cart & Checkout
       case Routes.cart:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -175,7 +167,6 @@ abstract class AppRoutes {
           ),
         );
 
-      // Orders
       case Routes.myOrders:
         return MaterialPageRoute(
           builder: (_) => const Placeholder(),
@@ -186,7 +177,6 @@ abstract class AppRoutes {
           builder: (_) => const Placeholder(),
         );
 
-      // Notifications
       case Routes.notification:
         return MaterialPageRoute(
           builder: (_) => NotificationView(
@@ -195,8 +185,7 @@ abstract class AppRoutes {
                 : null,
           ),
         );
-        
-      // Profile
+
       case Routes.profile:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -226,7 +215,6 @@ abstract class AppRoutes {
           ),
         );
 
-      // Tracking
       case Routes.orderSuccess:
         return MaterialPageRoute(
           builder: (_) => const Placeholder(),
@@ -253,4 +241,3 @@ abstract class AppRoutes {
     }
   }
 }
-

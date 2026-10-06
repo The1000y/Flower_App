@@ -31,19 +31,19 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
     final homeScreen = MultiBlocProvider(
       providers: [
         BlocProvider.value(
-          value: getIt.get<HomeCubit>(),
+          value: getIt<HomeCubit>(),
         ),
         BlocProvider.value(
-          value: getIt.get<AddressCubit>(),
+          value: getIt<AddressCubit>(),
         ),
       ],
       child: HomeView(controller: controller),
     );
 
-    final categoriesScreen = CategoriesView();
+    final categoriesScreen = const CategoriesView();
 
     final cartScreen = BlocProvider.value(
-      value: getIt.get<AddressCubit>(),
+      value: getIt<AddressCubit>(),
       child: const CartView(),
     );
 

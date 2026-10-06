@@ -3,6 +3,7 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
+import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_event.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_state.dart';
@@ -12,8 +13,6 @@ import 'package:flower_app/features/commerce/presentation/home/view/widgets/cust
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
-
-import '../../../../addresses/presentation/view/add_address/address_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key, required this.controller});
@@ -31,11 +30,11 @@ class _HomeViewState extends State<HomeView> {
       providers: [
         BlocProvider(
           create: (context) =>
-              getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
+          getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
         ),
         BlocProvider(
           create: (context) =>
-              getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
+          getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
         ),
       ],
       child: Scaffold(

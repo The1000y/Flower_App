@@ -1,11 +1,11 @@
+
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 part 'product_dto.g.dart';
 @JsonSerializable()
 class ProductDto {
     @JsonKey(name: "id")
-    int? id;
+    String? id;
     @JsonKey(name: "name")
     String? name;
     @JsonKey(name: "imageUrl")
@@ -38,7 +38,7 @@ class ProductDto {
 
     BestSellerEntity toDomain (){
       return BestSellerEntity(
-        id: id??0,
+        id: id ?? '',
         name: name??'',
         imageUrl: imageUrl??'',
         currency: currency??'',
@@ -48,5 +48,5 @@ class ProductDto {
         status: status??'',
       );
     }
-
 }
+

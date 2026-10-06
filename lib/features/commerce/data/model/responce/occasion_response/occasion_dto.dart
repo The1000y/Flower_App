@@ -7,7 +7,7 @@ part 'occasion_dto.g.dart';
 @JsonSerializable()
 class OccasionDto {
   @JsonKey(name: 'id')
-  final int id;
+  final String id;
 
   @JsonKey(name: 'name')
   final String name;
@@ -15,10 +15,18 @@ class OccasionDto {
   @JsonKey(name: 'imageUrl')
   final String imageUrl;
 
-  OccasionDto({required this.id, required this.name, required this.imageUrl});
+  OccasionDto({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+  });
 
   OccasionEntity toDomain() {
-    return OccasionEntity(id: id, name: name, imageUrl: imageUrl);
+    return OccasionEntity(
+      id: id,
+      name: name,
+      imageUrl: imageUrl,
+    );
   }
 
   factory OccasionDto.fromJson(Map<String, dynamic> json) =>

@@ -4,8 +4,8 @@ part 'products_request_dto.g.dart';
 
 @JsonSerializable()
 class ProductsRequestDto {
-  final int? occasionId;
-  final int? categoryId;
+  final String? occasionId;
+  final String? categoryId;
   final String? keyword;
   final String? sortBy;
   final int? page;

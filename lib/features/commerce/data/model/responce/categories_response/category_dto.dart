@@ -5,16 +5,23 @@ part 'category_dto.g.dart';
 
 @JsonSerializable()
 class CategoryDto {
-  final int id;
+  final String id;
   final String name;
+  @JsonKey(name: 'icon')
   final String iconUrl;
 
-  CategoryDto({required this.id, required this.name, required this.iconUrl});
+  CategoryDto({
+    required this.id,
+    required this.name,
+    required this.iconUrl,
+  });
 
-  factory CategoryDto.fromJson(Map<String, dynamic> json) =>
-      _$CategoryDtoFromJson(json);
+  factory CategoryDto.fromJson(Map<String, dynamic> json) => _$CategoryDtoFromJson(json);
   Map<String, dynamic> toJson() => _$CategoryDtoToJson(this);
 
-  CategoryEntity toDomain() =>
-      CategoryEntity(id: id, name: name, iconUrl: iconUrl);
+  CategoryEntity toDomain() => CategoryEntity(
+        id: id,
+        name: name,
+        iconUrl: iconUrl,
+      );
 }

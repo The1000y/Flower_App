@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/shared/app_widgets/custom_snack_bar.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
+import 'package:flower_app/features/addresses/presentation/view/widgets/address_form_fields.dart';
+import 'package:flower_app/features/addresses/presentation/view/widgets/address_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'address_form_fields.dart';
-import 'address_map_widget.dart';
 
 class CustomAddressBody extends StatefulWidget {
   const CustomAddressBody({
@@ -35,6 +35,9 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   late TextEditingController labelController;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late AddressCubit cubit;
+  String _lastLocationError = '';
+  String _lastAddAddressError = '';
+  String _lastReverseGeocodeError = '';
 
   @override
   void initState() {
@@ -44,9 +47,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     recipientNameController = TextEditingController();
     labelController = TextEditingController();
     cubit = context.read<AddressCubit>();
-    cubit.doEvent(
-      InitializeAddressEvent(existingAddress: widget.editingAddress),
-    );
+    cubit.doEvent(InitializeAddressEvent(existingAddress: widget.editingAddress));
 
     if (widget.editingAddress != null) {
       recipientNameController.text = widget.editingAddress!.recipientName;
@@ -80,17 +81,15 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   Widget build(BuildContext context) {
     return BlocConsumer<AddressCubit, AddressState>(
       listenWhen: (previous, current) =>
-          previous.locationState.errorMessage !=
-              current.locationState.errorMessage ||
+      previous.locationState.errorMessage != current.locationState.errorMessage ||
           previous.locationState.data != current.locationState.data ||
-          previous.addAddressState.errorMessage !=
-              current.addAddressState.errorMessage ||
+          previous.addAddressState.errorMessage != current.addAddressState.errorMessage ||
           previous.addAddressState.data != current.addAddressState.data ||
-          previous.reverseGeocodeState.errorMessage !=
-              current.reverseGeocodeState.errorMessage ||
+          previous.reverseGeocodeState.errorMessage != current.reverseGeocodeState.errorMessage ||
           previous.reverseGeocodeState.data != current.reverseGeocodeState.data,
       listener: _handleStateChanges,
       builder: (context, state) {
+
         return Form(
           key: formKey,
           child: Column(
@@ -135,17 +134,26 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     final addAddressError = state.addAddressState.errorMessage;
     final reverseGeocodeError = state.reverseGeocodeState.errorMessage;
 
-    if (locationError.isNotEmpty) {
-      _showError(context, locationError);
+    if (locationError != _lastLocationError) {
+      _lastLocationError = locationError;
+      if (locationError.isNotEmpty) _showError(context, locationError);
     }
-    if (addAddressError.isNotEmpty) {
-      _showError(context, addAddressError);
+    if (addAddressError != _lastAddAddressError) {
+      _lastAddAddressError = addAddressError;
+      if (addAddressError.isNotEmpty) _showError(context, addAddressError);
     }
-    if (reverseGeocodeError.isNotEmpty) {
-      _showError(context, reverseGeocodeError);
+    if (reverseGeocodeError != _lastReverseGeocodeError) {
+      _lastReverseGeocodeError = reverseGeocodeError;
+      if (reverseGeocodeError.isNotEmpty) {
+        _showError(context, reverseGeocodeError);
+      }
     }
 
     if (state.addAddressState.data != null) {
+      CustomSnackBar.showSuccess(
+        context,
+        message: AppStrings.addressAddedSuccess,
+      );
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }
@@ -154,8 +162,6 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
   }
 
   void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: AppColors.error, content: Text(message)),
-    );
+    CustomSnackBar.showError(context, message: message);
   }
 }

@@ -5,13 +5,13 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'build_sort_item_filter.dart';
 
-class TabBarViewWidget extends StatelessWidget {
+class TabbarviewWidget extends StatelessWidget {
   final String category;
   final List<ProductEntity> products;
   final String searchQuery;
   final SortType? sortType;
 
-  const TabBarViewWidget({
+  const TabbarviewWidget({
     super.key,
     required this.category,
     required this.products,

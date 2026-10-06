@@ -4,8 +4,10 @@ import 'package:flower_app/features/auth/data/model/request/forget_request/forgo
 import 'package:flower_app/features/auth/data/model/request/forget_request/reset_password_request_dto.dart';
 import 'package:flower_app/features/auth/data/model/request/forget_request/verify_otp_request.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/login_request.dart';
+import 'package:flower_app/features/auth/data/model/request/refresh_token_request/refresh_token_request_dto.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
 import 'package:flower_app/features/auth/data/model/response/login_response/login_response.dart';
+import 'package:flower_app/features/auth/data/model/response/refresh_token_response/refresh_token_response_dto.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -27,6 +29,11 @@ abstract class AuthApiClient {
 
   @POST(ApiStrings.register)
   Future<RegisterResponse> register(@Body() RegisterRequest request);
+
+  @POST(ApiStrings.refreshToken)
+  Future<RefreshTokenResponseDto> refreshToken(
+    @Body() RefreshTokenRequestDto request,
+  );
 
   @POST(ApiStrings.forgotPassword)
   Future<ForgotPasswordResponseDto> forgotPassword(

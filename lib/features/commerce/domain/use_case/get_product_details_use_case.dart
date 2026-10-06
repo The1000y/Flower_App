@@ -9,7 +9,8 @@ class GetProductDetailsUseCase {
 
   GetProductDetailsUseCase(this._repository);
 
-  Future<BaseResponce<ProductDetailsEntity>> execute(int productId) async {
+  Future<BaseResponce<ProductDetailsEntity>> execute(String productId) async {
     return await _repository.getProductDetails(productId);
   }
 }
+

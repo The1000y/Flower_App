@@ -42,19 +42,16 @@ class _BestsellerViewState extends State<BestsellerView> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new,
-              color: AppColors.blackBase,
-            ),
+            icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.blackBase),
             onPressed: () => Navigator.pop(context),
           ),
           titleSpacing: 0,
           title: Text(
             AppStrings.bestsellerLabel,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.sp,
-            ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.sp,
+                ),
           ),
         ),
         body: BlocBuilder<BestsellerCubit, BestsellerState>(
@@ -91,18 +88,15 @@ class _BestsellerViewState extends State<BestsellerView> {
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Text(
                     AppStrings.bloomSubtitle,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: AppColors.black30),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.black30,
+                        ),
                   ),
                 ),
                 SizedBox(height: 20.h),
                 Expanded(
                   child: GridView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 10.h,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 12.w,
@@ -171,9 +165,9 @@ class BestsellerProductCard extends StatelessWidget {
                   Text(
                     item.name,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.blackBase,
-                      fontWeight: FontWeight.w500,
-                    ),
+                          color: AppColors.blackBase,
+                          fontWeight: FontWeight.w500,
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -183,8 +177,7 @@ class BestsellerProductCard extends StatelessWidget {
                       Flexible(
                         child: Text(
                           '${item.currency} ${item.price}',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: AppColors.blackBase,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.sp,
@@ -197,8 +190,7 @@ class BestsellerProductCard extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Text(
                           '${item.originalPrice}',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: AppColors.black30,
                                 decoration: TextDecoration.lineThrough,
                                 fontSize: 10.sp,
@@ -209,8 +201,7 @@ class BestsellerProductCard extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Text(
                           '${item.discountPercentage}%',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Colors.green,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 10.sp,
@@ -234,11 +225,7 @@ class BestsellerProductCard extends StatelessWidget {
                         ),
                         padding: EdgeInsets.zero,
                       ),
-                      icon: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.white,
-                        size: 16.sp,
-                      ),
+                      icon: Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 16.sp),
                       label: Text(
                         AppStrings.addToCart,
                         style: TextStyle(

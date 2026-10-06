@@ -4,6 +4,7 @@ import 'package:flower_app/features/addresses/data/model/request/update_address_
 import 'package:flower_app/features/addresses/data/model/responce/address_dto.dart';
 import 'package:flower_app/features/addresses/domain/entities/location_entity.dart';
 
+
 abstract interface class AddressLocalDataSource {
   Future<BaseResponce<AddressDto>> addAddress({
     required AddAddressRequest addAddressRequest,
@@ -19,3 +20,4 @@ abstract interface class AddressLocalDataSource {
     required UpdateAddressRequestDto request,
   });
 }
+

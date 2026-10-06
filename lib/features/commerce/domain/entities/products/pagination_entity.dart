@@ -34,6 +34,7 @@ class PaginatedProducts extends Equatable {
   final PaginationEntity pagination;
 
   const PaginatedProducts({required this.items, required this.pagination});
+
   @override
   List<Object> get props => [items, pagination];
 }

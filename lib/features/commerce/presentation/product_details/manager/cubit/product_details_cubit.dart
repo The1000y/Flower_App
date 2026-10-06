@@ -10,7 +10,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   final GetProductDetailsUseCase _getProductDetailsUseCase;
 
   ProductDetailsCubit(this._getProductDetailsUseCase)
-    : super(const ProductDetailsState());
+      : super(const ProductDetailsState());
 
   void doEvent(ProductDetailsEvent event) {
     switch (event) {
@@ -20,7 +20,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
-  Future<void> getProductDetails(int productId) async {
+  Future<void> getProductDetails(String productId) async {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
 
     final result = await _getProductDetailsUseCase.execute(productId);
@@ -30,10 +30,10 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
         emit(state.copyWith(isLoading: false, data: result.data));
         break;
       case ErrorResponce():
-        emit(
-          state.copyWith(isLoading: false, errorMessage: result.errorMessage),
-        );
+        emit(state.copyWith(isLoading: false, errorMessage: result.errorMessage));
         break;
     }
   }
 }
+
+

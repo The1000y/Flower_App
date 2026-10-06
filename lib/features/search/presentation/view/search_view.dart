@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -119,7 +120,7 @@ class _SearchViewState extends State<SearchView> {
     if (products.isEmpty) {
       return Center(
         child: Text(
-          'No results found',
+          AppStrings.noResult,
           style: TextStyle(color: AppColors.black30, fontSize: 16.sp),
         ),
       );
@@ -147,7 +148,8 @@ class _SearchViewState extends State<SearchView> {
             name: product.name,
             price: product.price,
             oldPrice: product.originalPrice,
-            discount: product.discountPercentage?.round(), id: product.id,
+            discount: product.discountPercentage?.round(),
+            id: product.id,
           ),
         );
       },

@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
@@ -14,8 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MockCartCubit extends MockCubit<CartState> implements CartCubit {}
 
-class MockAddressCubit extends MockCubit<AddressState>
-    implements AddressCubit {}
+class MockAddressCubit extends MockCubit<AddressState> implements AddressCubit {}
 
 void main() {
   late MockCartCubit mockCubit;
@@ -24,6 +24,21 @@ void main() {
   setUp(() {
     mockCubit = MockCartCubit();
     mockAddressCubit = MockAddressCubit();
+
+    whenListen(
+      mockAddressCubit,
+      const Stream<AddressState>.empty(),
+      initialState: const AddressState(),
+    );
+
+    if (getIt.isRegistered<AddressCubit>()) {
+      getIt.unregister<AddressCubit>();
+    }
+    getIt.registerFactory<AddressCubit>(() => mockAddressCubit);
+  });
+
+  tearDown(() {
+    getIt.reset();
   });
 
   Future<void> pumpApp(WidgetTester tester, CartState state) async {
@@ -33,21 +48,13 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     whenListen(mockCubit, const Stream<CartState>.empty(), initialState: state);
-    whenListen(
-      mockAddressCubit,
-      const Stream<AddressState>.empty(),
-      initialState: const AddressState(),
-    );
 
     await tester.pumpWidget(
       ScreenUtilPlusInit(
         designSize: const Size(375, 812),
         child: MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider<CartCubit>.value(value: mockCubit),
-              BlocProvider<AddressCubit>.value(value: mockAddressCubit),
-            ],
+          home: BlocProvider<CartCubit>.value(
+            value: mockCubit,
             child: const CartView(),
           ),
         ),
@@ -99,7 +106,7 @@ void main() {
       items: [
         CartItemEntity(
           id: 'item-1',
-          productId: 1,
+          productId: '1',
           productName: 'Red Roses Bouquet',
           productImageUrl: 'https://example.com/rose.jpg',
           unitPrice: 200,
@@ -126,7 +133,7 @@ void main() {
       items: [
         CartItemEntity(
           id: 'item-1',
-          productId: 1,
+          productId: '1',
           productName: 'Red Roses Bouquet',
           productImageUrl: 'https://example.com/rose.jpg',
           unitPrice: 200,
@@ -137,7 +144,7 @@ void main() {
         ),
         CartItemEntity(
           id: 'item-2',
-          productId: 2,
+          productId: '2',
           productName: 'White Tulips Bouquet',
           productImageUrl: 'https://example.com/tulips.jpg',
           unitPrice: 100,
@@ -153,7 +160,15 @@ void main() {
       hasChanges: false,
     );
 
-    await pumpApp(tester, CartState(data: cart, loadingProductIds: {1}));
+    await pumpApp(
+      tester,
+      CartState(
+        data: cart,
+        itemLoadings: {
+          const CartItemLoading(id: '1', action: CartItemAction.update),
+        },
+      ),
+    );
 
     // Both items remain visible (no full-page loading).
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
@@ -168,7 +183,9 @@ void main() {
 
     // The affected product's delete is disabled; the other remains enabled.
     final deleteButtons = tester
-        .widgetList<IconButton>(find.widgetWithIcon(IconButton, Icons.delete))
+        .widgetList<IconButton>(
+          find.widgetWithIcon(IconButton, Icons.delete),
+        )
         .toList();
     expect(deleteButtons.length, 2);
     expect(deleteButtons[0].onPressed, isNull);

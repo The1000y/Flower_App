@@ -7,6 +7,8 @@ class AddressEntity extends Equatable {
   final String addressLine;
   final String city;
   final String area;
+  final String? cityId;
+  final String? areaId;
   final double? lat;
   final double? lng;
   final String? label;
@@ -22,6 +24,8 @@ class AddressEntity extends Equatable {
     required this.addressLine,
     required this.city,
     required this.area,
+    this.cityId,
+    this.areaId,
     this.lat,
     this.lng,
     this.label,
@@ -39,6 +43,8 @@ class AddressEntity extends Equatable {
     addressLine,
     city,
     area,
+    cityId,
+    areaId,
     lat,
     lng,
     label,

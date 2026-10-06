@@ -1,7 +1,6 @@
 abstract class AppStrings {
   static const String userData = 'User';
 
-  // Auth
   static const String loginTitle = 'Login';
   static const String emailLabel = 'Email';
   static const String emailHint = 'Enter your email';
@@ -26,8 +25,7 @@ abstract class AppStrings {
   static const String genderTitle = 'Gender';
   static const String female = 'female';
   static const String male = 'Male';
-  static const String termsPrefix =
-      'Creating an account, you agree to our ';
+  static const String termsPrefix = 'Creating an account, you agree to our ';
   static const String termsLink = 'Terms&Conditions';
   static const String alreadyHaveAccount = 'Already have an account?';
 
@@ -51,7 +49,6 @@ abstract class AppStrings {
       ' number at least';
   static const String newPasswordLabel = 'New password';
 
-  // Auth validation
   static const String loginFailed = 'Login failed';
   static const String loginSuccess = 'Login successful';
   static const String invalidCredentials = 'Invalid email or password';
@@ -63,10 +60,8 @@ abstract class AppStrings {
       'Password must be at least 8 characters';
   static const String passwordStrongRules =
       'Password must contain uppercase, lowercase, number and special character';
-  static const String confirmPasswordRequired =
-      'Please confirm your password';
-  static const String confirmPasswordMismatch =
-      'Passwords do not match';
+  static const String confirmPasswordRequired = 'Please confirm your password';
+  static const String confirmPasswordMismatch = 'Passwords do not match';
   static const String usernameRequired = 'Username is required';
   static const String usernameMinLength =
       'Username must be at least 3 characters';
@@ -77,18 +72,14 @@ abstract class AppStrings {
   static const String lastNameOnlyLetters =
       'Last name must contain only letters';
   static const String phoneRequired = 'Phone number is required';
-  static const String phoneInvalid =
-      'Enter a valid Egyptian phone number';
-
+  static const String phoneInvalid = 'Enter a valid Egyptian phone number';
   static const String registerError = 'Failed register';
   static const String registerSuccess = 'Register successful';
 
-  // Auth storage keys
   static const String refreshToken = 'refresh_token';
   static const String accessToken = 'access_token';
   static const String rememberedEmail = 'remembered_email';
 
-  // Home
   static const String floweryAppbarTitle = 'Flowery';
   static const String searchHint = 'Search';
   static const String deliverToPrefix = 'Deliver to ';
@@ -107,7 +98,6 @@ abstract class AppStrings {
   static const String bloomSubtitle =
       'Bloom with our exquisite best sellers';
 
-  // Product
   static const String statusLabel = 'Status: ';
   static const String addToCart = 'Add to cart';
   static const String productAddedToCart = 'Product added to cart';
@@ -116,7 +106,6 @@ abstract class AppStrings {
   static const String description = 'Description';
   static const String bouquetInclude = 'Bouquet include';
 
-  // Search / Filter
   static const String searchPlaceholder =
       'Search For Any Product You Want';
   static const String filterButton = 'Filter';
@@ -128,7 +117,6 @@ abstract class AppStrings {
   static const String sortDiscount = 'Discount';
   static const String noResult = 'No Result found';
 
-  // Checkout
   static const String checkoutTitle = 'Checkout';
   static const String checkout = 'Checkout';
   static const String deliveryTime = 'Delivery time';
@@ -153,40 +141,32 @@ abstract class AppStrings {
   static const String deliveryFee = 'Delivery Fee';
   static const String total = 'Total';
   static const String placeOrder = 'Place order';
-  static const String yourCartIsEmpty = 'Your cart is empty';
 
-  // Address
   static const String savedAddressTitle = 'Saved address';
   static const String addNewAddress = 'Add new address';
   static const String addressTitle = 'Address';
   static const String enterAddressHint = 'Enter the address';
   static const String enterTheThePhoneHint =
       'Enter the the phone number';
-
   static const String recipientNameLabel = 'Recipient name';
   static const String enterRecipientNameHint =
       'Enter the recipient name';
-
   static const String cityLabel = 'City';
   static const String areaLabel = 'Area';
   static const String saveAddress = 'Save address';
 
-  static const String savedAddressEmpty =
-      'No saved addresses yet';
+  static const String savedAddressEmpty = 'No saved addresses yet';
   static const String titleAddress = 'Title';
   static const String labelAddress = 'Enter Title Address';
   static const String loadingAddress = 'Loading...';
   static const String labelTitle = 'Title';
   static const String labelTitleHint = 'Title of the address';
-
-  static const String addressError =
-      'Could not get address details';
+  static const String addressError = 'Could not get address details';
   static const String addressRequired = 'Address is Required';
   static const String labelRequired = 'Label is Required';
   static const String recipientNameRequired = 'Name is Required';
   static const String cityRequired = 'City is Required';
   static const String phoneNumberRequired = 'Phone is Required';
-
   static const String addYourAddress = 'Add Your Address';
   static const String addressAddedSuccess =
       'Address added successfully';
@@ -202,12 +182,10 @@ abstract class AppStrings {
       'Please check your details.';
 
   static const String retry = 'Retry';
-
   static const String lat = 'lat';
   static const String lng = 'lng';
   static const String addressId = 'addressId';
 
-  // Orders
   static const String myOrdersTitle = 'My orders';
   static const String tabActive = 'Active';
   static const String tabCompleted = 'Completed';
@@ -238,7 +216,8 @@ abstract class AppStrings {
   static const String orderPlacedSuccess =
       'Your order placed successfully!';
 
-  // Profile
+  static const String yourCartIsEmpty = 'Your cart is empty';
+
   static const String profileUpdated = 'Profile updated';
   static const String genderFemaleLabel = 'Female';
   static const String genderMaleLabel = 'Male';
@@ -254,33 +233,26 @@ abstract class AppStrings {
   static const String passwordUpdatedSuccessfully =
       'Password updated successfully';
 
-  // Notifications
   static const String notificationTitle = 'Notification';
   static const String notificationNewOffer = 'New offer';
   static const String notificationRemember = 'Remember';
 
-  // Language
   static const String language = 'Language';
   static const String changeLanguageTitle = 'Change Language';
   static const String languageArabic = 'Arabic';
   static const String languageEnglish = 'English';
 
-  // General
   static const String aboutUs = 'About us';
-  static const String termsAndConditionsAlt =
-      'Terms & conditions';
+  static const String termsAndConditionsAlt = 'Terms & conditions';
 
-  // Logout
   static const String logout = 'Logout';
   static const String logoutDialogTitle = 'LOGOUT';
   static const String confirmLogoutSubtitle = 'Confirm logout!!';
   static const String actionCancel = 'Cancle';
 
-  // General Errors
   static const String userNotFound = 'User not found';
   static const String unexpectedError =
       'Something went wrong. Please try again.';
 
-  // App Version
   static const String versionProfile = 'v6.3.0 - 1.40.0';
 }

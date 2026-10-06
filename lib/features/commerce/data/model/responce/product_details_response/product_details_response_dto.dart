@@ -5,19 +5,31 @@ part 'product_details_response_dto.g.dart';
 
 @JsonSerializable()
 class ProductDetailsResponseDto {
-  final ProductDetailsDto data;
-  final bool isSuccess;
-  final String message;
-  final String errorCode;
+  @JsonKey(name: 'value')
+  final ProductDetailsDto? value;
+
+  @JsonKey(name: 'data')
+  final ProductDetailsDto? data;
+
+  @JsonKey(name: 'success')
+  final bool? isSuccess;
+
+  @JsonKey(name: 'message')
+  final String? message;
+
+  @JsonKey(name: 'error')
+  final String? errorCode;
 
   ProductDetailsResponseDto({
-    required this.data,
-    required this.isSuccess,
-    required this.message,
-    required this.errorCode,
+    this.value,
+    this.data,
+    this.isSuccess,
+    this.message,
+    this.errorCode,
   });
 
-  factory ProductDetailsResponseDto.fromJson(Map<String, dynamic> json) =>
-      _$ProductDetailsResponseDtoFromJson(json);
+  ProductDetailsDto get effectiveData => value ?? data!;
+
+  factory ProductDetailsResponseDto.fromJson(Map<String, dynamic> json) => _$ProductDetailsResponseDtoFromJson(json);
   Map<String, dynamic> toJson() => _$ProductDetailsResponseDtoToJson(this);
 }

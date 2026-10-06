@@ -5,7 +5,9 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 
 class CustomHeaderHomeView extends StatelessWidget {
-  const CustomHeaderHomeView({super.key});
+  const CustomHeaderHomeView({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,10 @@ class CustomHeaderHomeView extends StatelessWidget {
             },
             decoration: InputDecoration(
               hintText: AppStrings.searchHint,
-              prefixIcon: Icon(Icons.search, color: AppColors.white70),
+              prefixIcon: Icon(
+                Icons.search,
+                color: AppColors.white70,
+              ),
             ),
           ),
         ),

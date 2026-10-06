@@ -1,7 +1,6 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/commerce/data/data_source/local_data_source/commerce_local_data_source.dart';
 import 'package:flower_app/features/commerce/data/data_source/remote_data_source/commerce_remote_data_source.dart';
-import 'package:flower_app/features/commerce/data/model/responce/best_seller/product_dto.dart';
 import 'package:flower_app/features/commerce/data/model/request/cart_request/add_cart_item_request_dto.dart';
 import 'package:flower_app/features/commerce/data/model/request/cart_request/update_cart_item_request_dto.dart';
 import 'package:flower_app/features/commerce/data/model/responce/cart_response/cart_response_dto.dart';
@@ -31,44 +30,54 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<List<CategoryEntity>>> getCategories() async {
-    final response = await localDataSource.getCategories();
+    final response = await remoteDataSource.getCategories();
     switch (response) {
       case SuccessResponce<List<CategoryDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
       case ErrorResponce<List<CategoryDto>>():
-        return ErrorResponce(Exception(response.errorMessage));
+        return ErrorResponce(response.error);
     }
   }
 
   @override
   Future<BaseResponce<List<BestSellerEntity>>> getBestSeller() async {
-    final response = await localDataSource.getBestSellers();
+    // For Best Seller, we fetch regular products from the remote catalog
+    final response = await remoteDataSource.getProducts(pageSize: 10);
     switch (response) {
-      case SuccessResponce<List<ProductDto>>():
-        final data = response.data.map((element) {
-          return element.toDomain();
+      case SuccessResponce<ProductsResponseDto>():
+        final data = response.data.products.map((element) {
+          return BestSellerEntity(
+            id: element.id,
+            name: element.name,
+            imageUrl: element.imageUrl,
+            currency: element.currency,
+            price: element.price.toInt(),
+            originalPrice: element.originalPrice?.toInt() ?? 0,
+            discountPercentage: element.discountPercentage?.toInt() ?? 0,
+            status: element.status,
+          );
         }).toList();
         return SuccessResponce<List<BestSellerEntity>>(data);
 
-      case ErrorResponce<List<ProductDto>>():
-        return ErrorResponce(Exception(response.errorMessage));
+      case ErrorResponce<ProductsResponseDto>():
+        return ErrorResponce(response.error);
     }
   }
 
   @override
   Future<BaseResponce<List<SectionEntity>>> getSection() async {
-    final response = await localDataSource.getSections();
+    final response = await remoteDataSource.getSections();
     switch (response) {
       case SuccessResponce<List<SectionDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
       case ErrorResponce<List<SectionDto>>():
-        return ErrorResponce(Exception(response.errorMessage));
+        return ErrorResponce(response.error);
     }
   }
 
   @override
   Future<BaseResponce<List<OccasionEntity>>> getOccasions() async {
-    final response = await localDataSource.getOccasions();
+    final response = await remoteDataSource.getOccasions();
     switch (response) {
       case SuccessResponce<List<OccasionDto>>():
         return SuccessResponce(response.data.map((e) => e.toDomain()).toList());
@@ -79,7 +88,7 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<List<ProductEntity>>> getProducts() async {
-    final response = await localDataSource.getProducts();
+    final response = await remoteDataSource.getProducts();
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
         return SuccessResponce(response.data.products);
@@ -90,10 +99,13 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
-    int occasionId, {
+    String occasionId, {
     int page = 1,
   }) async {
-    final response = await remoteDataSource.getProducts(occasionId, page: page);
+    final response = await remoteDataSource.getProducts(
+      occasionId: occasionId,
+      page: page,
+    );
     switch (response) {
       case SuccessResponce<ProductsResponseDto>():
         return SuccessResponce(
@@ -109,57 +121,55 @@ class CommerceRepoImpl implements CommerceRepo {
 
   @override
   Future<BaseResponce<CartEntity>> addToCart(AddCartItemParams params) async {
-    final response = await localDataSource.addToCart(
+    final response = await remoteDataSource.addCartItem(
       AddCartItemRequestDto(
         productId: params.productId,
         quantity: params.quantity,
       ),
     );
-    switch (response) {
-      case SuccessResponce<CartResponseDto>():
-        return SuccessResponce(response.data.toDomain());
-      case ErrorResponce<CartResponseDto>():
-        return ErrorResponce(response.error);
-    }
+    return _toCartResponse(response);
   }
 
   @override
   Future<BaseResponce<CartEntity>> getCart() async {
-    final response = await localDataSource.getCart();
-    switch (response) {
-      case SuccessResponce<CartResponseDto>():
-        return SuccessResponce(response.data.toDomain());
-      case ErrorResponce<CartResponseDto>():
-        return ErrorResponce(response.error);
-    }
+    final response = await remoteDataSource.getCart();
+    return _toCartResponse(response);
   }
 
   @override
   Future<BaseResponce<CartEntity>> removeCartItem(String cartItemId) async {
-    final response = await localDataSource.removeCartItem(cartItemId);
-    switch (response) {
-      case SuccessResponce<CartResponseDto>():
-        return SuccessResponce(response.data.toDomain());
-      case ErrorResponce<CartResponseDto>():
-        return ErrorResponce(response.error);
-    }
+    final response = await remoteDataSource.removeCartItem(cartItemId);
+    return _toCartResponse(response);
   }
 
   @override
   Future<BaseResponce<CartEntity>> updateCartItemQuantity(
-    String cartItemId,
+    String productId,
     UpdateCartItemParams params,
   ) async {
-    final response = await localDataSource.updateCartItemQuantity(
-      cartItemId,
+    final response = await remoteDataSource.updateCartItemQuantity(
+      productId,
       UpdateCartItemRequestDto(quantity: params.quantity),
     );
+    return _toCartResponse(response);
+  }
 
-    switch (response) {
-      case SuccessResponce<CartResponseDto>():
-        return SuccessResponce(response.data.toDomain());
-      case ErrorResponce<CartResponseDto>():
-        return ErrorResponce(response.error);
-    }
+  @override
+  Future<BaseResponce<CartEntity>> clearCart() async {
+    final response = await remoteDataSource.clearCart();
+    return _toCartResponse(response);
+  }
+
+  BaseResponce<CartEntity> _toCartResponse(
+    BaseResponce<CartResponseDto> response,
+  ) {
+    return switch (response) {
+      SuccessResponce<CartResponseDto>() => SuccessResponce(
+        response.data.toDomain(),
+      ),
+      ErrorResponce<CartResponseDto>() => ErrorResponce(response.error),
+    };
   }
 }
+
+

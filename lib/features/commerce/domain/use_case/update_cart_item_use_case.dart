@@ -1,3 +1,4 @@
+
 import 'package:flower_app/features/commerce/domain/models/cart/update_cart_item_params.dart';
 import 'package:injectable/injectable.dart';
 
@@ -9,12 +10,18 @@ import '../repo/commerce_repo.dart';
 class UpdateCartItemUseCase {
   final CommerceRepo commerceRepo;
 
-  UpdateCartItemUseCase({required this.commerceRepo});
+  UpdateCartItemUseCase({
+    required this.commerceRepo,
+  });
 
   Future<BaseResponce<CartEntity>> call(
-    String cartItemId,
+    String productId,
     UpdateCartItemParams params,
   ) async {
-    return await commerceRepo.updateCartItemQuantity(cartItemId, params);
+    return await commerceRepo.updateCartItemQuantity(
+      productId,
+      params,
+    );
   }
 }
+

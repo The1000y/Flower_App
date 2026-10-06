@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -21,10 +19,10 @@ class BuildSortItemFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isSelected = value == groupValue;
+
     return GestureDetector(
-      onTap: () {
-        onChanged(value);
-      },
+      onTap: () => onChanged(value),
       child: Container(
         height: 64.h,
         margin: EdgeInsets.only(bottom: 16.h),
@@ -41,11 +39,9 @@ class BuildSortItemFilter extends StatelessWidget {
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
             ),
             const Spacer(),
-            Radio<SortType>(
-              value: value,
-              groupValue: groupValue,
-              activeColor: Colors.pink,
-              onChanged: onChanged,
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: isSelected ? Colors.pink : Colors.grey,
             ),
           ],
         ),

@@ -23,10 +23,12 @@ void main() {
   late MockGetProductsUseCase mockGetProductsUseCase;
   late OccasionCubit occasionCubit;
 
-  final tOccasions = [OccasionEntity(id: 1, name: 'Birthday', imageUrl: 'url')];
+  final tOccasions = [
+    OccasionEntity(id: '1', name: 'Birthday', imageUrl: 'url'),
+  ];
 
   final tProduct = ProductEntity(
-    id: 1,
+    id: '1',
     name: 'Red Rose',
     imageUrl: 'https://example.com/rose.png',
     currency: 'EGP',
@@ -86,7 +88,7 @@ void main() {
         when(() => mockGetOccasionsUseCase.execute()).thenAnswer(
           (_) async => SuccessResponce<List<OccasionEntity>>(tOccasions),
         );
-        when(() => mockGetProductsUseCase.execute(1, page: 1)).thenAnswer(
+        when(() => mockGetProductsUseCase.execute('1', page: 1)).thenAnswer(
           (_) async =>
               SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
         );
@@ -108,16 +110,16 @@ void main() {
             .having((s) => s.occasionsState.data, 'occasions data', tOccasions),
         isA<OccasionState>()
             .having((s) => s.productsState.isLoading, 'products loading', true)
-            .having((s) => s.currentOccasionId, 'current occasion', 1),
+            .having((s) => s.currentOccasionId, 'current occasion', '1'),
         isA<OccasionState>()
             .having((s) => s.productsState.isLoading, 'products loading', false)
             .having((s) => s.productsState.data, 'products data', [tProduct])
             .having((s) => s.pagination, 'pagination', tPaginationPage1NoNext)
-            .having((s) => s.currentOccasionId, 'current occasion', 1),
+            .having((s) => s.currentOccasionId, 'current occasion', '1'),
       ],
       verify: (_) {
         verify(() => mockGetOccasionsUseCase.execute()).called(1);
-        verify(() => mockGetProductsUseCase.execute(1, page: 1)).called(1);
+        verify(() => mockGetProductsUseCase.execute('1', page: 1)).called(1);
       },
     );
 
@@ -162,21 +164,21 @@ void main() {
     blocTest<OccasionCubit, OccasionState>(
       'emits products for the requested occasion on success',
       build: () {
-        when(() => mockGetProductsUseCase.execute(5, page: 1)).thenAnswer(
+        when(() => mockGetProductsUseCase.execute('5', page: 1)).thenAnswer(
           (_) async =>
               SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
         );
         return occasionCubit;
       },
-      act: (cubit) => cubit.handle(LoadProductsForOccasion(5)),
+      act: (cubit) => cubit.handle(LoadProductsForOccasion('5')),
       expect: () => [
         isA<OccasionState>()
             .having((s) => s.productsState.isLoading, 'products loading', true)
-            .having((s) => s.currentOccasionId, 'current occasion', 5),
+            .having((s) => s.currentOccasionId, 'current occasion', '5'),
         isA<OccasionState>()
             .having((s) => s.productsState.isLoading, 'products loading', false)
             .having((s) => s.productsState.data, 'products data', [tProduct])
-            .having((s) => s.currentOccasionId, 'current occasion', 5),
+            .having((s) => s.currentOccasionId, 'current occasion', '5'),
       ],
     );
 
@@ -185,11 +187,11 @@ void main() {
       build: () {
         final exception = Exception('Failed to get products');
         when(
-          () => mockGetProductsUseCase.execute(5, page: 1),
+          () => mockGetProductsUseCase.execute('5', page: 1),
         ).thenAnswer((_) async => ErrorResponce<PaginatedProducts>(exception));
         return occasionCubit;
       },
-      act: (cubit) => cubit.handle(LoadProductsForOccasion(5)),
+      act: (cubit) => cubit.handle(LoadProductsForOccasion('5')),
       expect: () => [
         isA<OccasionState>().having(
           (s) => s.productsState.isLoading,
@@ -211,17 +213,17 @@ void main() {
       () async {
         final completer = Completer<BaseResponce<PaginatedProducts>>();
         when(
-          () => mockGetProductsUseCase.execute(1, page: 1),
+          () => mockGetProductsUseCase.execute('1', page: 1),
         ).thenAnswer((_) => completer.future);
-        when(() => mockGetProductsUseCase.execute(2, page: 1)).thenAnswer(
+        when(() => mockGetProductsUseCase.execute('2', page: 1)).thenAnswer(
           (_) async =>
               SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
         );
 
-        occasionCubit.handle(LoadProductsForOccasion(1));
+        occasionCubit.handle(LoadProductsForOccasion('1'));
         await Future<void>.delayed(Duration.zero);
 
-        occasionCubit.handle(LoadProductsForOccasion(2));
+        occasionCubit.handle(LoadProductsForOccasion('2'));
         await Future<void>.delayed(Duration.zero);
 
         // The occasion-1 request resolves after occasion 2 is already active
@@ -233,7 +235,7 @@ void main() {
         );
         await Future<void>.delayed(Duration.zero);
 
-        expect(occasionCubit.state.currentOccasionId, 2);
+        expect(occasionCubit.state.currentOccasionId, '2');
         expect(occasionCubit.state.productsState.data, [tProduct]);
       },
     );
@@ -245,10 +247,10 @@ void main() {
       seed: () => OccasionState(
         productsState: BaseState<List<ProductEntity>>(data: [tProduct]),
         pagination: tPaginationPage1HasNext,
-        currentOccasionId: 1,
+        currentOccasionId: '1',
       ),
       build: () {
-        when(() => mockGetProductsUseCase.execute(1, page: 2)).thenAnswer(
+        when(() => mockGetProductsUseCase.execute('1', page: 2)).thenAnswer(
           (_) async => SuccessResponce<PaginatedProducts>(
             PaginatedProducts(
               items: [tProduct],
@@ -274,7 +276,7 @@ void main() {
             .having((s) => s.pagination, 'pagination', tPaginationPage2NoNext),
       ],
       verify: (_) {
-        verify(() => mockGetProductsUseCase.execute(1, page: 2)).called(1);
+        verify(() => mockGetProductsUseCase.execute('1', page: 2)).called(1);
       },
     );
 
@@ -283,7 +285,7 @@ void main() {
       seed: () => OccasionState(
         productsState: BaseState<List<ProductEntity>>(data: [tProduct]),
         pagination: tPaginationPage1NoNext,
-        currentOccasionId: 1,
+        currentOccasionId: '1',
       ),
       build: () => occasionCubit,
       act: (cubit) => cubit.handle(LoadMoreProducts()),

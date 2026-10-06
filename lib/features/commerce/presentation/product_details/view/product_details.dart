@@ -1,4 +1,4 @@
-import 'package:flower_app/config/di/di.dart';
+﻿import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -14,8 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductDetails extends StatefulWidget {
-  final int productId;
-
+  final String productId;
   const ProductDetails({super.key, required this.productId});
 
   @override
@@ -36,7 +35,6 @@ class _ProductDetailsState extends State<ProductDetails> {
               getIt<ProductDetailsCubit>()
                 ..doEvent(GetProductDetailsEvent(widget.productId)),
         ),
-        BlocProvider.value(value: getIt<CartCubit>()),
       ],
       child: BlocListener<CartCubit, CartState>(
         listenWhen: (previous, current) =>
@@ -140,13 +138,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         size: 20,
                                       ),
                                       color: AppColors.blackBase,
-                                      onPressed: () {
-                                        CategoriesNavigation
-                                                .selectedIndex
-                                                .value =
-                                            0;
-                                        Navigator.pop(context);
-                                      },
+                                onPressed: () {
+                                  CategoriesNavigation.selectedIndex.value = 0;
+                                  Navigator.pop(context);
+                                },
                                     ),
                                   ),
                                 ),
@@ -298,8 +293,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                       padding: EdgeInsets.all(16.w),
                       child: BlocBuilder<CartCubit, CartState>(
                         builder: (context, cartState) {
+                          final productId = product.id;
+
                           final isAdded = cartState.cart.items.any(
-                            (item) => item.productId == product.id,
+                            (item) => item.productId == productId,
                           );
 
                           return CustomButton(
@@ -311,13 +308,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 : () {
                                     context.read<CartCubit>().doEvent(
                                       AddToCartEvent(
-                                        productId: product.id,
+                                        productId: productId,
                                         quantity: 1,
                                       ),
                                     );
                                   },
                             isEnabled: !isAdded,
-                            isLoading: cartState.isProductLoading(product.id),
+                            isLoading: cartState.isProductLoading(productId),
                             enabledColor: AppColors.pinkBase,
                           );
                         },
@@ -345,3 +342,5 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 }
+
+

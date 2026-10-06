@@ -16,15 +16,12 @@ class BestSellerLocalDataSourceImpl implements BestSellerLocalDataSource {
         items: List.generate(
           6,
           (index) => ProductDto(
-            id: (page - 1) * 6 + index + 1,
+            id: ((page - 1) * 6 + index + 1).toString(),
             name: 'Red roses - Page $page',
             imageUrl:
                 'https://images.unsplash.com/photo-1561181286-d397369328d0?q=80&w=1000&auto=format&fit=crop',
             currency: 'EGP',
             price: 600,
-            originalPrice: 800,
-            discountPercentage: 20,
-            status: 'In stock',
           ),
         ),
         pagination: PaginationDto(
@@ -39,3 +36,4 @@ class BestSellerLocalDataSourceImpl implements BestSellerLocalDataSource {
     );
   }
 }
+

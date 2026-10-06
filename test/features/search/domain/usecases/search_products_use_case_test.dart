@@ -24,7 +24,7 @@ void main() {
 
   final tProducts = [
     ProductEntity(
-      id: 1,
+      id: '1',
       name: 'Red Roses Bouquet',
       imageUrl: 'https://example.com/rose.png',
       currency: 'EGP',

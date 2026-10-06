@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductCard extends StatelessWidget {
-  final int id;
+  final String id;
   final String image;
   final String name;
   final double price;
   final double? oldPrice;
   final int? discount;
   final VoidCallback? onAddToCart;
+
   const ProductCard({
     super.key,
     required this.image,
@@ -23,6 +24,7 @@ class ProductCard extends StatelessWidget {
     this.onAddToCart,
     required this.id,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,6 +59,7 @@ class ProductCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (_, error, stackTrace) {
                     log('Error loading image: $error');
+
                     return const Center(
                       child: Icon(Icons.image_not_supported, size: 60),
                     );
@@ -65,6 +68,7 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           ),
+
           SizedBox(height: 8.h),
 
           /// Product Name
@@ -74,6 +78,7 @@ class ProductCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),
           ),
+
           SizedBox(height: 6.h),
 
           /// Price
@@ -109,8 +114,10 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                       ),
+
                     if (oldPrice != null && discount != null)
                       SizedBox(width: 10.w),
+
                     if (discount != null)
                       Text(
                         '$discount%',
@@ -124,6 +131,7 @@ class ProductCard extends StatelessWidget {
                 ),
             ],
           ),
+
           SizedBox(height: 8.h),
 
           /// Add To Cart Button
@@ -153,3 +161,4 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
+

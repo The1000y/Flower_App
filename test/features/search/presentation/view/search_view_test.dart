@@ -1,5 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_event.dart';
@@ -142,13 +144,13 @@ void main() {
 
     await pumpApp(tester, wrap(state));
 
-    expect(find.text('No results found'), findsOneWidget);
+    expect(find.text(AppStrings.noResult), findsOneWidget);
   });
 
   testWidgets('renders the product grid with product names', (tester) async {
     final products = [
       ProductEntity(
-        id: 1,
+        id: '1',
         name: 'Red Roses Bouquet',
         imageUrl: 'https://example.com/rose.png',
         currency: 'EGP',
@@ -156,7 +158,7 @@ void main() {
         status: 'InStock',
       ),
       ProductEntity(
-        id: 2,
+        id: '2',
         name: 'White Lily Bouquet',
         imageUrl: 'https://example.com/lily.png',
         currency: 'EGP',

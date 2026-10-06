@@ -20,9 +20,8 @@ abstract interface class CommerceRepo {
   Future<BaseResponce<List<OccasionEntity>>> getOccasions();
 
   Future<BaseResponce<List<ProductEntity>>> getProducts();
-
   Future<BaseResponce<PaginatedProducts>> getOccasionsProducts(
-    int occasionId, {
+    String occasionId, {
     int page = 1,
   });
 
@@ -30,10 +29,17 @@ abstract interface class CommerceRepo {
 
   Future<BaseResponce<CartEntity>> addToCart(AddCartItemParams params);
 
+  /// The backend PATCH route is keyed by the catalogue product id
+  /// (`/cart/api/cart/items/:productId`), not by the cart line id.
   Future<BaseResponce<CartEntity>> updateCartItemQuantity(
-    String cartItemId,
+    String productId,
     UpdateCartItemParams params,
   );
 
+  /// The backend DELETE route is keyed by the cart line id
+  /// (`/cart/cart/items/:id`).
   Future<BaseResponce<CartEntity>> removeCartItem(String cartItemId);
+
+  Future<BaseResponce<CartEntity>> clearCart();
 }
+

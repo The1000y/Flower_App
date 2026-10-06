@@ -6,9 +6,11 @@ part 'categories_response_dto.g.dart';
 @JsonSerializable()
 class CategoriesResponseDto {
   final List<CategoryDto> data;
+  @JsonKey(name: 'success')
   final bool isSuccess;
   final String message;
-  final String errorCode;
+  @JsonKey(name: 'error')
+  final String? errorCode;
 
   CategoriesResponseDto({
     required this.data,
@@ -17,7 +19,7 @@ class CategoriesResponseDto {
     required this.errorCode,
   });
 
-  factory CategoriesResponseDto.fromJson(Map<String, dynamic> json) =>
-      _$CategoriesResponseDtoFromJson(json);
+  factory CategoriesResponseDto.fromJson(Map<String, dynamic> json) => _$CategoriesResponseDtoFromJson(json);
   Map<String, dynamic> toJson() => _$CategoriesResponseDtoToJson(this);
 }
+
