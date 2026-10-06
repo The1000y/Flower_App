@@ -1,7 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
-import 'package:flower_app/features/commerce/domain/entities/products/pagination_entity.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_event.dart';
