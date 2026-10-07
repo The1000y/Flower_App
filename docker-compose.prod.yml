@@ -3,6 +3,7 @@
 ###############################################################################
 
 services:
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: flower_sqlserver_team2
@@ -16,11 +17,7 @@ services:
     ports:
       - "127.0.0.1:1433:1433"
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD:-Password123!}" -C -Q "SELECT 1" || exit 1',
-        ]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MSSQL_SA_PASSWORD:-Password123!}\" -C -Q \"SELECT 1\" || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -155,32 +152,16 @@ services:
     networks:
       - flower_net_team2
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # Order & Fulfillment Microservice
-  # ────────────────────────────────────────────────────────────────────────────
-  order-service:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-order-service:latest
+  orderfulfillmentservice:
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-order-service-team2:latest
     build:
       context: .
-      dockerfile: Services/Order & Fulfillment/Order & Fulfillment Service/Dockerfile
-    container_name: flower_order_service
+      dockerfile: Order & Fulfillment Service/Dockerfile
+    container_name: flower_order_service_team2
     restart: unless-stopped
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-      identity-api:
-        condition: service_started
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=FlowersOrderDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
-      CartService__BaseUrl: "http://cart-service:8080"
-      AddressService__BaseUrl: "http://address-service:8080"
-      PaymentService__BaseUrl: "http://payment-service:8080"
-      IdentityService__BaseUrl: "http://identity-api:8080"
-      JwtSettings__Secret: ${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
-      JwtSettings__Issuer: ${JWT_ISSUER:-FlowersAuth}
-      JwtSettings__Audience: ${JWT_AUDIENCE:-FlowersApp}
     ports:
       - "5109:8080"
     networks:
@@ -193,19 +174,9 @@ services:
       dockerfile: Payment Service/Dockerfile
     container_name: flower_payment_service_team2
     restart: unless-stopped
-    depends_on:
-      sqlserver:
-        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=FlowersPaymentDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
-      Paymob__BaseUrl: ${PAYMOB_BASE_URL:-https://accept.paymob.com/api/}
-      Paymob__ApiKey: ${PAYMOB_API_KEY:-}
-      Paymob__SecretKey: ${PAYMOB_SECRET_KEY:-}
-      Paymob__PublicKey: ${PAYMOB_PUBLIC_KEY:-}
-      Paymob__HmacSecret: ${PAYMOB_HMAC_SECRET:-}
-      Paymob__IntegrationId: ${PAYMOB_INTEGRATION_ID:-0}
     ports:
       - "5260:8080"
     networks:

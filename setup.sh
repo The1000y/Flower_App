@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# setup.sh — Automated Full Microservices Backend Launcher for Flutter (Git Bash / Linux / macOS)
+# setup.sh — Automated Full Microservices Backend Launcher for Flutter (Team 2)
 #
 set -euo pipefail
 
@@ -35,7 +35,7 @@ if $RECREATE; then
   docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" pull || true
   docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d --force-recreate
 else
-  log "Starting Flower E-Commerce Microservices backend..."
+  log "Starting Flower E-Commerce Microservices backend (Team 2)..."
   docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d
 fi
 
@@ -80,18 +80,17 @@ mv "$TMP_FILE" "$ENV_FILE"
 success "Wrote ${ENV_VAR_NAME}=${BASE_URL} to $ENV_FILE"
 echo ""
 echo -e "\033[1;36m=================================================================\033[0m"
-echo -e "\033[1;32m  Flower E-Commerce Backend Running Successfully! \033[0m"
+echo -e "\033[1;32m  Flower E-Commerce Backend (Team 2) Running Successfully! \033[0m"
 echo -e "\033[1;36m=================================================================\033[0m"
 echo -e "  📌 API Gateway Base URL:    \033[1;33m${BASE_URL}\033[0m"
-echo -e "  🏥 Gateway Identity Health: \033[1;33m${BASE_URL}/Identity\033[0m"
-echo -e "  🏥 Gateway Catalog Health:  \033[1;33m${BASE_URL}/Catalog\033[0m"
-echo -e "  🏥 Gateway Cart Health:     \033[1;33m${BASE_URL}/Cart\033[0m"
-echo -e "  🏥 Gateway Order Health:    \033[1;33m${BASE_URL}/Order\033[0m"
-echo -e "  🏥 Gateway Payment Health:  \033[1;33m${BASE_URL}/Payment\033[0m"
-echo -e "  🏥 Gateway Address Health:  \033[1;33m${BASE_URL}/Address\033[0m"
+echo -e "  🏥 Gateway Catalog Health:  \033[1;33m${BASE_URL}/catalog\033[0m"
+echo -e "  🏥 Gateway Cart Health:     \033[1;33m${BASE_URL}/cart\033[0m"
+echo -e "  🏥 Gateway Order Health:    \033[1;33m${BASE_URL}/order\033[0m"
+echo -e "  🏥 Gateway Payment Health:  \033[1;33m${BASE_URL}/payment\033[0m"
+echo -e "  🏥 Gateway Address Health:  \033[1;33m${BASE_URL}/address\033[0m"
 echo -e "-----------------------------------------------------------------"
 echo -e "  📖 Direct Microservice Swagger UI Endpoints:"
-echo -e "  Swagger Identity API: \033[1;36mhttp://localhost:5022/swagger\033[0m"
+echo -e "  Swagger Auth API:     \033[1;36mhttp://localhost:5022/swagger\033[0m"
 echo -e "  Swagger Catalog API:  \033[1;36mhttp://localhost:5129/swagger\033[0m"
 echo -e "  Swagger Cart API:     \033[1;36mhttp://localhost:5292/swagger\033[0m"
 echo -e "  Swagger Order API:    \033[1;36mhttp://localhost:5109/swagger\033[0m"

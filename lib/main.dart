@@ -46,7 +46,7 @@ void main() async {
     firebaseMessagingBackgroundHandler,
   );
 
-  configureDependencies();
+  await configureDependencies();
 
   final localeCubit = getIt<LocaleCubit>();
 
