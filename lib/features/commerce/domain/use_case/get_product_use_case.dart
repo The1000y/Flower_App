@@ -3,8 +3,8 @@ import 'package:injectable/injectable.dart';
 
 import '../entities/products/product_entity.dart';
 import '../repo/commerce_repo.dart';
-@injectable
 
+@injectable
 class GetProductUseCase {
   CommerceRepo commerceRepo;
   GetProductUseCase(this.commerceRepo);

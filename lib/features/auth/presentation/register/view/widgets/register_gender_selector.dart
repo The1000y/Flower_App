@@ -15,10 +15,10 @@ class RegisterGenderSelector extends StatelessWidget {
         Text(
           AppStrings.genderTitle,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grayDark,
-              ),
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
+            color: AppColors.grayDark,
+          ),
         ),
         SizedBox(width: 44.w),
         ValueListenableBuilder<bool>(
@@ -29,16 +29,26 @@ class RegisterGenderSelector extends StatelessWidget {
               onChanged: (val) => isFemaleNotifier.value = val!,
               child: Row(
                 children: [
-                  const Radio<bool>(value: true, activeColor: AppColors.pinkBase),
+                  const Radio<bool>(
+                    value: true,
+                    activeColor: AppColors.pinkBase,
+                  ),
                   Text(
                     AppStrings.female,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.blackBase),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.blackBase,
+                    ),
                   ),
                   SizedBox(width: 15.5.w),
-                  const Radio<bool>(value: false, activeColor: AppColors.pinkBase),
+                  const Radio<bool>(
+                    value: false,
+                    activeColor: AppColors.pinkBase,
+                  ),
                   Text(
                     AppStrings.male,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.blackBase),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.blackBase,
+                    ),
                   ),
                 ],
               ),

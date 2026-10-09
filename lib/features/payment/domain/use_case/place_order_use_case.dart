@@ -6,16 +6,15 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class PlaceOrderUseCase {
-
   PlaceOrderRepo placeOrderRepo;
   PlaceOrderUseCase({required this.placeOrderRepo});
 
-
- Future<BaseResponce<PlaceOrderEntity>> call (PlaceOrderParam placeOrderParam)  async{
-    var result = await placeOrderRepo.palceOrder(placeOrderParam:placeOrderParam );
-    return  result;
+  Future<BaseResponce<PlaceOrderEntity>> call(
+    PlaceOrderParam placeOrderParam,
+  ) async {
+    var result = await placeOrderRepo.palceOrder(
+      placeOrderParam: placeOrderParam,
+    );
+    return result;
   }
-  
-
-
 }

@@ -12,7 +12,7 @@ class PlaceOrderDataSourceImpl implements RemoteDataSource {
   PlaceOrderDataSourceImpl(this.paymentApiClient);
 
   @override
-  Future<BaseResponce<PlaceOrderDto>> palceOrder({
+  Future<BaseResponce<PlaceOrderDto>> placeOrder({
     required PlaceOrderRequest placeOrderRequest,
   }) async {
     try {

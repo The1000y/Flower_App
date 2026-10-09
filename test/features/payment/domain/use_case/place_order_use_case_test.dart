@@ -32,26 +32,25 @@ void main() {
   group('PlaceOrderUseCase.call', () {
     test('returns the repo response for the given param', () async {
       // Arrange
-      when(repo.palceOrder(placeOrderParam: anyNamed('placeOrderParam')))
-          .thenAnswer((_) async => SuccessResponce<PlaceOrderEntity>(entity));
+      when(
+        repo.palceOrder(placeOrderParam: anyNamed('placeOrderParam')),
+      ).thenAnswer((_) async => SuccessResponce<PlaceOrderEntity>(entity));
 
       // Act
       final result = await useCase.call(param);
 
       // Assert
       expect(result, isA<SuccessResponce<PlaceOrderEntity>>());
-      expect(
-        (result as SuccessResponce<PlaceOrderEntity>).data,
-        same(entity),
-      );
+      expect((result as SuccessResponce<PlaceOrderEntity>).data, same(entity));
       verify(repo.palceOrder(placeOrderParam: param)).called(1);
     });
 
     test('returns the repo error response unchanged', () async {
       // Arrange
       final failure = Exception('boom');
-      when(repo.palceOrder(placeOrderParam: anyNamed('placeOrderParam')))
-          .thenAnswer((_) async => ErrorResponce<PlaceOrderEntity>(failure));
+      when(
+        repo.palceOrder(placeOrderParam: anyNamed('placeOrderParam')),
+      ).thenAnswer((_) async => ErrorResponce<PlaceOrderEntity>(failure));
 
       // Act
       final result = await useCase.call(param);

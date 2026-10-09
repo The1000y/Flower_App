@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpPinTheme {
-   static PinTheme themeDefautpin(TextTheme textTheme) {
+  static PinTheme themeDefautpin(TextTheme textTheme) {
     return PinTheme(
       width: 80,
       height: 50,
@@ -19,7 +19,7 @@ class OtpPinTheme {
     );
   }
 
- static PinTheme themeFocusedPin(TextTheme textTheme) {
+  static PinTheme themeFocusedPin(TextTheme textTheme) {
     return PinTheme(
       width: 90,
       height: 55,
@@ -44,7 +44,7 @@ class OtpPinTheme {
     );
   }
 
- static PinTheme themeSubmittedPin(TextTheme textTheme) {
+  static PinTheme themeSubmittedPin(TextTheme textTheme) {
     return PinTheme(
       width: 80,
       height: 50,
@@ -61,7 +61,7 @@ class OtpPinTheme {
     );
   }
 
- static PinTheme themeErrorPin(TextTheme textTheme) {
+  static PinTheme themeErrorPin(TextTheme textTheme) {
     return PinTheme(
       width: 80,
       height: 50,
@@ -77,6 +77,4 @@ class OtpPinTheme {
       ),
     );
   }
-
-
 }

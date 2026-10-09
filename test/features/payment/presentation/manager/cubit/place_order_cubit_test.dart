@@ -43,13 +43,12 @@ void main() {
   blocTest<PlaceOrderCubit, PlaceOrderState>(
     'emits [loading, success] when the order is accepted',
     build: () {
-      when(useCase.call(any)).thenAnswer(
-        (_) async => SuccessResponce<PlaceOrderEntity>(entity),
-      );
+      when(
+        useCase.call(any),
+      ).thenAnswer((_) async => SuccessResponce<PlaceOrderEntity>(entity));
       return buildCubit();
     },
-    act: (cubit) =>
-        cubit.doEvent(PostPlaceOrderEvent(placeOrderParam: param)),
+    act: (cubit) => cubit.doEvent(PostPlaceOrderEvent(placeOrderParam: param)),
     expect: () => [
       loadingState,
       PlaceOrderState(
@@ -72,8 +71,7 @@ void main() {
       );
       return buildCubit();
     },
-    act: (cubit) =>
-        cubit.doEvent(PostPlaceOrderEvent(placeOrderParam: param)),
+    act: (cubit) => cubit.doEvent(PostPlaceOrderEvent(placeOrderParam: param)),
     expect: () => [
       loadingState,
       const PlaceOrderState(

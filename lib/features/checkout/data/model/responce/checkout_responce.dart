@@ -6,10 +6,7 @@ import 'package:flower_app/features/checkout/data/model/responce/checkout_detail
 import 'package:flower_app/features/checkout/data/model/responce/checkout_error.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'checkout_responce.g.dart';
-
-
 
 @JsonSerializable()
 class CheckoutResponce {
@@ -29,4 +26,3 @@ class CheckoutResponce {
 
   Map<String, dynamic> toJson() => _$CheckoutResponceToJson(this);
 }
-

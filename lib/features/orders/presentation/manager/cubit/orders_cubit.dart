@@ -59,7 +59,8 @@ class OrdersCubit extends Cubit<OrdersState> {
             state.copyWith(
               baseState: OrdersBaseState.success,
               activeOrders: List.of(state.activeOrders)..addAll(active),
-              completedOrders: List.of(state.completedOrders)..addAll(completed),
+              completedOrders: List.of(state.completedOrders)
+                ..addAll(completed),
               page: state.page + 1,
             ),
           );
@@ -85,23 +86,29 @@ class OrdersCubit extends Cubit<OrdersState> {
   }
 
   void _trackOrderTapped(String id) {
-    emit(state.copyWith(
-      sideEffect: OrdersSideEffect.navigateToTrack,
-      selectedOrderId: id,
-    ));
+    emit(
+      state.copyWith(
+        sideEffect: OrdersSideEffect.navigateToTrack,
+        selectedOrderId: id,
+      ),
+    );
   }
 
   void _reorderTapped(String id) {
-    emit(state.copyWith(
-      sideEffect: OrdersSideEffect.navigateToCart,
-      selectedOrderId: id,
-    ));
+    emit(
+      state.copyWith(
+        sideEffect: OrdersSideEffect.navigateToCart,
+        selectedOrderId: id,
+      ),
+    );
   }
 
   void _resetSideEffect() {
-    emit(state.copyWith(
-      sideEffect: OrdersSideEffect.none,
-      resetSelectedOrderId: true,
-    ));
+    emit(
+      state.copyWith(
+        sideEffect: OrdersSideEffect.none,
+        resetSelectedOrderId: true,
+      ),
+    );
   }
 }

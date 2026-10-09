@@ -12,11 +12,7 @@ class NearestStoreResponseDto {
   @JsonKey(name: 'message')
   final String? message;
 
-  NearestStoreResponseDto({
-    this.data,
-    this.isSuccess,
-    this.message,
-  });
+  NearestStoreResponseDto({this.data, this.isSuccess, this.message});
 
   factory NearestStoreResponseDto.fromJson(Map<String, dynamic> json) =>
       _$NearestStoreResponseDtoFromJson(json);

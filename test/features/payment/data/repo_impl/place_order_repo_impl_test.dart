@@ -38,7 +38,9 @@ void main() {
     test('maps a successful data source response onto the entity', () async {
       // Arrange
       when(
-        remoteDataSource.palceOrder(placeOrderRequest: anyNamed('placeOrderRequest')),
+        remoteDataSource.placeOrder(
+          placeOrderRequest: anyNamed('placeOrderRequest'),
+        ),
       ).thenAnswer((_) async => SuccessResponce<PlaceOrderDto>(dto));
 
       // Act
@@ -56,19 +58,20 @@ void main() {
     test('forwards the param as a place order request', () async {
       // Arrange
       when(
-        remoteDataSource.palceOrder(placeOrderRequest: anyNamed('placeOrderRequest')),
+        remoteDataSource.placeOrder(
+          placeOrderRequest: anyNamed('placeOrderRequest'),
+        ),
       ).thenAnswer((_) async => SuccessResponce<PlaceOrderDto>(dto));
 
       // Act
       await repo.palceOrder(placeOrderParam: param);
 
       // Assert
-      final captured =
-          verify(
-            remoteDataSource.palceOrder(
-              placeOrderRequest: captureAnyNamed('placeOrderRequest'),
-            ),
-          ).captured;
+      final captured = verify(
+        remoteDataSource.placeOrder(
+          placeOrderRequest: captureAnyNamed('placeOrderRequest'),
+        ),
+      ).captured;
       final request = captured.single as PlaceOrderRequest;
       expect(request.addressId, 'address-1');
       expect(request.paymentMethod, 'Card');
@@ -82,7 +85,9 @@ void main() {
       // Arrange
       final failure = Exception('boom');
       when(
-        remoteDataSource.palceOrder(placeOrderRequest: anyNamed('placeOrderRequest')),
+        remoteDataSource.placeOrder(
+          placeOrderRequest: anyNamed('placeOrderRequest'),
+        ),
       ).thenAnswer((_) async => ErrorResponce<PlaceOrderDto>(failure));
 
       // Act

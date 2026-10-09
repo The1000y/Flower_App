@@ -30,6 +30,7 @@ class ProductDetailsResponseDto {
 
   ProductDetailsDto get effectiveData => value ?? data!;
 
-  factory ProductDetailsResponseDto.fromJson(Map<String, dynamic> json) => _$ProductDetailsResponseDtoFromJson(json);
+  factory ProductDetailsResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$ProductDetailsResponseDtoFromJson(json);
   Map<String, dynamic> toJson() => _$ProductDetailsResponseDtoToJson(this);
 }

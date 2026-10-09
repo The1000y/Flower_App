@@ -36,4 +36,3 @@ class BestSellerLocalDataSourceImpl implements BestSellerLocalDataSource {
     );
   }
 }
-

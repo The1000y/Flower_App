@@ -10,7 +10,7 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class PlaceOrderCubit extends Cubit<PlaceOrderState> {
- final PlaceOrderUseCase _placeOrderUseCase;
+  final PlaceOrderUseCase _placeOrderUseCase;
   PlaceOrderCubit(this._placeOrderUseCase) : super(PlaceOrderState());
 
   void doEvent(PlaceOrderEvent event) {

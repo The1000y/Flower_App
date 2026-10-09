@@ -15,6 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockGetOccasionsUseCase extends Mock implements GetOccasionsUseCase {}
+
 class MockGetProductsUseCase extends Mock implements GetProductsUseCase {}
 
 void main() {
@@ -70,7 +71,10 @@ void main() {
   setUp(() {
     mockGetOccasionsUseCase = MockGetOccasionsUseCase();
     mockGetProductsUseCase = MockGetProductsUseCase();
-    occasionCubit = OccasionCubit(mockGetOccasionsUseCase, mockGetProductsUseCase);
+    occasionCubit = OccasionCubit(
+      mockGetOccasionsUseCase,
+      mockGetProductsUseCase,
+    );
   });
 
   tearDown(() {
@@ -81,18 +85,28 @@ void main() {
     blocTest<OccasionCubit, OccasionState>(
       'emits occasions then auto-loads products for the first occasion on success',
       build: () {
-        when(() => mockGetOccasionsUseCase.execute())
-            .thenAnswer((_) async => SuccessResponce<List<OccasionEntity>>(tOccasions));
-        when(() => mockGetProductsUseCase.execute('1', page: 1))
-            .thenAnswer((_) async => SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1));
+        when(() => mockGetOccasionsUseCase.execute()).thenAnswer(
+          (_) async => SuccessResponce<List<OccasionEntity>>(tOccasions),
+        );
+        when(() => mockGetProductsUseCase.execute('1', page: 1)).thenAnswer(
+          (_) async =>
+              SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
+        );
         return occasionCubit;
       },
       act: (cubit) => cubit.handle(LoadOccasions()),
       expect: () => [
+        isA<OccasionState>().having(
+          (s) => s.occasionsState.isLoading,
+          'occasions loading',
+          true,
+        ),
         isA<OccasionState>()
-            .having((s) => s.occasionsState.isLoading, 'occasions loading', true),
-        isA<OccasionState>()
-            .having((s) => s.occasionsState.isLoading, 'occasions loading', false)
+            .having(
+              (s) => s.occasionsState.isLoading,
+              'occasions loading',
+              false,
+            )
             .having((s) => s.occasionsState.data, 'occasions data', tOccasions),
         isA<OccasionState>()
             .having((s) => s.productsState.isLoading, 'products loading', true)
@@ -113,21 +127,35 @@ void main() {
       'emits an error state when getOccasions fails',
       build: () {
         final exception = Exception('Failed to get occasions');
-        when(() => mockGetOccasionsUseCase.execute())
-            .thenAnswer((_) async => ErrorResponce<List<OccasionEntity>>(exception));
+        when(() => mockGetOccasionsUseCase.execute()).thenAnswer(
+          (_) async => ErrorResponce<List<OccasionEntity>>(exception),
+        );
         return occasionCubit;
       },
       act: (cubit) => cubit.handle(LoadOccasions()),
       expect: () => [
+        isA<OccasionState>().having(
+          (s) => s.occasionsState.isLoading,
+          'occasions loading',
+          true,
+        ),
         isA<OccasionState>()
-            .having((s) => s.occasionsState.isLoading, 'occasions loading', true),
-        isA<OccasionState>()
-            .having((s) => s.occasionsState.isLoading, 'occasions loading', false)
-            .having((s) => s.occasionsState.errorMessage.isNotEmpty, 'has error', true),
+            .having(
+              (s) => s.occasionsState.isLoading,
+              'occasions loading',
+              false,
+            )
+            .having(
+              (s) => s.occasionsState.errorMessage.isNotEmpty,
+              'has error',
+              true,
+            ),
       ],
       verify: (_) {
         verify(() => mockGetOccasionsUseCase.execute()).called(1);
-        verifyNever(() => mockGetProductsUseCase.execute(any(), page: any(named: 'page')));
+        verifyNever(
+          () => mockGetProductsUseCase.execute(any(), page: any(named: 'page')),
+        );
       },
     );
   });
@@ -136,8 +164,10 @@ void main() {
     blocTest<OccasionCubit, OccasionState>(
       'emits products for the requested occasion on success',
       build: () {
-        when(() => mockGetProductsUseCase.execute('5', page: 1))
-            .thenAnswer((_) async => SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1));
+        when(() => mockGetProductsUseCase.execute('5', page: 1)).thenAnswer(
+          (_) async =>
+              SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
+        );
         return occasionCubit;
       },
       act: (cubit) => cubit.handle(LoadProductsForOccasion('5')),
@@ -156,17 +186,25 @@ void main() {
       'emits an error state when getProducts fails',
       build: () {
         final exception = Exception('Failed to get products');
-        when(() => mockGetProductsUseCase.execute('5', page: 1))
-            .thenAnswer((_) async => ErrorResponce<PaginatedProducts>(exception));
+        when(
+          () => mockGetProductsUseCase.execute('5', page: 1),
+        ).thenAnswer((_) async => ErrorResponce<PaginatedProducts>(exception));
         return occasionCubit;
       },
       act: (cubit) => cubit.handle(LoadProductsForOccasion('5')),
       expect: () => [
-        isA<OccasionState>()
-            .having((s) => s.productsState.isLoading, 'products loading', true),
+        isA<OccasionState>().having(
+          (s) => s.productsState.isLoading,
+          'products loading',
+          true,
+        ),
         isA<OccasionState>()
             .having((s) => s.productsState.isLoading, 'products loading', false)
-            .having((s) => s.productsState.errorMessage.isNotEmpty, 'has error', true),
+            .having(
+              (s) => s.productsState.errorMessage.isNotEmpty,
+              'has error',
+              true,
+            ),
       ],
     );
 
@@ -174,10 +212,12 @@ void main() {
       'discards a stale response when the occasion changes before it resolves',
       () async {
         final completer = Completer<BaseResponce<PaginatedProducts>>();
-        when(() => mockGetProductsUseCase.execute('1', page: 1))
-            .thenAnswer((_) => completer.future);
+        when(
+          () => mockGetProductsUseCase.execute('1', page: 1),
+        ).thenAnswer((_) => completer.future);
         when(() => mockGetProductsUseCase.execute('2', page: 1)).thenAnswer(
-          (_) async => SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
+          (_) async =>
+              SuccessResponce<PaginatedProducts>(tPaginatedProductsPage1),
         );
 
         occasionCubit.handle(LoadProductsForOccasion('1'));
@@ -188,9 +228,11 @@ void main() {
 
         // The occasion-1 request resolves after occasion 2 is already active
         // — its response must be dropped, not appended/applied.
-        completer.complete(SuccessResponce<PaginatedProducts>(
-          PaginatedProducts(items: [], pagination: tPaginationPage1NoNext),
-        ));
+        completer.complete(
+          SuccessResponce<PaginatedProducts>(
+            PaginatedProducts(items: [], pagination: tPaginationPage1NoNext),
+          ),
+        );
         await Future<void>.delayed(Duration.zero);
 
         expect(occasionCubit.state.currentOccasionId, 2);
@@ -210,18 +252,27 @@ void main() {
       build: () {
         when(() => mockGetProductsUseCase.execute('1', page: 2)).thenAnswer(
           (_) async => SuccessResponce<PaginatedProducts>(
-            PaginatedProducts(items: [tProduct], pagination: tPaginationPage2NoNext),
+            PaginatedProducts(
+              items: [tProduct],
+              pagination: tPaginationPage2NoNext,
+            ),
           ),
         );
         return occasionCubit;
       },
       act: (cubit) => cubit.handle(LoadMoreProducts()),
       expect: () => [
-        isA<OccasionState>()
-            .having((s) => s.isLoadingMore, 'loading more', true),
+        isA<OccasionState>().having(
+          (s) => s.isLoadingMore,
+          'loading more',
+          true,
+        ),
         isA<OccasionState>()
             .having((s) => s.isLoadingMore, 'loading more', false)
-            .having((s) => s.productsState.data, 'products data', [tProduct, tProduct])
+            .having((s) => s.productsState.data, 'products data', [
+              tProduct,
+              tProduct,
+            ])
             .having((s) => s.pagination, 'pagination', tPaginationPage2NoNext),
       ],
       verify: (_) {
@@ -240,7 +291,9 @@ void main() {
       act: (cubit) => cubit.handle(LoadMoreProducts()),
       expect: () => [],
       verify: (_) {
-        verifyNever(() => mockGetProductsUseCase.execute(any(), page: any(named: 'page')));
+        verifyNever(
+          () => mockGetProductsUseCase.execute(any(), page: any(named: 'page')),
+        );
       },
     );
 
@@ -250,12 +303,10 @@ void main() {
       act: (cubit) => cubit.handle(LoadMoreProducts()),
       expect: () => [],
       verify: (_) {
-        verifyNever(() => mockGetProductsUseCase.execute(any(), page: any(named: 'page')));
+        verifyNever(
+          () => mockGetProductsUseCase.execute(any(), page: any(named: 'page')),
+        );
       },
     );
   });
 }
-
-
-
-

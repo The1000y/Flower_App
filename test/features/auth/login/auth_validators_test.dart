@@ -46,9 +46,18 @@ void main() {
     });
 
     test('returns passwordStrongRules for weak passwords', () {
-      expect(AuthValidators.strongPassword('password'), AppStrings.passwordStrongRules);
-      expect(AuthValidators.strongPassword('PASSWORD1'), AppStrings.passwordStrongRules);
-      expect(AuthValidators.strongPassword('Passw1'), AppStrings.passwordStrongRules);
+      expect(
+        AuthValidators.strongPassword('password'),
+        AppStrings.passwordStrongRules,
+      );
+      expect(
+        AuthValidators.strongPassword('PASSWORD1'),
+        AppStrings.passwordStrongRules,
+      );
+      expect(
+        AuthValidators.strongPassword('Passw1'),
+        AppStrings.passwordStrongRules,
+      );
     });
 
     test('returns null for strong password', () {
@@ -72,7 +81,10 @@ void main() {
     });
 
     test('returns null when passwords match', () {
-      expect(AuthValidators.confirmPassword('Password1!', 'Password1!'), isNull);
+      expect(
+        AuthValidators.confirmPassword('Password1!', 'Password1!'),
+        isNull,
+      );
     });
   });
 
@@ -97,10 +109,7 @@ void main() {
     });
 
     test('returns firstNameOnlyLetters for digits', () {
-      expect(
-        AuthValidators.firstName('123'),
-        AppStrings.firstNameOnlyLetters,
-      );
+      expect(AuthValidators.firstName('123'), AppStrings.firstNameOnlyLetters);
     });
 
     test('returns null for valid first name', () {

@@ -56,7 +56,8 @@ class DeliveryAddressSection extends StatelessWidget {
               return Column(
                 children: [
                   for (final address in addresses) ...[
-                    if (addresses.indexOf(address) > 0) const SizedBox(height: 16),
+                    if (addresses.indexOf(address) > 0)
+                      const SizedBox(height: 16),
                     _AddressTile(
                       address: address,
                       groupValue: state.selectedAddressId ?? '',

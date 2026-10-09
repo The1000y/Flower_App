@@ -12,21 +12,14 @@ class ProductIncludeItemDto {
   @JsonKey(name: 'quantity')
   final int? quantity;
 
-  ProductIncludeItemDto({
-    required this.name,
-    this.quantity,
-  });
+  ProductIncludeItemDto({required this.name, this.quantity});
 
   ProductIncludeItemEntity toDomain() {
-    return ProductIncludeItemEntity(
-      name: name,
-      quantity: quantity,
-    );
+    return ProductIncludeItemEntity(name: name, quantity: quantity);
   }
 
   factory ProductIncludeItemDto.fromJson(Map<String, dynamic> json) =>
       _$ProductIncludeItemDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$ProductIncludeItemDtoToJson(this);
+  Map<String, dynamic> toJson() => _$ProductIncludeItemDtoToJson(this);
 }

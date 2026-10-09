@@ -12,7 +12,11 @@ void main() {
   late MockPaymentApiClient apiClient;
   late PlaceOrderDataSourceImpl dataSource;
 
-  final request = PlaceOrderRequest(addressId: 'address-1');
+  final request = PlaceOrderRequest(
+    addressId: 'address-1',
+    paymentMethod: 'cash',
+    paymentGateway: 'cash',
+  );
   final dto = PlaceOrderDto(orderId: 'order-1', sessionUrl: 'https://pay');
 
   setUp(() {
@@ -28,9 +32,7 @@ void main() {
       ).thenAnswer((_) async => PlaceOrderResponse(data: dto));
 
       // Act
-      final result = await dataSource.palceOrder(
-        placeOrderRequest: request,
-      );
+      final result = await dataSource.placeOrder(placeOrderRequest: request);
 
       // Assert
       expect(result, isA<SuccessResponce<PlaceOrderDto>>());
@@ -44,9 +46,7 @@ void main() {
       ).thenAnswer((_) async => PlaceOrderResponse());
 
       // Act
-      final result = await dataSource.palceOrder(
-        placeOrderRequest: request,
-      );
+      final result = await dataSource.placeOrder(placeOrderRequest: request);
 
       // Assert
       final data = (result as SuccessResponce<PlaceOrderDto>).data;
@@ -59,9 +59,7 @@ void main() {
       when(apiClient.placeOrder(request)).thenThrow(Exception('boom'));
 
       // Act
-      final result = await dataSource.palceOrder(
-        placeOrderRequest: request,
-      );
+      final result = await dataSource.placeOrder(placeOrderRequest: request);
 
       // Assert
       expect(result, isA<ErrorResponce<PlaceOrderDto>>());

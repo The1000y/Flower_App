@@ -2,15 +2,11 @@
 //
 //     final dataDto = dataDtoFromJson(jsonString);
 
-
 import 'package:flower_app/features/checkout/data/model/responce/payment_methods_dto.dart';
 import 'package:flower_app/features/checkout/domain/entities/checkout_details_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'checkout_details_dto.g.dart';
-
-
 
 @JsonSerializable()
 class CheckoutDetailsDto {
@@ -75,5 +71,3 @@ class CheckoutDetailsDto {
     );
   }
 }
-
-

@@ -23,6 +23,7 @@ abstract class Routes {
   static const String shippingAddress = '/shipping_address';
   static const String savedAddresses = '/saved_addresses';
   static const String addAddress = '/add_address';
+  static const String webView = '/web_view';
 
   // Orders
   static const String myOrders = '/my_orders';

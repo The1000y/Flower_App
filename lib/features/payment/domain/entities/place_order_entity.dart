@@ -1,4 +1,6 @@
-class PlaceOrderEntity {
+import 'package:equatable/equatable.dart';
+
+class PlaceOrderEntity extends Equatable {
   final String message;
   final String? orderId;
   final String? status;
@@ -26,4 +28,20 @@ class PlaceOrderEntity {
     this.currency,
     this.estimatedDeliveryAt,
   });
+
+  @override
+  List<Object?> get props => [
+    message,
+    orderId,
+    status,
+    gateway,
+    sessionUrl,
+    sessionId,
+    successUrl,
+    cancelUrl,
+    expiresAt,
+    amount,
+    currency,
+    estimatedDeliveryAt,
+  ];
 }

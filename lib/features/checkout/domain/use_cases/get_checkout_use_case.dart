@@ -12,5 +12,5 @@ class GetCheckoutUseCase {
   Future<BaseResponce<CheckoutDetailsEntity>> call() async {
     var result = await checkoutRepo.getCheckoutDetails();
     return result;
-  } 
+  }
 }

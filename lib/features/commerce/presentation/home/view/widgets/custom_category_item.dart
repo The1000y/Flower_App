@@ -36,7 +36,9 @@ class CustomCategoryWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Image.network(
-              (category.iconUrl.startsWith('http') ? category.iconUrl : '${ApiStrings.baseUrl}/${category.iconUrl}'),
+              (category.iconUrl.startsWith('http')
+                  ? category.iconUrl
+                  : '${ApiStrings.baseUrl}/${category.iconUrl}'),
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) =>
                   Icon(Icons.error_outline, color: AppColors.pinkBase),
@@ -48,4 +50,3 @@ class CustomCategoryWidget extends StatelessWidget {
     );
   }
 }
-

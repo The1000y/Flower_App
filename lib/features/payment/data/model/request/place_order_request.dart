@@ -18,11 +18,11 @@ String placeOrderRequestToJson(PlaceOrderRequest data) =>
 @JsonSerializable(includeIfNull: false)
 class PlaceOrderRequest {
   @JsonKey(name: "addressId")
-  String? addressId;
+  String addressId;
   @JsonKey(name: "paymentMethod")
-  String? paymentMethod;
+  String paymentMethod;
   @JsonKey(name: "paymentGateway")
-  String? paymentGateway;
+  String paymentGateway;
   @JsonKey(name: "isGift")
   bool? isGift;
   @JsonKey(name: "giftRecipientName")
@@ -31,9 +31,9 @@ class PlaceOrderRequest {
   String? giftRecipientPhone;
 
   PlaceOrderRequest({
-    this.addressId,
-    this.paymentMethod,
-    this.paymentGateway,
+    required this.addressId,
+    required this.paymentMethod,
+    required this.paymentGateway,
     this.isGift,
     this.giftRecipientName,
     this.giftRecipientPhone,
@@ -55,16 +55,15 @@ class PlaceOrderRequest {
   //     giftRecipientPhone: param.giftRecipientPhone,
   //   );
   // }
-factory PlaceOrderRequest.fromParam(PlaceOrderParam param) {
-  final isCard = param.paymentMethod == CheckoutPaymentMethod.Card;
-  return PlaceOrderRequest(
-    addressId: param.addressId,
-    paymentMethod: param.paymentMethod.name, // "COD" أو "Card"
-    paymentGateway: isCard ? 'Paymob' : null,
-    isGift: param.isGift,
-    giftRecipientName: param.isGift ? param.giftRecipientName : null,
-    giftRecipientPhone: param.isGift ? param.giftRecipientPhone : null,
-  );
-}
-
+  factory PlaceOrderRequest.fromParam(PlaceOrderParam param) {
+    final isCard = param.paymentMethod == CheckoutPaymentMethod.Card;
+    return PlaceOrderRequest(
+      addressId: param.addressId,
+      paymentMethod: param.paymentMethod.name, // "COD" أو "Card"
+      paymentGateway: isCard ? 'Paymob' : 'cash',
+      isGift: param.isGift,
+      giftRecipientName: param.isGift ? param.giftRecipientName : null,
+      giftRecipientPhone: param.isGift ? param.giftRecipientPhone : null,
+    );
+  }
 }

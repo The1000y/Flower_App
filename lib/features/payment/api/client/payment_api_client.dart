@@ -15,7 +15,8 @@ abstract class PaymentApiClient {
   @factoryMethod
   factory PaymentApiClient(Dio dio) = _PaymentApiClient;
 
-   @POST(ApiStrings.placeOrder)
-  Future<PlaceOrderResponse> placeOrder(@Body() PlaceOrderRequest placeOrderRequest);
-  
+  @POST(ApiStrings.placeOrder)
+  Future<PlaceOrderResponse> placeOrder(
+    @Body() PlaceOrderRequest placeOrderRequest,
+  );
 }

@@ -344,28 +344,27 @@ void main() {
       expect(find.byType(TextFormField), findsNWidgets(2));
     });
 
-    testWidgets(
-      'tapping the back button returns to the cart tab',
-      (tester) async {
-        // Arrange
-        listenToBothCubits();
-        // TODO(flutter-app): the checkout screen lives in the cart tab of the
-        // bottom navigation bar, so its back button switches back to that tab
-        // instead of popping a route.
-        AppNavigation.controller.jumpToTab(1);
-        addTearDown(() => AppNavigation.controller.jumpToTab(0));
+    testWidgets('tapping the back button returns to the cart tab', (
+      tester,
+    ) async {
+      // Arrange
+      listenToBothCubits();
+      // TODO(flutter-app): the checkout screen lives in the cart tab of the
+      // bottom navigation bar, so its back button switches back to that tab
+      // instead of popping a route.
+      AppNavigation.controller.jumpToTab(1);
+      addTearDown(() => AppNavigation.controller.jumpToTab(0));
 
-        await pumpApp(tester);
-        expect(find.byType(CheckoutView), findsOneWidget);
+      await pumpApp(tester);
+      expect(find.byType(CheckoutView), findsOneWidget);
 
-        // Act
-        await tester.tap(find.byIcon(Icons.arrow_back_ios_new));
-        await pumpFrames(tester);
+      // Act
+      await tester.tap(find.byIcon(Icons.arrow_back_ios_new));
+      await pumpFrames(tester);
 
-        // Assert
-        expect(AppNavigation.controller.index, 0);
-        expect(find.byType(CheckoutView), findsOneWidget);
-      },
-    );
+      // Assert
+      expect(AppNavigation.controller.index, 0);
+      expect(find.byType(CheckoutView), findsOneWidget);
+    });
   });
 }

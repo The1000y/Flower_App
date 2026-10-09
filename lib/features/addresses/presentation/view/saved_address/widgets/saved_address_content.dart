@@ -16,7 +16,8 @@ class SavedAddressContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AddressCubit, AddressState>(
       listenWhen: (previous, current) =>
-      previous.addressesState.errorMessage != current.addressesState.errorMessage,
+          previous.addressesState.errorMessage !=
+          current.addressesState.errorMessage,
       listener: (context, state) {
         if (state.addressesState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -15,13 +15,22 @@ class MyOrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OrdersCubit, OrdersState>(
-      listenWhen: (previous, current) => previous.sideEffect != current.sideEffect,
+      listenWhen: (previous, current) =>
+          previous.sideEffect != current.sideEffect,
       listener: (context, state) {
         if (state.sideEffect == OrdersSideEffect.navigateToTrack) {
-          Navigator.pushNamed(context, Routes.trackOrder, arguments: state.selectedOrderId);
+          Navigator.pushNamed(
+            context,
+            Routes.trackOrder,
+            arguments: state.selectedOrderId,
+          );
           context.read<OrdersCubit>().doIntent(const ResetSideEffectIntent());
         } else if (state.sideEffect == OrdersSideEffect.navigateToCart) {
-          Navigator.pushNamed(context, Routes.cart, arguments: state.selectedOrderId);
+          Navigator.pushNamed(
+            context,
+            Routes.cart,
+            arguments: state.selectedOrderId,
+          );
           context.read<OrdersCubit>().doIntent(const ResetSideEffectIntent());
         }
       },
@@ -44,28 +53,35 @@ class MyOrdersView extends StatelessWidget {
                 ],
               ),
             ),
-            body: state.baseState == OrdersBaseState.loading && state.activeOrders.isEmpty && state.completedOrders.isEmpty
+            body:
+                state.baseState == OrdersBaseState.loading &&
+                    state.activeOrders.isEmpty &&
+                    state.completedOrders.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : state.baseState == OrdersBaseState.error
-                    ? Center(child: Text(state.errorMessage))
-                    : TabBarView(
-                        children: [
-                          OrdersListWidget(
-                            orders: state.activeOrders,
-                            onActionPressed: (id) =>
-                                context.read<OrdersCubit>().doIntent(TrackOrderTappedIntent(id)),
-                            onLoadMore: () =>
-                                context.read<OrdersCubit>().doIntent(const FetchOrdersIntent(isLoadMore: true)),
-                          ),
-                          OrdersListWidget(
-                            orders: state.completedOrders,
-                            onActionPressed: (id) =>
-                                context.read<OrdersCubit>().doIntent(ReorderTappedIntent(id)),
-                            onLoadMore: () =>
-                                context.read<OrdersCubit>().doIntent(const FetchOrdersIntent(isLoadMore: true)),
-                          ),
-                        ],
+                ? Center(child: Text(state.errorMessage))
+                : TabBarView(
+                    children: [
+                      OrdersListWidget(
+                        orders: state.activeOrders,
+                        onActionPressed: (id) => context
+                            .read<OrdersCubit>()
+                            .doIntent(TrackOrderTappedIntent(id)),
+                        onLoadMore: () => context.read<OrdersCubit>().doIntent(
+                          const FetchOrdersIntent(isLoadMore: true),
+                        ),
                       ),
+                      OrdersListWidget(
+                        orders: state.completedOrders,
+                        onActionPressed: (id) => context
+                            .read<OrdersCubit>()
+                            .doIntent(ReorderTappedIntent(id)),
+                        onLoadMore: () => context.read<OrdersCubit>().doIntent(
+                          const FetchOrdersIntent(isLoadMore: true),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         );
       },

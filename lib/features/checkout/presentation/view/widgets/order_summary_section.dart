@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/config/routing/web_view_payment_args.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -11,7 +12,6 @@ import 'package:flower_app/features/payment/domain/entities/param/place_order_pa
 import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_cubit.dart';
 import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_event.dart';
 import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_state.dart';
-import 'package:flower_app/features/payment/presentation/web_view_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -97,17 +97,13 @@ class OrderSummarySection extends StatelessWidget {
               }
               if (state.placeOrderState.data?.sessionUrl != null) {
                 log('sessionUrl: ${state.placeOrderState.data!.sessionUrl}');
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
-                      value: context.read<PlaceOrderCubit>(),
-                      child: WebViewPayment(
-                        cancelUrl: state.placeOrderState.data?.cancelUrl ?? '',
-                        successUrl: state.placeOrderState.data?.successUrl ?? '',
-                        sessionUrl: state.placeOrderState.data?.sessionUrl ?? '',
-                      ),
-                    ),
+                  Routes.webView,
+                  arguments: WebViewPaymentArgs(
+                    successUrl: state.placeOrderState.data!.successUrl!,
+                    cancelUrl: state.placeOrderState.data!.cancelUrl!,
+                    sessionUrl: state.placeOrderState.data!.sessionUrl!,
                   ),
                 );
                 return;
@@ -116,7 +112,7 @@ class OrderSummarySection extends StatelessWidget {
             builder: (context, state) {
               return CustomButton(
                 text: state.placeOrderState.isLoading
-                    ? 'loading....'
+                    ? AppStrings.loading
                     : AppStrings.placeOrder,
                 onPressed: state.placeOrderState.isLoading
                     ? null
@@ -132,7 +128,7 @@ class OrderSummarySection extends StatelessWidget {
                           if (addressId == null || addressId.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('no address selected'),
+                                content: Text(AppStrings.noAddress),
                                 backgroundColor: AppColors.error,
                               ),
                             );

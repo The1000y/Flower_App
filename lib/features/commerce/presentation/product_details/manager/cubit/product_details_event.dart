@@ -5,4 +5,3 @@ class GetProductDetailsEvent extends ProductDetailsEvent {
 
   GetProductDetailsEvent(this.productId);
 }
-

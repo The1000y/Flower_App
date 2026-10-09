@@ -16,7 +16,7 @@ class PlaceOrderRepoImpl implements PlaceOrderRepo {
   Future<BaseResponce<PlaceOrderEntity>> palceOrder({
     required PlaceOrderParam placeOrderParam,
   }) async {
-    var response = await remoteDataSource.palceOrder(
+    var response = await remoteDataSource.placeOrder(
       placeOrderRequest: PlaceOrderRequest.fromParam(placeOrderParam),
     );
     switch (response) {

@@ -45,6 +45,7 @@ dependencies:
   persistent_bottom_nav_bar_v2: ^6.3.2
   flutter_secure_storage: ^11.0.0
   google_fonts: ^8.2.0
+  lottie: ^3.6.1
   pinput: ^6.0.2
   cached_network_image: ^3.4.1
   shared_preferences: ^2.5.5
@@ -57,6 +58,7 @@ dependencies:
   shimmer: ^4.0.0
   material_ui: ^1.0.1
   webview_flutter: ^4.14.1
+  bloc: ^8.1.4
 
 
 
@@ -97,6 +99,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/lottie_json/
     - assets/jsons/
     - .env
   #   - images/a_dot_ham.jpeg

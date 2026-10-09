@@ -43,7 +43,15 @@ class ProductsResponseDto {
   }
 
   PaginationEntity get pagination {
-    return _effectiveData.pagination?.toDomain() ?? PaginationEntity(page: 1, pageSize: 10, totalPages: 1, totalCount: 0, hasNextPage: false, hasPreviousPage: false);
+    return _effectiveData.pagination?.toDomain() ??
+        PaginationEntity(
+          page: 1,
+          pageSize: 10,
+          totalPages: 1,
+          totalCount: 0,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        );
   }
 }
 
@@ -55,14 +63,10 @@ class ProductListDataDto {
   @JsonKey(name: 'pagination')
   final PaginationDto? pagination;
 
-  ProductListDataDto({
-    required this.items,
-    this.pagination,
-  });
+  ProductListDataDto({required this.items, this.pagination});
 
   factory ProductListDataDto.fromJson(Map<String, dynamic> json) =>
       _$ProductListDataDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductListDataDtoToJson(this);
 }
-

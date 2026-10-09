@@ -3,5 +3,7 @@ import 'package:flower_app/features/payment/domain/entities/param/place_order_pa
 import 'package:flower_app/features/payment/domain/entities/place_order_entity.dart';
 
 abstract interface class PlaceOrderRepo {
-  Future<BaseResponce<PlaceOrderEntity>> palceOrder({required PlaceOrderParam placeOrderParam});
+  Future<BaseResponce<PlaceOrderEntity>> palceOrder({
+    required PlaceOrderParam placeOrderParam,
+  });
 }

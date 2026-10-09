@@ -12,15 +12,17 @@ class ProductDetailsRepoImpl implements ProductDetailsRepo {
   ProductDetailsRepoImpl(this._localDataSource);
 
   @override
-  Future<BaseResponce<ProductDetailsEntity>> getProductDetails(String productId) async {
+  Future<BaseResponce<ProductDetailsEntity>> getProductDetails(
+    String productId,
+  ) async {
     final response = await _localDataSource.getProductDetails(productId);
     switch (response) {
       case SuccessResponce<ProductDetailsResponseDto>():
-        return SuccessResponce<ProductDetailsEntity>(response.data.effectiveData.toDomain());
+        return SuccessResponce<ProductDetailsEntity>(
+          response.data.effectiveData.toDomain(),
+        );
       case ErrorResponce<ProductDetailsResponseDto>():
         return ErrorResponce<ProductDetailsEntity>(response.error);
     }
   }
 }
-
-

@@ -4,9 +4,7 @@ import 'package:flower_app/features/payment/domain/entities/place_order_entity.d
 
 class PlaceOrderState extends Equatable {
   final BaseState<PlaceOrderEntity> placeOrderState;
-  const PlaceOrderState({
-    this.placeOrderState = const BaseState(),
-  });
+  const PlaceOrderState({this.placeOrderState = const BaseState()});
 
   PlaceOrderState copyWith({BaseState<PlaceOrderEntity>? placeOrderState}) {
     return PlaceOrderState(

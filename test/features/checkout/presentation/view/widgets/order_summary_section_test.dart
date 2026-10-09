@@ -320,9 +320,7 @@ void main() {
       // Assert
       // TODO(flutter-app): the event classes have no `==` override, so the
       // dispatched instance is captured and inspected instead of matched.
-      final captured = verify(
-        mockPlaceOrderCubit.doEvent(captureAny),
-      ).captured;
+      final captured = verify(mockPlaceOrderCubit.doEvent(captureAny)).captured;
       expect(captured.single, isA<PostPlaceOrderEvent>());
 
       final param = (captured.single as PostPlaceOrderEvent).placeOrderParam;
@@ -422,43 +420,41 @@ void main() {
         'https://pay.example/session',
       );
       expect(fakePlatform().lastController.navigationDelegate, isNotNull);
-      expect(
-        fakePlatform().lastDelegate.onNavigationRequest,
-        isNotNull,
-      );
+      expect(fakePlatform().lastDelegate.onNavigationRequest, isNotNull);
     });
 
-    testWidgets('replaces the screen with the success route without a session', (
-      tester,
-    ) async {
-      // Arrange
-      stub = CubitStreamStub(mockCubit, loadedState());
-      addTearDown(stub.close);
-      await pumpApp(tester);
+    testWidgets(
+      'replaces the screen with the success route without a session',
+      (tester) async {
+        // Arrange
+        stub = CubitStreamStub(mockCubit, loadedState());
+        addTearDown(stub.close);
+        await pumpApp(tester);
 
-      // Act
-      placeOrderStub.emit(
-        const PlaceOrderState(
-          placeOrderState: BaseState<PlaceOrderEntity>(isLoading: true),
-        ),
-      );
-      await pumpStream(tester);
-      placeOrderStub.emit(
-        const PlaceOrderState(
-          placeOrderState: BaseState<PlaceOrderEntity>(
-            data: PlaceOrderEntity(message: 'created'),
+        // Act
+        placeOrderStub.emit(
+          const PlaceOrderState(
+            placeOrderState: BaseState<PlaceOrderEntity>(isLoading: true),
           ),
-        ),
-      );
-      await pumpStream(tester);
-      for (var i = 0; i < 10; i++) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
+        );
+        await pumpStream(tester);
+        placeOrderStub.emit(
+          const PlaceOrderState(
+            placeOrderState: BaseState<PlaceOrderEntity>(
+              data: PlaceOrderEntity(message: 'created'),
+            ),
+          ),
+        );
+        await pumpStream(tester);
+        for (var i = 0; i < 10; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
 
-      // Assert
-      expect(find.text(orderSuccessRoute), findsOneWidget);
-      expect(find.byType(OrderSummarySection), findsNothing);
-      expect(find.byType(WebViewPayment), findsNothing);
-    });
+        // Assert
+        expect(find.text(orderSuccessRoute), findsOneWidget);
+        expect(find.byType(OrderSummarySection), findsNothing);
+        expect(find.byType(WebViewPayment), findsNothing);
+      },
+    );
   });
 }

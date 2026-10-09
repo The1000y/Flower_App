@@ -19,8 +19,9 @@ class OccasionView extends StatelessWidget {
     final initialOccasionName = args is String ? args : null;
 
     return BlocProvider(
-      create: (_) => getIt<OccasionCubit>()
-        ..handle(LoadOccasions(initialOccasionName: initialOccasionName)),
+      create: (_) =>
+          getIt<OccasionCubit>()
+            ..handle(LoadOccasions(initialOccasionName: initialOccasionName)),
       child: _OccasionScaffold(initialOccasionName: initialOccasionName),
     );
   }
@@ -37,7 +38,7 @@ class _OccasionScaffold extends StatelessWidget {
       appBar: const OccasionAppBar(),
       body: BlocBuilder<OccasionCubit, OccasionState>(
         buildWhen: (previous, current) =>
-        previous.occasionsState != current.occasionsState,
+            previous.occasionsState != current.occasionsState,
         builder: (context, state) {
           final occasionsState = state.occasionsState;
 
@@ -76,7 +77,7 @@ class _OccasionScaffold extends StatelessWidget {
     if (initialOccasionName == null) return 0;
     final cleanName = initialOccasionName!.trim().toLowerCase();
     final index = occasions.indexWhere(
-          (occ) => occ.name.trim().toLowerCase() == cleanName,
+      (occ) => occ.name.trim().toLowerCase() == cleanName,
     );
     return index == -1 ? 0 : index;
   }

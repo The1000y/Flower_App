@@ -1,4 +1,1 @@
-enum CheckoutPaymentMethod {
-  COD,
-  Card,
-}
+enum CheckoutPaymentMethod { COD, Card }

@@ -3,5 +3,7 @@ import 'package:flower_app/features/payment/data/model/request/place_order_reque
 import 'package:flower_app/features/payment/data/model/response/place_order_dto.dart';
 
 abstract interface class RemoteDataSource {
-  Future<BaseResponce<PlaceOrderDto>> palceOrder({required PlaceOrderRequest placeOrderRequest});
+  Future<BaseResponce<PlaceOrderDto>> placeOrder({
+    required PlaceOrderRequest placeOrderRequest,
+  });
 }

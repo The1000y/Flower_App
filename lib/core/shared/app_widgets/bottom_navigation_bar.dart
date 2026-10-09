@@ -16,7 +16,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeScreen = HomeView(controller: controller);
     final categoriesScreen = CategoriesView();
-    final cartScreen =CheckoutView();
+    final cartScreen = CheckoutView();
     final profileScreen = Placeholder();
 
     return PersistentTabView(

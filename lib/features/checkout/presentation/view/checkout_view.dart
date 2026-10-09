@@ -38,7 +38,7 @@ class _CheckoutViewState extends State<CheckoutView> {
         BlocProvider.value(
           value: getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
         ),
-        BlocProvider(create: (context) =>  getIt.get<PlaceOrderCubit>()),
+        BlocProvider(create: (context) => getIt.get<PlaceOrderCubit>()),
       ],
 
       child: Scaffold(
@@ -52,9 +52,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               Icons.arrow_back_ios_new,
               color: AppColors.blackBase,
             ),
-            onPressed: () => {
-              AppNavigation.controller.jumpToTab(0),
-            }
+            onPressed: () => {AppNavigation.controller.jumpToTab(0)},
           ),
           titleSpacing: 0,
           title: Text(
@@ -94,7 +92,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               const SizedBox(height: 24),
               GiftSection(formKey: giftFormKey),
               const SizedBox(height: 24),
-               OrderSummarySection(formKey: giftFormKey),
+              OrderSummarySection(formKey: giftFormKey),
             ],
           ),
         ),

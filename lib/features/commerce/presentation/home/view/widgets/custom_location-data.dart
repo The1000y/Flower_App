@@ -40,7 +40,7 @@ class CustomLocationData extends StatelessWidget {
     }
 
     final selectedId =
-    addresses.any((address) => address.id == selectedAddress?.id)
+        addresses.any((address) => address.id == selectedAddress?.id)
         ? selectedAddress?.id
         : null;
     if (addresses.isNotEmpty) {
@@ -52,7 +52,7 @@ class CustomLocationData extends StatelessWidget {
         items: [
           // العناوين الموجودة
           ...addresses.map(
-                (addr) => DropdownMenuItem(
+            (addr) => DropdownMenuItem(
               value: addr.id,
               child: Row(
                 children: [
@@ -97,7 +97,7 @@ class CustomLocationData extends StatelessWidget {
 
           // لو اختار عنوان موجود
           final newAddress = addresses.firstWhere(
-                (addr) => addr.id == selectedId,
+            (addr) => addr.id == selectedId,
           );
 
           onAddressChanged?.call(newAddress);

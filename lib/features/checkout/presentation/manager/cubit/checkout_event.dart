@@ -1,4 +1,3 @@
-
 sealed class CheckoutEvent {}
 
 class GetCheckoutEvent extends CheckoutEvent {}
@@ -13,17 +12,18 @@ class SelectPaymentMethodEvent extends CheckoutEvent {
 
   SelectPaymentMethodEvent({required this.paymentMethod});
 }
-class ToggleGiftEvent extends CheckoutEvent{
+
+class ToggleGiftEvent extends CheckoutEvent {
   final bool isGift;
   ToggleGiftEvent({required this.isGift});
 }
-class ChangeGiftRecipientNameEvent  extends CheckoutEvent{
+
+class ChangeGiftRecipientNameEvent extends CheckoutEvent {
   final String name;
   ChangeGiftRecipientNameEvent({required this.name});
 }
-class ChangeGiftRecipientPhoneEvent extends CheckoutEvent{
+
+class ChangeGiftRecipientPhoneEvent extends CheckoutEvent {
   final String phone;
   ChangeGiftRecipientPhoneEvent({required this.phone});
 }
-
-

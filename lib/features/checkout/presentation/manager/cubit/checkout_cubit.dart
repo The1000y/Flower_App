@@ -93,10 +93,10 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   void _selectedPaymentMethod(String paymentMethod) => emit(
     state.copyWith(
       selectedPaymentMethod: paymentMethod,
-        isGift: paymentMethod == CheckoutPaymentMethod.COD.name
+      isGift: paymentMethod == CheckoutPaymentMethod.COD.name
           ? false
           : state.isGift,
-        giftRecipientName: paymentMethod == CheckoutPaymentMethod.COD.name
+      giftRecipientName: paymentMethod == CheckoutPaymentMethod.COD.name
           ? ''
           : state.giftRecipientName,
       giftRecipientPhone: paymentMethod == CheckoutPaymentMethod.COD.name

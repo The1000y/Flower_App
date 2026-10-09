@@ -52,10 +52,9 @@ void main() {
       // Assert
       expect(fakePlatform.controllers, hasLength(1));
       expect(fakePlatform.lastController.loadedUrl, sessionUrl);
-      expect(
-        fakePlatform.lastController.javaScriptModes,
-        [JavaScriptMode.unrestricted],
-      );
+      expect(fakePlatform.lastController.javaScriptModes, [
+        JavaScriptMode.unrestricted,
+      ]);
       expect(fakePlatform.lastController.navigationDelegate, isNotNull);
       expect(fakePlatform.lastDelegate.onNavigationRequest, isNotNull);
       expect(find.byType(WebViewWidget), findsOneWidget);
@@ -130,8 +129,9 @@ void main() {
     testWidgets('leaves unrelated urls to the web view', (tester) async {
       // Act
       await pumpPayment(tester);
-      final decision = await fakePlatform.lastDelegate
-          .navigate('https://example.com/checkout');
+      final decision = await fakePlatform.lastDelegate.navigate(
+        'https://example.com/checkout',
+      );
 
       // Assert
       expect(decision, NavigationDecision.navigate);
@@ -140,7 +140,9 @@ void main() {
       expect(find.text(checkoutRoute), findsNothing);
     });
 
-    testWidgets('ignores a success url once the screen is gone', (tester) async {
+    testWidgets('ignores a success url once the screen is gone', (
+      tester,
+    ) async {
       // Arrange
       await pumpPayment(tester);
       final handleNavigation = fakePlatform.lastDelegate.onNavigationRequest!;

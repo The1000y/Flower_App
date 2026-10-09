@@ -42,9 +42,8 @@ class FakeWebViewPlatform extends WebViewPlatform {
 }
 
 class FakePlatformWebViewController extends PlatformWebViewController {
-  FakePlatformWebViewController(
-    PlatformWebViewControllerCreationParams params,
-  ) : super.implementation(params);
+  FakePlatformWebViewController(PlatformWebViewControllerCreationParams params)
+    : super.implementation(params);
 
   final List<LoadRequestParams> loadRequests = [];
   final List<JavaScriptMode> javaScriptModes = [];
@@ -81,14 +80,10 @@ class FakePlatformNavigationDelegate extends PlatformNavigationDelegate {
   /// Runs the callback the production `NavigationDelegate` registered, i.e.
   /// simulates the web view navigating to [url].
   Future<NavigationDecision> navigate(String url) async =>
-      onNavigationRequest!(
-        NavigationRequest(url: url, isMainFrame: true),
-      );
+      onNavigationRequest!(NavigationRequest(url: url, isMainFrame: true));
 
   @override
-  Future<void> setOnNavigationRequest(
-    NavigationRequestCallback handler,
-  ) async {
+  Future<void> setOnNavigationRequest(NavigationRequestCallback handler) async {
     onNavigationRequest = handler;
   }
 }

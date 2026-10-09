@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flower_app/features/orders/domain/entities/my_orders_entity.dart';
 
 enum OrdersBaseState { initial, loading, success, error }
+
 enum OrdersSideEffect { none, navigateToTrack, navigateToCart }
 
 class OrdersState extends Equatable {
@@ -24,7 +25,6 @@ class OrdersState extends Equatable {
     this.activeOrders = const [],
     this.completedOrders = const [],
     this.selectedOrderId,
-
   });
 
   OrdersState copyWith({
@@ -44,21 +44,27 @@ class OrdersState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       page: page ?? this.page,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      selectedOrderId: resetSelectedOrderId ? null : (selectedOrderId ?? this.selectedOrderId),
-      activeOrders: activeOrders != null ? UnmodifiableListView(activeOrders) : this.activeOrders,
-      completedOrders: completedOrders != null ? UnmodifiableListView(completedOrders) : this.completedOrders,
+      selectedOrderId: resetSelectedOrderId
+          ? null
+          : (selectedOrderId ?? this.selectedOrderId),
+      activeOrders: activeOrders != null
+          ? UnmodifiableListView(activeOrders)
+          : this.activeOrders,
+      completedOrders: completedOrders != null
+          ? UnmodifiableListView(completedOrders)
+          : this.completedOrders,
     );
   }
 
   @override
   List<Object?> get props => [
-        baseState,
-        sideEffect,
-        errorMessage,
-        page,
-        hasReachedMax,
-        activeOrders,
-        completedOrders,
-        selectedOrderId,
-      ];
+    baseState,
+    sideEffect,
+    errorMessage,
+    page,
+    hasReachedMax,
+    activeOrders,
+    completedOrders,
+    selectedOrderId,
+  ];
 }
