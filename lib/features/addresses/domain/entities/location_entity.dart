@@ -6,17 +6,15 @@ class GovernorateEntity extends Equatable {
   final String nameAr;
   final String nameEn;
 
-const  GovernorateEntity({
+  const GovernorateEntity({
     required this.id,
     required this.nameAr,
     required this.nameEn,
   });
 
   @override
-
   List<Object?> get props => [id, nameAr, nameEn];
 }
-
 
 class CityEntity extends Equatable {
   final String id;
@@ -33,5 +31,4 @@ class CityEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, governorateId, nameAr, nameEn];
-
 }

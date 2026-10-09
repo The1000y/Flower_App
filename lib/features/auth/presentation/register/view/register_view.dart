@@ -41,7 +41,8 @@ class _RegisterViewState extends State<RegisterView> {
   void initState() {
     super.initState();
     _termsRecognizer = TapGestureRecognizer()..onTap = () {};
-    _loginRecognizer = TapGestureRecognizer()..onTap = () => Navigator.pop(context);
+    _loginRecognizer = TapGestureRecognizer()
+      ..onTap = () => Navigator.pop(context);
   }
 
   @override
@@ -65,7 +66,8 @@ class _RegisterViewState extends State<RegisterView> {
 
     context.read<RegisterViewModel>().handle(
       RegisterSubmitted(
-        fullName: "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}",
+        fullName:
+            "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}",
         email: _emailController.text.trim(),
         password: _passwordController.text,
         confirmPassword: _confirmPasswordController.text,
@@ -82,12 +84,22 @@ class _RegisterViewState extends State<RegisterView> {
         if (state.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(state.errorMessage), backgroundColor: AppColors.error));
+            ..showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+                backgroundColor: AppColors.error,
+              ),
+            );
         }
         if (state.data != null && state.data!.isSuccess) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(AppStrings.registerSuccess), backgroundColor: AppColors.success));
+            ..showSnackBar(
+              SnackBar(
+                content: Text(AppStrings.registerSuccess),
+                backgroundColor: AppColors.success,
+              ),
+            );
           Navigator.pop(context);
         }
       },
@@ -98,7 +110,10 @@ class _RegisterViewState extends State<RegisterView> {
             icon: const Icon(Icons.arrow_back_ios_new),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text(AppStrings.signUp, style: Theme.of(context).textTheme.titleLarge),
+          title: Text(
+            AppStrings.signUp,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
         body: Form(
           key: _formKey,
@@ -162,7 +177,10 @@ class _RegisterViewState extends State<RegisterView> {
                         controller: _confirmPasswordController,
                         isPassword: true,
                         forceShowErrors: _isSubmitted,
-                        validator: (value) => AuthValidators.confirmPassword(value, _passwordController.text),
+                        validator: (value) => AuthValidators.confirmPassword(
+                          value,
+                          _passwordController.text,
+                        ),
                       ),
                     ),
                   ],

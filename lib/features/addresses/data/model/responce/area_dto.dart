@@ -11,11 +11,7 @@ class AreaDto {
   @JsonKey(name: 'cities')
   final List<CityItemDto>? cities;
 
-  const AreaDto({
-    this.id,
-    this.name,
-    this.cities,
-  });
+  const AreaDto({this.id, this.name, this.cities});
 
   factory AreaDto.fromJson(Map<String, dynamic> json) =>
       _$AreaDtoFromJson(json);
@@ -30,10 +26,7 @@ class CityItemDto {
   @JsonKey(name: 'name')
   final String? name;
 
-  const CityItemDto({
-    this.id,
-    this.name,
-  });
+  const CityItemDto({this.id, this.name});
 
   factory CityItemDto.fromJson(Map<String, dynamic> json) =>
       _$CityItemDtoFromJson(json);

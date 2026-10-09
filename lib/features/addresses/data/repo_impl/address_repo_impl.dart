@@ -59,12 +59,14 @@ class AddressRepoImpl implements AddressRepo {
         final cities = matchedArea
             .expand((area) => area.cities ?? const <CityItemDto>[])
             .where((city) => city.id?.isNotEmpty ?? false)
-            .map((city) => CityEntity(
-                  id: city.id ?? '',
-                  governorateId: governorateId,
-                  nameAr: city.name ?? '',
-                  nameEn: city.name ?? '',
-                ))
+            .map(
+              (city) => CityEntity(
+                id: city.id ?? '',
+                governorateId: governorateId,
+                nameAr: city.name ?? '',
+                nameEn: city.name ?? '',
+              ),
+            )
             .toList();
         return cities;
       case ErrorResponce<List<AreaDto>>():
@@ -79,11 +81,13 @@ class AddressRepoImpl implements AddressRepo {
       case SuccessResponce<List<AreaDto>>():
         return response.data
             .where((area) => area.id?.isNotEmpty ?? false)
-            .map((area) => GovernorateEntity(
-                  id: area.id ?? '',
-                  nameAr: area.name ?? '',
-                  nameEn: area.name ?? '',
-                ))
+            .map(
+              (area) => GovernorateEntity(
+                id: area.id ?? '',
+                nameAr: area.name ?? '',
+                nameEn: area.name ?? '',
+              ),
+            )
             .toList();
       case ErrorResponce<List<AreaDto>>():
         throw response.error;

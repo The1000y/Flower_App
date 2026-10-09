@@ -8,31 +8,32 @@ import 'dart:convert';
 
 part 'home_sections_response.g.dart';
 
-HomeSectionsResponse homeSectionsResponseFromJson(String str) => HomeSectionsResponse.fromJson(json.decode(str));
+HomeSectionsResponse homeSectionsResponseFromJson(String str) =>
+    HomeSectionsResponse.fromJson(json.decode(str));
 
-String homeSectionsResponseToJson(HomeSectionsResponse data) => json.encode(data.toJson());
+String homeSectionsResponseToJson(HomeSectionsResponse data) =>
+    json.encode(data.toJson());
 
 @JsonSerializable()
 class HomeSectionsResponse {
-    @JsonKey(name: "data")
-    List<SectionDto>? data;
-    @JsonKey(name: "success")
-    bool? isSuccess;
-    @JsonKey(name: "message")
-    String? message;
-    @JsonKey(name: "error")
-    String? errorCode;
+  @JsonKey(name: "data")
+  List<SectionDto>? data;
+  @JsonKey(name: "success")
+  bool? isSuccess;
+  @JsonKey(name: "message")
+  String? message;
+  @JsonKey(name: "error")
+  String? errorCode;
 
-    HomeSectionsResponse({
-        this.data,
-        this.isSuccess,
-        this.message,
-        this.errorCode,
-    });
+  HomeSectionsResponse({
+    this.data,
+    this.isSuccess,
+    this.message,
+    this.errorCode,
+  });
 
-    factory HomeSectionsResponse.fromJson(Map<String, dynamic> json) => _$HomeSectionsResponseFromJson(json);
+  factory HomeSectionsResponse.fromJson(Map<String, dynamic> json) =>
+      _$HomeSectionsResponseFromJson(json);
 
-    Map<String, dynamic> toJson() => _$HomeSectionsResponseToJson(this);
+  Map<String, dynamic> toJson() => _$HomeSectionsResponseToJson(this);
 }
-
-

@@ -49,22 +49,23 @@ class ProductDetailsDto {
     this.occasionIds,
   });
 
-  factory ProductDetailsDto.fromJson(Map<String, dynamic> json) => _$ProductDetailsDtoFromJson(json);
+  factory ProductDetailsDto.fromJson(Map<String, dynamic> json) =>
+      _$ProductDetailsDtoFromJson(json);
   Map<String, dynamic> toJson() => _$ProductDetailsDtoToJson(this);
 
   ProductDetailsEntity toDomain() => ProductDetailsEntity(
-        id: id,
-        name: name,
-        imageUrl: imageUrl,
-        currency: currency ?? 'EGP',
-        price: discountedPrice ?? price,
-        originalPrice: discountedPrice != null ? price : null,
-        discountPercentage: discountPercent,
-        status: (inStock ?? true) ? 'In Stock' : 'Out of Stock',
-        images: images ?? [],
-        description: description ?? '',
-        includes: includes?.map((e) => e.toDomain()).toList() ?? [],
-        categoryId: categoryId ?? '',
-        occasionIds: occasionIds ?? [],
-      );
+    id: id,
+    name: name,
+    imageUrl: imageUrl,
+    currency: currency ?? 'EGP',
+    price: discountedPrice ?? price,
+    originalPrice: discountedPrice != null ? price : null,
+    discountPercentage: discountPercent,
+    status: (inStock ?? true) ? 'In Stock' : 'Out of Stock',
+    images: images ?? [],
+    description: description ?? '',
+    includes: includes?.map((e) => e.toDomain()).toList() ?? [],
+    categoryId: categoryId ?? '',
+    occasionIds: occasionIds ?? [],
+  );
 }

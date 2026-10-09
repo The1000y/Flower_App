@@ -71,6 +71,7 @@ abstract class AppStrings {
   static const String addressTypeOffice = 'Office';
   static const String addNew = '+ Add new';
   static const String paymentMethod = 'Payment method';
+  static const String payment = 'Paymentd';
   static const String cashOnDelivery = 'Cash on delivery';
   static const String creditCard = 'Credit card';
   static const String itIsAGift = 'It is a gift';
@@ -151,6 +152,7 @@ abstract class AppStrings {
 
   // Auth error / validation messages
   static const String loginFailed = 'Login failed';
+  static const String loading = 'loading....';
   static const String loginSuccess = 'Login successful';
   static const String invalidCredentials = 'Invalid email or password';
   static const String somethingWentWrong = 'Something went wrong';
@@ -204,5 +206,6 @@ abstract class AppStrings {
   static const String lat = 'lat';
   static const String lng = 'lng';
   static const String addressId = 'addressId';
-  
+  static const String tryAgain = 'tryAgain';
+  static const String noAddress = 'no address selected';
 }

@@ -1,14 +1,23 @@
+import 'dart:developer';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/config/routing/web_view_payment_args.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
+import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
+import 'package:flower_app/features/payment/domain/entities/param/place_order_param.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_cubit.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_event.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderSummarySection extends StatelessWidget {
-  const OrderSummarySection({super.key});
+  const OrderSummarySection({super.key, required this.formKey});
+  final GlobalKey<FormState> formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +75,98 @@ class OrderSummarySection extends StatelessWidget {
             },
           ),
           const SizedBox(height: 32),
-          CustomButton(
-            text: AppStrings.placeOrder,
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.orderSuccess );
+          BlocConsumer<PlaceOrderCubit, PlaceOrderState>(
+            listenWhen: (previous, current) {
+              return previous.placeOrderState.isLoading &&
+                  !current.placeOrderState.isLoading;
             },
-            isEnabled: true,
-            enabledColor: AppColors.pinkBase,
+            listener: (context, state) {
+              if (state.placeOrderState.errorMessage.isNotEmpty) {
+                debugPrint(state.placeOrderState.errorMessage);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.placeOrderState.errorMessage),
+                    backgroundColor: AppColors.error,
+                  ),
+                );
+                return;
+              }
+              if (state.placeOrderState.data?.sessionUrl == null) {
+                Navigator.pushReplacementNamed(context, Routes.orderSuccess);
+                return;
+              }
+              if (state.placeOrderState.data?.sessionUrl != null) {
+                log('sessionUrl: ${state.placeOrderState.data!.sessionUrl}');
+                Navigator.pushNamed(
+                  context,
+                  Routes.webView,
+                  arguments: WebViewPaymentArgs(
+                    successUrl: state.placeOrderState.data!.successUrl!,
+                    cancelUrl: state.placeOrderState.data!.cancelUrl!,
+                    sessionUrl: state.placeOrderState.data!.sessionUrl!,
+                  ),
+                );
+                return;
+              }
+            },
+            builder: (context, state) {
+              return CustomButton(
+                text: state.placeOrderState.isLoading
+                    ? AppStrings.loading
+                    : AppStrings.placeOrder,
+                onPressed: state.placeOrderState.isLoading
+                    ? null
+                    : () {
+                        if (formKey.currentState!.validate()) {
+                          var checkoutState = context
+                              .read<CheckoutCubit>()
+                              .state;
+                          final addressId = context
+                              .read<AddressCubit>()
+                              .state
+                              .selectedAddressId;
+                          if (addressId == null || addressId.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(AppStrings.noAddress),
+                                backgroundColor: AppColors.error,
+                              ),
+                            );
+                            return;
+                          }
+                          if (checkoutState.selectedPaymentMethod.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('no payment method selected'),
+                                backgroundColor: AppColors.error,
+                              ),
+                            );
+
+                            return;
+                          }
+                          final paymentMethod = CheckoutPaymentMethod.values
+                              .byName(checkoutState.selectedPaymentMethod);
+                          context.read<PlaceOrderCubit>().doEvent(
+                            PostPlaceOrderEvent(
+                              placeOrderParam: PlaceOrderParam(
+                                giftRecipientName: checkoutState.isGift
+                                    ? checkoutState.giftRecipientName
+                                    : null,
+                                giftRecipientPhone: checkoutState.isGift
+                                    ? checkoutState.giftRecipientPhone
+                                    : null,
+                                isGift: checkoutState.isGift,
+                                addressId: addressId,
+                                paymentMethod: paymentMethod,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                isEnabled: true,
+                enabledColor: AppColors.pinkBase,
+              );
+            },
           ),
           const SizedBox(height: 24),
         ],

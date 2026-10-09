@@ -92,7 +92,9 @@ class AddressCubit extends Cubit<AddressState> {
     }
   }
 
-  Future<void> _submitAddress({required AddAddressParams addaddressParams}) async {
+  Future<void> _submitAddress({
+    required AddAddressParams addaddressParams,
+  }) async {
     emit(
       state.copyWith(
         addAddressState: BaseState<AddressEntity>(isLoading: true),
@@ -178,33 +180,38 @@ class AddressCubit extends Cubit<AddressState> {
   }
 
   Future<void> _initializeAddress({AddressEntity? existingAddress}) async {
-    emit(state.copyWith(locationState: const BaseState<LatLng>(isLoading: true)));
+    emit(
+      state.copyWith(locationState: const BaseState<LatLng>(isLoading: true)),
+    );
 
     try {
       final governorates = await _getGovernoratesUseCase.call();
 
       if (existingAddress != null) {
         final coordinates =
-        (existingAddress.lat != null && existingAddress.lng != null)
+            (existingAddress.lat != null && existingAddress.lng != null)
             ? LatLng(existingAddress.lat!, existingAddress.lng!)
             : const LatLng(30.047931723716083, 31.238564150922823);
 
         final matchedGovernorate = governorates.firstWhere(
-              (g) => existingAddress.cityId != null &&
+          (g) =>
+              existingAddress.cityId != null &&
                   existingAddress.cityId!.isNotEmpty
-                  ? g.id == existingAddress.cityId
-                  : g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
+              ? g.id == existingAddress.cityId
+              : g.nameEn.toLowerCase() == existingAddress.city.toLowerCase(),
           orElse: () => governorates.first,
         );
 
-        final citiesInGovernorate =
-            await _getCitiesUseCase.call(matchedGovernorate.id);
+        final citiesInGovernorate = await _getCitiesUseCase.call(
+          matchedGovernorate.id,
+        );
 
         final matchedCity = citiesInGovernorate.firstWhere(
-              (c) => existingAddress.areaId != null &&
+          (c) =>
+              existingAddress.areaId != null &&
                   existingAddress.areaId!.isNotEmpty
-                  ? c.id == existingAddress.areaId
-                  : c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
+              ? c.id == existingAddress.areaId
+              : c.nameEn.toLowerCase() == existingAddress.area.toLowerCase(),
           orElse: () => citiesInGovernorate.isNotEmpty
               ? citiesInGovernorate.first
               : throw Exception("No cities found"),
@@ -214,7 +221,7 @@ class AddressCubit extends Cubit<AddressState> {
           state.copyWith(
             selectedCoordinates: coordinates,
             streetAddress:
-            '${existingAddress.addressLine}, ${existingAddress.city}',
+                '${existingAddress.addressLine}, ${existingAddress.city}',
             governorates: governorates,
             selectedGovernorate: matchedGovernorate.id,
             selectedCity: matchedCity.id,
@@ -361,11 +368,11 @@ class AddressCubit extends Cubit<AddressState> {
     );
     try {
       final selectedGovernorateObj = state.governorates.firstWhere(
-            (city) => city.id == state.selectedGovernorate,
+        (city) => city.id == state.selectedGovernorate,
         orElse: () => throw Exception('Governorate not found'),
       );
       final selectedAreaObj = state.citiesState.data?.firstWhere(
-            (city) => city.id == state.selectedCity,
+        (city) => city.id == state.selectedCity,
         orElse: () => throw Exception('City not found'),
       );
       final resolvedParams = AddAddressParams(
@@ -386,12 +393,12 @@ class AddressCubit extends Cubit<AddressState> {
       final updatedUserAddresses = state.userAddresses
           .map((address) => address.id == id ? result : address)
           .toList();
-      final updatedSavedAddresses = (state.addressesState.data ??
-              const <AddressEntity>[])
-          .map((address) => address.id == id ? result : address)
-          .toList();
-      final wasSelected = state.selectedAddressId == id ||
-          state.selectedAddress?.id == id;
+      final updatedSavedAddresses =
+          (state.addressesState.data ?? const <AddressEntity>[])
+              .map((address) => address.id == id ? result : address)
+              .toList();
+      final wasSelected =
+          state.selectedAddressId == id || state.selectedAddress?.id == id;
 
       emit(
         state.copyWith(
@@ -560,8 +567,8 @@ class AddressCubit extends Cubit<AddressState> {
       if (isDeleted) {
         // FIX: clear the selected address if it was the one just deleted,
         // so a stale address is never sent to checkout.
-        final selectedWasDeleted = state.selectedAddressId == id ||
-            state.selectedAddress?.id == id;
+        final selectedWasDeleted =
+            state.selectedAddressId == id || state.selectedAddress?.id == id;
         if (selectedWasDeleted) {
           emit(
             state.copyWith(
@@ -636,10 +643,6 @@ class AddressCubit extends Cubit<AddressState> {
   }
 
   void _resetAddAddressState() {
-    emit(
-      state.copyWith(
-        addAddressState: const BaseState<AddressEntity>(),
-      ),
-    );
+    emit(state.copyWith(addAddressState: const BaseState<AddressEntity>()));
   }
 }

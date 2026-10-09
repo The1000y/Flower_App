@@ -4,6 +4,7 @@ import 'package:flower_app/features/checkout/domain/entities/checkout_details_en
 import 'package:flower_app/features/checkout/domain/entities/estimation_time_entity.dart';
 import 'package:flower_app/features/checkout/domain/use_cases/estimation_time_use_case.dart';
 import 'package:flower_app/features/checkout/domain/use_cases/get_checkout_use_case.dart';
+import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,6 +90,18 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     }
   }
 
-  void _selectedPaymentMethod(String paymentMethod) =>
-      emit(state.copyWith(selectedPaymentMethod: paymentMethod));
+  void _selectedPaymentMethod(String paymentMethod) => emit(
+    state.copyWith(
+      selectedPaymentMethod: paymentMethod,
+      isGift: paymentMethod == CheckoutPaymentMethod.COD.name
+          ? false
+          : state.isGift,
+      giftRecipientName: paymentMethod == CheckoutPaymentMethod.COD.name
+          ? ''
+          : state.giftRecipientName,
+      giftRecipientPhone: paymentMethod == CheckoutPaymentMethod.COD.name
+          ? ''
+          : state.giftRecipientPhone,
+    ),
+  );
 }

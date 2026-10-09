@@ -1,9 +1,9 @@
 // features/addresses/api/data_source_impl/local/address_dummy_data.dart
 
 abstract class AddressDummyData {
-  static Map<String, dynamic>   addressDummyData = {
+  static Map<String, dynamic> addressDummyData = {
     "id": "dummy-id-123",
-    "recipientName": "elalfy", 
+    "recipientName": "elalfy",
     "recipientPhone": "01277919151",
     "addressLine": "XH72+PCC,",
     "city": "Giza",
@@ -14,7 +14,7 @@ abstract class AddressDummyData {
     "label": "home",
     "isDefault": false,
     "storeId": "store-123",
-    "isServiceable": true, 
+    "isServiceable": true,
     "createdAt": "2024-01-15T10:30:00Z",
   };
   static List<Map<String, dynamic>> savedAddressesList = [
@@ -33,8 +33,6 @@ abstract class AddressDummyData {
       "storeId": "store-456",
       "isServiceable": true,
       "createdAt": "2024-02-10T09:15:00Z",
-    }
+    },
   ];
-
 }
-

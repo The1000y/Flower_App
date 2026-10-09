@@ -11,7 +11,8 @@ class OccasionDataDto {
   final List<OccasionDto> items;
 
   OccasionDataDto({required this.items});
-  factory OccasionDataDto.fromJson(Map<String, dynamic> json) => _$OccasionDataDtoFromJson(json);
+  factory OccasionDataDto.fromJson(Map<String, dynamic> json) =>
+      _$OccasionDataDtoFromJson(json);
   Map<String, dynamic> toJson() => _$OccasionDataDtoToJson(this);
 }
 
@@ -43,6 +44,5 @@ class OccasionsResponseDto {
   factory OccasionsResponseDto.fromJson(Map<String, dynamic> json) =>
       _$OccasionsResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$OccasionsResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$OccasionsResponseDtoToJson(this);
 }

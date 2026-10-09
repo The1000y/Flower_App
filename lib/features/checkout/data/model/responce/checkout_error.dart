@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'checkout_error.g.dart';
 
 @JsonSerializable()
@@ -12,7 +11,8 @@ class CheckoutError {
 
   CheckoutError({this.code, this.field});
 
-  factory CheckoutError.fromJson(Map<String, dynamic> json) => _$CheckoutErrorFromJson(json);
+  factory CheckoutError.fromJson(Map<String, dynamic> json) =>
+      _$CheckoutErrorFromJson(json);
 
   Map<String, dynamic> toJson() => _$CheckoutErrorToJson(this);
 }

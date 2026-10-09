@@ -1,6 +1,7 @@
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/shared/app_widgets/app_navigation.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -16,6 +17,8 @@ import 'package:flower_app/features/checkout/presentation/view/widgets/delivery_
 import 'package:flower_app/features/checkout/presentation/view/widgets/gift_section.dart';
 import 'package:flower_app/features/checkout/presentation/view/widgets/order_summary_section.dart';
 import 'package:flower_app/features/checkout/presentation/view/widgets/payment_method_section.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_cubit.dart';
+import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,12 +29,15 @@ import '../../mocks/mocks.mocks.dart';
 
 import '../../../../helpers/flutter_diagnostic_tolerances.dart';
 import '../../fixtures/checkout_fixtures.dart';
+import '../../../payment/mocks/mocks.mocks.dart';
 
 void main() {
   late MockCheckoutCubit mockCheckoutCubit;
   late MockAddressCubit mockAddressCubit;
+  late MockPlaceOrderCubit mockPlaceOrderCubit;
   late CubitStreamStub<CheckoutState, MockCheckoutCubit> checkoutStub;
   late CubitStreamStub<AddressState, MockAddressCubit> addressStub;
+  late CubitStreamStub<PlaceOrderState, MockPlaceOrderCubit> placeOrderStub;
 
   final tAddress = AddressEntity(
     id: 'address-1',
@@ -49,6 +55,7 @@ void main() {
   setUp(() {
     mockCheckoutCubit = MockCheckoutCubit();
     mockAddressCubit = MockAddressCubit();
+    mockPlaceOrderCubit = MockPlaceOrderCubit();
 
     if (getIt.isRegistered<CheckoutCubit>()) {
       getIt.unregister<CheckoutCubit>();
@@ -56,8 +63,12 @@ void main() {
     if (getIt.isRegistered<AddressCubit>()) {
       getIt.unregister<AddressCubit>();
     }
+    if (getIt.isRegistered<PlaceOrderCubit>()) {
+      getIt.unregister<PlaceOrderCubit>();
+    }
     getIt.registerFactory<CheckoutCubit>(() => mockCheckoutCubit);
     getIt.registerFactory<AddressCubit>(() => mockAddressCubit);
+    getIt.registerFactory<PlaceOrderCubit>(() => mockPlaceOrderCubit);
   });
 
   tearDown(() {
@@ -86,7 +97,11 @@ void main() {
     );
   }
 
-  void listenToBothCubits({CheckoutState? checkout, AddressState? address}) {
+  void listenToBothCubits({
+    CheckoutState? checkout,
+    AddressState? address,
+    PlaceOrderState? placeOrder,
+  }) {
     checkoutStub = CubitStreamStub(
       mockCheckoutCubit,
       checkout ?? const CheckoutState(),
@@ -95,8 +110,13 @@ void main() {
       mockAddressCubit,
       address ?? const AddressState(),
     );
+    placeOrderStub = CubitStreamStub(
+      mockPlaceOrderCubit,
+      placeOrder ?? const PlaceOrderState(),
+    );
     addTearDown(checkoutStub.close);
     addTearDown(addressStub.close);
+    addTearDown(placeOrderStub.close);
   }
 
   /// The sections use `shimmer` and indeterminate `CircularProgressIndicator`s,
@@ -324,55 +344,27 @@ void main() {
       expect(find.byType(TextFormField), findsNWidgets(2));
     });
 
-    testWidgets('tapping the back button pops the checkout route', (
+    testWidgets('tapping the back button returns to the cart tab', (
       tester,
     ) async {
       // Arrange
       listenToBothCubits();
-      // TODO(flutter-app): the address and payment tiles wrap their
-      // `RadioListTile` in a `Container` with a background colour, which trips
-      // the ListTile ink-visibility diagnostic on every build. Fixing it
-      // requires a production change, so only that exact message is dropped.
-      FlutterDiagnosticTolerances.ignoreFlutterDiagnostics({
-        FlutterDiagnosticTolerances.listTileInkVisibility,
-      });
-      addTearDown(FlutterDiagnosticTolerances.restoreFlutterErrorHandler);
+      // TODO(flutter-app): the checkout screen lives in the cart tab of the
+      // bottom navigation bar, so its back button switches back to that tab
+      // instead of popping a route.
+      AppNavigation.controller.jumpToTab(1);
+      addTearDown(() => AppNavigation.controller.jumpToTab(0));
 
-      tester.view.physicalSize = const Size(800, 2400);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      await tester.pumpWidget(
-        ScreenUtilPlusInit(
-          designSize: const Size(800, 2400),
-          child: MaterialApp(
-            home: Builder(
-              builder: (context) => Scaffold(
-                body: Center(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const CheckoutView()),
-                    ),
-                    child: const Text('Go to checkout'),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Act
-      await tester.tap(find.text('Go to checkout'));
-      await pumpFrames(tester);
+      await pumpApp(tester);
       expect(find.byType(CheckoutView), findsOneWidget);
 
+      // Act
       await tester.tap(find.byIcon(Icons.arrow_back_ios_new));
       await pumpFrames(tester);
 
       // Assert
-      expect(find.byType(CheckoutView), findsNothing);
-      expect(find.text('Go to checkout'), findsOneWidget);
+      expect(AppNavigation.controller.index, 0);
+      expect(find.byType(CheckoutView), findsOneWidget);
     });
   });
 }

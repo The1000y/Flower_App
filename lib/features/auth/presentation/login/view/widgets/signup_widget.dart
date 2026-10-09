@@ -9,27 +9,26 @@ class SignupWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Text.rich(
-                      TextSpan(
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        children: [
-                          const TextSpan(text: AppStrings.dontHaveAccount),
-                          TextSpan(
-                            text: AppStrings.signUp,
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushNamed(context, Routes.signUp);
-                              },
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: AppColors.pinkBase,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    );
+    return Text.rich(
+      TextSpan(
+        style: Theme.of(context).textTheme.bodyMedium,
+        children: [
+          const TextSpan(text: AppStrings.dontHaveAccount),
+          TextSpan(
+            text: AppStrings.signUp,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Navigator.pushNamed(context, Routes.signUp);
+              },
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.pinkBase,
+              decoration: TextDecoration.underline,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+      textAlign: TextAlign.center,
+    );
   }
 }

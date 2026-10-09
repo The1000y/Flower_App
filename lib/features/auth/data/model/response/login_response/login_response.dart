@@ -14,12 +14,7 @@ class LoginResponse {
   @JsonKey(name: 'data')
   LoginDataDto? data;
 
-  LoginResponse({
-    this.isSuccess,
-    this.errorCode,
-    this.message,
-    this.data,
-  });
+  LoginResponse({this.isSuccess, this.errorCode, this.message, this.data});
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('accessToken')) {

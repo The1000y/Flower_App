@@ -12,11 +12,9 @@ import 'package:flower_app/features/commerce/domain/entities/products/product_en
 import 'package:flower_app/features/commerce/domain/use_case/get_categories_use_case.dart';
 import 'package:flower_app/features/commerce/domain/use_case/get_product_use_case.dart';
 
-class MockGetCategoriesUseCase extends Mock
-    implements GetCategoriesUseCase {}
+class MockGetCategoriesUseCase extends Mock implements GetCategoriesUseCase {}
 
-class MockGetProductUseCase extends Mock
-    implements GetProductUseCase {}
+class MockGetProductUseCase extends Mock implements GetProductUseCase {}
 
 void main() {
   late MockGetCategoriesUseCase mockGetCategoriesUseCase;
@@ -50,12 +48,8 @@ void main() {
           ),
         ];
 
-        when(
-          () => mockGetCategoriesUseCase.call(),
-        ).thenAnswer(
-          (_) async => SuccessResponce<List<CategoryEntity>>(
-            categories,
-          ),
+        when(() => mockGetCategoriesUseCase.call()).thenAnswer(
+          (_) async => SuccessResponce<List<CategoryEntity>>(categories),
         );
 
         return categoriesCubit;
@@ -84,9 +78,7 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(
-          () => mockGetCategoriesUseCase.call(),
-        ).called(1);
+        verify(() => mockGetCategoriesUseCase.call()).called(1);
       },
     );
 
@@ -95,12 +87,8 @@ void main() {
       build: () {
         final exception = Exception('Failed to get categories');
 
-        when(
-          () => mockGetCategoriesUseCase.call(),
-        ).thenAnswer(
-          (_) async => ErrorResponce<List<CategoryEntity>>(
-            exception,
-          ),
+        when(() => mockGetCategoriesUseCase.call()).thenAnswer(
+          (_) async => ErrorResponce<List<CategoryEntity>>(exception),
         );
 
         return categoriesCubit;
@@ -123,9 +111,7 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(
-          () => mockGetCategoriesUseCase.call(),
-        ).called(1);
+        verify(() => mockGetCategoriesUseCase.call()).called(1);
       },
     );
 
@@ -145,12 +131,8 @@ void main() {
           ),
         ];
 
-        when(
-          () => mockGetProductUseCase.call(),
-        ).thenAnswer(
-          (_) async => SuccessResponce<List<ProductEntity>>(
-            products,
-          ),
+        when(() => mockGetProductUseCase.call()).thenAnswer(
+          (_) async => SuccessResponce<List<ProductEntity>>(products),
         );
 
         return categoriesCubit;
@@ -184,9 +166,7 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(
-          () => mockGetProductUseCase.call(),
-        ).called(1);
+        verify(() => mockGetProductUseCase.call()).called(1);
       },
     );
 
@@ -195,12 +175,8 @@ void main() {
       build: () {
         final exception = Exception('Failed to get products');
 
-        when(
-          () => mockGetProductUseCase.call(),
-        ).thenAnswer(
-          (_) async => ErrorResponce<List<ProductEntity>>(
-            exception,
-          ),
+        when(() => mockGetProductUseCase.call()).thenAnswer(
+          (_) async => ErrorResponce<List<ProductEntity>>(exception),
         );
 
         return categoriesCubit;
@@ -223,9 +199,7 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(
-          () => mockGetProductUseCase.call(),
-        ).called(1);
+        verify(() => mockGetProductUseCase.call()).called(1);
       },
     );
   });

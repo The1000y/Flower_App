@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class MockAddressCubit extends MockCubit<AddressState> implements AddressCubit {}
+class MockAddressCubit extends MockCubit<AddressState>
+    implements AddressCubit {}
 
 void main() {
   late MockAddressCubit mockCubit;
@@ -41,7 +42,9 @@ void main() {
     );
   }
 
-  testWidgets('shows loading indicator while addresses are loading', (tester) async {
+  testWidgets('shows loading indicator while addresses are loading', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<AddressState>.empty(),
@@ -55,7 +58,9 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('shows empty state message when addresses list is empty', (tester) async {
+  testWidgets('shows empty state message when addresses list is empty', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<AddressState>.empty(),

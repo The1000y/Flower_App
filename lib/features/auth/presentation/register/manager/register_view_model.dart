@@ -38,7 +38,9 @@ class RegisterViewModel extends Cubit<RegisterState> {
       case SuccessResponce<RegisterEntity>():
         emit(state.copyWith(isLoading: false, data: result.data));
       case ErrorResponce<RegisterEntity>():
-        emit(state.copyWith(isLoading: false, errorMessage: result.errorMessage));
+        emit(
+          state.copyWith(isLoading: false, errorMessage: result.errorMessage),
+        );
     }
   }
 }

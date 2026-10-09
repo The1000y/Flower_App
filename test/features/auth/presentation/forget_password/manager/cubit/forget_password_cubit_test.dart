@@ -14,11 +14,9 @@ import 'package:mocktail/mocktail.dart';
 class MockForgetPasswordUserCase extends Mock
     implements ForgetPasswordUserCase {}
 
-class MockResetPasswordUserCase extends Mock
-    implements ResetPasswordUserCase {}
+class MockResetPasswordUserCase extends Mock implements ResetPasswordUserCase {}
 
-class MockVerifyOtpUserCase extends Mock
-    implements VerifyOtpUserCase {}
+class MockVerifyOtpUserCase extends Mock implements VerifyOtpUserCase {}
 
 void main() {
   late MockForgetPasswordUserCase mockForgetPasswordUserCase;
@@ -63,25 +61,16 @@ void main() {
         );
       },
       act: (cubit) {
-        cubit.doEvent(
-          ForgetBassEvent(
-            email: 'test@gmail.com',
-          ),
-        );
+        cubit.doEvent(ForgetBassEvent(email: 'test@gmail.com'));
       },
       expect: () => [
+        isA<ForgetPasswordState>().having(
+          (state) => state.forgotstate.isLoading,
+          'isLoading',
+          true,
+        ),
         isA<ForgetPasswordState>()
-            .having(
-              (state) => state.forgotstate.isLoading,
-              'isLoading',
-              true,
-            ),
-        isA<ForgetPasswordState>()
-            .having(
-              (state) => state.forgotstate.isLoading,
-              'isLoading',
-              false,
-            )
+            .having((state) => state.forgotstate.isLoading, 'isLoading', false)
             .having(
               (state) => state.forgotstate.data?.isSuccess,
               'isSuccess',
@@ -101,9 +90,8 @@ void main() {
         when(
           () => mockForgetPasswordUserCase.call(email: 'wrong@gmail.com'),
         ).thenAnswer(
-          (_) async => ErrorResponce(
-            Exception('something went wrong, pls try again'),
-          ),
+          (_) async =>
+              ErrorResponce(Exception('something went wrong, pls try again')),
         );
 
         return ForgetPasswordCubit(
@@ -113,25 +101,16 @@ void main() {
         );
       },
       act: (cubit) {
-        cubit.doEvent(
-          ForgetBassEvent(
-            email: 'wrong@gmail.com',
-          ),
-        );
+        cubit.doEvent(ForgetBassEvent(email: 'wrong@gmail.com'));
       },
       expect: () => [
+        isA<ForgetPasswordState>().having(
+          (state) => state.forgotstate.isLoading,
+          'isLoading',
+          true,
+        ),
         isA<ForgetPasswordState>()
-            .having(
-              (state) => state.forgotstate.isLoading,
-              'isLoading',
-              true,
-            ),
-        isA<ForgetPasswordState>()
-            .having(
-              (state) => state.forgotstate.isLoading,
-              'isLoading',
-              false,
-            )
+            .having((state) => state.forgotstate.isLoading, 'isLoading', false)
             .having(
               (state) => state.forgotstate.errorMessage,
               'errorMessage',
@@ -179,18 +158,13 @@ void main() {
         );
       },
       expect: () => [
+        isA<ForgetPasswordState>().having(
+          (state) => state.resetstate.isLoading,
+          'isLoading',
+          true,
+        ),
         isA<ForgetPasswordState>()
-            .having(
-              (state) => state.resetstate.isLoading,
-              'isLoading',
-              true,
-            ),
-        isA<ForgetPasswordState>()
-            .having(
-              (state) => state.resetstate.isLoading,
-              'isLoading',
-              false,
-            )
+            .having((state) => state.resetstate.isLoading, 'isLoading', false)
             .having(
               (state) => state.resetstate.data?.isSuccess,
               'isSuccess',
@@ -217,11 +191,7 @@ void main() {
             otp: 'wrong-otp',
             password: 'NewPassword@123',
           ),
-        ).thenAnswer(
-          (_) async => ErrorResponce(
-            Exception('Invalid OTP'),
-          ),
-        );
+        ).thenAnswer((_) async => ErrorResponce(Exception('Invalid OTP')));
 
         return ForgetPasswordCubit(
           mockVerifyOtpUserCase,
@@ -239,18 +209,13 @@ void main() {
         );
       },
       expect: () => [
+        isA<ForgetPasswordState>().having(
+          (state) => state.resetstate.isLoading,
+          'isLoading',
+          true,
+        ),
         isA<ForgetPasswordState>()
-            .having(
-              (state) => state.resetstate.isLoading,
-              'isLoading',
-              true,
-            ),
-        isA<ForgetPasswordState>()
-            .having(
-              (state) => state.resetstate.isLoading,
-              'isLoading',
-              false,
-            )
+            .having((state) => state.resetstate.isLoading, 'isLoading', false)
             .having(
               (state) => state.resetstate.errorMessage,
               'errorMessage',

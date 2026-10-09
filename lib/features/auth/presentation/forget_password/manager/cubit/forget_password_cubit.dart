@@ -95,7 +95,7 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     );
     final BaseResponce<VerifyOtpEntity> responce = await _verifyOtpUserCase
         .call(email: email, otp: otp);
-    
+
     switch (responce) {
       case SuccessResponce<VerifyOtpEntity>():
         emit(
@@ -176,13 +176,13 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
         ),
       ),
     );
-    
+
     final BaseResponce<ResetPassswordEntity> responce =
         await _resetPasswordUseCase.call(
-      email: email,
-      otp: otp,
-      password: newPassword,
-    );
+          email: email,
+          otp: otp,
+          password: newPassword,
+        );
 
     switch (responce) {
       case SuccessResponce<ResetPassswordEntity>():

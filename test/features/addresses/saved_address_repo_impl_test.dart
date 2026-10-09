@@ -19,12 +19,8 @@ void main() {
   late AddressRepoImpl addressRepoImpl;
 
   setUpAll(() {
-    registerFallbackValue(
-      SuccessResponce<List<AddressDto>>([]),
-    );
-    registerFallbackValue(
-      SuccessResponce<bool>(false),
-    );
+    registerFallbackValue(SuccessResponce<List<AddressDto>>([]));
+    registerFallbackValue(SuccessResponce<bool>(false));
     registerFallbackValue(
       SuccessResponce<AddressDto>(
         AddressDto(
@@ -39,9 +35,7 @@ void main() {
         ),
       ),
     );
-    registerFallbackValue(
-      SuccessResponce<List<AreaDto>>([]),
-    );
+    registerFallbackValue(SuccessResponce<List<AreaDto>>([]));
   });
 
   setUp(() {
@@ -66,24 +60,26 @@ void main() {
   );
 
   group('AddressRepoImpl - GetAddresses', () {
-    test('should return List<AddressEntity> when remote data source succeeds',
-        () async {
-      when(() => mockRemoteDataSource.getAddresses()).thenAnswer(
-        (_) async => SuccessResponce<List<AddressDto>>([dummyAddressDto]),
-      );
+    test(
+      'should return List<AddressEntity> when remote data source succeeds',
+      () async {
+        when(() => mockRemoteDataSource.getAddresses()).thenAnswer(
+          (_) async => SuccessResponce<List<AddressDto>>([dummyAddressDto]),
+        );
 
-      final result = await addressRepoImpl.getAddresses();
+        final result = await addressRepoImpl.getAddresses();
 
-      expect(result, isA<List<AddressEntity>>());
-      expect(result.length, 1);
-      expect(result.first.id, '123');
-      verify(() => mockRemoteDataSource.getAddresses()).called(1);
-    });
+        expect(result, isA<List<AddressEntity>>());
+        expect(result.length, 1);
+        expect(result.first.id, '123');
+        verify(() => mockRemoteDataSource.getAddresses()).called(1);
+      },
+    );
 
     test('should throw Exception when remote data source fails', () async {
-      when(() => mockRemoteDataSource.getAddresses()).thenAnswer(
-        (_) async => ErrorResponce(Exception('Fetch failed')),
-      );
+      when(
+        () => mockRemoteDataSource.getAddresses(),
+      ).thenAnswer((_) async => ErrorResponce(Exception('Fetch failed')));
 
       expect(() => addressRepoImpl.getAddresses(), throwsException);
     });
@@ -91,9 +87,9 @@ void main() {
 
   group('AddressRepoImpl - DeleteAddress', () {
     test('should return bool when remote data source succeeds', () async {
-      when(() => mockRemoteDataSource.deleteAddress(any())).thenAnswer(
-        (_) async => SuccessResponce<bool>(true),
-      );
+      when(
+        () => mockRemoteDataSource.deleteAddress(any()),
+      ).thenAnswer((_) async => SuccessResponce<bool>(true));
 
       final result = await addressRepoImpl.deleteAddress('123');
 
@@ -103,17 +99,19 @@ void main() {
   });
 
   group('AddressRepoImpl - SetDefaultAddress', () {
-    test('should return AddressEntity when remote data source succeeds',
-        () async {
-      when(() => mockRemoteDataSource.setDefaultAddress(any())).thenAnswer(
-        (_) async => SuccessResponce<AddressDto>(dummyAddressDto),
-      );
+    test(
+      'should return AddressEntity when remote data source succeeds',
+      () async {
+        when(
+          () => mockRemoteDataSource.setDefaultAddress(any()),
+        ).thenAnswer((_) async => SuccessResponce<AddressDto>(dummyAddressDto));
 
-      final result = await addressRepoImpl.setDefaultAddress('123');
+        final result = await addressRepoImpl.setDefaultAddress('123');
 
-      expect(result, isA<AddressEntity>());
-      verify(() => mockRemoteDataSource.setDefaultAddress('123')).called(1);
-    });
+        expect(result, isA<AddressEntity>());
+        verify(() => mockRemoteDataSource.setDefaultAddress('123')).called(1);
+      },
+    );
   });
 
   group('AddressRepoImpl - GetGovernorates', () {
@@ -154,9 +152,7 @@ void main() {
           const AreaDto(
             id: 'g2',
             name: 'Cairo',
-            cities: [
-              CityItemDto(id: 'c3', name: 'Maadi'),
-            ],
+            cities: [CityItemDto(id: 'c3', name: 'Maadi')],
           ),
         ]),
       );
