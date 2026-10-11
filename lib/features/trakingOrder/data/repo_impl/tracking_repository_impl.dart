@@ -61,6 +61,13 @@ class TrackingRepositoryImpl implements TrackingRepository {
     await _closeSession(session);
   }
 
+  @override
+  Future<void> refreshTracking(String orderId) async {
+    final session = _sessions[orderId];
+    if (session == null || session.isClosed) return;
+    await _fetch(session);
+  }
+
   Future<void> _fetch(_TrackingSession session) async {
     if (session.isClosed || session.isFetching) return;
     session.isFetching = true;

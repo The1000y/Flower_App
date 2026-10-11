@@ -7,4 +7,6 @@ abstract interface class TrackingRepository {
   Stream<BaseResponce<TrackingEntity>> startTracking(String orderId);
 
   Future<void> stopTracking(String orderId);
+
+  Future<void> refreshTracking(String orderId);
 }

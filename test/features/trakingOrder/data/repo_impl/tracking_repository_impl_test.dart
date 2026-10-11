@@ -247,4 +247,78 @@ void main() {
     await subscriptionA.cancel();
     await subscriptionB.cancel();
   });
+
+  test(
+    'refreshTracking triggers an immediate fetch on an active session',
+    () async {
+      when(
+        () => dataSource.getOrderTracking('o-1'),
+      ).thenAnswer((_) async => SuccessResponce<TrackingDto>(_successDto()));
+
+      repository = _TestTrackingRepository(
+        dataSource,
+        const Duration(hours: 1),
+      );
+      final events = <BaseResponce<TrackingEntity>>[];
+      final subscription = repository.startTracking('o-1').listen(events.add);
+
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      final afterStart = events.length;
+
+      await repository.refreshTracking('o-1');
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+
+      expect(events.length, afterStart + 1);
+      verify(() => dataSource.getOrderTracking('o-1')).called(2);
+
+      await subscription.cancel();
+    },
+  );
+
+  test('refreshTracking without an active session is a no-op', () async {
+    await repository.refreshTracking('missing');
+
+    verifyNever(() => dataSource.getOrderTracking('missing'));
+  });
+
+  test('refreshTracking does not overlap an in-flight request', () async {
+    final gate = Completer<TrackingDto>();
+    when(
+      () => dataSource.getOrderTracking('o-1'),
+    ).thenAnswer((_) async => SuccessResponce<TrackingDto>(await gate.future));
+
+    repository = _TestTrackingRepository(dataSource, const Duration(hours: 1));
+    final subscription = repository.startTracking('o-1').listen((_) {});
+
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    await repository.refreshTracking('o-1');
+
+    gate.complete(_successDto());
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    verify(() => dataSource.getOrderTracking('o-1')).called(1);
+    await subscription.cancel();
+  });
+
+  test('refreshTracking after the session is stopped is a no-op', () async {
+    var calls = 0;
+    when(() => dataSource.getOrderTracking('o-1')).thenAnswer((_) async {
+      calls++;
+      return SuccessResponce<TrackingDto>(_successDto());
+    });
+
+    repository = _TestTrackingRepository(dataSource, const Duration(hours: 1));
+    final subscription = repository.startTracking('o-1').listen((_) {});
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    await repository.stopTracking('o-1');
+    final callsBefore = calls;
+
+    await repository.refreshTracking('o-1');
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    expect(calls, callsBefore);
+    await subscription.cancel();
+  });
 }
