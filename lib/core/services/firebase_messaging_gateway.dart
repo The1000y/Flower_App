@@ -1,12 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:injectable/injectable.dart';
-
-/// Instance-level view of the FirebaseMessaging surface this app depends on.
-///
-/// `FirebaseMessaging.onMessage` / `onMessageOpenedApp` are static-only getters
-/// on the plugin, so they cannot be swapped in a test. This gateway wraps them
-/// behind instance members, letting [FirebaseMessagingService] take a single
-/// injectable collaborator and keeping the plugin statics confined to this file.
 abstract interface class FirebaseMessagingGateway {
   Stream<RemoteMessage> get onMessage;
 
