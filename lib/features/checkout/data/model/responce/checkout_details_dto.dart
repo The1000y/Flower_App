@@ -2,15 +2,11 @@
 //
 //     final dataDto = dataDtoFromJson(jsonString);
 
-
 import 'package:flower_app/features/checkout/data/model/responce/payment_methods_dto.dart';
 import 'package:flower_app/features/checkout/domain/entities/checkout_details_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'checkout_details_dto.g.dart';
-
-
 
 @JsonSerializable()
 class CheckoutDetailsDto {
@@ -30,6 +26,10 @@ class CheckoutDetailsDto {
   String? giftRecipientName;
   @JsonKey(name: "giftRecipientPhone")
   String? giftRecipientPhone;
+  @JsonKey(name: "cartId")
+  String? cartId;
+  @JsonKey(name: "addressId")
+  String? addressId;
 
   CheckoutDetailsDto({
     this.subtotal,
@@ -40,6 +40,8 @@ class CheckoutDetailsDto {
     this.isGift,
     this.giftRecipientName,
     this.giftRecipientPhone,
+    this.cartId,
+    this.addressId,
   });
 
   factory CheckoutDetailsDto.fromJson(Map<String, dynamic> json) =>
@@ -64,8 +66,8 @@ class CheckoutDetailsDto {
       isGift: isGift ?? false,
       giftRecipientName: giftRecipientName,
       giftRecipientPhone: giftRecipientPhone,
+      cartId: cartId,
+      addressId: addressId,
     );
   }
 }
-
-

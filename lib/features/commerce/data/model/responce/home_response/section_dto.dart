@@ -25,51 +25,50 @@ SectionType? _stringToSectionType(String? type) {
   }
 }
 
-SectionDto sectionDtoFromJson(String str) => SectionDto.fromJson(json.decode(str));
+SectionDto sectionDtoFromJson(String str) =>
+    SectionDto.fromJson(json.decode(str));
 
 String sectionDtoToJson(SectionDto data) => json.encode(data.toJson());
 
 @JsonSerializable()
 class SectionDto {
-    @JsonKey(name: "id")
-    String? id;
-    @JsonKey(name: "type")
-    String? type;
-    @JsonKey(name: "index")
-    int? index;
-    @JsonKey(name: "isActive")
-    bool? isActive;
-    @JsonKey(name: "title")
-    String? title;
-    @JsonKey(name: "occasionId")
-    String? occasionId;
-    @JsonKey(name: "categoryId")
-    String? categoryId;
+  @JsonKey(name: "id")
+  String? id;
+  @JsonKey(name: "type")
+  String? type;
+  @JsonKey(name: "index")
+  int? index;
+  @JsonKey(name: "isActive")
+  bool? isActive;
+  @JsonKey(name: "title")
+  String? title;
+  @JsonKey(name: "occasionId")
+  String? occasionId;
+  @JsonKey(name: "categoryId")
+  String? categoryId;
 
-    SectionDto({
-        this.id,
-        this.type,
-        this.index,
-        this.isActive,
-        this.title,
-        this.occasionId,
-        this.categoryId,
-    });
+  SectionDto({
+    this.id,
+    this.type,
+    this.index,
+    this.isActive,
+    this.title,
+    this.occasionId,
+    this.categoryId,
+  });
 
-    factory SectionDto.fromJson(Map<String, dynamic> json) => _$SectionDtoFromJson(json);
+  factory SectionDto.fromJson(Map<String, dynamic> json) =>
+      _$SectionDtoFromJson(json);
 
-    Map<String, dynamic> toJson() => _$SectionDtoToJson(this);
+  Map<String, dynamic> toJson() => _$SectionDtoToJson(this);
 
-    SectionEntity toDomain() => SectionEntity(
-        id: id ?? '',
-        type: _stringToSectionType(type) ?? SectionType.category,
-        index: index??0,
-        isActive: isActive??false,
-        title: title??'',
-        occasionId: occasionId,
-        categoryId: categoryId,
-    );
+  SectionEntity toDomain() => SectionEntity(
+    id: id ?? '',
+    type: _stringToSectionType(type) ?? SectionType.category,
+    index: index ?? 0,
+    isActive: isActive ?? false,
+    title: title ?? '',
+    occasionId: occasionId,
+    categoryId: categoryId,
+  );
 }
-
-
-

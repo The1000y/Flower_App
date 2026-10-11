@@ -5,12 +5,13 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class EstimationTimeUseCase {
-
- final CheckoutRepo checkoutRepo ;
+  final CheckoutRepo checkoutRepo;
 
   EstimationTimeUseCase(this.checkoutRepo);
 
-  Future<BaseResponce<EstimationTimeEntity>> call({required String addressId}) async {
+  Future<BaseResponce<EstimationTimeEntity>> call({
+    required String addressId,
+  }) async {
     return await checkoutRepo.getEstimationTime(addressId);
   }
 }

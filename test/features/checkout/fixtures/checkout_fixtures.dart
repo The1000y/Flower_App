@@ -40,6 +40,7 @@ class CheckoutFixtures {
   // Checkout details (entity / dto)
   // ---------------------------------------------------------------------
   static const String tEstimatedDeliveryAt = '2024-02-10T09:15:00.000Z';
+  static const String tCartId = 'cart-1';
 
   static const CheckoutDetailsEntity tCheckoutDetailsEntity =
       CheckoutDetailsEntity(
@@ -51,6 +52,8 @@ class CheckoutFixtures {
         isGift: false,
         giftRecipientName: 'Mona Ahmed',
         giftRecipientPhone: '01012345678',
+        cartId: tCartId,
+        addressId: tAddressId,
       );
 
   static final CheckoutDetailsDto tCheckoutDetailsDto = CheckoutDetailsDto(
@@ -62,6 +65,8 @@ class CheckoutFixtures {
     isGift: false,
     giftRecipientName: 'Mona Ahmed',
     giftRecipientPhone: '01012345678',
+    cartId: tCartId,
+    addressId: tAddressId,
   );
 
   /// A DTO with every nullable field left `null` to cover the `toEntity()`
@@ -104,6 +109,8 @@ class CheckoutFixtures {
     'isGift': false,
     'giftRecipientName': 'Mona Ahmed',
     'giftRecipientPhone': '01012345678',
+    'cartId': tCartId,
+    'addressId': tAddressId,
   };
 
   static const Map<String, dynamic> tCheckoutResponceJson = {

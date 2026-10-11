@@ -14,7 +14,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   Future<BaseResponce<CheckoutDetailsDto>> getCheckoutDetails() async {
     try {
       final responce = await checkoutApiClient.getCheckoutDetails();
-      return SuccessResponce<CheckoutDetailsDto>(responce.data ?? CheckoutDetailsDto());
+      return SuccessResponce<CheckoutDetailsDto>(
+        responce.data ?? CheckoutDetailsDto(),
+      );
     } on Exception catch (e) {
       return ErrorResponce<CheckoutDetailsDto>(e);
     }

@@ -49,15 +49,20 @@ void main() {
     'emits loading and success states when FetchOrdersIntent succeeds on first page',
     build: () {
       when(() => mockGetOrdersUseCase(page: 1, limit: 10)).thenAnswer(
-        (_) async => SuccessResponce(
-          (activeOrders: [tActiveOrder], completedOrders: [tCompletedOrder]),
-        ),
+        (_) async => SuccessResponce((
+          activeOrders: [tActiveOrder],
+          completedOrders: [tCompletedOrder],
+        )),
       );
       return cubit;
     },
     act: (cubit) => cubit.doIntent(const FetchOrdersIntent()),
     expect: () => [
-      const OrdersState(baseState: OrdersBaseState.loading, page: 1, hasReachedMax: false),
+      const OrdersState(
+        baseState: OrdersBaseState.loading,
+        page: 1,
+        hasReachedMax: false,
+      ),
       const OrdersState(
         baseState: OrdersBaseState.success,
         page: 2,
@@ -74,9 +79,10 @@ void main() {
     'emits appended list on successful loadMore via FetchOrdersIntent',
     build: () {
       when(() => mockGetOrdersUseCase(page: 2, limit: 10)).thenAnswer(
-        (_) async => SuccessResponce(
-          (activeOrders: [tActiveOrder], completedOrders: <OrderEntity>[]),
-        ),
+        (_) async => SuccessResponce((
+          activeOrders: [tActiveOrder],
+          completedOrders: <OrderEntity>[],
+        )),
       );
       return cubit;
     },
@@ -143,9 +149,9 @@ void main() {
   blocTest<OrdersCubit, OrdersState>(
     'emits error state when GetOrdersUseCase returns ErrorResponce',
     build: () {
-      when(() => mockGetOrdersUseCase(page: 1, limit: 10)).thenAnswer(
-        (_) async => ErrorResponce(Exception('Network Error')),
-      );
+      when(
+        () => mockGetOrdersUseCase(page: 1, limit: 10),
+      ).thenAnswer((_) async => ErrorResponce(Exception('Network Error')));
       return cubit;
     },
     act: (cubit) => cubit.doIntent(const FetchOrdersIntent()),
@@ -163,9 +169,10 @@ void main() {
     'sets hasReachedMax when GetOrdersUseCase returns empty lists',
     build: () {
       when(() => mockGetOrdersUseCase(page: 1, limit: 10)).thenAnswer(
-        (_) async => SuccessResponce(
-          (activeOrders: <OrderEntity>[], completedOrders: <OrderEntity>[]),
-        ),
+        (_) async => SuccessResponce((
+          activeOrders: <OrderEntity>[],
+          completedOrders: <OrderEntity>[],
+        )),
       );
       return cubit;
     },

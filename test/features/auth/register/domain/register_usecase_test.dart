@@ -39,9 +39,9 @@ void main() {
 
   group('RegisterAuthUseCase', () {
     test('execute delegates to the repo and returns its result', () async {
-      when(() => authRepo.register(any())).thenAnswer(
-        (_) async => SuccessResponce<RegisterEntity>(successEntity),
-      );
+      when(
+        () => authRepo.register(any()),
+      ).thenAnswer((_) async => SuccessResponce<RegisterEntity>(successEntity));
 
       final result = await useCase.execute(validEntity);
 

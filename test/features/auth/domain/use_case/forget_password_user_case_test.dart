@@ -21,19 +21,12 @@ void main() {
       'should call forgetPassword from AuthRepo with correct email',
       () async {
         final response = SuccessResponce<ForgetPasswordEntity>(
-          ForgetPasswordEntity(
-            isSuccess: true,
-            message: 'success',
-          ),
+          ForgetPasswordEntity(isSuccess: true, message: 'success'),
         );
 
         when(
-          () => authRepo.forgetPassword(
-            email: 'test@gmail.com',
-          ),
-        ).thenAnswer(
-          (_) async => response,
-        );
+          () => authRepo.forgetPassword(email: 'test@gmail.com'),
+        ).thenAnswer((_) async => response);
 
         final result = await forgetPasswordUserCase.call(
           email: 'test@gmail.com',
@@ -42,9 +35,7 @@ void main() {
         expect(result, response);
 
         verify(
-          () => authRepo.forgetPassword(
-            email: 'test@gmail.com',
-          ),
+          () => authRepo.forgetPassword(email: 'test@gmail.com'),
         ).called(1);
       },
     );

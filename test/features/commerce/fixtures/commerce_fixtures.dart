@@ -151,4 +151,3 @@ class CommerceFixtures {
     OccasionDto(id: '2', name: 'Wedding', imageUrl: 'wedding.png'),
   ];
 }
-

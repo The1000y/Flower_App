@@ -31,5 +31,3 @@ class ProductDetailsEntity {
     required this.occasionIds,
   });
 }
-
-

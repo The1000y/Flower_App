@@ -5,13 +5,12 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: OrdersRemoteDataSource)
 class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
-final OrdersApiClient ordersApiClient;
+  final OrdersApiClient ordersApiClient;
 
   OrdersRemoteDataSourceImpl(this.ordersApiClient);
 
   @override
   Future<OrdersResponse> getOrders({required int page, required int limit}) {
-   return ordersApiClient.getOrders(page, limit);
+    return ordersApiClient.getOrders(page, limit);
   }
-
 }

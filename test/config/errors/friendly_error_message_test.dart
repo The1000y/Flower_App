@@ -20,11 +20,11 @@ void main() {
 
   group('FriendlyErrorMessage.from', () {
     test('maps an empty message to the generic fallback', () {
+      expect(FriendlyErrorMessage.from(''), AppStrings.addressAddFailedServer);
       expect(
-        FriendlyErrorMessage.from(''),
+        FriendlyErrorMessage.from(null),
         AppStrings.addressAddFailedServer,
       );
-      expect(FriendlyErrorMessage.from(null), AppStrings.addressAddFailedServer);
     });
 
     test('keeps a safe, understandable backend message', () {
@@ -85,7 +85,9 @@ void main() {
 
     test('maps raw exceptions and status codes to the generic message', () {
       expect(
-        FriendlyErrorMessage.from(Exception('Null check operator used on a null value')),
+        FriendlyErrorMessage.from(
+          Exception('Null check operator used on a null value'),
+        ),
         AppStrings.addressAddFailedServer,
       );
       expect(

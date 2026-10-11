@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/config/routing/web_view_payment_args.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
@@ -14,6 +15,7 @@ import 'package:flower_app/features/commerce/presentation/product_details/view/p
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
+import 'package:flower_app/features/payment/presentation/web_view_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -105,13 +107,16 @@ abstract class AppRoutes {
 
       case Routes.addAddress:
         final editingAddress = settings.arguments as AddressEntity?;
-        return MaterialPageRoute(builder: (_) => AddressView(editingAddress: editingAddress));
+        return MaterialPageRoute(
+          builder: (_) => AddressView(editingAddress: editingAddress),
+        );
 
       // Orders
       case Routes.myOrders:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => getIt<OrdersCubit>()..doIntent(const FetchOrdersIntent()),
+            create: (_) =>
+                getIt<OrdersCubit>()..doIntent(const FetchOrdersIntent()),
             child: const MyOrdersView(),
           ),
         );
@@ -142,6 +147,16 @@ abstract class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => OrderSuccessView(orderId: orderId),
         );
+      // Tracking
+      case Routes.webView:
+        final args = settings.arguments as WebViewPaymentArgs;
+        return MaterialPageRoute(
+          builder: (_) => WebViewPayment(
+            successUrl: args.successUrl,
+            cancelUrl: args.cancelUrl,
+            sessionUrl: args.sessionUrl,
+          ),
+        );
 
       case Routes.trackOrder:
         return MaterialPageRoute(builder: (_) => const Placeholder());
@@ -157,6 +172,3 @@ abstract class AppRoutes {
     }
   }
 }
-
-
-

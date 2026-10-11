@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../../../core/themes/app_colors/app_color.dart';
-import 'buildSortItemfFilter.dart';
+import 'build_sort_item_filter.dart';
 
 class FilterView extends StatefulWidget {
   const FilterView({super.key, this.selectedSort, required this.onChanged});

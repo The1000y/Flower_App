@@ -52,10 +52,16 @@ void main() {
 
     getIt.registerSingleton<OrdersCubit>(mockOrdersCubit);
 
-    when(() => mockOrdersCubit.state).thenReturn(const OrdersState(baseState: OrdersBaseState.initial));
-    when(() => mockOrdersCubit.stream).thenAnswer((_) => stateController.stream);
+    when(
+      () => mockOrdersCubit.state,
+    ).thenReturn(const OrdersState(baseState: OrdersBaseState.initial));
+    when(
+      () => mockOrdersCubit.stream,
+    ).thenAnswer((_) => stateController.stream);
     when(() => mockOrdersCubit.doIntent(any())).thenAnswer((_) async {});
-    when(() => mockOrdersCubit.close()).thenAnswer((_) async => stateController.close());
+    when(
+      () => mockOrdersCubit.close(),
+    ).thenAnswer((_) async => stateController.close());
   });
 
   tearDown(() {
@@ -67,7 +73,8 @@ void main() {
       designSize: const Size(375, 812),
       child: MaterialApp(
         routes: {
-          Routes.trackOrder: (context) => const Scaffold(body: Text('Track Order View')),
+          Routes.trackOrder: (context) =>
+              const Scaffold(body: Text('Track Order View')),
           Routes.cart: (context) => const Scaffold(body: Text('Cart View')),
         },
         home: BlocProvider<OrdersCubit>.value(
@@ -79,17 +86,19 @@ void main() {
   }
 
   group('MyOrdersView', () {
-    testWidgets('displays CircularProgressIndicator when state is loading',
-        (tester) async {
-      when(() => mockOrdersCubit.state).thenReturn(const OrdersState(baseState: OrdersBaseState.loading));
+    testWidgets('displays CircularProgressIndicator when state is loading', (
+      tester,
+    ) async {
+      when(
+        () => mockOrdersCubit.state,
+      ).thenReturn(const OrdersState(baseState: OrdersBaseState.loading));
 
       await tester.pumpWidget(createWidgetUnderTest());
 
       expect(find.byType(CircularProgressIndicator), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('displays active orders when state is success',
-        (tester) async {
+    testWidgets('displays active orders when state is success', (tester) async {
       when(() => mockOrdersCubit.state).thenReturn(
         OrdersState(
           baseState: OrdersBaseState.success,
@@ -108,10 +117,14 @@ void main() {
       expect(find.text("Red Roses"), findsOneWidget);
     });
 
-    testWidgets('displays error message when state is error',
-        (tester) async {
+    testWidgets('displays error message when state is error', (tester) async {
       const errorMessage = "Failed to load orders";
-      when(() => mockOrdersCubit.state).thenReturn(const OrdersState(baseState: OrdersBaseState.error, errorMessage: errorMessage));
+      when(() => mockOrdersCubit.state).thenReturn(
+        const OrdersState(
+          baseState: OrdersBaseState.error,
+          errorMessage: errorMessage,
+        ),
+      );
 
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
@@ -119,98 +132,118 @@ void main() {
       expect(find.text(errorMessage), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('dispatches FetchOrdersIntent(isLoadMore: true) on scrolling to bottom',
-        (tester) async {
-      final fifteenOrders = List.generate(
-        15,
-        (index) => OrderEntity(
-          orderName: "Order $index",
-          orderPrice: "100 EGP",
-          orderId: "ORD-$index",
-          orderDeliverDate: "2026-09-25",
-          isActive: true,
-          imageUrl: "https://example.com/flower.png",
-        ),
-      );
+    testWidgets(
+      'dispatches FetchOrdersIntent(isLoadMore: true) on scrolling to bottom',
+      (tester) async {
+        final fifteenOrders = List.generate(
+          15,
+          (index) => OrderEntity(
+            orderName: "Order $index",
+            orderPrice: "100 EGP",
+            orderId: "ORD-$index",
+            orderDeliverDate: "2026-09-25",
+            isActive: true,
+            imageUrl: "https://example.com/flower.png",
+          ),
+        );
 
-      when(() => mockOrdersCubit.state).thenReturn(
-        OrdersState(
-          baseState: OrdersBaseState.success,
-          activeOrders: fifteenOrders,
-        ),
-      );
+        when(() => mockOrdersCubit.state).thenReturn(
+          OrdersState(
+            baseState: OrdersBaseState.success,
+            activeOrders: fifteenOrders,
+          ),
+        );
 
-      await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(createWidgetUnderTest());
+        await tester.pumpAndSettle();
 
-      await tester.drag(find.byType(ListView).first, const Offset(0, -2000));
-      await tester.pump();
+        await tester.drag(find.byType(ListView).first, const Offset(0, -2000));
+        await tester.pump();
 
-      verify(() => mockOrdersCubit.doIntent(const FetchOrdersIntent(isLoadMore: true))).called(greaterThan(0));
-    });
+        verify(
+          () => mockOrdersCubit.doIntent(
+            const FetchOrdersIntent(isLoadMore: true),
+          ),
+        ).called(greaterThan(0));
+      },
+    );
 
-    testWidgets('dispatches TrackOrderTappedIntent when track order button is tapped',
-        (tester) async {
-      when(() => mockOrdersCubit.state).thenReturn(
-        OrdersState(
-          baseState: OrdersBaseState.success,
-          activeOrders: [tActiveOrder],
-        ),
-      );
+    testWidgets(
+      'dispatches TrackOrderTappedIntent when track order button is tapped',
+      (tester) async {
+        when(() => mockOrdersCubit.state).thenReturn(
+          OrdersState(
+            baseState: OrdersBaseState.success,
+            activeOrders: [tActiveOrder],
+          ),
+        );
 
-      await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(createWidgetUnderTest());
+        await tester.pumpAndSettle();
 
-      final trackButton = find.text(AppStrings.trackOrder);
-      expect(trackButton, findsOneWidget);
-      await tester.tap(trackButton);
-      await tester.pump();
+        final trackButton = find.text(AppStrings.trackOrder);
+        expect(trackButton, findsOneWidget);
+        await tester.tap(trackButton);
+        await tester.pump();
 
-      verify(() => mockOrdersCubit.doIntent(TrackOrderTappedIntent(tActiveOrder.orderId))).called(1);
-    });
+        verify(
+          () => mockOrdersCubit.doIntent(
+            TrackOrderTappedIntent(tActiveOrder.orderId),
+          ),
+        ).called(1);
+      },
+    );
 
-    testWidgets('navigates to trackOrder and dispatches ResetSideEffectIntent on navigateToTrack side effect',
-        (tester) async {
-      when(() => mockOrdersCubit.state).thenReturn(
-        const OrdersState(baseState: OrdersBaseState.success),
-      );
+    testWidgets(
+      'navigates to trackOrder and dispatches ResetSideEffectIntent on navigateToTrack side effect',
+      (tester) async {
+        when(
+          () => mockOrdersCubit.state,
+        ).thenReturn(const OrdersState(baseState: OrdersBaseState.success));
 
-      await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(createWidgetUnderTest());
+        await tester.pumpAndSettle();
 
-      stateController.add(
-        const OrdersState(
-          baseState: OrdersBaseState.success,
-          sideEffect: OrdersSideEffect.navigateToTrack,
-          selectedOrderId: "123456",
-        ),
-      );
-      await tester.pumpAndSettle();
+        stateController.add(
+          const OrdersState(
+            baseState: OrdersBaseState.success,
+            sideEffect: OrdersSideEffect.navigateToTrack,
+            selectedOrderId: "123456",
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Track Order View'), findsOneWidget);
-      verify(() => mockOrdersCubit.doIntent(const ResetSideEffectIntent())).called(1);
-    });
+        expect(find.text('Track Order View'), findsOneWidget);
+        verify(
+          () => mockOrdersCubit.doIntent(const ResetSideEffectIntent()),
+        ).called(1);
+      },
+    );
 
-    testWidgets('navigates to cart and dispatches ResetSideEffectIntent on navigateToCart side effect',
-        (tester) async {
-      when(() => mockOrdersCubit.state).thenReturn(
-        const OrdersState(baseState: OrdersBaseState.success),
-      );
+    testWidgets(
+      'navigates to cart and dispatches ResetSideEffectIntent on navigateToCart side effect',
+      (tester) async {
+        when(
+          () => mockOrdersCubit.state,
+        ).thenReturn(const OrdersState(baseState: OrdersBaseState.success));
 
-      await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(createWidgetUnderTest());
+        await tester.pumpAndSettle();
 
-      stateController.add(
-        const OrdersState(
-          baseState: OrdersBaseState.success,
-          sideEffect: OrdersSideEffect.navigateToCart,
-          selectedOrderId: "654321",
-        ),
-      );
-      await tester.pumpAndSettle();
+        stateController.add(
+          const OrdersState(
+            baseState: OrdersBaseState.success,
+            sideEffect: OrdersSideEffect.navigateToCart,
+            selectedOrderId: "654321",
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Cart View'), findsOneWidget);
-      verify(() => mockOrdersCubit.doIntent(const ResetSideEffectIntent())).called(1);
-    });
+        expect(find.text('Cart View'), findsOneWidget);
+        verify(
+          () => mockOrdersCubit.doIntent(const ResetSideEffectIntent()),
+        ).called(1);
+      },
+    );
   });
 }

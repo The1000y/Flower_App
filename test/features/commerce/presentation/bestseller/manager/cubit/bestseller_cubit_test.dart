@@ -31,7 +31,9 @@ void main() {
       'emits [isLoading: true, data: data] when getBestsellerList succeeds',
       build: () {
         when(mockUseCase.call()).thenAnswer(
-          (_) async => SuccessResponce<List<BestSellerEntity>>(CommerceFixtures.tBestSellers),
+          (_) async => SuccessResponce<List<BestSellerEntity>>(
+            CommerceFixtures.tBestSellers,
+          ),
         );
         return cubit;
       },
@@ -46,29 +48,38 @@ void main() {
       'emits [isLoading: true, errorMessage: error] when getBestsellerList fails',
       build: () {
         when(mockUseCase.call()).thenAnswer(
-          (_) async => ErrorResponce<List<BestSellerEntity>>(Exception('error')),
+          (_) async =>
+              ErrorResponce<List<BestSellerEntity>>(Exception('error')),
         );
         return cubit;
       },
       act: (cubit) => cubit.getBestsellerList(),
       expect: () => [
         const BestsellerState(isLoading: true),
-        const BestsellerState(isLoading: false, errorMessage: 'something went wrong, pls try again'),
+        const BestsellerState(
+          isLoading: false,
+          errorMessage: 'something went wrong, pls try again',
+        ),
       ],
     );
-   group('doEvent', () {
+    group('doEvent', () {
       blocTest<BestsellerCubit, BestsellerState>(
         'triggers getBestsellerList when GetBestsellerListEvent is received',
         build: () {
           when(mockUseCase.call()).thenAnswer(
-            (_) async => SuccessResponce<List<BestSellerEntity>>(CommerceFixtures.tBestSellers),
+            (_) async => SuccessResponce<List<BestSellerEntity>>(
+              CommerceFixtures.tBestSellers,
+            ),
           );
           return cubit;
         },
         act: (cubit) => cubit.doEvent(GetBestsellerListEvent()),
         expect: () => [
           const BestsellerState(isLoading: true),
-          BestsellerState(isLoading: false, data: CommerceFixtures.tBestSellers),
+          BestsellerState(
+            isLoading: false,
+            data: CommerceFixtures.tBestSellers,
+          ),
         ],
       );
     });

@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 class OrderEntity extends Equatable {
@@ -20,11 +19,11 @@ class OrderEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        orderName,
-        orderPrice,
-        orderId,
-        orderDeliverDate,
-        isActive,
-        imageUrl,
-      ];
+    orderName,
+    orderPrice,
+    orderId,
+    orderDeliverDate,
+    isActive,
+    imageUrl,
+  ];
 }

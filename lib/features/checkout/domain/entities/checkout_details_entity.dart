@@ -9,6 +9,8 @@ class CheckoutDetailsEntity extends Equatable {
   final bool isGift;
   final String? giftRecipientName;
   final String? giftRecipientPhone;
+  final String? cartId;
+  final String? addressId;
 
   const CheckoutDetailsEntity({
     required this.subtotal,
@@ -19,6 +21,8 @@ class CheckoutDetailsEntity extends Equatable {
     required this.isGift,
     this.giftRecipientName,
     this.giftRecipientPhone,
+    this.cartId,
+    this.addressId,
   });
 
   @override
@@ -31,6 +35,8 @@ class CheckoutDetailsEntity extends Equatable {
     isGift,
     giftRecipientName,
     giftRecipientPhone,
+    cartId,
+    addressId,
   ];
 }
 

@@ -21,6 +21,8 @@ void main() {
       expect(result.isGift, isFalse);
       expect(result.giftRecipientName, 'Mona Ahmed');
       expect(result.giftRecipientPhone, '01012345678');
+      expect(result.cartId, CheckoutFixtures.tCartId);
+      expect(result.addressId, CheckoutFixtures.tAddressId);
     });
 
     test('should parse paymentMethods from JSON correctly', () {
@@ -53,6 +55,8 @@ void main() {
       expect(result['isGift'], isFalse);
       expect(result['giftRecipientName'], 'Mona Ahmed');
       expect(result['giftRecipientPhone'], '01012345678');
+      expect(result['cartId'], CheckoutFixtures.tCartId);
+      expect(result['addressId'], CheckoutFixtures.tAddressId);
     });
 
     test(
@@ -73,6 +77,8 @@ void main() {
         expect(result.isGift, isFalse);
         expect(result.giftRecipientName, 'Mona Ahmed');
         expect(result.giftRecipientPhone, '01012345678');
+        expect(result.cartId, CheckoutFixtures.tCartId);
+        expect(result.addressId, CheckoutFixtures.tAddressId);
       },
     );
 
@@ -104,6 +110,8 @@ void main() {
       expect(result.isGift, isFalse);
       expect(result.giftRecipientName, isNull);
       expect(result.giftRecipientPhone, isNull);
+      expect(result.cartId, isNull);
+      expect(result.addressId, isNull);
     });
 
     test(

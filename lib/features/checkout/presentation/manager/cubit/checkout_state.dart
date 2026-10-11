@@ -14,7 +14,7 @@ class CheckoutState extends Equatable {
   const CheckoutState({
     this.giftRecipientName = '',
     this.giftRecipientPhone = '',
-    this.selectedPaymentMethod = '', 
+    this.selectedPaymentMethod = '',
     this.estimationTimeState = const BaseState(isLoading: true),
     this.checkoutDetailsState = const BaseState(isLoading: true),
     this.isGift = false,

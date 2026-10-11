@@ -9,7 +9,7 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: CheckoutRepo)
 class CheckoutRepoImpl implements CheckoutRepo {
- final RemoteDataSource remoteDataSource;
+  final RemoteDataSource remoteDataSource;
 
   CheckoutRepoImpl(this.remoteDataSource);
   @override
@@ -28,9 +28,7 @@ class CheckoutRepoImpl implements CheckoutRepo {
   Future<BaseResponce<EstimationTimeEntity>> getEstimationTime(
     String addressId,
   ) async {
-    var result = await remoteDataSource.getEstimationTime(
-      addressId: addressId,
-    );
+    var result = await remoteDataSource.getEstimationTime(addressId: addressId);
     switch (result) {
       case SuccessResponce<EstimationTimeDto>():
         return SuccessResponce<EstimationTimeEntity>(result.data.toEntity());

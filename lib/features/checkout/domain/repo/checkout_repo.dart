@@ -4,5 +4,7 @@ import 'package:flower_app/features/checkout/domain/entities/estimation_time_ent
 
 abstract interface class CheckoutRepo {
   Future<BaseResponce<CheckoutDetailsEntity>> getCheckoutDetails();
-  Future<BaseResponce<EstimationTimeEntity>> getEstimationTime(String addressId);
+  Future<BaseResponce<EstimationTimeEntity>> getEstimationTime(
+    String addressId,
+  );
 }
