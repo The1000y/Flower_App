@@ -1,6 +1,6 @@
 import 'package:flower_app/core/shared/app_widgets/app_navigation.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/features/checkout/presentation/view/checkout_view.dart';
+// import 'package:flower_app/features/checkout/presentation/view/checkout_view.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeScreen = HomeView(controller: controller);
     final categoriesScreen = CategoriesView();
-    final cartScreen = CheckoutView();
+    final cartScreen = Placeholder();
     final profileScreen = Placeholder();
 
     return PersistentTabView(
