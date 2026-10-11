@@ -13,6 +13,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   configureDependencies();
 
   await getIt<SecureStorageService>().clear();
@@ -48,3 +49,4 @@ class FlowerApp extends StatelessWidget {
   }
   
 }
+

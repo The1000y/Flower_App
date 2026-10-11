@@ -45,9 +45,7 @@ class _SavedAddressViewState extends State<SavedAddressView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Expanded(
-                      child: SavedAddressContent(),
-                    ),
+                    const Expanded(child: SavedAddressContent()),
                     SizedBox(height: 12.h),
                     CustomButton(
                       text: AppStrings.addNewAddress,
@@ -69,9 +67,9 @@ class _SavedAddressViewState extends State<SavedAddressView> {
     final result = await Navigator.of(context).pushNamed(Routes.addAddress);
     if (result != null && context.mounted) {
       context.read<AddressCubit>().doEvent(FetchUserAddressesEvent());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Address added')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Address added')));
     }
   }
 }

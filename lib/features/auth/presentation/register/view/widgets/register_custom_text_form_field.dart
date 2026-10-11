@@ -9,7 +9,8 @@ class RegisterCustomTextFormField extends StatefulWidget {
     this.controller,
     this.validator,
     this.keyboardType,
-    this.isPassword = false, // New parameter to handle password logic internally
+    this.isPassword =
+        false, // New parameter to handle password logic internally
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
@@ -28,10 +29,12 @@ class RegisterCustomTextFormField extends StatefulWidget {
   final bool forceShowErrors;
 
   @override
-  State<RegisterCustomTextFormField> createState() => _RegisterCustomTextFormFieldState();
+  State<RegisterCustomTextFormField> createState() =>
+      _RegisterCustomTextFormFieldState();
 }
 
-class _RegisterCustomTextFormFieldState extends State<RegisterCustomTextFormField> {
+class _RegisterCustomTextFormFieldState
+    extends State<RegisterCustomTextFormField> {
   late final FocusNode _focusNode;
   bool _hasInteracted = false;
   late bool _obscureText;
@@ -81,47 +84,33 @@ class _RegisterCustomTextFormFieldState extends State<RegisterCustomTextFormFiel
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hintText,
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 18.h,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.isPassword
             ? IconButton(
-          icon: Icon(
-            _obscureText
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined,
-          ),
-          onPressed: () => setState(() => _obscureText = !_obscureText),
-        )
+                icon: Icon(
+                  _obscureText
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
+                onPressed: () => setState(() => _obscureText = !_obscureText),
+              )
             : widget.suffixIcon,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(
-            width: 1.5.w,
-            color: Colors.green,
-          ),
+          borderSide: BorderSide(width: 1.5.w, color: Colors.green),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(
-            width: 1.5.w,
-            color: Colors.red,
-          ),
+          borderSide: BorderSide(width: 1.5.w, color: Colors.red),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(
-            width: 1.5.w,
-            color: Colors.red,
-          ),
+          borderSide: BorderSide(width: 1.5.w, color: Colors.red),
         ),
       ),
     );

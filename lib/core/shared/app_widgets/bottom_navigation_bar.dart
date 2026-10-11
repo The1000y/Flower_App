@@ -1,3 +1,4 @@
+import 'package:flower_app/core/shared/app_widgets/app_navigation.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
@@ -12,9 +13,7 @@ class PersistentBottomNavBarDemo extends StatelessWidget {
 
   final VoidCallback? onCartTabSelected;
 
-  final PersistentTabController controller = PersistentTabController(
-    initialIndex: 0,
-  );
+  final PersistentTabController controller = AppNavigation.controller;
 
   late final Widget homeScreen = HomeView(controller: controller);
 

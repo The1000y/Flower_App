@@ -54,6 +54,7 @@ abstract class AppStrings {
   static const String navProfile = 'Profile';
   static const String navcategories = 'Categories';
   static const String currencyEGP = 'EGP';
+  static const String currencyUsd = '\$';
   static const String bloomSubtitle = 'Bloom with our exquisite best sellers';
   static const String statusLabel = 'Status: ';
   static const String addToCart = 'Add to cart';
@@ -63,18 +64,22 @@ abstract class AppStrings {
   static const String bouquetInclude = 'Bouquet include';
   static const String checkoutTitle = 'Checkout';
   static const String deliveryTime = 'Delivery time';
-  static const String instant = 'Instant, ';
+  static const String instant = ' Instant, ';
+  static const String arriveByPrefix = 'Arrive by ';
   static const String deliveryAddress = 'Delivery address';
   static const String addressTypeHome = 'Home';
   static const String addressTypeOffice = 'Office';
   static const String addNew = '+ Add new';
   static const String paymentMethod = 'Payment method';
+  static const String payment = 'Paymentd';
   static const String cashOnDelivery = 'Cash on delivery';
   static const String creditCard = 'Credit card';
   static const String itIsAGift = 'It is a gift';
   static const String nameLabel = 'Name';
   static const String enterNameHint = 'Enter the name';
   static const String enterPhoneHintAlt = 'Enter the phone number';
+  static const String noSavedAddresses = 'No saved addresses';
+  static const String giftNameValidation = 'Enter your name';
   static const String subTotal = 'Sub Total';
   static const String subtotal = 'Sub Total';
   static const String deliveryFee = 'Delivery Fee';
@@ -101,6 +106,7 @@ abstract class AppStrings {
   static const String tabActive = 'Active';
   static const String tabCompleted = 'Completed';
   static const String orderNumberPrefix = 'Order number# ';
+  static const String orderIdPrefix = 'Order number# ';
   static const String trackOrder = 'Track order';
   static const String deliveredOnPrefix = 'Delivered on ';
   static const String reorder = 'Reorder';
@@ -147,6 +153,7 @@ abstract class AppStrings {
 
 // Auth error / validation messages
 static const String loginFailed = 'Login failed';
+  static const String loading = 'loading....';
 static const String loginSuccess = 'Login successful';
 static const String invalidCredentials = 'Invalid email or password';
 static const String somethingWentWrong = 'Something went wrong';
@@ -199,6 +206,8 @@ static const String retry = 'Retry';
 static const String lat = 'lat';
 static const String lng = 'lng';
 static const String addressId = 'addressId';
+  static const String tryAgain = 'tryAgain';
+  static const String noAddress = 'no address selected';
   static const String yourCartIsEmpty = 'Your cart is empty';
   static const String productAddedToCart = 'Product added to cart';
   static const String checkout = 'Checkout';

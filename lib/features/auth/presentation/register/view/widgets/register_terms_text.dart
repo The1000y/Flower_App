@@ -14,7 +14,9 @@ class RegisterTermsText extends StatelessWidget {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.blackBase),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: AppColors.blackBase),
         children: [
           const TextSpan(text: AppStrings.termsPrefix),
           TextSpan(

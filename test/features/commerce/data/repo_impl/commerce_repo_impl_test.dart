@@ -88,9 +88,9 @@ void main() {
     test(
       'should return SuccessResponce<PaginatedProducts> when remote data source succeeds',
       () async {
-        final productDto = ProductDto(
-          id: '1',
-          name: 'Red Rose',
+final productDto = ProductDto(
+        id: '1',
+        name: 'Red Rose',
           imageUrl: 'https://example.com/rose.png',
           currency: 'EGP',
           price: 250,

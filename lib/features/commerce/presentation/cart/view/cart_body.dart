@@ -95,7 +95,10 @@ class CartBody extends StatelessWidget {
                     },
                     onAddressChanged: (newAddress) {
                       context.read<AddressCubit>().doEvent(
-                        SelectAddressEvent(selectedAddress: newAddress),
+                        SelectAddressEvent(
+                          selectedAddress: newAddress,
+                          addressId: newAddress.id,
+                        ),
                       );
                     },
                   );

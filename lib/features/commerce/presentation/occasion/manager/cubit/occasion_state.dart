@@ -45,4 +45,3 @@ class OccasionState extends Equatable {
     currentOccasionId,
   ];
 }
-

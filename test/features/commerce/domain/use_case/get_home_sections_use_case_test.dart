@@ -30,19 +30,18 @@ void main() {
         );
         when(mockCommerceRepo.getSection()).thenAnswer((_) async => tSuccess);
 
-        // Act
-        final result = await useCase.call();
+      // Act
+      final result = await useCase.call();
 
-        // Assert
-        expect(result, isA<SuccessResponce<List<SectionEntity>>>());
-        expect(
-          (result as SuccessResponce<List<SectionEntity>>).data,
-          equals(CommerceFixtures.tActiveSortedSections),
-        );
-        verify(mockCommerceRepo.getSection()).called(1);
-        verifyNoMoreInteractions(mockCommerceRepo);
-      },
-    );
+      // Assert
+      expect(result, isA<SuccessResponce<List<SectionEntity>>>());
+      expect(
+        (result as SuccessResponce<List<SectionEntity>>).data,
+        equals(CommerceFixtures.tActiveSortedSections),
+      );
+      verify(mockCommerceRepo.getSection()).called(1);
+      verifyNoMoreInteractions(mockCommerceRepo);
+    });
 
     test(
       'returns ErrorResponce with message when repository call fails',

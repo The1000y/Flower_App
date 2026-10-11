@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class AddAddressUseCase {
- final AddressRepo addressRepo;
+  final AddressRepo addressRepo;
 
   AddAddressUseCase({required this.addressRepo});
 

@@ -48,7 +48,9 @@ class BestSellerCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               "${bestSellerEntity.price} ${bestSellerEntity.currency}",
-              style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

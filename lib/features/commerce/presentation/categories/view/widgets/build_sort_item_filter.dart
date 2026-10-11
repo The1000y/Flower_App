@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:flutter/material.dart';
 
 enum SortType { recommended, newest, priceLowToHigh, priceHighToLow }
 

@@ -119,4 +119,3 @@ void main() {
     expect(find.text('Wedding'), findsOneWidget);
   });
 }
-

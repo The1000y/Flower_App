@@ -5,5 +5,4 @@ import 'package:injectable/injectable.dart';
 abstract class AppModule {
   @lazySingleton
   AssetBundle get assetBundle => rootBundle;
-
 }

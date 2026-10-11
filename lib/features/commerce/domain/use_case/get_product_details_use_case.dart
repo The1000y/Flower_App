@@ -13,4 +13,3 @@ class GetProductDetailsUseCase {
     return await _repository.getProductDetails(productId);
   }
 }
-
