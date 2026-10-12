@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/core/constants/api_strings/api_strings.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/trakingOrder/data/model/tracking_dto.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -13,5 +14,7 @@ abstract class TrackingApiClient {
   factory TrackingApiClient(Dio dio) = _TrackingApiClient;
 
   @GET(ApiStrings.orderTracking)
-  Future<TrackingDto> getOrderTracking(@Path('orderId') String orderId);
+  Future<TrackingDto> getOrderTracking(
+    @Path(AppStrings.orderId) String orderId,
+  );
 }

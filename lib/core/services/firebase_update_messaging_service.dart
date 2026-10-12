@@ -1,24 +1,7 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flower_app/core/services/order_update_handler.dart';
+import 'package:flower_app/core/services/order_update_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-
-class OrderUpdateMessage {
-  const OrderUpdateMessage({required this.orderId});
-
-  final String orderId;
-
-  static OrderUpdateMessage? tryParse(RemoteMessage message) {
-    final orderId = message.data['orderId'];
-    if (orderId is! String) return null;
-    final normalized = orderId.trim();
-    if (normalized.isEmpty) return null;
-    return OrderUpdateMessage(orderId: normalized);
-  }
-}
-
-abstract interface class OrderUpdateHandler {
-  Future<void> onOrderUpdated(String orderId);
-}
 
 @lazySingleton
 class FirebaseUpdateMessagingService {

@@ -6,6 +6,7 @@ import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity
 import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/stop_tracking_use_case.dart';
+import 'package:flower_app/features/trakingOrder/presentation/manager/cubit/tracking_event.dart';
 import 'package:flower_app/features/trakingOrder/presentation/manager/cubit/tracking_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -24,7 +25,21 @@ class TrackingCubit extends Cubit<TrackingState> {
 
   StreamSubscription<BaseResponce<TrackingEntity>>? _subscription;
 
-  Future<void> getTracking(String orderId) async {
+  void doEvent(TrackingEvent event) {
+    switch (event) {
+      case GetTrackingEvent():
+        _getTracking(event.orderId);
+        break;
+      case StartTrackingEvent():
+        _startTracking(event.orderId);
+        break;
+      case StopTrackingEvent():
+        _stopTracking();
+        break;
+    }
+  }
+
+  Future<void> _getTracking(String orderId) async {
     emit(
       state.copyWith(
         orderId: orderId,
@@ -36,7 +51,7 @@ class TrackingCubit extends Cubit<TrackingState> {
     _emitResult(result);
   }
 
-  void startTracking(String orderId) {
+  void _startTracking(String orderId) {
     if (state.orderId == orderId && _subscription != null) return;
     _subscription?.cancel();
     emit(
@@ -50,7 +65,7 @@ class TrackingCubit extends Cubit<TrackingState> {
     ).listen((response) => _onStreamResponse(response, orderId));
   }
 
-  Future<void> stopTracking() async {
+  Future<void> _stopTracking() async {
     await _subscription?.cancel();
     _subscription = null;
     final orderId = state.orderId;

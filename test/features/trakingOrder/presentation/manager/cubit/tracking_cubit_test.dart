@@ -7,6 +7,7 @@ import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_us
 import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/stop_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/presentation/manager/cubit/tracking_cubit.dart';
+import 'package:flower_app/features/trakingOrder/presentation/manager/cubit/tracking_event.dart';
 import 'package:flower_app/features/trakingOrder/presentation/manager/cubit/tracking_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -49,7 +50,7 @@ void main() {
     'startTracking emits loading then the incoming snapshot in order',
     build: () => cubit,
     act: (cubit) {
-      cubit.startTracking('o-1');
+      cubit.doEvent(StartTrackingEvent('o-1'));
       streamController.add(
         SuccessResponce<TrackingEntity>(
           const TrackingEntity(
@@ -82,7 +83,7 @@ void main() {
     'an error response keeps the last snapshot and surfaces the message',
     build: () => cubit,
     act: (cubit) {
-      cubit.startTracking('o-1');
+      cubit.doEvent(StartTrackingEvent('o-1'));
       streamController.add(
         SuccessResponce<TrackingEntity>(
           const TrackingEntity(orderId: 'o-1', status: 'OutForDelivery'),
@@ -127,7 +128,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.getTracking('o-9'),
+    act: (cubit) => cubit.doEvent(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
@@ -151,7 +152,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.getTracking('o-9'),
+    act: (cubit) => cubit.doEvent(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
@@ -169,16 +170,55 @@ void main() {
     ],
   );
 
+  blocTest<TrackingCubit, TrackingState>(
+    'doEvent routes GetTrackingEvent to a single fetch',
+    build: () {
+      when(() => repository.getTracking('o-9')).thenAnswer(
+        (_) async => SuccessResponce<TrackingEntity>(
+          const TrackingEntity(orderId: 'o-9'),
+        ),
+      );
+      return cubit;
+    },
+    act: (cubit) => cubit.doEvent(GetTrackingEvent('o-9')),
+    expect: () => [
+      isA<TrackingState>()
+          .having((s) => s.orderId, 'orderId', 'o-9')
+          .having((s) => s.trackingState.isLoading, 'isLoading', isTrue),
+      isA<TrackingState>()
+          .having((s) => s.orderId, 'orderId', 'o-9')
+          .having((s) => s.trackingState.data?.orderId, 'data.orderId', 'o-9'),
+    ],
+    verify: (_) {
+      verify(() => repository.getTracking('o-9')).called(1);
+    },
+  );
+
+  test('doEvent routes StartTrackingEvent to start tracking', () {
+    cubit.doEvent(StartTrackingEvent('o-1'));
+
+    verify(() => repository.startTracking('o-1')).called(1);
+  });
+
+  test('doEvent routes StopTrackingEvent to stop the active order', () async {
+    cubit.doEvent(StartTrackingEvent('o-1'));
+    cubit.doEvent(StopTrackingEvent());
+    await Future<void>.delayed(Duration.zero);
+
+    verify(() => repository.stopTracking('o-1')).called(1);
+  });
+
   test('repeated start for the same order keeps one subscription', () {
-    cubit.startTracking('o-1');
-    cubit.startTracking('o-1');
+    cubit.doEvent(StartTrackingEvent('o-1'));
+    cubit.doEvent(StartTrackingEvent('o-1'));
 
     verify(() => repository.startTracking('o-1')).called(1);
   });
 
   test('stopTracking cancels the subscription and stops the session', () async {
-    cubit.startTracking('o-1');
-    await cubit.stopTracking();
+    cubit.doEvent(StartTrackingEvent('o-1'));
+    cubit.doEvent(StopTrackingEvent());
+    await Future<void>.delayed(Duration.zero);
 
     verify(() => repository.stopTracking('o-1')).called(1);
 
@@ -190,7 +230,7 @@ void main() {
   test(
     'closing the cubit stops the session when it owns the last listener',
     () async {
-      cubit.startTracking('o-1');
+      cubit.doEvent(StartTrackingEvent('o-1'));
       await cubit.close();
       await Future<void>.delayed(Duration.zero);
 
@@ -202,7 +242,7 @@ void main() {
   test(
     'closing the cubit keeps the session alive for another listener',
     () async {
-      cubit.startTracking('o-1');
+      cubit.doEvent(StartTrackingEvent('o-1'));
       final otherListener = streamController.stream.listen((_) {});
       await cubit.close();
       await Future<void>.delayed(Duration.zero);
@@ -222,8 +262,8 @@ void main() {
       () => repository.startTracking('o-2'),
     ).thenAnswer((_) => secondController.stream);
 
-    cubit.startTracking('o-1');
-    cubit.startTracking('o-2');
+    cubit.doEvent(StartTrackingEvent('o-1'));
+    cubit.doEvent(StartTrackingEvent('o-2'));
     await Future<void>.delayed(Duration.zero);
 
     expect(cubit.state.orderId, 'o-2');

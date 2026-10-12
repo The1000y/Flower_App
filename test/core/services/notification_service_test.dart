@@ -6,6 +6,7 @@ import 'package:flower_app/core/services/firebase_messaging_service.dart';
 import 'package:flower_app/core/services/firebase_update_messaging_service.dart';
 import 'package:flower_app/core/services/notification_navigator.dart';
 import 'package:flower_app/core/services/notification_service.dart';
+import 'package:flower_app/core/services/order_update_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -94,10 +94,10 @@ class TrackingRepositoryImpl implements TrackingRepository {
     session.add(response);
   }
 
-  void _handleLastListenerCancelled(_TrackingSession session) {
+  Future<void> _handleLastListenerCancelled(_TrackingSession session) async {
     if (_sessions[session.orderId] != session) return;
     _sessions.remove(session.orderId);
-    unawaited(_closeSession(session));
+    await _closeSession(session);
   }
 
   Future<void> _closeSession(_TrackingSession session) async {

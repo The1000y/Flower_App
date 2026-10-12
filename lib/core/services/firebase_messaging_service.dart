@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/core/services/firebase_messaging_gateway.dart';
 import 'package:flower_app/core/services/firebase_update_messaging_service.dart';
 import 'package:flower_app/core/services/notification_service.dart';
+import 'package:flower_app/core/services/order_update_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
