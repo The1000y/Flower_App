@@ -6,7 +6,7 @@ import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity
 import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/stop_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_intent.dart';
+import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_event.dart';
 import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -25,9 +25,9 @@ class TrackingViewModel extends Cubit<TrackingState> {
 
   StreamSubscription<BaseResponce<TrackingEntity>>? _subscription;
 
-  void handle(TrackingIntent intent) {
+  void handle(TrackingEvent  intent) {
     switch (intent) {
-      case GetTrackingIntent():
+      case GetTrackingEvent():
         _getTracking(intent.orderId);
         break;
       case StartTrackingIntent():

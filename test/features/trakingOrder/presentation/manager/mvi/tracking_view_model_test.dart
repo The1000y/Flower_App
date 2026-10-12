@@ -6,7 +6,7 @@ import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity
 import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/stop_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_intent.dart';
+import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_event.dart';
 import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_state.dart';
 import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_view_model.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -128,7 +128,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.handle(GetTrackingIntent('o-9')),
+    act: (cubit) => cubit.handle(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
@@ -152,7 +152,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.handle(GetTrackingIntent('o-9')),
+    act: (cubit) => cubit.handle(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
@@ -180,7 +180,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.handle(GetTrackingIntent('o-9')),
+    act: (cubit) => cubit.handle(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
