@@ -417,4 +417,23 @@ void main() {
       await subscription.cancel();
     },
   );
+
+  test('rapid start and stop sequences leave no polling behind', () async {
+    var calls = 0;
+    when(() => dataSource.getOrderTracking('o-1')).thenAnswer((_) async {
+      calls++;
+      return SuccessResponce<TrackingDto>(_successDto());
+    });
+
+    for (var i = 0; i < 5; i++) {
+      final subscription = repository.startTracking('o-1').listen((_) {});
+      await subscription.cancel();
+    }
+
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+    final callsAfterBurst = calls;
+
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    expect(calls, callsAfterBurst);
+  });
 }

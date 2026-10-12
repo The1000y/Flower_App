@@ -143,6 +143,32 @@ void main() {
     },
   );
 
+  blocTest<TrackingCubit, TrackingState>(
+    'getTracking emits loading then the error state when the fetch fails',
+    build: () {
+      when(() => repository.getTracking('o-9')).thenAnswer(
+        (_) async => ErrorResponce<TrackingEntity>(Exception('offline')),
+      );
+      return cubit;
+    },
+    act: (cubit) => cubit.getTracking('o-9'),
+    expect: () => [
+      isA<TrackingState>()
+          .having((s) => s.orderId, 'orderId', 'o-9')
+          .having((s) => s.trackingState.isLoading, 'isLoading', isTrue)
+          .having((s) => s.trackingState.data, 'data', isNull),
+      isA<TrackingState>()
+          .having((s) => s.orderId, 'orderId', 'o-9')
+          .having((s) => s.trackingState.isLoading, 'isLoading', isFalse)
+          .having((s) => s.trackingState.data, 'data', isNull)
+          .having(
+            (s) => s.trackingState.errorMessage,
+            'errorMessage',
+            isNotEmpty,
+          ),
+    ],
+  );
+
   test('repeated start for the same order keeps one subscription', () {
     cubit.startTracking('o-1');
     cubit.startTracking('o-1');
