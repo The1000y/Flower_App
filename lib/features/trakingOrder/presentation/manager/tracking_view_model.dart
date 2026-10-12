@@ -6,8 +6,8 @@ import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity
 import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/stop_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_event.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_state.dart';
+import 'package:flower_app/features/trakingOrder/presentation/manager/tracking_event.dart';
+import 'package:flower_app/features/trakingOrder/presentation/manager/tracking_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
