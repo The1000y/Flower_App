@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/core/services/firebase_messaging_gateway.dart';
 import 'package:flower_app/core/services/firebase_messaging_service.dart';
+import 'package:flower_app/core/services/firebase_update_messaging_service.dart';
 import 'package:flower_app/core/services/notification_navigator.dart';
 import 'package:flower_app/core/services/notification_service.dart';
+import 'package:flower_app/core/services/order_update_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -70,8 +72,16 @@ class _RecordingNotificationService implements NotificationService {
   Future<void> handleMessage(Object? message) async => handled.add(message);
 }
 
+class _RecordingOrderUpdateHandler implements OrderUpdateHandler {
+  final List<String> orderIds = [];
+
+  @override
+  Future<void> onOrderUpdated(String orderId) async => orderIds.add(orderId);
+}
+
 class _RemoteMessageStub extends RemoteMessage {
-  _RemoteMessageStub(this.stubId);
+  _RemoteMessageStub(this.stubId, {Map<String, dynamic>? data})
+    : super(data: data ?? const <String, dynamic>{});
 
   final String stubId;
 
@@ -82,16 +92,21 @@ class _RemoteMessageStub extends RemoteMessage {
 void main() {
   late _FakeFirebaseMessagingGateway gateway;
   late _RecordingNotificationService notifications;
+  late _RecordingOrderUpdateHandler orderUpdates;
 
   setUp(() {
     gateway = _FakeFirebaseMessagingGateway();
     notifications = _RecordingNotificationService();
+    orderUpdates = _RecordingOrderUpdateHandler();
   });
 
   tearDown(() => gateway.close());
 
-  FirebaseMessagingService buildService() =>
-      FirebaseMessagingService(gateway, notifications);
+  FirebaseMessagingService buildService() => FirebaseMessagingService(
+    gateway,
+    notifications,
+    FirebaseUpdateMessagingService(orderUpdates),
+  );
 
   group('FirebaseMessagingService.initialize', () {
     test('requests permission and fetches the token', () async {
@@ -184,6 +199,95 @@ void main() {
         expect(notifications.handled, contains(message));
       },
     );
+  });
+
+  group('FirebaseMessagingService order-update routing', () {
+    test('routes a foreground order update to the update service', () async {
+      final service = buildService();
+      addTearDown(service.dispose);
+
+      await service.initialize();
+      gateway.onMessageController.add(
+        _RemoteMessageStub('update', data: {'orderId': 'o-1'}),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(orderUpdates.orderIds, ['o-1']);
+      expect(notifications.handled, isEmpty);
+    });
+
+    test('does not treat a foreground ordinary message as an update', () async {
+      final service = buildService();
+      addTearDown(service.dispose);
+
+      await service.initialize();
+      gateway.onMessageController.add(_RemoteMessageStub('plain'));
+      await Future<void>.delayed(Duration.zero);
+
+      expect(orderUpdates.orderIds, isEmpty);
+      expect(notifications.handled, isEmpty);
+    });
+
+    test('routes an opened-app order update to the update service', () async {
+      final service = buildService();
+      addTearDown(service.dispose);
+
+      await service.initialize();
+      gateway.onMessageOpenedController.add(
+        _RemoteMessageStub('update', data: {'orderId': 'o-2'}),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(orderUpdates.orderIds, ['o-2']);
+      expect(notifications.handled, isEmpty);
+    });
+
+    test(
+      'keeps ordinary opened-app messages on the notification path',
+      () async {
+        final service = buildService();
+        addTearDown(service.dispose);
+
+        await service.initialize();
+        final message = _RemoteMessageStub('plain');
+        gateway.onMessageOpenedController.add(message);
+        await Future<void>.delayed(Duration.zero);
+
+        expect(orderUpdates.orderIds, isEmpty);
+        expect(notifications.handled, contains(message));
+      },
+    );
+
+    test(
+      'routes a launch order update and skips the notification path',
+      () async {
+        gateway.initialMessage = _RemoteMessageStub(
+          'launch-update',
+          data: {'orderId': 'o-3'},
+        );
+        final service = buildService();
+        addTearDown(service.dispose);
+
+        await service.initialize();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(orderUpdates.orderIds, ['o-3']);
+        expect(notifications.handled, isEmpty);
+      },
+    );
+
+    test('ignores an update without an orderId', () async {
+      final service = buildService();
+      addTearDown(service.dispose);
+
+      await service.initialize();
+      gateway.onMessageController.add(
+        _RemoteMessageStub('malformed', data: {'foo': 'bar'}),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(orderUpdates.orderIds, isEmpty);
+    });
   });
 
   group('FirebaseMessagingService.dispose', () {
