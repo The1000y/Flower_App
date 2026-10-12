@@ -12,6 +12,6 @@ abstract class TrackingApiClient {
   @factoryMethod
   factory TrackingApiClient(Dio dio) = _TrackingApiClient;
 
-  @GET("${ApiStrings.orderTraking}/{orderId}/tracking")
+  @GET(ApiStrings.orderTracking)
   Future<TrackingDto> getOrderTracking(@Path('orderId') String orderId);
 }

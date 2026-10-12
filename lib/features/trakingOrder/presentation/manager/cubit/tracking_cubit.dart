@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/config/errors/hadel_error_exception.dart';
 import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_use_case.dart';
 import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
@@ -24,7 +23,6 @@ class TrackingCubit extends Cubit<TrackingState> {
   final StopTrackingUseCase _stopTrackingUseCase;
 
   StreamSubscription<BaseResponce<TrackingEntity>>? _subscription;
-  String? _orderId;
 
   Future<void> getTracking(String orderId) async {
     emit(
@@ -39,26 +37,23 @@ class TrackingCubit extends Cubit<TrackingState> {
   }
 
   void startTracking(String orderId) {
-    if (_orderId == orderId && _subscription != null) return;
+    if (state.orderId == orderId && _subscription != null) return;
     _subscription?.cancel();
-    _orderId = orderId;
     emit(
       state.copyWith(
         orderId: orderId,
         trackingState: const BaseState<TrackingEntity>(isLoading: true),
       ),
     );
-    _subscription = _startTrackingUseCase(orderId).listen(
-      (response) => _onStreamResponse(response, orderId),
-      onError: (Object error) => _onStreamError(error, orderId),
-    );
+    _subscription = _startTrackingUseCase(
+      orderId,
+    ).listen((response) => _onStreamResponse(response, orderId));
   }
 
   Future<void> stopTracking() async {
     await _subscription?.cancel();
     _subscription = null;
-    final orderId = _orderId;
-    _orderId = null;
+    final orderId = state.orderId;
     if (orderId != null) {
       await _stopTrackingUseCase(orderId);
     }
@@ -68,13 +63,8 @@ class TrackingCubit extends Cubit<TrackingState> {
     BaseResponce<TrackingEntity> response,
     String orderId,
   ) {
-    if (isClosed || orderId != _orderId) return;
+    if (isClosed || state.orderId != orderId) return;
     _emitResult(response);
-  }
-
-  void _onStreamError(Object error, String orderId) {
-    if (isClosed || orderId != _orderId) return;
-    _emitError(error);
   }
 
   void _emitResult(BaseResponce<TrackingEntity> response) {
@@ -93,19 +83,6 @@ class TrackingCubit extends Cubit<TrackingState> {
           ),
         );
     }
-  }
-
-  void _emitError(Object error) {
-    emit(
-      state.copyWith(
-        trackingState: state.trackingState.copyWith(
-          isLoading: false,
-          errorMessage: HandelErrorException().handelErrorexception(
-            error is Exception ? error : Exception(error.toString()),
-          ),
-        ),
-      ),
-    );
   }
 
   @override

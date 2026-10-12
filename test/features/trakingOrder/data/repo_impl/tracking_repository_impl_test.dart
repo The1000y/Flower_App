@@ -29,6 +29,13 @@ TrackingDto _successDto({
   });
 }
 
+class _ThrowingTrackingDto extends TrackingDto {
+  _ThrowingTrackingDto() : super(isSuccess: true);
+
+  @override
+  TrackingEntity? toEntity() => throw const FormatException('bad payload');
+}
+
 void main() {
   late MockTrackingRemoteDataSource dataSource;
   late _TestTrackingRepository repository;
@@ -66,6 +73,30 @@ void main() {
     final result = await repository.getTracking('o-1');
 
     expect(result, isA<ErrorResponce<TrackingEntity>>());
+  });
+
+  test(
+    'getTracking maps a success response without data to an error response',
+    () async {
+      when(() => dataSource.getOrderTracking('o-1')).thenAnswer(
+        (_) async => SuccessResponce<TrackingDto>(TrackingDto(isSuccess: true)),
+      );
+
+      final result = await repository.getTracking('o-1');
+
+      expect(result, isA<ErrorResponce<TrackingEntity>>());
+    },
+  );
+
+  test('getTracking lets a DTO mapping bug propagate', () async {
+    when(() => dataSource.getOrderTracking('o-1')).thenAnswer(
+      (_) async => SuccessResponce<TrackingDto>(_ThrowingTrackingDto()),
+    );
+
+    expect(
+      () => repository.getTracking('o-1'),
+      throwsA(isA<FormatException>()),
+    );
   });
 
   test(
@@ -141,28 +172,28 @@ void main() {
     },
   );
 
-  test(
-    'isLive false stops polling without losing the final snapshot',
-    () async {
-      when(() => dataSource.getOrderTracking('o-1')).thenAnswer(
-        (_) async => SuccessResponce<TrackingDto>(
-          _successDto(status: 'Preparing', isLive: false),
-        ),
+  test('isLive false keeps polling while the order is not terminal', () async {
+    var calls = 0;
+    when(() => dataSource.getOrderTracking('o-1')).thenAnswer((_) async {
+      calls++;
+      return SuccessResponce<TrackingDto>(
+        _successDto(status: 'Preparing', isLive: false),
       );
+    });
 
-      final events = <BaseResponce<TrackingEntity>>[];
-      final done = Completer<void>();
-      repository.startTracking('o-1').listen(events.add, onDone: done.complete);
+    final events = <BaseResponce<TrackingEntity>>[];
+    final subscription = repository.startTracking('o-1').listen(events.add);
 
-      await done.future.timeout(const Duration(seconds: 2));
+    await Future<void>.delayed(const Duration(milliseconds: 60));
 
-      expect(events.length, 1);
-      final snapshot = (events.single as SuccessResponce<TrackingEntity>).data;
-      expect(snapshot.isLive, isFalse);
-      expect(snapshot.status, 'Preparing');
-      expect(snapshot.isTerminal, isFalse);
-    },
-  );
+    expect(events, isNotEmpty);
+    final snapshot = (events.first as SuccessResponce<TrackingEntity>).data;
+    expect(snapshot.isLive, isFalse);
+    expect(snapshot.isTerminal, isFalse);
+    expect(calls, greaterThanOrEqualTo(2));
+
+    await subscription.cancel();
+  });
 
   test('temporary failures keep the session alive and recover', () async {
     var calls = 0;
@@ -321,4 +352,69 @@ void main() {
     expect(calls, callsBefore);
     await subscription.cancel();
   });
+
+  test('cancelling the last listener stops the session', () async {
+    var calls = 0;
+    when(() => dataSource.getOrderTracking('o-1')).thenAnswer((_) async {
+      calls++;
+      return SuccessResponce<TrackingDto>(_successDto());
+    });
+
+    final subscription = repository.startTracking('o-1').listen((_) {});
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+
+    await subscription.cancel();
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+    final callsAfterCancel = calls;
+
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+    expect(calls, callsAfterCancel);
+  });
+
+  test(
+    'cancelling one listener keeps the session alive for the other',
+    () async {
+      var calls = 0;
+      when(() => dataSource.getOrderTracking('o-1')).thenAnswer((_) async {
+        calls++;
+        return SuccessResponce<TrackingDto>(_successDto());
+      });
+
+      final first = repository.startTracking('o-1').listen((_) {});
+      final second = repository.startTracking('o-1').listen((_) {});
+      await Future<void>.delayed(const Duration(milliseconds: 40));
+
+      await first.cancel();
+      final callsAfterFirstCancel = calls;
+      await Future<void>.delayed(const Duration(milliseconds: 40));
+
+      expect(calls, greaterThan(callsAfterFirstCancel));
+
+      await second.cancel();
+    },
+  );
+
+  test(
+    'an unexpected fetch error becomes an error response and polling survives',
+    () async {
+      var calls = 0;
+      when(() => dataSource.getOrderTracking('o-1')).thenAnswer((_) async {
+        calls++;
+        if (calls == 1) {
+          throw Exception('boom');
+        }
+        return SuccessResponce<TrackingDto>(_successDto());
+      });
+
+      final events = <BaseResponce<TrackingEntity>>[];
+      final subscription = repository.startTracking('o-1').listen(events.add);
+
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+
+      expect(events.first, isA<ErrorResponce<TrackingEntity>>());
+      expect(events.whereType<SuccessResponce<TrackingEntity>>(), isNotEmpty);
+
+      await subscription.cancel();
+    },
+  );
 }

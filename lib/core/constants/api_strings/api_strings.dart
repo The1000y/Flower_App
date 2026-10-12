@@ -29,7 +29,7 @@ abstract class ApiStrings {
   static const String updateProfile = '/api/users/UpdateProfile';
   static const String changePassword = '/users/me/change-password';
 
-  static const String orderTraking = '/orders';
+  static const String orderTracking = '/orders/{orderId}/tracking';
   static const String fullNameKey = 'FullName';
   static const String emailKey = 'Email';
   static const String phoneKey = 'Phone';

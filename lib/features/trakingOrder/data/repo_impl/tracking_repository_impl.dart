@@ -22,17 +22,13 @@ class TrackingRepositoryImpl implements TrackingRepository {
     final result = await _remoteDataSource.getOrderTracking(orderId);
     switch (result) {
       case SuccessResponce<TrackingDto>(:final data):
-        try {
-          final entity = data.toEntity();
-          if (entity == null) {
-            return ErrorResponce<TrackingEntity>(
-              Exception('Missing tracking response data'),
-            );
-          }
-          return SuccessResponce<TrackingEntity>(entity);
-        } catch (e) {
-          return ErrorResponce<TrackingEntity>(Exception(e.toString()));
+        final entity = data.toEntity();
+        if (entity == null) {
+          return ErrorResponce<TrackingEntity>(
+            Exception('Missing tracking response data'),
+          );
         }
+        return SuccessResponce<TrackingEntity>(entity);
       case ErrorResponce<TrackingDto>(:final error):
         return ErrorResponce<TrackingEntity>(error);
     }
@@ -42,16 +38,17 @@ class TrackingRepositoryImpl implements TrackingRepository {
   Stream<BaseResponce<TrackingEntity>> startTracking(String orderId) {
     final existing = _sessions[orderId];
     if (existing != null && !existing.isClosed) {
-      return existing.controller.stream;
+      return existing.stream;
     }
     final session = _TrackingSession(orderId);
+    session.onCancel = () => _handleLastListenerCancelled(session);
     _sessions[orderId] = session;
     unawaited(_fetch(session));
     session.timer = Timer.periodic(
       pollingInterval,
       (_) => unawaited(_fetch(session)),
     );
-    return session.controller.stream;
+    return session.stream;
   }
 
   @override
@@ -77,21 +74,30 @@ class TrackingRepositoryImpl implements TrackingRepository {
       switch (result) {
         case SuccessResponce<TrackingEntity>(:final data):
           _emit(session, SuccessResponce<TrackingEntity>(data));
-          if (!data.isLive || data.isTerminal) {
+          if (data.isTerminal) {
             _sessions.remove(session.orderId);
             await _closeSession(session);
           }
         case ErrorResponce<TrackingEntity>(:final error):
           _emit(session, ErrorResponce<TrackingEntity>(error));
       }
+    } catch (error, stackTrace) {
+      if (session.isClosed) return;
+      session.addError(error, stackTrace);
     } finally {
       session.isFetching = false;
     }
   }
 
   void _emit(_TrackingSession session, BaseResponce<TrackingEntity> response) {
-    if (session.isClosed || session.controller.isClosed) return;
-    session.controller.add(response);
+    if (session.isClosed) return;
+    session.add(response);
+  }
+
+  void _handleLastListenerCancelled(_TrackingSession session) {
+    if (_sessions[session.orderId] != session) return;
+    _sessions.remove(session.orderId);
+    unawaited(_closeSession(session));
   }
 
   Future<void> _closeSession(_TrackingSession session) async {
@@ -99,9 +105,7 @@ class TrackingRepositoryImpl implements TrackingRepository {
     session.isClosed = true;
     session.timer?.cancel();
     session.timer = null;
-    if (!session.controller.isClosed) {
-      await session.controller.close();
-    }
+    await session.close();
   }
 }
 
@@ -109,9 +113,44 @@ class _TrackingSession {
   _TrackingSession(this.orderId);
 
   final String orderId;
-  final StreamController<BaseResponce<TrackingEntity>> controller =
+  final StreamController<BaseResponce<TrackingEntity>> _controller =
       StreamController<BaseResponce<TrackingEntity>>.broadcast();
   Timer? timer;
   bool isFetching = false;
   bool isClosed = false;
+
+  Stream<BaseResponce<TrackingEntity>> get stream =>
+      _controller.stream.transform(
+        StreamTransformer<
+          BaseResponce<TrackingEntity>,
+          BaseResponce<TrackingEntity>
+        >.fromHandlers(
+          handleError: (error, stackTrace, sink) {
+            sink.add(
+              ErrorResponce<TrackingEntity>(
+                error is Exception ? error : Exception(error.toString()),
+              ),
+            );
+          },
+        ),
+      );
+
+  set onCancel(FutureOr<void> Function() callback) {
+    _controller.onCancel = callback;
+  }
+
+  void add(BaseResponce<TrackingEntity> response) {
+    if (_controller.isClosed) return;
+    _controller.add(response);
+  }
+
+  void addError(Object error, StackTrace stackTrace) {
+    if (_controller.isClosed) return;
+    _controller.addError(error, stackTrace);
+  }
+
+  Future<void> close() async {
+    if (_controller.isClosed) return;
+    await _controller.close();
+  }
 }
