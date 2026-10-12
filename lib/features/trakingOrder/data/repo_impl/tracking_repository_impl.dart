@@ -65,6 +65,15 @@ class TrackingRepositoryImpl implements TrackingRepository {
     await _fetch(session);
   }
 
+  @override
+  Future<void> dispose() async {
+    final sessions = _sessions.values.toList();
+    _sessions.clear();
+    for (final session in sessions) {
+      await _closeSession(session);
+    }
+  }
+
   Future<void> _fetch(_TrackingSession session) async {
     if (session.isClosed || session.isFetching) return;
     session.isFetching = true;
@@ -119,8 +128,10 @@ class _TrackingSession {
   bool isFetching = false;
   bool isClosed = false;
 
-  Stream<BaseResponce<TrackingEntity>> get stream =>
-      _controller.stream.transform(
+  /// Built once: repeated session lookups reuse the same transformed stream
+  /// instead of allocating a fresh transformer on every access.
+  late final Stream<BaseResponce<TrackingEntity>> stream = _controller.stream
+      .transform(
         StreamTransformer<
           BaseResponce<TrackingEntity>,
           BaseResponce<TrackingEntity>

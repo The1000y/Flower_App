@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 @module
 abstract class DioModule {
   @lazySingleton
-  Dio dio() {
+  Dio dio(LocaleInterceptors localeInterceptors) {
     final dio = Dio(
       BaseOptions(
         baseUrl: ApiStrings.baseUrl,
@@ -16,7 +16,7 @@ abstract class DioModule {
         headers: {'Accept-Language': 'en', 'Content-Type': 'application/json'},
       ),
     );
-    dio.interceptors.add(LocaleInterceptors());
+    dio.interceptors.add(localeInterceptors);
     dio.interceptors.add(AuthInterceptors());
     return dio;
   }

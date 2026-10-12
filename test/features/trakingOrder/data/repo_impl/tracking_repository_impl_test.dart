@@ -436,4 +436,29 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 60));
     expect(calls, callsAfterBurst);
   });
+
+  test('dispose closes every active session and stops polling', () async {
+    var calls = 0;
+    when(() => dataSource.getOrderTracking('o-1')).thenAnswer((_) async {
+      calls++;
+      return SuccessResponce<TrackingDto>(_successDto());
+    });
+    when(() => dataSource.getOrderTracking('a')).thenAnswer((_) async {
+      calls++;
+      return SuccessResponce<TrackingDto>(_successDto(orderId: 'a'));
+    });
+
+    final subscription = repository.startTracking('o-1').listen((_) {});
+    final subscriptionA = repository.startTracking('a').listen((_) {});
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+
+    await repository.dispose();
+    final callsAfterDispose = calls;
+
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    expect(calls, callsAfterDispose);
+
+    await subscription.cancel();
+    await subscriptionA.cancel();
+  });
 }

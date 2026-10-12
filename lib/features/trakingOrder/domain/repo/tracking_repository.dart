@@ -9,4 +9,9 @@ abstract interface class TrackingRepository {
   Future<void> stopTracking(String orderId);
 
   Future<void> refreshTracking(String orderId);
+
+  /// Closes every active polling session. Intended to be called by the owner
+  /// of the repository (e.g. on app teardown) so controllers and timers cannot
+  /// outlive the sessions that created them.
+  Future<void> dispose();
 }
