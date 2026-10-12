@@ -34,32 +34,47 @@ void main() {
   ];
 
   group('SearchProductsUseCase', () {
-    test('should return SuccessResponce with matching products when search repo succeeds', () async {
-      // Arrange
-      final tSuccess = SuccessResponce<List<ProductEntity>>(tProducts);
-      when(mockSearchRepo.searchProduct('rose')).thenAnswer((_) async => tSuccess);
+    test(
+      'should return SuccessResponce with matching products when search repo succeeds',
+      () async {
+        // Arrange
+        final tSuccess = SuccessResponce<List<ProductEntity>>(tProducts);
+        when(
+          mockSearchRepo.searchProduct('rose'),
+        ).thenAnswer((_) async => tSuccess);
 
-      // Act
-      final result = await useCase.call('rose');
+        // Act
+        final result = await useCase.call('rose');
 
-      // Assert
-      expect(result, isA<SuccessResponce<List<ProductEntity>>>());
-      expect((result as SuccessResponce<List<ProductEntity>>).data, equals(tProducts));
-      verify(mockSearchRepo.searchProduct('rose')).called(1);
-      verifyNoMoreInteractions(mockSearchRepo);
-    });
+        // Assert
+        expect(result, isA<SuccessResponce<List<ProductEntity>>>());
+        expect(
+          (result as SuccessResponce<List<ProductEntity>>).data,
+          equals(tProducts),
+        );
+        verify(mockSearchRepo.searchProduct('rose')).called(1);
+        verifyNoMoreInteractions(mockSearchRepo);
+      },
+    );
 
     test('should return ErrorResponce when search repo fails', () async {
       // Arrange
-      final tError = ErrorResponce<List<ProductEntity>>(Exception('Search failed'));
-      when(mockSearchRepo.searchProduct('rose')).thenAnswer((_) async => tError);
+      final tError = ErrorResponce<List<ProductEntity>>(
+        Exception('Search failed'),
+      );
+      when(
+        mockSearchRepo.searchProduct('rose'),
+      ).thenAnswer((_) async => tError);
 
       // Act
       final result = await useCase.call('rose');
 
       // Assert
       expect(result, isA<ErrorResponce<List<ProductEntity>>>());
-      expect((result as ErrorResponce<List<ProductEntity>>).errorMessage, equals(tError.errorMessage));
+      expect(
+        (result as ErrorResponce<List<ProductEntity>>).errorMessage,
+        equals(tError.errorMessage),
+      );
       verify(mockSearchRepo.searchProduct('rose')).called(1);
       verifyNoMoreInteractions(mockSearchRepo);
     });

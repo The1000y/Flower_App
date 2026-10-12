@@ -38,36 +38,40 @@ void main() {
       expect(await storage.getAccessToken(), 'fresh-access');
     });
 
-    test('persists the rotated refresh token returned by the gateway',
-        () async {
-      final apiClient = FakeAuthApiClient(
-        refreshResponse: const RefreshTokenResponseDto(
-          accessToken: 'fresh-access',
-          refreshToken: 'rotated-refresh',
-        ),
-      );
-      service = build(apiClient);
-      await storage.saveRefreshToken('old-refresh');
+    test(
+      'persists the rotated refresh token returned by the gateway',
+      () async {
+        final apiClient = FakeAuthApiClient(
+          refreshResponse: const RefreshTokenResponseDto(
+            accessToken: 'fresh-access',
+            refreshToken: 'rotated-refresh',
+          ),
+        );
+        service = build(apiClient);
+        await storage.saveRefreshToken('old-refresh');
 
-      await service.refreshAccessToken();
+        await service.refreshAccessToken();
 
-      expect(await storage.getRefreshToken(), 'rotated-refresh');
-    });
+        expect(await storage.getRefreshToken(), 'rotated-refresh');
+      },
+    );
 
-    test('keeps the previous refresh token when the response omits it',
-        () async {
-      final apiClient = FakeAuthApiClient(
-        refreshResponse: const RefreshTokenResponseDto(
-          accessToken: 'fresh-access',
-        ),
-      );
-      service = build(apiClient);
-      await storage.saveRefreshToken('old-refresh');
+    test(
+      'keeps the previous refresh token when the response omits it',
+      () async {
+        final apiClient = FakeAuthApiClient(
+          refreshResponse: const RefreshTokenResponseDto(
+            accessToken: 'fresh-access',
+          ),
+        );
+        service = build(apiClient);
+        await storage.saveRefreshToken('old-refresh');
 
-      await service.refreshAccessToken();
+        await service.refreshAccessToken();
 
-      expect(await storage.getRefreshToken(), 'old-refresh');
-    });
+        expect(await storage.getRefreshToken(), 'old-refresh');
+      },
+    );
 
     test('parses the flat gateway response body', () {
       final response = RefreshTokenResponseDto.fromJson({
@@ -83,28 +87,27 @@ void main() {
     });
 
     test('treats a response without an access token as unsuccessful', () {
-      expect(
-        const RefreshTokenResponseDto().isSuccessful,
-        isFalse,
-      );
+      expect(const RefreshTokenResponseDto().isSuccessful, isFalse);
       expect(
         const RefreshTokenResponseDto(accessToken: '').isSuccessful,
         isFalse,
       );
     });
 
-    test('returns null and clears credentials when no refresh token is stored',
-        () async {
-      final apiClient = FakeAuthApiClient();
-      service = build(apiClient);
-      await storage.saveAccessToken('stale-access');
+    test(
+      'returns null and clears credentials when no refresh token is stored',
+      () async {
+        final apiClient = FakeAuthApiClient();
+        service = build(apiClient);
+        await storage.saveAccessToken('stale-access');
 
-      final token = await service.refreshAccessToken();
+        final token = await service.refreshAccessToken();
 
-      expect(token, isNull);
-      expect(apiClient.refreshCallCount, 0);
-      expect(await storage.getAccessToken(), isNull);
-    });
+        expect(token, isNull);
+        expect(apiClient.refreshCallCount, 0);
+        expect(await storage.getAccessToken(), isNull);
+      },
+    );
 
     test('returns null and clears credentials when the gateway rejects the '
         'refresh token', () async {

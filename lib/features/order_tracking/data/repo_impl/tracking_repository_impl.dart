@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/trakingOrder/data/data_source/remote_data_source/remote_data_source.dart';
-import 'package:flower_app/features/trakingOrder/data/model/tracking_dto.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity.dart';
-import 'package:flower_app/features/trakingOrder/domain/repo/tracking_repository.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../domain/entities/tracking_entity.dart';
+import '../../domain/repo/tracking_repository.dart';
+import '../data_source/remote_data_source/remote_data_source.dart';
+import '../model/tracking_dto.dart';
 
 @LazySingleton(as: TrackingRepository)
 class TrackingRepositoryImpl implements TrackingRepository {

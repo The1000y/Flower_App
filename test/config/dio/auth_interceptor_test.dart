@@ -15,8 +15,7 @@ import '../../helpers/auth_test_helpers.dart';
 class _RecordingAdapter implements HttpClientAdapter {
   _RecordingAdapter(this._responder);
 
-  final ResponseBody Function(RequestOptions options, int callIndex)
-  _responder;
+  final ResponseBody Function(RequestOptions options, int callIndex) _responder;
 
   final List<RequestOptions> requests = [];
 
@@ -96,21 +95,24 @@ void main() {
           : _json('{"ok":true}', 200),
     );
 
-    test('refreshes the token and replays a 401 request successfully', () async {
-      refreshService.newAccessToken = 'fresh-access';
-      final dio = expiredThenOk();
-      await storage.saveAccessToken('expired-access');
+    test(
+      'refreshes the token and replays a 401 request successfully',
+      () async {
+        refreshService.newAccessToken = 'fresh-access';
+        final dio = expiredThenOk();
+        await storage.saveAccessToken('expired-access');
 
-      final response = await dio.get<dynamic>('/cart/cart');
+        final response = await dio.get<dynamic>('/cart/cart');
 
-      expect(response.statusCode, 200);
-      expect(refreshService.callCount, 1);
-      expect(adapter.requests.length, 2);
-      expect(
-        adapter.requests.last.headers['Authorization'],
-        'Bearer fresh-access',
-      );
-    });
+        expect(response.statusCode, 200);
+        expect(refreshService.callCount, 1);
+        expect(adapter.requests.length, 2);
+        expect(
+          adapter.requests.last.headers['Authorization'],
+          'Bearer fresh-access',
+        );
+      },
+    );
 
     test('replays the original method, url, query and body', () async {
       refreshService.newAccessToken = 'fresh-access';
@@ -131,27 +133,29 @@ void main() {
       expect(retried.data, {'productId': 'abc', 'quantity': 2});
     });
 
-    test('surfaces the 401 and refreshes only once when the retry also fails',
-        () async {
-      refreshService.newAccessToken = 'fresh-access';
-      final dio = buildDio(
-        (options, callIndex) => _json('{"error":"no"}', 401),
-      );
-      await storage.saveAccessToken('expired-access');
+    test(
+      'surfaces the 401 and refreshes only once when the retry also fails',
+      () async {
+        refreshService.newAccessToken = 'fresh-access';
+        final dio = buildDio(
+          (options, callIndex) => _json('{"error":"no"}', 401),
+        );
+        await storage.saveAccessToken('expired-access');
 
-      await expectLater(
-        dio.get<dynamic>('/cart/cart'),
-        throwsA(
-          isA<DioException>().having(
-            (e) => e.response?.statusCode,
-            'statusCode',
-            401,
+        await expectLater(
+          dio.get<dynamic>('/cart/cart'),
+          throwsA(
+            isA<DioException>().having(
+              (e) => e.response?.statusCode,
+              'statusCode',
+              401,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(refreshService.callCount, 1);
-    });
+        expect(refreshService.callCount, 1);
+      },
+    );
 
     test('does not refresh on failures other than 401', () async {
       final dio = buildDio(
@@ -194,32 +198,32 @@ void main() {
       expect(refreshService.callCount, 0);
     });
 
-    test('surfaces the original 401 when the session cannot be renewed',
-        () async {
-      refreshService.newAccessToken = null;
-      final dio = buildDio(
-        (options, callIndex) => _json('{"error":"no"}', 401),
-      );
-      await storage.saveAccessToken('expired-access');
+    test(
+      'surfaces the original 401 when the session cannot be renewed',
+      () async {
+        refreshService.newAccessToken = null;
+        final dio = buildDio(
+          (options, callIndex) => _json('{"error":"no"}', 401),
+        );
+        await storage.saveAccessToken('expired-access');
 
-      await expectLater(
-        dio.get<dynamic>('/cart/cart'),
-        throwsA(
-          isA<DioException>().having(
-            (e) => e.response?.statusCode,
-            'statusCode',
-            401,
+        await expectLater(
+          dio.get<dynamic>('/cart/cart'),
+          throwsA(
+            isA<DioException>().having(
+              (e) => e.response?.statusCode,
+              'statusCode',
+              401,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(refreshService.callCount, 1);
-    });
+        expect(refreshService.callCount, 1);
+      },
+    );
 
     test('attaches the stored access token to outgoing requests', () async {
-      final dio = buildDio(
-        (options, callIndex) => _json('{"ok":true}', 200),
-      );
+      final dio = buildDio((options, callIndex) => _json('{"ok":true}', 200));
       await storage.saveAccessToken('stored-access');
 
       await dio.get<dynamic>('/cart/cart');
@@ -232,9 +236,7 @@ void main() {
     });
 
     test('sends no Authorization header when nothing is stored', () async {
-      final dio = buildDio(
-        (options, callIndex) => _json('{"ok":true}', 200),
-      );
+      final dio = buildDio((options, callIndex) => _json('{"ok":true}', 200));
 
       await dio.get<dynamic>('/catalog/products');
 

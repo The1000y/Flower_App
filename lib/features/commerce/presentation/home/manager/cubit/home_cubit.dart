@@ -125,8 +125,8 @@ class HomeCubit extends Cubit<HomeState> {
 
     switch (result) {
       case SuccessResponce<List<SectionEntity>>():
-        final sections = result.data;  
-      
+        final sections = result.data;
+
         // sections.sort(
         //   (SectionEntity a, SectionEntity b) => a.index.compareTo(b.index),
         // );
@@ -178,9 +178,20 @@ class HomeCubit extends Cubit<HomeState> {
     final result = await _getOccasionsUseCase.call();
     switch (result) {
       case SuccessResponce<List<OccasionEntity>>():
-        emit(state.copyWith(occasionState: BaseState(data: result.data, isLoading: false)));
+        emit(
+          state.copyWith(
+            occasionState: BaseState(data: result.data, isLoading: false),
+          ),
+        );
       case ErrorResponce<List<OccasionEntity>>():
-        emit(state.copyWith(occasionState: BaseState(errorMessage: result.errorMessage, isLoading: false)));
+        emit(
+          state.copyWith(
+            occasionState: BaseState(
+              errorMessage: result.errorMessage,
+              isLoading: false,
+            ),
+          ),
+        );
     }
   }
 }

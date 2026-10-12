@@ -46,7 +46,9 @@ void main() {
     );
   }
 
-  testWidgets('shows the AppBar with back button and Search title', (tester) async {
+  testWidgets('shows the AppBar with back button and Search title', (
+    tester,
+  ) async {
     whenListen(
       mockCubit,
       const Stream<SearchState>.empty(),
@@ -87,7 +89,9 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('shows the error message and Retry button on failure', (tester) async {
+  testWidgets('shows the error message and Retry button on failure', (
+    tester,
+  ) async {
     final state = const SearchState(
       query: 'rose',
       resultState: BaseState<List<ProductEntity>>(
@@ -124,13 +128,13 @@ void main() {
     await tester.tap(find.text('Retry'));
 
     verify(
-      () => mockCubit.doEvent(
-        any(that: isA<SearchProductsEvent>()),
-      ),
+      () => mockCubit.doEvent(any(that: isA<SearchProductsEvent>())),
     ).called(1);
   });
 
-  testWidgets('shows no results message when products list is empty', (tester) async {
+  testWidgets('shows no results message when products list is empty', (
+    tester,
+  ) async {
     final state = const SearchState(
       query: 'rose',
       resultState: BaseState<List<ProductEntity>>(data: []),

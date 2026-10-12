@@ -24,49 +24,70 @@ void main() {
   );
 
   group('ChangePasswordUseCase', () {
-    test('should call ProfileRepo.changePassword and return SuccessResponce when repo succeeds', () async {
-      when(() => mockProfileRepo.changePassword(
+    test(
+      'should call ProfileRepo.changePassword and return SuccessResponce when repo succeeds',
+      () async {
+        when(
+          () => mockProfileRepo.changePassword(
             currentPassword: 'OldPassword123',
             newPassword: 'NewPassword123',
             confirmPassword: 'NewPassword123',
-          )).thenAnswer((_) async => SuccessResponce<ChangePasswordEntity>(tEntity));
+          ),
+        ).thenAnswer(
+          (_) async => SuccessResponce<ChangePasswordEntity>(tEntity),
+        );
 
-      final result = await useCase.call(
-        currentPassword: 'OldPassword123',
-        newPassword: 'NewPassword123',
-        confirmNewPassword: 'NewPassword123',
-      );
+        final result = await useCase.call(
+          currentPassword: 'OldPassword123',
+          newPassword: 'NewPassword123',
+          confirmNewPassword: 'NewPassword123',
+        );
 
-      expect(result, isA<SuccessResponce<ChangePasswordEntity>>());
-      expect((result as SuccessResponce<ChangePasswordEntity>).data, equals(tEntity));
-      verify(() => mockProfileRepo.changePassword(
+        expect(result, isA<SuccessResponce<ChangePasswordEntity>>());
+        expect(
+          (result as SuccessResponce<ChangePasswordEntity>).data,
+          equals(tEntity),
+        );
+        verify(
+          () => mockProfileRepo.changePassword(
             currentPassword: 'OldPassword123',
             newPassword: 'NewPassword123',
             confirmPassword: 'NewPassword123',
-          )).called(1);
-      verifyNoMoreInteractions(mockProfileRepo);
-    });
+          ),
+        ).called(1);
+        verifyNoMoreInteractions(mockProfileRepo);
+      },
+    );
 
-    test('should return ErrorResponce when ProfileRepo.changePassword fails', () async {
-      final tError = ErrorResponce<ChangePasswordEntity>(Exception('Network error'));
-      when(() => mockProfileRepo.changePassword(
+    test(
+      'should return ErrorResponce when ProfileRepo.changePassword fails',
+      () async {
+        final tError = ErrorResponce<ChangePasswordEntity>(
+          Exception('Network error'),
+        );
+        when(
+          () => mockProfileRepo.changePassword(
             currentPassword: 'OldPassword123',
             newPassword: 'NewPassword123',
             confirmPassword: 'NewPassword123',
-          )).thenAnswer((_) async => tError);
+          ),
+        ).thenAnswer((_) async => tError);
 
-      final result = await useCase.call(
-        currentPassword: 'OldPassword123',
-        newPassword: 'NewPassword123',
-        confirmNewPassword: 'NewPassword123',
-      );
+        final result = await useCase.call(
+          currentPassword: 'OldPassword123',
+          newPassword: 'NewPassword123',
+          confirmNewPassword: 'NewPassword123',
+        );
 
-      expect(result, isA<ErrorResponce<ChangePasswordEntity>>());
-      verify(() => mockProfileRepo.changePassword(
+        expect(result, isA<ErrorResponce<ChangePasswordEntity>>());
+        verify(
+          () => mockProfileRepo.changePassword(
             currentPassword: 'OldPassword123',
             newPassword: 'NewPassword123',
             confirmPassword: 'NewPassword123',
-          )).called(1);
-    });
+          ),
+        ).called(1);
+      },
+    );
   });
 }

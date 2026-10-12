@@ -63,8 +63,9 @@ void main() {
   blocTest<SearchCubit, SearchState>(
     'emits [isLoading: true, data: tProducts] when searchProducts succeeds',
     build: () {
-      when(mockSearchProductsUseCase.call('rose'))
-          .thenAnswer((_) async => SuccessResponce<List<ProductEntity>>(tProducts));
+      when(mockSearchProductsUseCase.call('rose')).thenAnswer(
+        (_) async => SuccessResponce<List<ProductEntity>>(tProducts),
+      );
       return cubit;
     },
     act: (cubit) => cubit.doEvent(SearchProductsEvent('rose')),
@@ -94,8 +95,10 @@ void main() {
   blocTest<SearchCubit, SearchState>(
     'emits [isLoading: true, errorMessage] when searchProducts fails',
     build: () {
-      when(mockSearchProductsUseCase.call('rose'))
-          .thenAnswer((_) async => ErrorResponce<List<ProductEntity>>(Exception('Search failed')));
+      when(mockSearchProductsUseCase.call('rose')).thenAnswer(
+        (_) async =>
+            ErrorResponce<List<ProductEntity>>(Exception('Search failed')),
+      );
       return cubit;
     },
     act: (cubit) => cubit.doEvent(SearchProductsEvent('rose')),
@@ -125,8 +128,7 @@ void main() {
   blocTest<SearchCubit, SearchState>(
     'emits error message when SearchProductsUseCase throws an exception',
     build: () {
-      when(mockSearchProductsUseCase.call('rose'))
-          .thenThrow(Exception('boom'));
+      when(mockSearchProductsUseCase.call('rose')).thenThrow(Exception('boom'));
       return cubit;
     },
     act: (cubit) => cubit.doEvent(SearchProductsEvent('rose')),

@@ -14,9 +14,8 @@ class RefreshTokenRequestDto {
 
   const RefreshTokenRequestDto({required this.token});
 
-  factory RefreshTokenRequestDto.fromJson(
-    Map<String, dynamic> json,
-  ) => _$RefreshTokenRequestDtoFromJson(json);
+  factory RefreshTokenRequestDto.fromJson(Map<String, dynamic> json) =>
+      _$RefreshTokenRequestDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$RefreshTokenRequestDtoToJson(this);
 }

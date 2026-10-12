@@ -14,13 +14,15 @@ void main() {
   setUp(() {
     mockRepo = MockProfileRepo();
     useCase = UpdateProfileUseCase(mockRepo);
-    registerFallbackValue(const ProfileEntity(
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      gender: '',
-    ));
+    registerFallbackValue(
+      const ProfileEntity(
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        gender: '',
+      ),
+    );
   });
 
   test('should call updateProfile from the repository', () async {
@@ -32,8 +34,9 @@ void main() {
       phoneNumber: '01000000000',
       gender: 'Male',
     );
-    when(() => mockRepo.updateProfile(any()))
-        .thenAnswer((_) async => SuccessResponce(entity));
+    when(
+      () => mockRepo.updateProfile(any()),
+    ).thenAnswer((_) async => SuccessResponce(entity));
 
     // Act
     final result = await useCase(entity);

@@ -34,11 +34,13 @@ void main() {
   blocTest<ChangePasswordCubit, ChangePasswordState>(
     'emits [isLoading: true, data: tEntity] when UpdatePasswordEvent succeeds',
     build: () {
-      when(() => mockUseCase.call(
-            currentPassword: 'OldPassword123',
-            newPassword: 'NewPassword123',
-            confirmNewPassword: 'NewPassword123',
-          )).thenAnswer((_) async => SuccessResponce<ChangePasswordEntity>(tEntity));
+      when(
+        () => mockUseCase.call(
+          currentPassword: 'OldPassword123',
+          newPassword: 'NewPassword123',
+          confirmNewPassword: 'NewPassword123',
+        ),
+      ).thenAnswer((_) async => SuccessResponce<ChangePasswordEntity>(tEntity));
       return cubit;
     },
     act: (cubit) => cubit.doEvent(
@@ -65,22 +67,30 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(() => mockUseCase.call(
-            currentPassword: 'OldPassword123',
-            newPassword: 'NewPassword123',
-            confirmNewPassword: 'NewPassword123',
-          )).called(1);
+      verify(
+        () => mockUseCase.call(
+          currentPassword: 'OldPassword123',
+          newPassword: 'NewPassword123',
+          confirmNewPassword: 'NewPassword123',
+        ),
+      ).called(1);
     },
   );
 
   blocTest<ChangePasswordCubit, ChangePasswordState>(
     'emits [isLoading: true, errorMessage] when UpdatePasswordEvent fails',
     build: () {
-      when(() => mockUseCase.call(
-            currentPassword: 'OldPassword123',
-            newPassword: 'NewPassword123',
-            confirmNewPassword: 'NewPassword123',
-          )).thenAnswer((_) async => ErrorResponce<ChangePasswordEntity>(Exception('Change password failed')));
+      when(
+        () => mockUseCase.call(
+          currentPassword: 'OldPassword123',
+          newPassword: 'NewPassword123',
+          confirmNewPassword: 'NewPassword123',
+        ),
+      ).thenAnswer(
+        (_) async => ErrorResponce<ChangePasswordEntity>(
+          Exception('Change password failed'),
+        ),
+      );
       return cubit;
     },
     act: (cubit) => cubit.doEvent(
@@ -107,11 +117,13 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(() => mockUseCase.call(
-            currentPassword: 'OldPassword123',
-            newPassword: 'NewPassword123',
-            confirmNewPassword: 'NewPassword123',
-          )).called(1);
+      verify(
+        () => mockUseCase.call(
+          currentPassword: 'OldPassword123',
+          newPassword: 'NewPassword123',
+          confirmNewPassword: 'NewPassword123',
+        ),
+      ).called(1);
     },
   );
 }

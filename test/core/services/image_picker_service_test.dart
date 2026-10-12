@@ -15,22 +15,25 @@ void main() {
   });
 
   test('returns the picked file path', () async {
-    when(() => picker.pickImage(source: ImageSource.gallery))
-        .thenAnswer((_) async => XFile('/tmp/me.jpg'));
+    when(
+      () => picker.pickImage(source: ImageSource.gallery),
+    ).thenAnswer((_) async => XFile('/tmp/me.jpg'));
 
     expect(await service.pickFromGallery(), '/tmp/me.jpg');
   });
 
   test('returns null when the user cancels', () async {
-    when(() => picker.pickImage(source: ImageSource.gallery))
-        .thenAnswer((_) async => null);
+    when(
+      () => picker.pickImage(source: ImageSource.gallery),
+    ).thenAnswer((_) async => null);
 
     expect(await service.pickFromGallery(), isNull);
   });
 
   test('returns null when the plugin throws', () async {
-    when(() => picker.pickImage(source: ImageSource.gallery))
-        .thenThrow(Exception('plugin failure'));
+    when(
+      () => picker.pickImage(source: ImageSource.gallery),
+    ).thenThrow(Exception('plugin failure'));
 
     expect(await service.pickFromGallery(), isNull);
   });

@@ -65,8 +65,9 @@ void main() {
     blocTest<ProfileViewModel, ProfileState>(
       'emits [isLoading: true, data: tProfile] when the profile loads',
       build: () {
-        when(() => mockGetProfile.call())
-            .thenAnswer((_) async => SuccessResponce<ProfileEntity>(tProfile));
+        when(
+          () => mockGetProfile.call(),
+        ).thenAnswer((_) async => SuccessResponce<ProfileEntity>(tProfile));
         return viewModel;
       },
       act: (cubit) => cubit.doEvent(FetchProfileEvent()),
@@ -110,20 +111,21 @@ void main() {
     blocTest<ProfileViewModel, ProfileState>(
       'stores the picked image path',
       build: () {
-        when(() => mockImagePicker.pickFromGallery())
-            .thenAnswer((_) async => '/tmp/picked.png');
+        when(
+          () => mockImagePicker.pickFromGallery(),
+        ).thenAnswer((_) async => '/tmp/picked.png');
         return viewModel;
       },
       act: (cubit) => cubit.doEvent(PickProfileImageEvent()),
-      expect: () => [
-        const ProfileState(pickedImagePath: '/tmp/picked.png'),
-      ],
+      expect: () => [const ProfileState(pickedImagePath: '/tmp/picked.png')],
     );
 
     blocTest<ProfileViewModel, ProfileState>(
       'emits nothing when the user cancels the picker',
       build: () {
-        when(() => mockImagePicker.pickFromGallery()).thenAnswer((_) async => null);
+        when(
+          () => mockImagePicker.pickFromGallery(),
+        ).thenAnswer((_) async => null);
         return viewModel;
       },
       act: (cubit) => cubit.doEvent(PickProfileImageEvent()),
@@ -135,15 +137,19 @@ void main() {
     blocTest<ProfileViewModel, ProfileState>(
       'syncs the loaded profile with the saved one and clears the picked image',
       build: () {
-        when(() => mockUpdateProfile.call(any()))
-            .thenAnswer((_) async => SuccessResponce<ProfileEntity>(tUpdate));
+        when(
+          () => mockUpdateProfile.call(any()),
+        ).thenAnswer((_) async => SuccessResponce<ProfileEntity>(tUpdate));
         return viewModel;
       },
       seed: () => const ProfileState(pickedImagePath: '/tmp/picked.png'),
       act: (cubit) => cubit.doEvent(UpdateProfileEvent(profile: tUpdate)),
       expect: () => [
-        isA<ProfileState>()
-            .having((s) => s.updateProfileState.isLoading, 'isLoading', isTrue),
+        isA<ProfileState>().having(
+          (s) => s.updateProfileState.isLoading,
+          'isLoading',
+          isTrue,
+        ),
         isA<ProfileState>()
             .having((s) => s.profileState.data, 'profileState.data', tUpdate)
             .having(
@@ -169,8 +175,11 @@ void main() {
       ),
       act: (cubit) => cubit.doEvent(UpdateProfileEvent(profile: tUpdate)),
       expect: () => [
-        isA<ProfileState>()
-            .having((s) => s.updateProfileState.isLoading, 'isLoading', isTrue),
+        isA<ProfileState>().having(
+          (s) => s.updateProfileState.isLoading,
+          'isLoading',
+          isTrue,
+        ),
         isA<ProfileState>()
             .having(
               (s) => s.updateProfileState.errorMessage,

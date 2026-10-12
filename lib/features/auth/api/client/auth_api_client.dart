@@ -37,14 +37,14 @@ abstract class AuthApiClient {
 
   @POST(ApiStrings.forgotPassword)
   Future<ForgotPasswordResponseDto> forgotPassword(
-      @Body() ForgotPasswordRequestDto request,
-      );
+    @Body() ForgotPasswordRequestDto request,
+  );
 
   @POST(ApiStrings.verifyOtp)
   Future<VerifyOtpResponse> verifyOtp(@Body() VerifyOtpRequest request);
 
   @POST(ApiStrings.resetPassword)
   Future<ResetPasswordResponseDto> resetPassword(
-      @Body() ResetPasswordRequestDto request,
-      );
+    @Body() ResetPasswordRequestDto request,
+  );
 }

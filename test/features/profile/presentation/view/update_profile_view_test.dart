@@ -28,8 +28,8 @@ class FakeProfileRepo implements ProfileRepo {
 
   @override
   Future<BaseResponce<ProfileEntity>> updateProfile(
-      ProfileEntity profile,
-      ) async {
+    ProfileEntity profile,
+  ) async {
     updateCallCount++;
     return updateProfileResponse;
   }
@@ -39,8 +39,9 @@ class FakeProfileRepo implements ProfileRepo {
     required String currentPassword,
     required String newPassword,
     required String confirmPassword,
-  }) async =>
-      SuccessResponce<ChangePasswordEntity>(const ChangePasswordEntity(data: true));
+  }) async => SuccessResponce<ChangePasswordEntity>(
+    const ChangePasswordEntity(data: true),
+  );
 }
 
 class FakeImagePickerService implements ImagePickerService {
@@ -73,89 +74,96 @@ void main() {
     );
   }
 
-  testWidgets('Shows a CircularProgressIndicator while the profile is loading',
-          (tester) async {
-        final fakeRepo = FakeProfileRepo(
-          getProfileResponse: SuccessResponce(testEntity),
-          updateProfileResponse: SuccessResponce(testEntity),
-        );
+  testWidgets('Shows a CircularProgressIndicator while the profile is loading', (
+    tester,
+  ) async {
+    final fakeRepo = FakeProfileRepo(
+      getProfileResponse: SuccessResponce(testEntity),
+      updateProfileResponse: SuccessResponce(testEntity),
+    );
 
-        await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
+    await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
 
-        // Initial pump shows the loading indicator triggered by initState FetchProfileEvent
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
-        await tester.pumpAndSettle();
-      });
-
-  testWidgets('After loading, the text fields are filled with the entity values',
-          (tester) async {
-        final fakeRepo = FakeProfileRepo(
-          getProfileResponse: SuccessResponce(testEntity),
-          updateProfileResponse: SuccessResponce(testEntity),
-        );
-
-        await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
-        await tester.pumpAndSettle();
-
-        expect(find.text('Sara'), findsOneWidget);
-        expect(find.text('Ahmed'), findsOneWidget);
-        expect(find.text('sara.ahmed@example.com'), findsOneWidget);
-        expect(find.text('01000000000'), findsOneWidget);
-      });
-
-  testWidgets('The Update button is disabled when nothing has changed',
-          (tester) async {
-        final fakeRepo = FakeProfileRepo(
-          getProfileResponse: SuccessResponce(testEntity),
-          updateProfileResponse: SuccessResponce(testEntity),
-        );
-
-        await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
-        await tester.pumpAndSettle();
-
-        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
-        expect(button.onPressed, isNull);
-      });
+    // Initial pump shows the loading indicator triggered by initState FetchProfileEvent
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    await tester.pumpAndSettle();
+  });
 
   testWidgets(
-      'After editing a field, tapping Update calls updateProfile and shows a SnackBar',
-          (tester) async {
-        final fakeRepo = FakeProfileRepo(
-          getProfileResponse: SuccessResponce(testEntity),
-          updateProfileResponse: SuccessResponce(testEntity),
-        );
+    'After loading, the text fields are filled with the entity values',
+    (tester) async {
+      final fakeRepo = FakeProfileRepo(
+        getProfileResponse: SuccessResponce(testEntity),
+        updateProfileResponse: SuccessResponce(testEntity),
+      );
 
-        await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
+      await tester.pumpAndSettle();
 
-        // First TextFormField is the first name; editing it enables the Update button
-        await tester.enterText(find.byType(TextFormField).first, 'Mona');
-        await tester.pump();
+      expect(find.text('Sara'), findsOneWidget);
+      expect(find.text('Ahmed'), findsOneWidget);
+      expect(find.text('sara.ahmed@example.com'), findsOneWidget);
+      expect(find.text('01000000000'), findsOneWidget);
+    },
+  );
 
-        final updateFinder = find.text(AppStrings.actionUpdate);
-        await tester.ensureVisible(updateFinder);
-        await tester.tap(updateFinder);
-        await tester.pump(); // start the update
-        await tester.pumpAndSettle(); // finish the update and SnackBar animation
+  testWidgets('The Update button is disabled when nothing has changed', (
+    tester,
+  ) async {
+    final fakeRepo = FakeProfileRepo(
+      getProfileResponse: SuccessResponce(testEntity),
+      updateProfileResponse: SuccessResponce(testEntity),
+    );
 
-        expect(fakeRepo.updateCallCount, 1);
-        expect(find.text(AppStrings.profileUpdated), findsWidgets);
-      });
+    await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
+    await tester.pumpAndSettle();
 
-  testWidgets('When getProfile returns an error, a SnackBar with the error message appears',
-          (tester) async {
-        final error = ErrorResponce<ProfileEntity>(Exception('Network failure'));
-        final fakeRepo = FakeProfileRepo(
-          getProfileResponse: error,
-          updateProfileResponse: SuccessResponce(testEntity),
-        );
+    final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+    expect(button.onPressed, isNull);
+  });
 
-        await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
-        await tester.pump(); // state emission
-        await tester.pumpAndSettle(); // snackbar animation
+  testWidgets(
+    'After editing a field, tapping Update calls updateProfile and shows a SnackBar',
+    (tester) async {
+      final fakeRepo = FakeProfileRepo(
+        getProfileResponse: SuccessResponce(testEntity),
+        updateProfileResponse: SuccessResponce(testEntity),
+      );
 
-        expect(find.byType(SnackBar), findsOneWidget);
-        // Uses the message the error handler actually produces, not a hardcoded string
-        expect(find.text(error.errorMessage), findsWidgets);
-      });
+      await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
+      await tester.pumpAndSettle();
+
+      // First TextFormField is the first name; editing it enables the Update button
+      await tester.enterText(find.byType(TextFormField).first, 'Mona');
+      await tester.pump();
+
+      final updateFinder = find.text(AppStrings.actionUpdate);
+      await tester.ensureVisible(updateFinder);
+      await tester.tap(updateFinder);
+      await tester.pump(); // start the update
+      await tester.pumpAndSettle(); // finish the update and SnackBar animation
+
+      expect(fakeRepo.updateCallCount, 1);
+      expect(find.text(AppStrings.profileUpdated), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'When getProfile returns an error, a SnackBar with the error message appears',
+    (tester) async {
+      final error = ErrorResponce<ProfileEntity>(Exception('Network failure'));
+      final fakeRepo = FakeProfileRepo(
+        getProfileResponse: error,
+        updateProfileResponse: SuccessResponce(testEntity),
+      );
+
+      await tester.pumpWidget(createWidgetUnderTest(fakeRepo));
+      await tester.pump(); // state emission
+      await tester.pumpAndSettle(); // snackbar animation
+
+      expect(find.byType(SnackBar), findsOneWidget);
+      // Uses the message the error handler actually produces, not a hardcoded string
+      expect(find.text(error.errorMessage), findsWidgets);
+    },
+  );
 }

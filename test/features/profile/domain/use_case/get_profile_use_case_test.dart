@@ -25,8 +25,9 @@ void main() {
       phoneNumber: '01000000000',
       gender: 'Male',
     );
-    when(() => mockRepo.getProfile())
-        .thenAnswer((_) async => SuccessResponce(entity));
+    when(
+      () => mockRepo.getProfile(),
+    ).thenAnswer((_) async => SuccessResponce(entity));
 
     // Act
     final result = await useCase();

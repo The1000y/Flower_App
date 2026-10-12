@@ -42,26 +42,31 @@ void main() {
   ];
 
   group('SearchRepoImpl', () {
-    test('should filter products case-insensitively when CommerceRepo.getProducts succeeds', () async {
-      // Arrange
-      when(mockCommerceRepo.getProducts())
-          .thenAnswer((_) async => SuccessResponce<List<ProductEntity>>(tProducts));
+    test(
+      'should filter products case-insensitively when CommerceRepo.getProducts succeeds',
+      () async {
+        // Arrange
+        when(mockCommerceRepo.getProducts()).thenAnswer(
+          (_) async => SuccessResponce<List<ProductEntity>>(tProducts),
+        );
 
-      // Act
-      final result = await searchRepoImpl.searchProduct('rose');
+        // Act
+        final result = await searchRepoImpl.searchProduct('rose');
 
-      // Assert
-      expect(result, isA<SuccessResponce<List<ProductEntity>>>());
-      final successResult = result as SuccessResponce<List<ProductEntity>>;
-      expect(successResult.data.length, equals(1));
-      expect(successResult.data.first.name, equals('Red Roses Bouquet'));
-      verify(mockCommerceRepo.getProducts()).called(1);
-    });
+        // Assert
+        expect(result, isA<SuccessResponce<List<ProductEntity>>>());
+        final successResult = result as SuccessResponce<List<ProductEntity>>;
+        expect(successResult.data.length, equals(1));
+        expect(successResult.data.first.name, equals('Red Roses Bouquet'));
+        verify(mockCommerceRepo.getProducts()).called(1);
+      },
+    );
 
     test('should return empty list when no products match query', () async {
       // Arrange
-      when(mockCommerceRepo.getProducts())
-          .thenAnswer((_) async => SuccessResponce<List<ProductEntity>>(tProducts));
+      when(mockCommerceRepo.getProducts()).thenAnswer(
+        (_) async => SuccessResponce<List<ProductEntity>>(tProducts),
+      );
 
       // Act
       final result = await searchRepoImpl.searchProduct('sunflower');
@@ -73,17 +78,22 @@ void main() {
       verify(mockCommerceRepo.getProducts()).called(1);
     });
 
-    test('should return ErrorResponce when CommerceRepo.getProducts fails', () async {
-      // Arrange
-      final tError = ErrorResponce<List<ProductEntity>>(Exception('Failed to fetch products'));
-      when(mockCommerceRepo.getProducts()).thenAnswer((_) async => tError);
+    test(
+      'should return ErrorResponce when CommerceRepo.getProducts fails',
+      () async {
+        // Arrange
+        final tError = ErrorResponce<List<ProductEntity>>(
+          Exception('Failed to fetch products'),
+        );
+        when(mockCommerceRepo.getProducts()).thenAnswer((_) async => tError);
 
-      // Act
-      final result = await searchRepoImpl.searchProduct('rose');
+        // Act
+        final result = await searchRepoImpl.searchProduct('rose');
 
-      // Assert
-      expect(result, isA<ErrorResponce<List<ProductEntity>>>());
-      verify(mockCommerceRepo.getProducts()).called(1);
-    });
+        // Assert
+        expect(result, isA<ErrorResponce<List<ProductEntity>>>());
+        verify(mockCommerceRepo.getProducts()).called(1);
+      },
+    );
   });
 }

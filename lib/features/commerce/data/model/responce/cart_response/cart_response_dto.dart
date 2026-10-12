@@ -88,12 +88,8 @@ class CartDataDto {
   });
 
   /// An empty, well-formed cart, used when a response carries no cart payload.
-  factory CartDataDto.empty() => CartDataDto(
-    items: const [],
-    subtotal: 0,
-    total: 0,
-    hasChanges: false,
-  );
+  factory CartDataDto.empty() =>
+      CartDataDto(items: const [], subtotal: 0, total: 0, hasChanges: false);
 
   factory CartDataDto.fromJson(Map<String, dynamic> json) =>
       _$CartDataDtoFromJson(json);

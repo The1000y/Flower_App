@@ -31,14 +31,16 @@ void main() {
   late RegisterViewModel viewModel;
 
   setUpAll(() {
-    registerFallbackValue(RegisterRequestEntity(
-      fullName: 'John Doe',
-      email: 'john@example.com',
-      phoneNumber: '01012345678',
-      gender: 1,
-      password: 'P@ssw0rd',
-      confirmPassword: 'P@ssw0rd',
-    ));
+    registerFallbackValue(
+      RegisterRequestEntity(
+        fullName: 'John Doe',
+        email: 'john@example.com',
+        phoneNumber: '01012345678',
+        gender: 1,
+        password: 'P@ssw0rd',
+        confirmPassword: 'P@ssw0rd',
+      ),
+    );
   });
 
   setUp(() {
@@ -53,50 +55,56 @@ void main() {
       expect(viewModel.state.data, isNull);
     });
 
-    test('emits loading then success state on successful registration', () async {
-      when(() => useCase.execute(any())).thenAnswer(
-        (_) async => SuccessResponce<RegisterEntity>(entity),
-      );
+    test(
+      'emits loading then success state on successful registration',
+      () async {
+        when(
+          () => useCase.execute(any()),
+        ).thenAnswer((_) async => SuccessResponce<RegisterEntity>(entity));
 
-      final expectations = expectLater(
-        viewModel.stream,
-        emitsInOrder([
-          predicate<RegisterState>(
-            (state) => state.isLoading && state.errorMessage.isEmpty,
-          ),
-          predicate<RegisterState>(
-            (state) => !state.isLoading && state.data?.isSuccess == true,
-          ),
-        ]),
-      );
+        final expectations = expectLater(
+          viewModel.stream,
+          emitsInOrder([
+            predicate<RegisterState>(
+              (state) => state.isLoading && state.errorMessage.isEmpty,
+            ),
+            predicate<RegisterState>(
+              (state) => !state.isLoading && state.data?.isSuccess == true,
+            ),
+          ]),
+        );
 
-      viewModel.handle(event);
+        viewModel.handle(event);
 
-      await expectations;
-      verify(() => useCase.execute(any())).called(1);
-    });
+        await expectations;
+        verify(() => useCase.execute(any())).called(1);
+      },
+    );
 
-    test('emits loading then error state when the use case returns an error', () async {
-      when(() => useCase.execute(any())).thenAnswer(
-        (_) async => ErrorResponce<RegisterEntity>(Exception('boom')),
-      );
+    test(
+      'emits loading then error state when the use case returns an error',
+      () async {
+        when(() => useCase.execute(any())).thenAnswer(
+          (_) async => ErrorResponce<RegisterEntity>(Exception('boom')),
+        );
 
-      final expectations = expectLater(
-        viewModel.stream,
-        emitsInOrder([
-          predicate<RegisterState>(
-            (state) => state.isLoading && state.errorMessage.isEmpty,
-          ),
-          predicate<RegisterState>(
-            (state) => !state.isLoading && state.errorMessage.isNotEmpty,
-          ),
-        ]),
-      );
+        final expectations = expectLater(
+          viewModel.stream,
+          emitsInOrder([
+            predicate<RegisterState>(
+              (state) => state.isLoading && state.errorMessage.isEmpty,
+            ),
+            predicate<RegisterState>(
+              (state) => !state.isLoading && state.errorMessage.isNotEmpty,
+            ),
+          ]),
+        );
 
-      viewModel.handle(event);
+        viewModel.handle(event);
 
-      await expectations;
-      verify(() => useCase.execute(any())).called(1);
-    });
+        await expectations;
+        verify(() => useCase.execute(any())).called(1);
+      },
+    );
   });
 }

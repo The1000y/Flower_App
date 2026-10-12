@@ -11,7 +11,7 @@ void main() {
         email: 'john@example.com',
         phoneNumber: '01000000000',
         gender: 'Male',
-        photoUrl: 'invalid/path/that/does/not/exist.jpg', 
+        photoUrl: 'invalid/path/that/does/not/exist.jpg',
       );
 
       final dto = UpdateProfileRequestDto.fromDomain(entity);

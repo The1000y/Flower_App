@@ -15,12 +15,12 @@ abstract interface class RemoteDataSource {
   Future<LoginResponse> login(LoginRequest login);
   Future<RegisterResponse> register(RegisterRequest request);
   Future<BaseResponce<ForgotPasswordResponseDto>> forgotPassword(
-      ForgotPasswordRequestDto request,
-      );
+    ForgotPasswordRequestDto request,
+  );
   Future<BaseResponce<VerifyOtpResponse>> verifyOtp({
     required VerifyOtpRequest verifyOtpRequest,
   });
   Future<BaseResponce<ResetPasswordResponseDto>> resetPassword(
-      ResetPasswordRequestDto request,
-      );
+    ResetPasswordRequestDto request,
+  );
 }

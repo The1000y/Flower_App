@@ -51,7 +51,12 @@ void main() {
       const Stream<CartState>.empty(),
       initialState: CartState(
         itemLoadings: isLoading
-            ? {CartItemLoading(id: entity.productId, action: CartItemAction.update)}
+            ? {
+                CartItemLoading(
+                  id: entity.productId,
+                  action: CartItemAction.update,
+                ),
+              }
             : const {},
       ),
     );

@@ -73,20 +73,23 @@ void main() {
     expect(result, same(response));
   });
 
-  test('UpdateCartItemUseCase forwards the product id, parameters, and result', () async {
-    const params = UpdateCartItemParams(quantity: 4);
-    final response = SuccessResponce<CartEntity>(cart);
-    when(
-      () => repository.updateCartItemQuantity('5', params),
-    ).thenAnswer((_) async => response);
+  test(
+    'UpdateCartItemUseCase forwards the product id, parameters, and result',
+    () async {
+      const params = UpdateCartItemParams(quantity: 4);
+      final response = SuccessResponce<CartEntity>(cart);
+      when(
+        () => repository.updateCartItemQuantity('5', params),
+      ).thenAnswer((_) async => response);
 
-    final result = await UpdateCartItemUseCase(
-      commerceRepo: repository,
-    ).call('5', params);
+      final result = await UpdateCartItemUseCase(
+        commerceRepo: repository,
+      ).call('5', params);
 
-    expect(result, same(response));
-    verify(() => repository.updateCartItemQuantity('5', params)).called(1);
-  });
+      expect(result, same(response));
+      verify(() => repository.updateCartItemQuantity('5', params)).called(1);
+    },
+  );
 
   test('UpdateCartItemUseCase returns repository errors', () async {
     const params = UpdateCartItemParams(quantity: 4);

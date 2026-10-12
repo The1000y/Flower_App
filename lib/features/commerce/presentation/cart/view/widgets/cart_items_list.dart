@@ -3,6 +3,7 @@ import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_enti
 import 'package:flutter/material.dart';
 
 import 'cart_item.dart';
+
 class CartItemsList extends StatelessWidget {
   final List<CartItemEntity> items;
   final void Function(String cartItemId) onDelete;
@@ -19,9 +20,7 @@ class CartItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return const Center(
-        child: Text(AppStrings.yourCartIsEmpty),
-      );
+      return const Center(child: Text(AppStrings.yourCartIsEmpty));
     }
 
     return ListView.builder(
@@ -40,11 +39,7 @@ class CartItemsList extends StatelessWidget {
               return;
             }
 
-            onQuantityChanged(
-              item.id,
-              item.productId,
-              newQuantity,
-            );
+            onQuantityChanged(item.id, item.productId, newQuantity);
           },
         );
       },

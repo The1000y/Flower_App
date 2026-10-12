@@ -27,11 +27,7 @@ class AuthRepoImpl implements AuthRepo {
   final RemoteDataSource _remoteDataSource;
   final SecureStorageService _secureStorage;
 
-  AuthRepoImpl(
-      LocalDataSource _,
-      this._remoteDataSource,
-      this._secureStorage,
-      );
+  AuthRepoImpl(LocalDataSource _, this._remoteDataSource, this._secureStorage);
 
   @override
   Future<BaseResponce<ForgetPasswordEntity>> forgetPassword({
@@ -41,10 +37,12 @@ class AuthRepoImpl implements AuthRepo {
       ForgotPasswordRequestDto(email: email),
     );
     return switch (response) {
-      SuccessResponce<ForgotPasswordResponseDto>() =>
-          SuccessResponce(response.data.toDomain()),
-      ErrorResponce<ForgotPasswordResponseDto>() =>
-          ErrorResponce(response.error),
+      SuccessResponce<ForgotPasswordResponseDto>() => SuccessResponce(
+        response.data.toDomain(),
+      ),
+      ErrorResponce<ForgotPasswordResponseDto>() => ErrorResponce(
+        response.error,
+      ),
     };
   }
 
@@ -62,10 +60,12 @@ class AuthRepoImpl implements AuthRepo {
       ),
     );
     return switch (response) {
-      SuccessResponce<ResetPasswordResponseDto>() =>
-          SuccessResponce(response.data.toDomain()),
-      ErrorResponce<ResetPasswordResponseDto>() =>
-          ErrorResponce(response.error),
+      SuccessResponce<ResetPasswordResponseDto>() => SuccessResponce(
+        response.data.toDomain(),
+      ),
+      ErrorResponce<ResetPasswordResponseDto>() => ErrorResponce(
+        response.error,
+      ),
     };
   }
 
@@ -78,17 +78,18 @@ class AuthRepoImpl implements AuthRepo {
       verifyOtpRequest: VerifyOtpRequest(email: email, otp: otp),
     );
     return switch (response) {
-      SuccessResponce<VerifyOtpResponse>() =>
-          SuccessResponce(response.data.data!.toEntity()),
+      SuccessResponce<VerifyOtpResponse>() => SuccessResponce(
+        response.data.data!.toEntity(),
+      ),
       ErrorResponce<VerifyOtpResponse>() => ErrorResponce(response.error),
     };
   }
 
   @override
   Future<BaseResponce<LoginEntity>> login(
-      LoginCredentials credentials, {
-        bool rememberMe = false,
-      }) async {
+    LoginCredentials credentials, {
+    bool rememberMe = false,
+  }) async {
     try {
       final response = await _remoteDataSource.login(
         LoginRequest(
@@ -125,8 +126,8 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   Future<BaseResponce<RegisterEntity>> register(
-      RegisterRequestEntity entity,
-      ) async {
+    RegisterRequestEntity entity,
+  ) async {
     try {
       final request = RegisterRequest.fromEntity(entity);
       final response = await _remoteDataSource.register(request);

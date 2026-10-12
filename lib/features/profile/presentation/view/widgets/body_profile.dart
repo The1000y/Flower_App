@@ -38,8 +38,8 @@ class ProfileBody extends StatelessWidget {
   String get _badgeLabel => _badgeCount > 99 ? '99+' : '$_badgeCount';
 
   String get _displayName {
-    final profileName =
-        '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}'.trim();
+    final profileName = '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}'
+        .trim();
     return profileName;
   }
 

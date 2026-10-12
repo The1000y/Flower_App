@@ -1,5 +1,6 @@
-import 'package:flower_app/features/trakingOrder/domain/repo/tracking_repository.dart';
 import 'package:injectable/injectable.dart';
+
+import '../repo/tracking_repository.dart';
 
 @injectable
 class StopTrackingUseCase {

@@ -138,10 +138,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         size: 20,
                                       ),
                                       color: AppColors.blackBase,
-                                onPressed: () {
-                                  CategoriesNavigation.selectedIndex.value = 0;
-                                  Navigator.pop(context);
-                                },
+                                      onPressed: () {
+                                        CategoriesNavigation
+                                                .selectedIndex
+                                                .value =
+                                            0;
+                                        Navigator.pop(context);
+                                      },
                                     ),
                                   ),
                                 ),
@@ -342,5 +345,3 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 }
-
-

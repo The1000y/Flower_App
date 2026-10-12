@@ -1,7 +1,8 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity.dart';
-import 'package:flower_app/features/trakingOrder/domain/repo/tracking_repository.dart';
 import 'package:injectable/injectable.dart';
+import '../entities/tracking_entity.dart';
+
+import '../repo/tracking_repository.dart';
 
 @injectable
 class StartTrackingUseCase {

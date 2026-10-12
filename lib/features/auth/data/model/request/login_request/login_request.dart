@@ -18,12 +18,7 @@ class LoginRequest {
   @JsonKey(name: 'fcmToken')
   String? fcmToken;
 
-  LoginRequest({
-    this.email,
-    this.password,
-    this.deviceId,
-    this.fcmToken,
-  });
+  LoginRequest({this.email, this.password, this.deviceId, this.fcmToken});
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>
       _$LoginRequestFromJson(json);

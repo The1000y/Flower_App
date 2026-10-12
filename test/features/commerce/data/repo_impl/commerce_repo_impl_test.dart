@@ -408,16 +408,19 @@ void main() {
       expect(result, isA<ErrorResponce<CartEntity>>());
     });
 
-    test('removeCartItem passes the cart line id and maps the response', () async {
-      when(
-        () => mockRemoteDataSource.removeCartItem('item-1'),
-      ).thenAnswer((_) async => SuccessResponce(responseDto));
+    test(
+      'removeCartItem passes the cart line id and maps the response',
+      () async {
+        when(
+          () => mockRemoteDataSource.removeCartItem('item-1'),
+        ).thenAnswer((_) async => SuccessResponce(responseDto));
 
-      final result = await commerceRepo.removeCartItem('item-1');
+        final result = await commerceRepo.removeCartItem('item-1');
 
-      expect(result, isA<SuccessResponce<CartEntity>>());
-      verify(() => mockRemoteDataSource.removeCartItem('item-1')).called(1);
-    });
+        expect(result, isA<SuccessResponce<CartEntity>>());
+        verify(() => mockRemoteDataSource.removeCartItem('item-1')).called(1);
+      },
+    );
 
     test('removeCartItem returns datasource errors', () async {
       when(() => mockRemoteDataSource.removeCartItem('item-1')).thenAnswer(

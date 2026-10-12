@@ -42,7 +42,10 @@ void main() {
       final result = await dataSource.getProfile();
 
       expect(result, isA<SuccessResponce<GetProfileResponseDto>>());
-      expect((result as SuccessResponce<GetProfileResponseDto>).data, same(dto));
+      expect(
+        (result as SuccessResponce<GetProfileResponseDto>).data,
+        same(dto),
+      );
     });
 
     test('returns ErrorResponce when the client throws DioException', () async {
@@ -51,20 +54,26 @@ void main() {
       final result = await dataSource.getProfile();
 
       expect(result, isA<ErrorResponce<GetProfileResponseDto>>());
-      expect((result as ErrorResponce<GetProfileResponseDto>).error, same(dioError));
-    });
-
-    test('returns ErrorResponce when the client throws another error', () async {
-      when(() => mockClient.getProfile()).thenThrow(StateError('boom'));
-
-      final result = await dataSource.getProfile();
-
-      expect(result, isA<ErrorResponce<GetProfileResponseDto>>());
       expect(
-        (result as ErrorResponce<GetProfileResponseDto>).error.toString(),
-        contains('boom'),
+        (result as ErrorResponce<GetProfileResponseDto>).error,
+        same(dioError),
       );
     });
+
+    test(
+      'returns ErrorResponce when the client throws another error',
+      () async {
+        when(() => mockClient.getProfile()).thenThrow(StateError('boom'));
+
+        final result = await dataSource.getProfile();
+
+        expect(result, isA<ErrorResponce<GetProfileResponseDto>>());
+        expect(
+          (result as ErrorResponce<GetProfileResponseDto>).error.toString(),
+          contains('boom'),
+        );
+      },
+    );
   });
 
   group('updateProfile', () {
@@ -75,35 +84,44 @@ void main() {
       gender: 'Male',
     );
 
-    test('returns SuccessResponce and sends the DTO fields to the client', () async {
-      when(() => mockClient.updateProfile(
-        'John Doe',
-        'john@example.com',
-        '01000000000',
-        'Male',
-        null,
-      )).thenAnswer((_) async {});
+    test(
+      'returns SuccessResponce and sends the DTO fields to the client',
+      () async {
+        when(
+          () => mockClient.updateProfile(
+            'John Doe',
+            'john@example.com',
+            '01000000000',
+            'Male',
+            null,
+          ),
+        ).thenAnswer((_) async {});
 
-      final result = await dataSource.updateProfile(requestDto);
+        final result = await dataSource.updateProfile(requestDto);
 
-      expect(result, isA<SuccessResponce<void>>());
-      verify(() => mockClient.updateProfile(
-        'John Doe',
-        'john@example.com',
-        '01000000000',
-        'Male',
-        null,
-      )).called(1);
-    });
+        expect(result, isA<SuccessResponce<void>>());
+        verify(
+          () => mockClient.updateProfile(
+            'John Doe',
+            'john@example.com',
+            '01000000000',
+            'Male',
+            null,
+          ),
+        ).called(1);
+      },
+    );
 
     test('returns ErrorResponce when the client throws DioException', () async {
-      when(() => mockClient.updateProfile(
-        'John Doe',
-        'john@example.com',
-        '01000000000',
-        'Male',
-        null,
-      )).thenThrow(dioError);
+      when(
+        () => mockClient.updateProfile(
+          'John Doe',
+          'john@example.com',
+          '01000000000',
+          'Male',
+          null,
+        ),
+      ).thenThrow(dioError);
 
       final result = await dataSource.updateProfile(requestDto);
 
@@ -111,20 +129,28 @@ void main() {
       expect((result as ErrorResponce<void>).error, same(dioError));
     });
 
-    test('returns ErrorResponce when the client throws another error', () async {
-      when(() => mockClient.updateProfile(
-        'John Doe',
-        'john@example.com',
-        '01000000000',
-        'Male',
-        null,
-      )).thenThrow(StateError('boom'));
+    test(
+      'returns ErrorResponce when the client throws another error',
+      () async {
+        when(
+          () => mockClient.updateProfile(
+            'John Doe',
+            'john@example.com',
+            '01000000000',
+            'Male',
+            null,
+          ),
+        ).thenThrow(StateError('boom'));
 
-      final result = await dataSource.updateProfile(requestDto);
+        final result = await dataSource.updateProfile(requestDto);
 
-      expect(result, isA<ErrorResponce<void>>());
-      expect((result as ErrorResponce<void>).error.toString(), contains('boom'));
-    });
+        expect(result, isA<ErrorResponce<void>>());
+        expect(
+          (result as ErrorResponce<void>).error.toString(),
+          contains('boom'),
+        );
+      },
+    );
   });
 
   group('changePassword', () {
@@ -141,32 +167,51 @@ void main() {
       errorCode: 200,
     );
 
-    test('returns SuccessResponce<ChangePasswordResponse> when client succeeds', () async {
-      when(() => mockClient.changePassword(any())).thenAnswer((_) async => tResponse);
+    test(
+      'returns SuccessResponce<ChangePasswordResponse> when client succeeds',
+      () async {
+        when(
+          () => mockClient.changePassword(any()),
+        ).thenAnswer((_) async => tResponse);
 
-      final result = await dataSource.changePassword(tRequest);
+        final result = await dataSource.changePassword(tRequest);
 
-      expect(result, isA<SuccessResponce<ChangePasswordResponse>>());
-      expect((result as SuccessResponce<ChangePasswordResponse>).data, equals(tResponse));
-      verify(() => mockClient.changePassword(tRequest)).called(1);
-    });
+        expect(result, isA<SuccessResponce<ChangePasswordResponse>>());
+        expect(
+          (result as SuccessResponce<ChangePasswordResponse>).data,
+          equals(tResponse),
+        );
+        verify(() => mockClient.changePassword(tRequest)).called(1);
+      },
+    );
 
-    test('returns ErrorResponce<ChangePasswordResponse> when client throws', () async {
-      when(() => mockClient.changePassword(any())).thenThrow(Exception('Network Exception'));
+    test(
+      'returns ErrorResponce<ChangePasswordResponse> when client throws',
+      () async {
+        when(
+          () => mockClient.changePassword(any()),
+        ).thenThrow(Exception('Network Exception'));
 
-      final result = await dataSource.changePassword(tRequest);
+        final result = await dataSource.changePassword(tRequest);
 
-      expect(result, isA<ErrorResponce<ChangePasswordResponse>>());
-      verify(() => mockClient.changePassword(tRequest)).called(1);
-    });
+        expect(result, isA<ErrorResponce<ChangePasswordResponse>>());
+        verify(() => mockClient.changePassword(tRequest)).called(1);
+      },
+    );
 
-    test('returns ErrorResponce<ChangePasswordResponse> when client throws DioException', () async {
-      when(() => mockClient.changePassword(any())).thenThrow(dioError);
+    test(
+      'returns ErrorResponce<ChangePasswordResponse> when client throws DioException',
+      () async {
+        when(() => mockClient.changePassword(any())).thenThrow(dioError);
 
-      final result = await dataSource.changePassword(tRequest);
+        final result = await dataSource.changePassword(tRequest);
 
-      expect(result, isA<ErrorResponce<ChangePasswordResponse>>());
-      expect((result as ErrorResponce<ChangePasswordResponse>).error, same(dioError));
-    });
+        expect(result, isA<ErrorResponce<ChangePasswordResponse>>());
+        expect(
+          (result as ErrorResponce<ChangePasswordResponse>).error,
+          same(dioError),
+        );
+      },
+    );
   });
 }

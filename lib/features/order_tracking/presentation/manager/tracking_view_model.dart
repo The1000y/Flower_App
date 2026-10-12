@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity.dart';
-import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/domain/use_case/stop_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_intent.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_state.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_event.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../domain/entities/tracking_entity.dart';
+import '../../domain/use_case/get_tracking_use_case.dart';
+import '../../domain/use_case/start_tracking_use_case.dart';
+import '../../domain/use_case/stop_tracking_use_case.dart';
 
 @injectable
 class TrackingViewModel extends Cubit<TrackingState> {
@@ -25,15 +26,15 @@ class TrackingViewModel extends Cubit<TrackingState> {
 
   StreamSubscription<BaseResponce<TrackingEntity>>? _subscription;
 
-  void handle(TrackingIntent intent) {
-    switch (intent) {
-      case GetTrackingIntent():
-        _getTracking(intent.orderId);
+  void handle(TrackingEvent event) {
+    switch (event) {
+      case GetTrackingEvent():
+        _getTracking(event.orderId);
         break;
-      case StartTrackingIntent():
-        _startTracking(intent.orderId);
+      case StartTrackingEvent():
+        _startTracking(event.orderId);
         break;
-      case StopTrackingIntent():
+      case StopTrackingEvent():
         _stopTracking();
         break;
     }

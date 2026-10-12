@@ -15,10 +15,7 @@ import 'package:flower_app/features/profile/presentation/view/profile_home_view.
 import '../../constants/app_strings/app_strings.dart';
 
 class PersistenBottomNavBarDemo extends StatelessWidget {
-  PersistenBottomNavBarDemo({
-    super.key,
-    this.onCartTabSelected,
-  });
+  PersistenBottomNavBarDemo({super.key, this.onCartTabSelected});
 
   final VoidCallback? onCartTabSelected;
 
@@ -30,12 +27,8 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeScreen = MultiBlocProvider(
       providers: [
-        BlocProvider.value(
-          value: getIt<HomeCubit>(),
-        ),
-        BlocProvider.value(
-          value: getIt<AddressCubit>(),
-        ),
+        BlocProvider.value(value: getIt<HomeCubit>()),
+        BlocProvider.value(value: getIt<AddressCubit>()),
       ],
       child: HomeView(controller: controller),
     );

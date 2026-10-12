@@ -15,7 +15,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MockCartCubit extends MockCubit<CartState> implements CartCubit {}
 
-class MockAddressCubit extends MockCubit<AddressState> implements AddressCubit {}
+class MockAddressCubit extends MockCubit<AddressState>
+    implements AddressCubit {}
 
 void main() {
   late MockCartCubit mockCubit;
@@ -183,9 +184,7 @@ void main() {
 
     // The affected product's delete is disabled; the other remains enabled.
     final deleteButtons = tester
-        .widgetList<IconButton>(
-          find.widgetWithIcon(IconButton, Icons.delete),
-        )
+        .widgetList<IconButton>(find.widgetWithIcon(IconButton, Icons.delete))
         .toList();
     expect(deleteButtons.length, 2);
     expect(deleteButtons[0].onPressed, isNull);
