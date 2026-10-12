@@ -1,4 +1,3 @@
-import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -14,8 +13,15 @@ Finder _showMapButton() =>
 Finder _deliveredButton() =>
     find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction);
 
-Widget _section({required bool isDelivered}) =>
-    CustomTrackingButtonsSection(isDelivered: isDelivered);
+Widget _section({
+  required bool isDelivered,
+  VoidCallback? onShowMap,
+  VoidCallback? onDelivered,
+}) => CustomTrackingButtonsSection(
+  isDelivered: isDelivered,
+  onShowMap: onShowMap,
+  onDelivered: onDelivered,
+);
 
 void main() {
   group('CustomTrackingButtonsSection - visibility', () {
@@ -119,39 +125,64 @@ void main() {
   });
 
   group('CustomTrackingButtonsSection - actions', () {
-    testWidgets('tapping "Show map" opens the order map route', (tester) async {
-      await pumpOrderTrackingApp(tester, _section(isDelivered: false));
+    testWidgets('tapping "Show map" triggers onShowMap', (tester) async {
+      var showMapTapped = false;
+      await pumpOrderTrackingApp(
+        tester,
+        _section(isDelivered: false, onShowMap: () => showMapTapped = true),
+      );
 
       await tester.tap(_showMapButton());
-      await tester.pumpAndSettle();
+      await tester.pump();
 
-      expect(find.text(routeStubText(Routes.orderMap)), findsOneWidget);
+      expect(showMapTapped, isTrue);
     });
 
     testWidgets('"Show map" also works once the order is delivered', (
       tester,
     ) async {
-      await pumpOrderTrackingApp(tester, _section(isDelivered: true));
+      var showMapTapped = false;
+      await pumpOrderTrackingApp(
+        tester,
+        _section(isDelivered: true, onShowMap: () => showMapTapped = true),
+      );
 
       await tester.tap(_showMapButton());
-      await tester.pumpAndSettle();
+      await tester.pump();
 
-      expect(find.text(routeStubText(Routes.orderMap)), findsOneWidget);
+      expect(showMapTapped, isTrue);
     });
 
-    // The "Order Delivered" action is still a TODO in the widget. When it is
-    // implemented, replace this test with one that checks the real behavior.
-    testWidgets('tapping "Order Delivered" does nothing yet (no crash, no navigation)', (
+    testWidgets('tapping "Order Delivered" triggers onDelivered only', (
+      tester,
+    ) async {
+      var showMapTapped = false;
+      var deliveredTapped = false;
+      await pumpOrderTrackingApp(
+        tester,
+        _section(
+          isDelivered: true,
+          onShowMap: () => showMapTapped = true,
+          onDelivered: () => deliveredTapped = true,
+        ),
+      );
+
+      await tester.tap(_deliveredButton());
+      await tester.pump();
+
+      expect(deliveredTapped, isTrue);
+      expect(showMapTapped, isFalse);
+    });
+
+    testWidgets('tapping delivered without a callback does not throw', (
       tester,
     ) async {
       await pumpOrderTrackingApp(tester, _section(isDelivered: true));
 
       await tester.tap(_deliveredButton());
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(tester.takeException(), isNull);
-      expect(find.byType(CustomTrackingButtonsSection), findsOneWidget);
-      expect(find.textContaining('route:'), findsNothing);
     });
   });
 }

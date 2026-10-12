@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/shared/app_widgets/custom_button.dart';
 import '../../../../core/themes/app_colors/app_color.dart';
 
 class CustomTrackingButtonsSection extends StatelessWidget {
-  const CustomTrackingButtonsSection({super.key, required this.isDelivered});
+  const CustomTrackingButtonsSection({
+    super.key,
+    required this.isDelivered,
+    this.onShowMap,
+    this.onDelivered,
+  });
 
   final bool isDelivered;
+  final VoidCallback? onShowMap;
+  final VoidCallback? onDelivered;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +24,7 @@ class CustomTrackingButtonsSection extends StatelessWidget {
         Expanded(
           child: CustomButton(
             text: AppStrings.showMap,
-            onPressed: () => Navigator.pushNamed(context, Routes.orderMap),
+            onPressed: onShowMap,
             isEnabled: true,
             enabledColor: AppColors.pinkBase,
           ),
@@ -29,9 +35,7 @@ class CustomTrackingButtonsSection extends StatelessWidget {
           Expanded(
             child: CustomButton(
               text: AppStrings.orderDeliveredAction,
-              onPressed: () {
-                //ToDO: perform the action when it finally delivered
-              },
+              onPressed: onDelivered,
               isEnabled: true,
               enabledColor: AppColors.pinkBase,
             ),

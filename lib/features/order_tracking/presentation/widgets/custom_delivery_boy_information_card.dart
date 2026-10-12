@@ -9,12 +9,12 @@ class CustomDeliveryBoyInformationCard extends StatelessWidget {
     super.key,
     required this.deliveryBoyName,
     required this.deliveryBoyPhoneNumber,
-    required this.deliveryBoyImageURL,
+    this.deliveryBoyImageURL,
   });
 
   final String deliveryBoyName;
   final String deliveryBoyPhoneNumber;
-  final String deliveryBoyImageURL;
+  final String? deliveryBoyImageURL;
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +26,17 @@ class CustomDeliveryBoyInformationCard extends StatelessWidget {
           radius: 25,
           backgroundColor: AppColors.pinkBase,
           child: ClipOval(
-            child: Image.network(
-              deliveryBoyImageURL,
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.person, size: 30);
-              },
-            ),
+            child: deliveryBoyImageURL == null || deliveryBoyImageURL!.isEmpty
+                ? const Icon(Icons.person, size: 30)
+                : Image.network(
+                    deliveryBoyImageURL!,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.person, size: 30);
+                    },
+                  ),
           ),
         ),
 

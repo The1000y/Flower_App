@@ -14,6 +14,9 @@ import 'package:flower_app/features/addresses/presentation/manager/cubit/add_add
 import 'package:flower_app/features/addresses/presentation/view/address_view.dart';
 import 'package:flower_app/features/addresses/presentation/view/saved_address/saved_address_view.dart';
 
+import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
+
 import 'package:flower_app/features/auth/presentation/forget_password/view/forget_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/reset_password.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/verification_view.dart';
@@ -188,10 +191,33 @@ abstract class AppRoutes {
         return MaterialPageRoute(builder: (_) => const OrderSuccessView());
 
       case Routes.trackOrder:
-        return MaterialPageRoute(builder: (_) => const TrackOrderView());
+        final orderId = settings.arguments as String? ?? '';
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<TrackingViewModel>(),
+            child: TrackOrderView(orderId: orderId),
+          ),
+        );
 
       case Routes.orderMap:
-        return MaterialPageRoute(builder: (_) => const OrderMapView());
+        final args = settings.arguments;
+        TrackingEntity? tracking;
+        TrackingViewModel? viewModel;
+        if (args is OrderMapRouteArguments) {
+          tracking = args.tracking;
+          viewModel = args.viewModel;
+        }
+        return MaterialPageRoute(
+          builder: (_) => viewModel == null
+              ? BlocProvider(
+                  create: (_) => getIt<TrackingViewModel>(),
+                  child: OrderMapView(tracking: tracking),
+                )
+              : BlocProvider.value(
+                  value: viewModel,
+                  child: OrderMapView(tracking: tracking),
+                ),
+        );
 
       default:
         return MaterialPageRoute(

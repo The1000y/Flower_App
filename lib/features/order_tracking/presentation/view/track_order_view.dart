@@ -1,33 +1,57 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_app_bar.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/constants/enums/order_status.dart';
 import '../../../../core/shared/animations/animated_car_single_file.dart';
+import '../../domain/entities/tracking_entity.dart';
+import '../manager/tracking_event.dart';
+import '../manager/tracking_state.dart';
+import '../manager/tracking_view_model.dart';
 import '../widgets/custom_delivery_boy_information_card.dart';
 import '../widgets/custom_estimated_arrival_section.dart';
 import '../widgets/custom_tracking_buttons_section.dart';
 import '../widgets/order_status_section.dart';
+import 'order_map_view.dart';
 
 class TrackOrderView extends StatefulWidget {
-  const TrackOrderView({super.key});
+  const TrackOrderView({super.key, required this.orderId});
+
+  final String orderId;
 
   @override
   State<TrackOrderView> createState() => _TrackOrderViewState();
 }
 
 class _TrackOrderViewState extends State<TrackOrderView> {
-  // TEMP: replace with the cubit state later
-  OrderStatus _status = OrderStatus.received;
+  late final TrackingViewModel _viewModel;
 
-  // TEMP: cycles through the statuses so you can check each UI state
-  void _nextStatus() {
-    setState(() {
-      _status =
-          OrderStatus.values[(_status.index + 1) % OrderStatus.values.length];
-    });
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = context.read<TrackingViewModel>();
+    _viewModel.handle(StartTrackingEvent(widget.orderId));
+  }
+
+  @override
+  void dispose() {
+    _viewModel.handle(StopTrackingEvent());
+    super.dispose();
+  }
+
+  void _openMap(TrackingEntity entity) {
+    Navigator.pushNamed(
+      context,
+      Routes.orderMap,
+      arguments: OrderMapRouteArguments(
+        tracking: entity,
+        viewModel: context.read<TrackingViewModel>(),
+      ),
+    );
   }
 
   @override
@@ -40,57 +64,129 @@ class _TrackOrderViewState extends State<TrackOrderView> {
         title: AppStrings.trackOrder,
         onBack: () => Navigator.pop(context),
       ),
-
-      // TEMP debug button, delete before merging
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: _nextStatus,
-        child: const Icon(Icons.skip_next),
-      ),
-
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          CustomEstimatedArrivalSection(
-                            estimatedArrivalDateTime: DateTime.now(),
-                          ),
-                          const Gap(32),
-                          CustomDeliveryBoyInformationCard(
-                            deliveryBoyName: 'Mohamed',
-                            deliveryBoyPhoneNumber: '01014194042',
-                            deliveryBoyImageURL: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=500',
-                          ),
+        child: BlocBuilder<TrackingViewModel, TrackingState>(
+          builder: (context, state) {
+            final tracking = state.trackingState;
+            final entity = tracking.data;
 
-                          const Gap(32),
+            if (tracking.isLoading && entity == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                          AnimatedCar(
-                            width: 340,
-                            duration: const Duration(milliseconds: 600),
-                            showRoad: true,
-                            showSpeedLines: true,
-                            roadColor: AppColors.white70,
-                          ),
-                          const Gap(32),
-                          OrderStatusSection(status: _status),
-                        ],
+            if (entity == null) {
+              return _TrackingError(
+                message: tracking.errorMessage.isEmpty
+                    ? AppStrings.somethingWentWrong
+                    : tracking.errorMessage,
+                onRetry: () => context
+                    .read<TrackingViewModel>()
+                    .handle(StartTrackingEvent(widget.orderId)),
+              );
+            }
+
+            return _TrackingContent(
+              entity: entity,
+              onShowMap: () => _openMap(entity),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _TrackingContent extends StatelessWidget {
+  const _TrackingContent({required this.entity, required this.onShowMap});
+
+  final TrackingEntity entity;
+  final VoidCallback onShowMap;
+
+  @override
+  Widget build(BuildContext context) {
+    final driver = entity.driver;
+    final estimatedArrival = entity.estimatedDeliveryAt;
+
+    return Column(
+      children: [
+        Expanded(
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                sliver: SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      if (estimatedArrival != null) ...[
+                        CustomEstimatedArrivalSection(
+                          estimatedArrivalDateTime: estimatedArrival,
+                        ),
+                        const Gap(32),
+                      ],
+                      if (driver != null) ...[
+                        CustomDeliveryBoyInformationCard(
+                          deliveryBoyName: driver.name ?? '',
+                          deliveryBoyPhoneNumber: driver.phone ?? '',
+                          deliveryBoyImageURL: driver.photoUrl,
+                        ),
+                        const Gap(32),
+                      ],
+                      const AnimatedCar(
+                        width: 340,
+                        duration: Duration(milliseconds: 600),
+                        showRoad: true,
+                        showSpeedLines: true,
+                        roadColor: AppColors.white70,
                       ),
-                    ),
+                      const Gap(32),
+                      OrderStatusSection(
+                        status: OrderStatus.fromStatus(entity.status),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: CustomTrackingButtonsSection(
-                isDelivered: _status == OrderStatus.delivered,
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: CustomTrackingButtonsSection(
+            isDelivered: entity.isDelivered,
+            onShowMap: onShowMap,
+            onDelivered: () =>
+                context.read<TrackingViewModel>().handle(StopTrackingEvent()),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TrackingError extends StatelessWidget {
+  const _TrackingError({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(message, style: textTheme.bodyMedium, textAlign: TextAlign.center),
+            const Gap(16),
+            FilledButton(
+              onPressed: onRetry,
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.pinkBase,
               ),
+              child: const Text(AppStrings.retry),
             ),
           ],
         ),
@@ -98,39 +194,3 @@ class _TrackOrderViewState extends State<TrackOrderView> {
     );
   }
 }
-
-//ToDo: replace after create the cubit!:
-
-// class OrderStatusSection extends StatelessWidget {
-//   const OrderStatusSection({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocSelector<TrackOrderCubit, TrackOrderState, OrderStatus>(
-//       selector: (state) => state.status,
-//       builder: (context, status) {
-//         final now = DateTime.now(); // replace with real timestamps from your API
-//         return OrderStatusTimeline(
-//           currentIndex: status.index,
-//           steps: [
-//             OrderStep(title: 'Received your order', dateTime: now),
-//             OrderStep(
-//               title: 'Preparing your order',
-//               dateTime: status.index >= 1 ? now : null,
-//             ),
-//             OrderStep(
-//               title: 'Out for delivery',
-//               dateTime: status.index >= 2 ? now : null,
-//             ),
-//             OrderStep(
-//               title: 'Delivered',
-//               dateTime: status.index >= 3 ? now : null,
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }
-
-//======================================================

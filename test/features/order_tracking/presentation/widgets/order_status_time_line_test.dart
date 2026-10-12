@@ -258,12 +258,15 @@ void main() {
         ),
       );
 
-      expect(_dotColors(tester), [
-        Colors.green,
-        Colors.green,
-        Colors.grey,
-        Colors.grey,
-      ]);
+      expect(
+        _dotColors(tester).map((c) => c.toARGB32()).toList(),
+        [
+          Colors.green.toARGB32(),
+          Colors.green.toARGB32(),
+          Colors.grey.toARGB32(),
+          Colors.grey.toARGB32(),
+        ],
+      );
     });
   });
 

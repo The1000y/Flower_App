@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity.dart';
-import 'package:flower_app/features/trakingOrder/domain/use_case/get_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/domain/use_case/start_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/domain/use_case/stop_tracking_use_case.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_intent.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_state.dart';
-import 'package:flower_app/features/trakingOrder/presentation/manager/mvi/tracking_view_model.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/get_tracking_use_case.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/start_tracking_use_case.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/stop_tracking_use_case.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_event.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_state.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../tracking_mocks.dart';
+import '../../tracking_mocks.dart';
 
 void main() {
   late MockTrackingRepository repository;
@@ -50,7 +50,7 @@ void main() {
     'start tracking emits loading then the incoming snapshot in order',
     build: () => cubit,
     act: (cubit) {
-      cubit.handle(StartTrackingIntent('o-1'));
+      cubit.handle(StartTrackingEvent('o-1'));
       streamController.add(
         SuccessResponce<TrackingEntity>(
           const TrackingEntity(
@@ -83,7 +83,7 @@ void main() {
     'an error response keeps the last snapshot and surfaces the message',
     build: () => cubit,
     act: (cubit) {
-      cubit.handle(StartTrackingIntent('o-1'));
+      cubit.handle(StartTrackingEvent('o-1'));
       streamController.add(
         SuccessResponce<TrackingEntity>(
           const TrackingEntity(orderId: 'o-1', status: 'OutForDelivery'),
@@ -98,11 +98,7 @@ void main() {
         isTrue,
       ),
       isA<TrackingState>()
-          .having(
-            (s) => s.trackingState.data?.status,
-            'status',
-            'OutForDelivery',
-          )
+          .having((s) => s.trackingState.data?.status, 'status', 'OutForDelivery')
           .having((s) => s.trackingState.errorMessage, 'errorMessage', isEmpty),
       isA<TrackingState>()
           .having(
@@ -128,7 +124,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.handle(GetTrackingIntent('o-9')),
+    act: (cubit) => cubit.handle(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
@@ -152,7 +148,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.handle(GetTrackingIntent('o-9')),
+    act: (cubit) => cubit.handle(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
@@ -162,16 +158,12 @@ void main() {
           .having((s) => s.orderId, 'orderId', 'o-9')
           .having((s) => s.trackingState.isLoading, 'isLoading', isFalse)
           .having((s) => s.trackingState.data, 'data', isNull)
-          .having(
-            (s) => s.trackingState.errorMessage,
-            'errorMessage',
-            isNotEmpty,
-          ),
+          .having((s) => s.trackingState.errorMessage, 'errorMessage', isNotEmpty),
     ],
   );
 
   blocTest<TrackingViewModel, TrackingState>(
-    'handle routes GetTrackingIntent to a single fetch',
+    'handle routes GetTrackingEvent to a single fetch',
     build: () {
       when(() => repository.getTracking('o-9')).thenAnswer(
         (_) async => SuccessResponce<TrackingEntity>(
@@ -180,7 +172,7 @@ void main() {
       );
       return cubit;
     },
-    act: (cubit) => cubit.handle(GetTrackingIntent('o-9')),
+    act: (cubit) => cubit.handle(GetTrackingEvent('o-9')),
     expect: () => [
       isA<TrackingState>()
           .having((s) => s.orderId, 'orderId', 'o-9')
@@ -194,30 +186,30 @@ void main() {
     },
   );
 
-  test('handle routes StartTrackingIntent to start tracking', () {
-    cubit.handle(StartTrackingIntent('o-1'));
+  test('handle routes StartTrackingEvent to start tracking', () {
+    cubit.handle(StartTrackingEvent('o-1'));
 
     verify(() => repository.startTracking('o-1')).called(1);
   });
 
-  test('handle routes StopTrackingIntent to stop the active order', () async {
-    cubit.handle(StartTrackingIntent('o-1'));
-    cubit.handle(StopTrackingIntent());
+  test('handle routes StopTrackingEvent to stop the active order', () async {
+    cubit.handle(StartTrackingEvent('o-1'));
+    cubit.handle(StopTrackingEvent());
     await Future<void>.delayed(Duration.zero);
 
     verify(() => repository.stopTracking('o-1')).called(1);
   });
 
   test('repeated start for the same order keeps one subscription', () {
-    cubit.handle(StartTrackingIntent('o-1'));
-    cubit.handle(StartTrackingIntent('o-1'));
+    cubit.handle(StartTrackingEvent('o-1'));
+    cubit.handle(StartTrackingEvent('o-1'));
 
     verify(() => repository.startTracking('o-1')).called(1);
   });
 
   test('stopping cancels the subscription and stops the session', () async {
-    cubit.handle(StartTrackingIntent('o-1'));
-    cubit.handle(StopTrackingIntent());
+    cubit.handle(StartTrackingEvent('o-1'));
+    cubit.handle(StopTrackingEvent());
     await Future<void>.delayed(Duration.zero);
 
     verify(() => repository.stopTracking('o-1')).called(1);
@@ -227,33 +219,27 @@ void main() {
     expect(cubit.state.trackingState.errorMessage, isEmpty);
   });
 
-  test(
-    'closing the cubit stops the session when it owns the last listener',
-    () async {
-      cubit.handle(StartTrackingIntent('o-1'));
-      await cubit.close();
-      await Future<void>.delayed(Duration.zero);
+  test('closing the cubit stops the session when it owns the last listener', () async {
+    cubit.handle(StartTrackingEvent('o-1'));
+    await cubit.close();
+    await Future<void>.delayed(Duration.zero);
 
-      expect(sessionStopped, isTrue);
-      verifyNever(() => repository.stopTracking('o-1'));
-    },
-  );
+    expect(sessionStopped, isTrue);
+    verifyNever(() => repository.stopTracking('o-1'));
+  });
 
-  test(
-    'closing the cubit keeps the session alive for another listener',
-    () async {
-      cubit.handle(StartTrackingIntent('o-1'));
-      final otherListener = streamController.stream.listen((_) {});
-      await cubit.close();
-      await Future<void>.delayed(Duration.zero);
+  test('closing the cubit keeps the session alive for another listener', () async {
+    cubit.handle(StartTrackingEvent('o-1'));
+    final otherListener = streamController.stream.listen((_) {});
+    await cubit.close();
+    await Future<void>.delayed(Duration.zero);
 
-      expect(sessionStopped, isFalse);
+    expect(sessionStopped, isFalse);
 
-      await otherListener.cancel();
-      await Future<void>.delayed(Duration.zero);
-      expect(sessionStopped, isTrue);
-    },
-  );
+    await otherListener.cancel();
+    await Future<void>.delayed(Duration.zero);
+    expect(sessionStopped, isTrue);
+  });
 
   test('switching orders cancels the previous subscription only', () async {
     final secondController =
@@ -262,8 +248,8 @@ void main() {
       () => repository.startTracking('o-2'),
     ).thenAnswer((_) => secondController.stream);
 
-    cubit.handle(StartTrackingIntent('o-1'));
-    cubit.handle(StartTrackingIntent('o-2'));
+    cubit.handle(StartTrackingEvent('o-1'));
+    cubit.handle(StartTrackingEvent('o-2'));
     await Future<void>.delayed(Duration.zero);
 
     expect(cubit.state.orderId, 'o-2');

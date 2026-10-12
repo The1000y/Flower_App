@@ -5,53 +5,77 @@ import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/constants/app_svgs/app_svgs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../core/shared/app_widgets/custom_button.dart';
 import '../../../../core/themes/app_colors/app_color.dart';
+import '../../domain/entities/tracking_entity.dart';
+import '../manager/tracking_state.dart';
+import '../manager/tracking_view_model.dart';
 import '../widgets/custom_delivery_boy_information_card.dart';
 import '../widgets/custom_estimated_arrival_section.dart';
 
-// ---------------------------------------------------------------------------
-// Screen
-// ---------------------------------------------------------------------------
+class OrderMapRouteArguments {
+  const OrderMapRouteArguments({this.tracking, this.viewModel});
+
+  final TrackingEntity? tracking;
+  final TrackingViewModel? viewModel;
+}
 
 class OrderMapView extends StatelessWidget {
-  const OrderMapView({super.key});
+  const OrderMapView({super.key, this.tracking});
 
-  // ---- DUMMY DATA (UI only). Replace with real data / routing API later. ----
-  static const _apartment = LatLng(30.0430, 31.2330);
-  static const _flowery = LatLng(30.0485, 31.2410);
-  static const _courier = LatLng(30.0452, 31.2392);
-  static const _route = <LatLng>[
-    _apartment,
-    LatLng(30.0430, 31.2375),
-    LatLng(30.0452, 31.2375),
-    LatLng(30.0452, 31.2410),
-    _flowery,
-  ];
+  final TrackingEntity? tracking;
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<TrackingViewModel, TrackingState>(
+      builder: (context, state) {
+        final entity = state.trackingState.data ?? tracking;
+        return _build(context, entity);
+      },
+    );
+  }
+
+  Widget _build(BuildContext context, TrackingEntity? entity) {
+    final destination = entity?.userAddress;
+    final courier = entity?.currentLocation;
+
+    final destLat = destination?.lat;
+    final destLng = destination?.lng;
+    final courierLat = courier?.lat;
+    final courierLng = courier?.lng;
+
+    final destinationPos = destLat != null && destLng != null
+        ? LatLng(destLat, destLng)
+        : null;
+    final courierPos = courierLat != null && courierLng != null
+        ? LatLng(courierLat, courierLng)
+        : null;
+
+    final originPos = courierPos ?? destinationPos;
+
     return Scaffold(
       body: Column(
         children: [
-          // Map takes all remaining height above the info panel
           Expanded(
             child: Stack(
               children: [
-                const OrderRouteMap(
-                  route: _route,
-                  origin: _apartment,
-                  originLabel: 'Apartment',
-                  destination: _flowery,
-                  destinationLabel: 'Flowery',
-                  courier: _courier,
-                ),
+                if (originPos != null && destinationPos != null)
+                  OrderRouteMap(
+                    route: [originPos, destinationPos],
+                    origin: originPos,
+                    originLabel: '',
+                    destination: destinationPos,
+                    destinationLabel: destination?.addressLine ?? '',
+                    courier: courierPos,
+                  )
+                else
+                  const ColoredBox(color: AppColors.lightPink),
 
-                // Floating back button (respects the status bar)
                 Positioned(
                   top: MediaQuery.paddingOf(context).top + 8,
                   left: 16,
@@ -60,7 +84,7 @@ class OrderMapView extends StatelessWidget {
                     style: IconButton.styleFrom(
                       backgroundColor: AppColors.pinkBase,
                     ),
-                    padding: const EdgeInsets.only(left: 8), // centers the iOS-style arrow
+                    padding: const EdgeInsets.only(left: 8),
                     icon: const Icon(
                       Icons.arrow_back_ios,
                       color: AppColors.whiteBase,
@@ -72,7 +96,7 @@ class OrderMapView extends StatelessWidget {
             ),
           ),
 
-          const _OrderInfoPanel(),
+          _OrderInfoPanel(tracking: entity),
         ],
       ),
     );
@@ -84,10 +108,15 @@ class OrderMapView extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _OrderInfoPanel extends StatelessWidget {
-  const _OrderInfoPanel();
+  const _OrderInfoPanel({this.tracking});
+
+  final TrackingEntity? tracking;
 
   @override
   Widget build(BuildContext context) {
+    final estimatedArrival = tracking?.estimatedDeliveryAt;
+    final driver = tracking?.driver;
+
     return Material(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
@@ -97,17 +126,20 @@ class _OrderInfoPanel extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomEstimatedArrivalSection(
-                estimatedArrivalDateTime: DateTime(2024, 9, 3, 11),
-              ),
-              const Gap(16),
-              CustomDeliveryBoyInformationCard(
-                deliveryBoyName: 'Muhamed',
-                deliveryBoyPhoneNumber: '01014194042',
-                deliveryBoyImageURL:
-                'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=500',
-              ),
-              const Gap(24),
+              if (estimatedArrival != null) ...[
+                CustomEstimatedArrivalSection(
+                  estimatedArrivalDateTime: estimatedArrival,
+                ),
+                const Gap(16),
+              ],
+              if (driver != null) ...[
+                CustomDeliveryBoyInformationCard(
+                  deliveryBoyName: driver.name ?? '',
+                  deliveryBoyPhoneNumber: driver.phone ?? '',
+                  deliveryBoyImageURL: driver.photoUrl,
+                ),
+                const Gap(24),
+              ],
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(

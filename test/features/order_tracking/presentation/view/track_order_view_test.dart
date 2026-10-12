@@ -1,7 +1,21 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
+import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/animations/animated_car_single_file.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/driver_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/location_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/user_address_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/repo/tracking_repository.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/get_tracking_use_case.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/start_tracking_use_case.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/stop_tracking_use_case.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
+import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_contract_card.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_delivery_boy_information_card.dart';
@@ -9,43 +23,126 @@ import 'package:flower_app/features/order_tracking/presentation/widgets/custom_e
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_tracking_buttons_section.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/order_status_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/order_tracking_test_helpers.dart';
 
-// NOTE: this screen contains the driving car, an animation that never ends, so
-// these tests use fixed-length pumps instead of pumpAndSettle.
+class _FakeTrackingRepository implements TrackingRepository {
+  final controller = StreamController<BaseResponce<TrackingEntity>>.broadcast();
 
-const _formattedDummyDate = '03 Sep 2024 - 2:10';
+  @override
+  Future<BaseResponce<TrackingEntity>> getTracking(String orderId) async =>
+      SuccessResponce<TrackingEntity>(const TrackingEntity());
 
-Future<void> _pumpTrackOrder(
-  WidgetTester tester, {
-  Size surfaceSize = const Size(800, 1400),
-}) => pumpOrderTrackingApp(
-  tester,
-  const TrackOrderView(),
-  inScaffold: false,
-  surfaceSize: surfaceSize,
-);
+  @override
+  Stream<BaseResponce<TrackingEntity>> startTracking(String orderId) =>
+      controller.stream;
 
-Finder _showMapButton() =>
-    find.widgetWithText(CustomButton, AppStrings.showMap);
+  @override
+  Future<void> stopTracking(String orderId) async {}
 
-Finder _deliveredButton() =>
-    find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction);
+  @override
+  Future<void> refreshTracking(String orderId) async {}
 
-/// Taps the TEMP floating button that cycles the status, then lets the
-/// timeline (700 ms) and date fade (400 ms) animations finish.
-Future<void> _tapNextStatus(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.skip_next));
-  await tester.pump();
-  await tester.pump(const Duration(seconds: 1));
+  @override
+  Future<void> dispose() async {}
 }
 
+class _Harness {
+  _Harness({this.onGenerateRoute}) {
+    _repository = _FakeTrackingRepository();
+    viewModel = TrackingViewModel(
+      GetTrackingUseCase(_repository),
+      StartTrackingUseCase(_repository),
+      StopTrackingUseCase(_repository),
+    );
+  }
+
+  late final _FakeTrackingRepository _repository;
+  late TrackingViewModel viewModel;
+  RouteFactory? onGenerateRoute;
+
+  void addTracking(TrackingEntity entity) {
+    _repository.controller.add(SuccessResponce<TrackingEntity>(entity));
+  }
+
+  void addError(String message) {
+    _repository.controller.add(
+      ErrorResponce<TrackingEntity>(
+        DioException(
+          requestOptions: RequestOptions(path: '/'),
+          response: Response<dynamic>(
+            requestOptions: RequestOptions(path: '/'),
+            statusCode: 400,
+            data: {'message': message},
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> pump(
+    WidgetTester tester, {
+    Size surfaceSize = const Size(800, 1400),
+  }) async {
+    tester.view.physicalSize = surfaceSize;
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(viewModel.close);
+    addTearDown(_repository.controller.close);
+
+    await tester.pumpWidget(
+      ScreenUtilPlusInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        child: BlocProvider.value(
+          value: viewModel,
+          child: MaterialApp(
+            home: const TrackOrderView(orderId: 'o-1'),
+            onGenerateRoute: onGenerateRoute ??
+                (settings) => MaterialPageRoute<void>(
+                  settings: settings,
+                  builder: (_) => Scaffold(
+                    body: Center(
+                      child: Text(routeStubText(settings.name ?? '')),
+                    ),
+                  ),
+                ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+  }
+}
+
+const _entity = TrackingEntity(
+  orderId: 'o-1',
+  status: 'OutForDelivery',
+  isLive: true,
+);
+
 void main() {
+  group('TrackOrderView - loading', () {
+    testWidgets('shows a loader while no snapshot has arrived', (tester) async {
+      final harness = _Harness();
+      await harness.pump(tester);
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+  });
+
   group('TrackOrderView - content', () {
     testWidgets('shows the "Track order" title in the app bar', (tester) async {
-      await _pumpTrackOrder(tester);
+      final harness = _Harness();
+      await harness.pump(tester);
+      harness.addTracking(_entity);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
       expect(
         find.descendant(
@@ -56,137 +153,228 @@ void main() {
       );
     });
 
-    testWidgets('shows every section of the screen', (tester) async {
-      await _pumpTrackOrder(tester);
+    testWidgets('renders the sections from the tracking snapshot', (
+      tester,
+    ) async {
+      final harness = _Harness();
+      await harness.pump(tester);
+      harness.addTracking(_entity);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
-      expect(find.byType(CustomEstimatedArrivalSection), findsOneWidget);
-      expect(find.byType(CustomDeliveryBoyInformationCard), findsOneWidget);
       expect(find.byType(AnimatedCar), findsOneWidget);
       expect(find.byType(OrderStatusSection), findsOneWidget);
       expect(find.byType(CustomTrackingButtonsSection), findsOneWidget);
+      expect(find.byType(CustomEstimatedArrivalSection), findsNothing);
+      expect(find.byType(CustomDeliveryBoyInformationCard), findsNothing);
     });
 
-    // Dummy data for now (UI-only task). Update when real data is wired in.
-    testWidgets('shows the dummy delivery boy', (tester) async {
-      await _pumpTrackOrder(tester);
-
-      expect(find.text('Mohamed'), findsOneWidget);
-      expect(
-        tester.widget<CustomContractCard>(find.byType(CustomContractCard)).phoneNumber,
-        '01014194042',
-      );
-    });
-
-    testWidgets('the car keeps animating without errors', (tester) async {
-      await _pumpTrackOrder(tester);
-
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pump(const Duration(milliseconds: 500));
-
-      expect(tester.takeException(), isNull);
-    });
-
-    testWidgets('sections are stacked in the expected order', (tester) async {
-      await _pumpTrackOrder(tester);
-
-      final arrival = tester.getTopLeft(find.byType(CustomEstimatedArrivalSection)).dy;
-      final card = tester.getTopLeft(find.byType(CustomDeliveryBoyInformationCard)).dy;
-      final car = tester.getTopLeft(find.byType(AnimatedCar)).dy;
-      final timeline = tester.getTopLeft(find.byType(OrderStatusSection)).dy;
-      final buttons = tester.getTopLeft(find.byType(CustomTrackingButtonsSection)).dy;
-
-      expect(arrival, lessThan(card));
-      expect(card, lessThan(car));
-      expect(car, lessThan(timeline));
-      expect(timeline, lessThan(buttons));
-    });
-  });
-
-  group('TrackOrderView - scrolling', () {
-    testWidgets('the content is inside the scroll view', (tester) async {
-      await _pumpTrackOrder(tester);
-
-      for (final type in [
-        CustomEstimatedArrivalSection,
-        CustomDeliveryBoyInformationCard,
-        AnimatedCar,
-        OrderStatusSection,
-      ]) {
-        expect(
-          find.descendant(
-            of: find.byType(CustomScrollView),
-            matching: find.byType(type),
+    testWidgets('renders driver and arrival data from the tracking snapshot', (
+      tester,
+    ) async {
+      final harness = _Harness();
+      await harness.pump(tester);
+      harness.addTracking(
+        TrackingEntity(
+          orderId: 'o-1',
+          status: 'Delivered',
+          isLive: false,
+          estimatedDeliveryAt: DateTime(2024, 9, 3, 11),
+          driver: DriverEntity(
+            driverId: 'd-1',
+            name: 'Ali',
+            phone: '01234567890',
+            photoUrl: 'https://example.com/ali.jpg',
           ),
-          findsOneWidget,
-          reason: '$type should scroll with the page',
-        );
-      }
-    });
-
-    testWidgets('the bottom buttons are NOT inside the scroll view', (
-      tester,
-    ) async {
-      await _pumpTrackOrder(tester);
-
-      expect(
-        find.descendant(
-          of: find.byType(CustomScrollView),
-          matching: find.byType(CustomTrackingButtonsSection),
         ),
-        findsNothing,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byType(CustomEstimatedArrivalSection), findsOneWidget);
+      expect(find.byType(CustomDeliveryBoyInformationCard), findsOneWidget);
+      expect(find.text('Ali'), findsOneWidget);
+      expect(
+        tester
+            .widget<CustomContractCard>(find.byType(CustomContractCard))
+            .phoneNumber,
+        '01234567890',
       );
     });
 
-    testWidgets('scrolling moves the content but the buttons stay in place', (
+    testWidgets('replaces the snapshot data when the stream emits again', (
       tester,
     ) async {
-      // A short screen so the content is taller than the scrollable area.
-      await _pumpTrackOrder(tester, surfaceSize: const Size(800, 500));
-
-      final buttonsBefore = tester.getTopLeft(find.byType(CustomTrackingButtonsSection));
-      final lastStepBefore = tester.getTopLeft(find.text('Delivered')).dy;
-
-      await tester.drag(find.byType(CustomScrollView), const Offset(0, -200));
-      await tester.pump();
-
-      final lastStepAfter = tester.getTopLeft(find.text('Delivered')).dy;
-      expect(lastStepAfter, lessThan(lastStepBefore - 100));
-      expect(
-        tester.getTopLeft(find.byType(CustomTrackingButtonsSection)),
-        buttonsBefore,
+      final harness = _Harness();
+      await harness.pump(tester);
+      harness.addTracking(
+        TrackingEntity(
+          orderId: 'o-1',
+          status: 'Preparing',
+          isLive: true,
+          estimatedDeliveryAt: DateTime(2024, 9, 3, 11),
+        ),
       );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.byType(CustomEstimatedArrivalSection), findsOneWidget);
+
+      harness.addTracking(
+        TrackingEntity(
+          orderId: 'o-1',
+          status: 'Preparing',
+          isLive: true,
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byType(CustomEstimatedArrivalSection), findsNothing);
     });
   });
 
   group('TrackOrderView - buttons', () {
-    testWidgets('starts on "Received": only "Show map" is available', (
+    testWidgets('only "Show map" is available while not delivered', (
       tester,
     ) async {
-      await _pumpTrackOrder(tester);
+      final harness = _Harness();
+      await harness.pump(tester);
+      harness.addTracking(_entity);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
-      expect(_showMapButton(), findsOneWidget);
-      expect(_deliveredButton(), findsNothing);
-      expect(find.text(_formattedDummyDate), findsOneWidget);
+      expect(
+        find.widgetWithText(CustomButton, AppStrings.showMap),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction),
+        findsNothing,
+      );
     });
 
-    testWidgets('"Show map" opens the order map route', (tester) async {
-      await _pumpTrackOrder(tester);
+    testWidgets('shows the delivered action when the order is delivered', (
+      tester,
+    ) async {
+      final harness = _Harness();
+      await harness.pump(tester);
+      harness.addTracking(
+        const TrackingEntity(orderId: 'o-1', status: 'delivered'),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
-      await tester.tap(_showMapButton());
+      expect(
+        find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('"Show map" shares the same cubit with the map screen', (
+      tester,
+    ) async {
+      Object? capturedArguments;
+      final harnessWithRoute = _Harness(
+        onGenerateRoute: (settings) {
+          if (settings.name == Routes.orderMap) {
+            capturedArguments = settings.arguments;
+          }
+          return MaterialPageRoute<void>(
+            settings: settings,
+            builder: (_) => Scaffold(
+              body: Center(child: Text(routeStubText(settings.name ?? ''))),
+            ),
+          );
+        },
+      );
+      await harnessWithRoute.pump(tester);
+      harnessWithRoute.addTracking(
+        const TrackingEntity(
+          orderId: 'o-1',
+          status: 'OutForDelivery',
+          isLive: true,
+          currentLocation: LocationEntity(lat: 1.0, lng: 2.0),
+          userAddress: UserAddressEntity(
+            lat: 3.0,
+            lng: 4.0,
+            addressLine: 'Street',
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      await tester.tap(find.widgetWithText(CustomButton, AppStrings.showMap));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text(routeStubText(Routes.orderMap)), findsOneWidget);
+      expect(capturedArguments, isA<OrderMapRouteArguments>());
+      final args = capturedArguments as OrderMapRouteArguments;
+      expect(args.viewModel, same(harnessWithRoute.viewModel));
+      expect(args.tracking?.orderId, 'o-1');
+    });
+  });
+
+  group('TrackOrderView - error', () {
+    testWidgets('shows the error message and retries', (tester) async {
+      final harness = _Harness();
+      await harness.pump(tester);
+      harness.addError('offline');
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.text('offline'), findsOneWidget);
+
+      await tester.tap(find.text(AppStrings.retry));
+      await tester.pump();
+
+      harness.addTracking(_entity);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.text('offline'), findsNothing);
+      expect(find.byType(CustomTrackingButtonsSection), findsOneWidget);
     });
   });
 
   group('TrackOrderView - navigation', () {
     testWidgets('the back arrow closes the screen', (tester) async {
-      await pumpOrderTrackingApp(
-        tester,
-        openScreenHome(const TrackOrderView()),
-        inScaffold: false,
+      final harness = _Harness();
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(harness.viewModel.close);
+      addTearDown(harness._repository.controller.close);
+
+      await tester.pumpWidget(
+        ScreenUtilPlusInit(
+          designSize: const Size(375, 812),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          child: BlocProvider.value(
+            value: harness.viewModel,
+            child: MaterialApp(
+              home: Builder(
+                builder: (context) => Scaffold(
+                  body: Center(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const TrackOrderView(orderId: 'o-1'),
+                        ),
+                      ),
+                      child: const Text(openButtonLabel),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       );
+      await tester.pump();
 
       await tester.tap(find.text(openButtonLabel));
       await tester.pump();
@@ -199,66 +387,6 @@ void main() {
 
       expect(find.byType(TrackOrderView), findsNothing);
       expect(find.text(openButtonLabel), findsOneWidget);
-    });
-  });
-
-  // TEMPORARY: these exercise the debug floating button that cycles through
-  // the statuses. Delete or replace the group when the cubit replaces it.
-  group('TrackOrderView - status cycling (temporary debug button)', () {
-    testWidgets('shows the debug button', (tester) async {
-      await _pumpTrackOrder(tester);
-
-      expect(find.byIcon(Icons.skip_next), findsOneWidget);
-    });
-
-    testWidgets('"Preparing": a second step gets its date, still one button', (
-      tester,
-    ) async {
-      await _pumpTrackOrder(tester);
-
-      await _tapNextStatus(tester);
-
-      expect(find.text(_formattedDummyDate), findsNWidgets(2));
-      expect(_deliveredButton(), findsNothing);
-    });
-
-    testWidgets('"Out for delivery": three dates, still no delivered button', (
-      tester,
-    ) async {
-      await _pumpTrackOrder(tester);
-
-      await _tapNextStatus(tester);
-      await _tapNextStatus(tester);
-
-      expect(find.text(_formattedDummyDate), findsNWidgets(3));
-      expect(_deliveredButton(), findsNothing);
-    });
-
-    testWidgets('"Delivered": all four dates and the second button show up', (
-      tester,
-    ) async {
-      await _pumpTrackOrder(tester);
-
-      await _tapNextStatus(tester);
-      await _tapNextStatus(tester);
-      await _tapNextStatus(tester);
-
-      expect(find.text(_formattedDummyDate), findsNWidgets(4));
-      expect(_showMapButton(), findsOneWidget);
-      expect(_deliveredButton(), findsOneWidget);
-    });
-
-    testWidgets('after "Delivered" the cycle wraps back to "Received"', (
-      tester,
-    ) async {
-      await _pumpTrackOrder(tester);
-
-      for (var i = 0; i < 4; i++) {
-        await _tapNextStatus(tester);
-      }
-
-      expect(find.text(_formattedDummyDate), findsOneWidget);
-      expect(_deliveredButton(), findsNothing);
     });
   });
 }
