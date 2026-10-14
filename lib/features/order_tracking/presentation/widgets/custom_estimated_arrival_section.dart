@@ -1,6 +1,6 @@
+import 'package:flower_app/core/extensions/date_time_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/constants/app_strings/app_strings.dart';
 
@@ -20,22 +20,20 @@ class CustomEstimatedArrivalSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(AppStrings.estimatedArrival, style: textTheme.bodyMedium),
               const Gap(8),
               Text(
-                DateFormat(
-                  'd MMMM yyyy, h:mm a',
-                ).format(estimatedArrivalDateTime),
+                estimatedArrivalDateTime.toEstimatedArrivalFormat(),
                 style: textTheme.titleMedium,
               ),
             ],
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }

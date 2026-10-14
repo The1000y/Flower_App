@@ -30,7 +30,7 @@ class CustomTrackingButtonsSection extends StatelessWidget {
             child: CustomButton(
               text: AppStrings.orderDeliveredAction,
               onPressed: () {
-                //ToDO: perform the action when it finally delivered
+
               },
               isEnabled: true,
               enabledColor: AppColors.pinkBase,

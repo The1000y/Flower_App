@@ -1,6 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
-import 'package:flower_app/features/order_tracking/presentation/view/order_success_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -185,7 +184,7 @@ abstract class AppRoutes {
         );
 
       case Routes.orderSuccess:
-        return MaterialPageRoute(builder: (_) => const OrderSuccessView());
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.trackOrder:
         return MaterialPageRoute(builder: (_) => const TrackOrderView());

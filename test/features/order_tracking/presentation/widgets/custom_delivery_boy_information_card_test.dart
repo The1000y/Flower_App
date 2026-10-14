@@ -97,8 +97,8 @@ void main() {
     ) async {
       await pumpOrderTrackingApp(tester, _card(phone: '01234567890'));
 
-      final contact = tester.widget<CustomContractCard>(
-        find.byType(CustomContractCard),
+      final contact = tester.widget<CustomContactCard>(
+        find.byType(CustomContactCard),
       );
       expect(contact.phoneNumber, '01234567890');
     });
@@ -108,7 +108,7 @@ void main() {
 
       expect(
         find.descendant(
-          of: find.byType(CustomContractCard),
+          of: find.byType(CustomContactCard),
           matching: find.byType(IconButton),
         ),
         findsNWidgets(2),
@@ -121,7 +121,7 @@ void main() {
       await pumpOrderTrackingApp(tester, _card());
 
       expect(
-        tester.getTopLeft(find.byType(CustomContractCard)).dx,
+        tester.getTopLeft(find.byType(CustomContactCard)).dx,
         greaterThan(tester.getTopLeft(find.text('Mohamed')).dx),
       );
     });

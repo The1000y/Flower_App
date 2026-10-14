@@ -188,6 +188,9 @@ abstract class AppStrings {
   static const String trackOrder = 'Track order';
   static const String deliveredOnPrefix = 'Delivered on ';
   static const String reorder = 'Reorder';
+  static const String waitingForDriverTitle = 'Waiting for a driver';
+  static const String waitingForDriverSubtitle =
+      "We'll assign one to your order shortly";
 
   static const String estimatedArrival = 'Estimated arrival';
   static const String deliveryHeroSubtitle = 'Is your delivery hero for today';
@@ -198,6 +201,7 @@ abstract class AppStrings {
   static const String statusDelivered = 'Delivered';
 
   static const String showMap = 'Show map';
+  static const String apartment = 'Apartment';
   static const String orderDeliveredAction = 'Order Delivered';
   static const String orderDetails = 'Order details';
   static const String stepPayment = 'Payment';

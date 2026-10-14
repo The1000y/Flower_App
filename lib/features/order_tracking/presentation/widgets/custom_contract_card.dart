@@ -5,8 +5,8 @@ import '../../../../config/utils/helpers/phone_launcher.dart';
 import '../../../../config/utils/helpers/whatsapp_launcher.dart';
 import '../../../../core/constants/app_svgs/app_svgs.dart';
 
-class CustomContractCard extends StatelessWidget {
-  const CustomContractCard({super.key, required this.phoneNumber});
+class CustomContactCard extends StatelessWidget {
+  const CustomContactCard({super.key, required this.phoneNumber});
 
   final String phoneNumber;
 

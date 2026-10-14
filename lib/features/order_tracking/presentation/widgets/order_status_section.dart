@@ -1,3 +1,4 @@
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/enums/order_status.dart';
@@ -16,17 +17,17 @@ class OrderStatusSection extends StatelessWidget {
     return OrderStatusTimeline(
       currentIndex: status.index,
       steps: [
-        OrderStepEntity(title: 'Received your order', dateTime: _dummyDate),
+        OrderStepEntity(title: AppStrings.statusReceived, dateTime: _dummyDate),
         OrderStepEntity(
-          title: 'Preparing your order',
+          title: AppStrings.statusPreparing,
           dateTime: status.index >= 1 ? _dummyDate : null,
         ),
         OrderStepEntity(
-          title: 'Out for delivery',
+          title: AppStrings.statusOutForDelivery,
           dateTime: status.index >= 2 ? _dummyDate : null,
         ),
         OrderStepEntity(
-          title: 'Delivered',
+          title: AppStrings.statusDelivered,
           dateTime: status.index >= 3 ? _dummyDate : null,
         ),
       ],

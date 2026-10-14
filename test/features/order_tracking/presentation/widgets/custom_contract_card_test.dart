@@ -41,7 +41,7 @@ Finder _whatsAppButton() => find.byType(IconButton).last;
 Future<void> _pumpCard(
   WidgetTester tester, {
   String phone = '01014194042',
-}) => pumpOrderTrackingApp(tester, CustomContractCard(phoneNumber: phone));
+}) => pumpOrderTrackingApp(tester, CustomContactCard(phoneNumber: phone));
 
 void main() {
   late _FakeUrlLauncher launcher;
@@ -68,7 +68,7 @@ void main() {
       await _pumpCard(tester, phone: '0123');
 
       expect(
-        tester.widget<CustomContractCard>(find.byType(CustomContractCard)).phoneNumber,
+        tester.widget<CustomContactCard>(find.byType(CustomContactCard)).phoneNumber,
         '0123',
       );
     });

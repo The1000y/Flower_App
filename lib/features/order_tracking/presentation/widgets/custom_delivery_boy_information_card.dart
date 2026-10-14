@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
 import '../../../../core/constants/app_strings/app_strings.dart';
+import '../../../../core/shared/app_widgets/custom_profile_image.dart';
 import '../../../../core/themes/app_colors/app_color.dart';
 import 'custom_contract_card.dart';
 
@@ -14,7 +16,7 @@ class CustomDeliveryBoyInformationCard extends StatelessWidget {
 
   final String deliveryBoyName;
   final String deliveryBoyPhoneNumber;
-  final String deliveryBoyImageURL;
+  final String? deliveryBoyImageURL;
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +24,7 @@ class CustomDeliveryBoyInformationCard extends StatelessWidget {
 
     return Row(
       children: [
-        CircleAvatar(
-          radius: 25,
-          backgroundColor: AppColors.pinkBase,
-          child: ClipOval(
-            child: Image.network(
-              deliveryBoyImageURL,
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.person, size: 30);
-              },
-            ),
-          ),
-        ),
+        CustomProfileImage(profileImageURL: deliveryBoyImageURL),
 
         const Gap(16),
 
@@ -57,7 +45,7 @@ class CustomDeliveryBoyInformationCard extends StatelessWidget {
           ],
         ),
 
-        CustomContractCard(phoneNumber: deliveryBoyPhoneNumber),
+        CustomContactCard(phoneNumber: deliveryBoyPhoneNumber),
       ],
     );
   }

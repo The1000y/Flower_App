@@ -1,6 +1,6 @@
+import 'package:flower_app/core/extensions/date_time_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/themes/app_colors/app_color.dart';
 import '../../domain/entities/order_step_entity.dart';
@@ -158,9 +158,7 @@ class _TimelineStep extends StatelessWidget {
                       child: step.dateTime == null
                           ? const SizedBox.shrink(key: ValueKey('no-date'))
                           : Text(
-                              DateFormat(
-                                'dd MMM yyyy - h:mm',
-                              ).format(step.dateTime!),
+                              step.dateTime!.toEstimatedArrivalFormat(),
                               key: const ValueKey('has-date'),
                               // not the date itself, so rebuilds don't re-animate
                               style: textTheme.bodyMedium,

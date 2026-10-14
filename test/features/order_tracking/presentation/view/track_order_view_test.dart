@@ -72,7 +72,7 @@ void main() {
 
       expect(find.text('Mohamed'), findsOneWidget);
       expect(
-        tester.widget<CustomContractCard>(find.byType(CustomContractCard)).phoneNumber,
+        tester.widget<CustomContactCard>(find.byType(CustomContactCard)).phoneNumber,
         '01014194042',
       );
     });
