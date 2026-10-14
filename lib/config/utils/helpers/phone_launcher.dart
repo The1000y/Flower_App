@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../../core/constants/app_strings/app_strings.dart';
-import '../../../core/themes/app_colors/app_color.dart';
+import '../../../core/services/url_launcher_service.dart';
+import 'launch_failure_snack_bar.dart';
 
-Future<void> phoneLauncher(String phoneNumber, BuildContext context) async {
-  final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
-  if(await canLaunchUrl(uri)) {
-    await launchUrl(uri);
-  } else {
-    if(!context.mounted) return;
+Future<void> phoneLauncher(
+  String phoneNumber,
+  BuildContext context,
+  UrlLauncherService urlLauncher,
+) async {
+  final uri = Uri(scheme: 'tel', path: phoneNumber);
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(AppStrings.somethingWentWrong),
-          backgroundColor: AppColors.error,
-        ),
-      );
-  }
+  final launched = await urlLauncher.launch(uri);
+
+  if (!launched && context.mounted) showLaunchFailureSnackBar(context);
 }
