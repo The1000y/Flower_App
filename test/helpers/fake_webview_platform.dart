@@ -76,6 +76,7 @@ class FakePlatformNavigationDelegate extends PlatformNavigationDelegate {
   ) : super.implementation(params);
 
   NavigationRequestCallback? onNavigationRequest;
+  WebResourceErrorCallback? onWebResourceError;
 
   /// Runs the callback the production `NavigationDelegate` registered, i.e.
   /// simulates the web view navigating to [url].
@@ -85,6 +86,11 @@ class FakePlatformNavigationDelegate extends PlatformNavigationDelegate {
   @override
   Future<void> setOnNavigationRequest(NavigationRequestCallback handler) async {
     onNavigationRequest = handler;
+  }
+
+  @override
+  Future<void> setOnWebResourceError(WebResourceErrorCallback handler) async {
+    onWebResourceError = handler;
   }
 }
 

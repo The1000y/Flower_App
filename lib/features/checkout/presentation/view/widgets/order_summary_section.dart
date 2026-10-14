@@ -12,6 +12,7 @@ import 'package:flower_app/features/payment/domain/entities/param/place_order_pa
 import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_cubit.dart';
 import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_event.dart';
 import 'package:flower_app/features/payment/presentation/manager/cubit/place_order_state.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,7 @@ class OrderSummarySection extends StatelessWidget {
   final GlobalKey<FormState> formKey;
 
   @override
+
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -80,7 +82,7 @@ class OrderSummarySection extends StatelessWidget {
               return previous.placeOrderState.isLoading &&
                   !current.placeOrderState.isLoading;
             },
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state.placeOrderState.errorMessage.isNotEmpty) {
                 debugPrint(state.placeOrderState.errorMessage);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -92,14 +94,18 @@ class OrderSummarySection extends StatelessWidget {
                 return;
               }
               if (state.placeOrderState.data?.sessionUrl == null) {
-                Navigator.pushReplacementNamed(context, Routes.orderSuccess);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.orderSuccess,
+                  (route) => false,
+                );
                 return;
               }
               if (state.placeOrderState.data?.sessionUrl != null) {
                 log('sessionUrl: ${state.placeOrderState.data!.sessionUrl}');
-                Navigator.pushNamed(
-                  context,
+
+                Navigator.of(context).pushNamedAndRemoveUntil( 
                   Routes.webView,
+                  (route) => false,
                   arguments: WebViewPaymentArgs(
                     successUrl: state.placeOrderState.data!.successUrl!,
                     cancelUrl: state.placeOrderState.data!.cancelUrl!,

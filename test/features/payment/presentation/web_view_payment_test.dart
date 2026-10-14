@@ -1,10 +1,15 @@
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/payment/presentation/web_view_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart' as mocktail;
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../helpers/fake_webview_platform.dart';
+
+class MockCartCubit extends mocktail.Mock implements CartCubit {}
 
 void main() {
   const sessionUrl = 'https://accept.paymob.com/unifiedcheckout/session';
@@ -18,7 +23,11 @@ void main() {
   setUp(() {
     fakePlatform = FakeWebViewPlatform();
     WebViewPlatform.instance = fakePlatform;
+    getIt.allowReassignment = true;
+    getIt.registerSingleton<CartCubit>(MockCartCubit());
   });
+
+  tearDown(() => getIt.reset());
 
   Future<void> pumpPayment(WidgetTester tester) async {
     await tester.pumpWidget(

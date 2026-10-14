@@ -2,19 +2,26 @@ import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/manager/cubit/bestseller_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/manager/cubit/bestseller_state.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart' as mocktail;
 
 import '../../../fixtures/commerce_fixtures.dart';
 import '../../../mocks/mocks.mocks.dart';
 import '../../../mocks/test_dummies.dart';
 
+class MockCartCubit extends mocktail.Mock implements CartCubit {}
+
 void main() {
   registerCommerceTestDummies();
 
   late MockBestsellerCubit mockCubit;
+  late MockCartCubit mockCartCubit;
 
   setUpAll(() {
     getIt.allowReassignment = true;
@@ -23,6 +30,13 @@ void main() {
   setUp(() {
     mockCubit = MockBestsellerCubit();
     getIt.registerSingleton<BestsellerCubit>(mockCubit);
+
+    mockCartCubit = MockCartCubit();
+    mocktail.when(() => mockCartCubit.state).thenReturn(const CartState());
+    mocktail
+        .when(() => mockCartCubit.stream)
+        .thenAnswer((_) => const Stream.empty());
+    mocktail.when(() => mockCartCubit.close()).thenAnswer((_) async {});
 
     // Default stubbing
     when(mockCubit.state).thenReturn(const BestsellerState());
@@ -42,7 +56,10 @@ void main() {
   Widget createWidgetUnderTest() {
     return ScreenUtilPlusInit(
       designSize: const Size(375, 812),
-      child: const MaterialApp(home: BestsellerView()),
+      child: BlocProvider<CartCubit>.value(
+        value: mockCartCubit,
+        child: const MaterialApp(home: BestsellerView()),
+      ),
     );
   }
 

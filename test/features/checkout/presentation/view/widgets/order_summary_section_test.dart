@@ -1,10 +1,14 @@
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/config/routing/web_view_payment_args.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
 import 'package:flower_app/features/checkout/domain/entities/checkout_details_entity.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
 import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
@@ -19,6 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart' as mocktail;
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../../helpers/fake_webview_platform.dart';
@@ -27,10 +32,13 @@ import '../../../mocks/cubit_stream_stub.dart';
 import '../../../mocks/mocks.mocks.dart';
 import '../../../fixtures/checkout_fixtures.dart';
 
+class MockCartCubit extends mocktail.Mock implements CartCubit {}
+
 void main() {
   late MockCheckoutCubit mockCubit;
   late MockAddressCubit mockAddressCubit;
   late MockPlaceOrderCubit mockPlaceOrderCubit;
+  late MockCartCubit mockCartCubit;
   late CubitStreamStub<CheckoutState, MockCheckoutCubit> stub;
   late CubitStreamStub<AddressState, MockAddressCubit> addressStub;
   late CubitStreamStub<PlaceOrderState, MockPlaceOrderCubit> placeOrderStub;
@@ -43,6 +51,10 @@ void main() {
     mockCubit = MockCheckoutCubit();
     mockAddressCubit = MockAddressCubit();
     mockPlaceOrderCubit = MockPlaceOrderCubit();
+    mockCartCubit = MockCartCubit();
+    mocktail.when(() => mockCartCubit.stream)
+        .thenAnswer((_) => const Stream<CartState>.empty());
+    mocktail.registerFallbackValue(GetCartItemsEvent());
     formKey = GlobalKey<FormState>();
     // The web view is only ever exercised through the fake platform below, so
     // it is installed once for the whole file and never restored.
@@ -79,18 +91,31 @@ void main() {
           routes: {
             Routes.orderSuccess: (_) => const Text(orderSuccessRoute),
             Routes.checkout: (_) => const Text(checkoutRoute),
+            Routes.webView: (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments
+                      as WebViewPaymentArgs;
+              return WebViewPayment(
+                successUrl: args.successUrl,
+                cancelUrl: args.cancelUrl,
+                sessionUrl: args.sessionUrl,
+              );
+            },
           },
           home: Scaffold(
-            body: BlocProvider<CheckoutCubit>.value(
-              value: mockCubit,
-              child: BlocProvider<AddressCubit>.value(
-                value: mockAddressCubit,
-                child: BlocProvider<PlaceOrderCubit>.value(
-                  value: mockPlaceOrderCubit,
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: formKey,
-                      child: OrderSummarySection(formKey: formKey),
+            body: BlocProvider<CartCubit>.value(
+              value: mockCartCubit,
+              child: BlocProvider<CheckoutCubit>.value(
+                value: mockCubit,
+                child: BlocProvider<AddressCubit>.value(
+                  value: mockAddressCubit,
+                  child: BlocProvider<PlaceOrderCubit>.value(
+                    value: mockPlaceOrderCubit,
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: formKey,
+                        child: OrderSummarySection(formKey: formKey),
+                      ),
                     ),
                   ),
                 ),
@@ -454,6 +479,11 @@ void main() {
         expect(find.text(orderSuccessRoute), findsOneWidget);
         expect(find.byType(OrderSummarySection), findsNothing);
         expect(find.byType(WebViewPayment), findsNothing);
+
+        final cleared = mocktail
+            .verify(() => mockCartCubit.doEvent(mocktail.captureAny()))
+            .captured;
+        expect(cleared.single, isA<ClearCartEvent>());
       },
     );
   });

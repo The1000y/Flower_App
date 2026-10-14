@@ -8,17 +8,25 @@ import 'package:flower_app/features/commerce/presentation/cart/view/cart_body.da
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CartView extends StatelessWidget {
+class CartView extends StatefulWidget {
   const CartView({super.key});
+
+  @override
+  State<CartView> createState() => _CartViewState();
+}
+
+class _CartViewState extends State<CartView> {
+  @override
+  void initState() {
+    super.initState();
+    getIt.get<AddressCubit>().doEvent(FetchUserAddressesEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) =>
-              getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
-        ),
+        BlocProvider<AddressCubit>.value(value: getIt.get<AddressCubit>()),
       ],
       child: Scaffold(
         backgroundColor: Colors.white,

@@ -35,7 +35,7 @@ void main() {
   Future<void> pumpItem(
     WidgetTester tester, {
     CartItemEntity? item,
-    bool isLoading = false,
+    CartState? state,
     VoidCallback onDelete = _noop,
     ValueChanged<int> onQuantityChanged = _noopChanged,
   }) async {
@@ -44,16 +44,11 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    final entity = item ?? buildItem();
     final cubit = MockCartCubit();
     whenListen(
       cubit,
       const Stream<CartState>.empty(),
-      initialState: CartState(
-        itemLoadings: isLoading
-            ? {CartItemLoading(id: entity.productId, action: CartItemAction.update)}
-            : const {},
-      ),
+      initialState: state ?? const CartState(),
     );
 
     await tester.pumpWidget(
@@ -64,7 +59,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: CartItem(
-                item: entity,
+                item: item ?? buildItem(),
                 onDelete: onDelete,
                 onQuantityChanged: onQuantityChanged,
               ),
@@ -91,26 +86,41 @@ void main() {
     );
   });
 
-  testWidgets('renders the quantity and fires callbacks', (tester) async {
+  testWidgets('fires callbacks with the requested new quantity', (
+    tester,
+  ) async {
     var deleted = false;
-    var latestDelta = 0;
+    int? latestQuantity;
     await pumpItem(
       tester,
       item: buildItem(quantity: 3),
       onDelete: () => deleted = true,
-      onQuantityChanged: (delta) => latestDelta = delta,
+      onQuantityChanged: (newQuantity) => latestQuantity = newQuantity,
     );
 
     expect(find.text('3'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.add));
-    expect(latestDelta, 1);
+    expect(latestQuantity, 4);
 
     await tester.tap(find.byIcon(Icons.remove));
-    expect(latestDelta, -1);
+    expect(latestQuantity, 2);
 
     await tester.tap(find.byIcon(Icons.delete));
     expect(deleted, isTrue);
+  });
+
+  testWidgets('shows the optimistic quantity while one is pending', (
+    tester,
+  ) async {
+    await pumpItem(
+      tester,
+      item: buildItem(quantity: 2),
+      state: const CartState(pendingQuantities: {'1': 5}),
+    );
+
+    expect(find.text('5'), findsOneWidget);
+    expect(find.text('2'), findsNothing);
   });
 
   testWidgets('shows a loading indicator and disables actions while loading', (
@@ -119,7 +129,7 @@ void main() {
     await pumpItem(
       tester,
       item: buildItem(quantity: 3),
-      isLoading: true,
+      state: const CartState(updatingProductIds: {'1'}),
       onDelete: () {},
       onQuantityChanged: (_) {},
     );
@@ -138,4 +148,4 @@ void main() {
 
 void _noop() {}
 
-void _noopChanged(int delta) {}
+void _noopChanged(int quantity) {}

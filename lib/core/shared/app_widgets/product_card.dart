@@ -2,7 +2,10 @@ import 'dart:developer';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class ProductCard extends StatelessWidget {
@@ -142,7 +145,15 @@ class ProductCard extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(AppColors.pinkBase),
               ),
-              onPressed: onAddToCart,
+              onPressed: onAddToCart ??
+                  () {
+                    context.read<CartCubit>().doEvent(
+                          AddToCartEvent(
+                            productId: id,
+                            quantity: 1,
+                          ),
+                        );
+                  },
               icon: Icon(
                 Icons.shopping_cart_outlined,
                 color: AppColors.whiteBase,

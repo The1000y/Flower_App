@@ -5,6 +5,7 @@ import 'package:flower_app/features/auth/presentation/login/manager/login_view_m
 import 'package:flower_app/features/auth/presentation/login/view/login_view.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/view/cart_ui_event_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,8 +24,8 @@ void main() async {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: BlocProvider(
-        create: (_) => getIt<CartCubit>(),
+      child: BlocProvider<CartCubit>.value(
+        value: getIt<CartCubit>(),
         child: const FlowerApp(),
       ),
     ),
@@ -38,6 +39,8 @@ class FlowerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: AppRoutes.onGenerateRoute,
+      builder: (context, child) =>
+          CartUiEventListener(child: child ?? const SizedBox.shrink()),
       home: BlocProvider(
         create: (_) => getIt<LoginViewModel>(),
         child: const LoginView(),

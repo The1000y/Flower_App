@@ -1,3 +1,6 @@
+import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -8,15 +11,25 @@ import '../../../../../core/shared/app_widgets/custom_button.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
 import '../manager/cubit/order_success_cubit.dart';
 
-class OrderSuccessView extends StatelessWidget {
+class OrderSuccessView extends StatefulWidget {
   final String? orderId;
 
   const OrderSuccessView({super.key, this.orderId});
 
   @override
+  State<OrderSuccessView> createState() => _OrderSuccessViewState();
+}
+
+class _OrderSuccessViewState extends State<OrderSuccessView> {
+  @override
+void initState() {
+  super.initState();
+  getIt<CartCubit>().doEvent(ClearCartEvent());
+}
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OrderSuccessCubit(orderId: orderId),
+      create: (context) => OrderSuccessCubit(orderId: widget.orderId),
       child: BlocListener<OrderSuccessCubit, OrderSuccessState>(
         listener: (context, state) {
           if (state.action == OrderSuccessAction.navigateToHome) {
@@ -101,9 +114,9 @@ class OrderSuccessView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 12.h),
-                        if (orderId != null)
+                        if (widget.orderId != null)
                           Text(
-                            '${AppStrings.orderIdPrefix}$orderId',
+                            '${AppStrings.orderIdPrefix}${widget.orderId}',
                             textAlign: TextAlign.center,
                             style: textTheme.bodyMedium!.copyWith(
                               fontSize: 16.sp,

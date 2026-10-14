@@ -13,6 +13,8 @@ import 'package:flower_app/features/commerce/domain/use_case/update_cart_item_us
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_ui_event.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/request_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -26,14 +28,12 @@ class MockRemoveCartItemUseCase extends Mock implements RemoveCartItemUseCase {}
 
 class MockClearCartUseCase extends Mock implements ClearCartUseCase {}
 
-CartItemLoading adding(String productId) =>
-    CartItemLoading(id: productId, action: CartItemAction.add);
-
-CartItemLoading updating(String productId) =>
-    CartItemLoading(id: productId, action: CartItemAction.update);
-
-CartItemLoading removing(String cartItemId) =>
-    CartItemLoading(id: cartItemId, action: CartItemAction.remove);
+/// True when no item operation and no optimistic quantity is outstanding.
+bool _settled(CartState state) =>
+    state.addingProductIds.isEmpty &&
+    state.updatingProductIds.isEmpty &&
+    state.removingCartItemIds.isEmpty &&
+    state.pendingQuantities.isEmpty;
 
 void main() {
   late MockGetCartUseCase getCartUseCase;
@@ -85,6 +85,19 @@ void main() {
     hasChanges: false,
   );
 
+  CartCubit buildCubit({Duration? quantityDebounce}) {
+    return CartCubit(
+      getCartUseCase: getCartUseCase,
+      addCartItemUseCase: addCartItemUseCase,
+      updateCartItemUseCase: updateCartItemUseCase,
+      removeCartItemUseCase: removeCartItemUseCase,
+      clearCartUseCase: clearCartUseCase,
+      // A zero window keeps most tests deterministic; the debounce itself is
+      // covered by the dedicated tests at the end of the file.
+      quantityDebounce: quantityDebounce ?? Duration.zero,
+    );
+  }
+
   setUpAll(() {
     registerFallbackValue(const AddCartItemParams(productId: '', quantity: 0));
     registerFallbackValue(const UpdateCartItemParams(quantity: 0));
@@ -96,13 +109,7 @@ void main() {
     updateCartItemUseCase = MockUpdateCartItemUseCase();
     removeCartItemUseCase = MockRemoveCartItemUseCase();
     clearCartUseCase = MockClearCartUseCase();
-    cubit = CartCubit(
-      getCartUseCase: getCartUseCase,
-      addCartItemUseCase: addCartItemUseCase,
-      updateCartItemUseCase: updateCartItemUseCase,
-      removeCartItemUseCase: removeCartItemUseCase,
-      clearCartUseCase: clearCartUseCase,
-    );
+    cubit = buildCubit();
     // A successful quantity change re-reads the cart, so the fetch is stubbed
     // by default and overridden by the tests that care about its outcome.
     when(
@@ -112,28 +119,21 @@ void main() {
 
   tearDown(() => cubit.close());
 
-  /// `doEvent` is fire-and-forget, so the emitted states are used to know when
-  /// the item operation has settled.
+  /// Waits until every item operation and optimistic quantity has settled.
   Future<void> runSettled(CartEvent event) async {
     final settled = expectLater(
       cubit.stream,
-      emitsThrough(
-        isA<CartState>().having(
-          (state) => state.itemLoadings,
-          'itemLoadings',
-          isEmpty,
-        ),
-      ),
+      emitsThrough(isA<CartState>().having(_settled, 'settled', isTrue)),
     );
     cubit.doEvent(event);
     await settled;
   }
 
   test('has an empty initial state', () {
-    expect(cubit.state.isLoading, isFalse);
-    expect(cubit.state.isClearingCart, isFalse);
-    expect(cubit.state.errorMessage, isEmpty);
     expect(cubit.state.data, isNull);
+    expect(cubit.state.fetch, isA<RequestIdle<CartEntity>>());
+    expect(cubit.state.clear, isA<RequestIdle<CartEntity>>());
+    expect(cubit.state.errorMessage, isEmpty);
     expect(cubit.state.cart.items, isEmpty);
   });
 
@@ -145,9 +145,9 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
-        isA<CartState>().having((state) => state.isLoading, 'loading', true),
+        isA<CartState>().having((state) => state.isFetching, 'loading', true),
         isA<CartState>()
-            .having((state) => state.isLoading, 'loading', false)
+            .having((state) => state.isFetching, 'loading', false)
             .having((state) => state.data, 'data', same(cart)),
       ]),
     );
@@ -165,9 +165,9 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
-        isA<CartState>().having((state) => state.isLoading, 'loading', true),
+        isA<CartState>().having((state) => state.isFetching, 'loading', true),
         isA<CartState>()
-            .having((state) => state.isLoading, 'loading', false)
+            .having((state) => state.isFetching, 'loading', false)
             .having((state) => state.errorMessage, 'error', isNotEmpty),
       ]),
     );
@@ -185,16 +185,21 @@ void main() {
       cubit.stream,
       emitsInOrder([
         isA<CartState>()
-            .having((state) => state.itemLoadings, 'itemLoadings', {
-              adding('7'),
-            })
-            .having((state) => state.isLoading, 'loading', false),
-        isA<CartState>().having((state) => state.data, 'data', same(cart)),
+            .having((state) => state.addingProductIds, 'adding', {'7'})
+            .having((state) => state.isFetching, 'loading', false),
+        isA<CartState>()
+            .having((state) => state.data, 'data', same(cart))
+            .having((state) => state.addingProductIds, 'adding', isEmpty),
       ]),
+    );
+    final uiEvent = expectLater(
+      cubit.uiEvents,
+      emits(isA<AddToCartSuccessUiEvent>()),
     );
     cubit.doEvent(AddToCartEvent(productId: '7', quantity: 3));
 
     await emitted;
+    await uiEvent;
     final params =
         verify(() => addCartItemUseCase.call(captureAny())).captured.single
             as AddCartItemParams;
@@ -202,22 +207,41 @@ void main() {
     expect(params.quantity, 3);
   });
 
-  test('an add marks only the add action as loading for that product', () async {
-    final completer = Completer<BaseResponce<CartEntity>>();
-    when(() => addCartItemUseCase.call(any())).thenAnswer(
-      (_) => completer.future,
+  test('emits a failure UI event when adding an item fails', () async {
+    when(
+      () => addCartItemUseCase.call(any()),
+    ).thenAnswer((_) async => ErrorResponce<CartEntity>(Exception('add failed')));
+
+    final uiEvent = expectLater(
+      cubit.uiEvents,
+      emits(isA<AddToCartFailureUiEvent>()),
     );
 
     cubit.doEvent(AddToCartEvent(productId: '7', quantity: 1));
-    await pumpEventQueue();
 
-    expect(cubit.state.isProductLoading('7'), isTrue);
-    expect(cubit.state.isItemUpdating('7'), isFalse);
-    expect(cubit.state.isItemRemoving('7'), isFalse);
-
-    completer.complete(SuccessResponce(cart));
-    await pumpEventQueue();
+    await uiEvent;
+    expect(cubit.state.addingProductIds, isEmpty);
   });
+
+  test(
+    'an add marks only the add action as loading for that product',
+    () async {
+      final completer = Completer<BaseResponce<CartEntity>>();
+      when(
+        () => addCartItemUseCase.call(any()),
+      ).thenAnswer((_) => completer.future);
+
+      cubit.doEvent(AddToCartEvent(productId: '7', quantity: 1));
+      await pumpEventQueue();
+
+      expect(cubit.state.isProductLoading('7'), isTrue);
+      expect(cubit.state.isProductUpdating('7'), isFalse);
+      expect(cubit.state.isCartItemRemoving('7'), isFalse);
+
+      completer.complete(SuccessResponce(cart));
+      await pumpEventQueue();
+    },
+  );
 
   test('updates an item using the product id and quantity', () async {
     when(
@@ -230,13 +254,23 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
-        isA<CartState>().having((state) => state.itemLoadings, 'itemLoadings', {
-          updating('1'),
+        isA<CartState>().having((state) => state.pendingQuantities, 'pending', {
+          '1': 4,
         }),
+        isA<CartState>().having(
+          (state) => state.updatingProductIds,
+          'updating',
+          {'1'},
+        ),
         isA<CartState>().having(
           (state) => state.data,
           'data',
           same(refreshedCart),
+        ),
+        isA<CartState>().having(
+          (state) => state.updatingProductIds,
+          'updating',
+          isEmpty,
         ),
       ]),
     );
@@ -249,6 +283,25 @@ void main() {
       () => updateCartItemUseCase.call('1', captureAny()),
     ).captured;
     expect((invocation.single as UpdateCartItemParams).quantity, 4);
+  });
+
+  test('applies the new quantity optimistically before any request', () async {
+    final completer = Completer<BaseResponce<CartEntity>>();
+    when(
+      () => updateCartItemUseCase.call(any(), any()),
+    ).thenAnswer((_) => completer.future);
+
+    cubit.doEvent(
+      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 4),
+    );
+
+    // The state reflects the tapped value immediately...
+    expect(cubit.state.displayQuantity('1', 2), 4);
+    // ...but the optimistic value is not persisted server-side yet.
+    expect(cubit.state.pendingQuantities['1'], 4);
+
+    completer.complete(SuccessResponce(cart));
+    await pumpEventQueue();
   });
 
   test('re-reads the cart so the new quantity shows up immediately', () async {
@@ -279,8 +332,16 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
-        isA<CartState>().having((state) => state.isLoading, 'loading', isFalse),
-        isA<CartState>().having((state) => state.isLoading, 'loading', isFalse),
+        isA<CartState>().having(
+          (state) => state.isFetching,
+          'loading',
+          isFalse,
+        ),
+        isA<CartState>().having(
+          (state) => state.isFetching,
+          'loading',
+          isFalse,
+        ),
       ]),
     );
     cubit.doEvent(
@@ -291,16 +352,17 @@ void main() {
   });
 
   test('keeps the cart on screen when the re-read fails', () async {
+    await pumpEventQueue();
     when(
       () => getCartUseCase.call(),
     ).thenAnswer((_) async => SuccessResponce(cart));
+    cubit.doEvent(GetCartItemsEvent());
+    await pumpEventQueue();
+    final before = cubit.state.data;
+
     when(
       () => updateCartItemUseCase.call(any(), any()),
     ).thenAnswer((_) async => SuccessResponce(cart));
-
-    await runSettled(GetCartItemsEvent());
-    final before = cubit.state.data;
-
     when(() => getCartUseCase.call()).thenAnswer(
       (_) async => ErrorResponce<CartEntity>(Exception('refetch failed')),
     );
@@ -310,7 +372,7 @@ void main() {
     );
 
     expect(cubit.state.data, same(before));
-    expect(cubit.state.itemLoadings, isEmpty);
+    expect(cubit.state.updatingProductIds, isEmpty);
   });
 
   test('does not re-read the cart when the update itself fails', () async {
@@ -333,9 +395,11 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
-        isA<CartState>().having((state) => state.itemLoadings, 'itemLoadings', {
-          removing('item-1'),
-        }),
+        isA<CartState>().having(
+          (state) => state.removingCartItemIds,
+          'removing',
+          {'item-1'},
+        ),
         isA<CartState>().having((state) => state.data, 'data', same(cart)),
       ]),
     );
@@ -347,47 +411,67 @@ void main() {
 
   test('a remove marks only that cart line as loading', () async {
     final completer = Completer<BaseResponce<CartEntity>>();
-    when(() => removeCartItemUseCase.call(any())).thenAnswer(
-      (_) => completer.future,
-    );
+    when(
+      () => removeCartItemUseCase.call(any()),
+    ).thenAnswer((_) => completer.future);
 
     cubit.doEvent(RemoveCartItemEvent(cartItemId: 'item-1'));
     await pumpEventQueue();
 
-    expect(cubit.state.isItemRemoving('item-1'), isTrue);
-    expect(cubit.state.isItemRemoving('item-2'), isFalse);
+    expect(cubit.state.isCartItemRemoving('item-1'), isTrue);
+    expect(cubit.state.isCartItemRemoving('item-2'), isFalse);
     expect(cubit.state.isProductLoading('item-1'), isFalse);
 
     completer.complete(SuccessResponce(cart));
     await pumpEventQueue();
   });
 
-  test('an update and a remove of the same product run independently', () async {
-    final updateCompleter = Completer<BaseResponce<CartEntity>>();
-    when(() => updateCartItemUseCase.call(any(), any())).thenAnswer(
-      (_) => updateCompleter.future,
-    );
-    when(() => removeCartItemUseCase.call(any())).thenAnswer(
-      (_) async => SuccessResponce(cart),
-    );
+  test(
+    'an update and a remove of the same product run independently',
+    () async {
+      final updateCompleter = Completer<BaseResponce<CartEntity>>();
+      when(
+        () => updateCartItemUseCase.call(any(), any()),
+      ).thenAnswer((_) => updateCompleter.future);
+      when(
+        () => removeCartItemUseCase.call(any()),
+      ).thenAnswer((_) async => SuccessResponce(cart));
 
-    cubit.doEvent(
-      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 2),
-    );
-    await pumpEventQueue();
+      cubit.doEvent(
+        UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 2),
+      );
+      await pumpEventQueue();
 
-    expect(cubit.state.isItemUpdating('1'), isTrue);
-    expect(cubit.state.isItemRemoving('item-1'), isFalse);
+      expect(cubit.state.isProductUpdating('1'), isTrue);
+      expect(cubit.state.isCartItemRemoving('item-1'), isFalse);
 
-    // A removal for the same product is not blocked by the pending update.
-    cubit.doEvent(RemoveCartItemEvent(cartItemId: 'item-1'));
-    await pumpEventQueue();
+      // A removal for the same product is not blocked by the pending update.
+      cubit.doEvent(RemoveCartItemEvent(cartItemId: 'item-1'));
+      await pumpEventQueue();
 
-    verify(() => removeCartItemUseCase.call('item-1')).called(1);
+      verify(() => removeCartItemUseCase.call('item-1')).called(1);
 
-    updateCompleter.complete(SuccessResponce(cart));
-    await pumpEventQueue();
-  });
+      updateCompleter.complete(SuccessResponce(cart));
+      await pumpEventQueue();
+    },
+  );
+
+  test(
+    'removing a line by stepping below one skips the update request',
+    () async {
+      when(
+        () => removeCartItemUseCase.call(any()),
+      ).thenAnswer((_) async => SuccessResponce(cart));
+
+      cubit.doEvent(
+        UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 0),
+      );
+      await pumpEventQueue();
+
+      verify(() => removeCartItemUseCase.call('item-1')).called(1);
+      verifyNever(() => updateCartItemUseCase.call(any(), any()));
+    },
+  );
 
   test('clears the cart and emits the cleared state', () async {
     final emptyCart = CartEntity(
@@ -396,9 +480,9 @@ void main() {
       total: 0,
       hasChanges: false,
     );
-    when(() => clearCartUseCase.call()).thenAnswer(
-      (_) async => SuccessResponce(emptyCart),
-    );
+    when(
+      () => clearCartUseCase.call(),
+    ).thenAnswer((_) async => SuccessResponce(emptyCart));
 
     final emitted = expectLater(
       cubit.stream,
@@ -427,7 +511,7 @@ void main() {
     await pumpEventQueue();
 
     expect(cubit.state.isClearingCart, isTrue);
-    expect(cubit.state.isLoading, isFalse);
+    expect(cubit.state.isFetching, isFalse);
 
     completer.complete(
       SuccessResponce(
@@ -479,28 +563,39 @@ void main() {
     await emitted;
   });
 
-  test('stops loading and keeps the cart intact when an update fails', () async {
-    when(() => updateCartItemUseCase.call(any(), any())).thenAnswer(
-      (_) async => ErrorResponce<CartEntity>(Exception('update failed')),
-    );
+  test(
+    'stops loading and keeps the cart intact when an update fails',
+    () async {
+      when(() => updateCartItemUseCase.call(any(), any())).thenAnswer(
+        (_) async => ErrorResponce<CartEntity>(Exception('update failed')),
+      );
 
-    final emitted = expectLater(
-      cubit.stream,
-      emitsInOrder([
-        isA<CartState>().having((state) => state.itemLoadings, 'itemLoadings', {
-          updating('1'),
-        }),
-        isA<CartState>()
-            .having((state) => state.itemLoadings, 'itemLoadings', isEmpty)
-            .having((state) => state.errorMessage, 'error', isEmpty),
-      ]),
-    );
-    cubit.doEvent(
-      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 4),
-    );
+      final emitted = expectLater(
+        cubit.stream,
+        emitsInOrder([
+          isA<CartState>().having(
+            (state) => state.pendingQuantities,
+            'pending',
+            {'1': 4},
+          ),
+          isA<CartState>().having(
+            (state) => state.updatingProductIds,
+            'updating',
+            {'1'},
+          ),
+          isA<CartState>()
+              .having((state) => state.updatingProductIds, 'updating', isEmpty)
+              .having((state) => state.pendingQuantities, 'pending', isEmpty)
+              .having((state) => state.errorMessage, 'error', isEmpty),
+        ]),
+      );
+      cubit.doEvent(
+        UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 4),
+      );
 
-    await emitted;
-  });
+      await emitted;
+    },
+  );
 
   test('stops loading and keeps the cart intact when a remove fails', () async {
     when(() => removeCartItemUseCase.call(any())).thenAnswer(
@@ -510,11 +605,13 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
-        isA<CartState>().having((state) => state.itemLoadings, 'itemLoadings', {
-          removing('item-1'),
-        }),
+        isA<CartState>().having(
+          (state) => state.removingCartItemIds,
+          'removing',
+          {'item-1'},
+        ),
         isA<CartState>()
-            .having((state) => state.itemLoadings, 'itemLoadings', isEmpty)
+            .having((state) => state.removingCartItemIds, 'removing', isEmpty)
             .having((state) => state.errorMessage, 'error', isEmpty),
       ]),
     );
@@ -566,21 +663,24 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
+        isA<CartState>().having((state) => state.pendingQuantities, 'pending', {
+          '1': 2,
+        }),
         isA<CartState>()
             .having(
-              (state) => state.itemLoadings,
-              'itemLoadings',
-              equals({updating('1')}),
+              (state) => state.updatingProductIds,
+              'updating',
+              equals({'1'}),
             )
             .having(
-              (state) => state.isItemUpdating('2'),
+              (state) => state.isProductUpdating('2'),
               'product 2 not loading',
               isFalse,
             )
-            .having((state) => state.isLoading, 'loading', false),
+            .having((state) => state.isFetching, 'loading', false),
         isA<CartState>().having(
-          (state) => state.itemLoadings,
-          'itemLoadings',
+          (state) => state.updatingProductIds,
+          'updating',
           isEmpty,
         ),
       ]),
@@ -604,18 +704,18 @@ void main() {
       emitsInOrder([
         isA<CartState>()
             .having(
-              (state) => state.itemLoadings,
-              'itemLoadings',
-              equals({removing('item-1')}),
+              (state) => state.removingCartItemIds,
+              'removing',
+              equals({'item-1'}),
             )
             .having(
-              (state) => state.isItemRemoving('item-2'),
+              (state) => state.isCartItemRemoving('item-2'),
               'item-2 not loading',
               isFalse,
             ),
         isA<CartState>().having(
-          (state) => state.itemLoadings,
-          'itemLoadings',
+          (state) => state.removingCartItemIds,
+          'removing',
           isEmpty,
         ),
       ]),
@@ -635,62 +735,37 @@ void main() {
     verifyNever(() => addCartItemUseCase.call(any()));
   });
 
-  test('still adds another product when one product is already in the cart', () async {
-    await seedCart(cartWithItems([item('7', 'item-7')]));
-    when(() => addCartItemUseCase.call(any())).thenAnswer(
-      (_) async => SuccessResponce(
-        cartWithItems([item('7', 'item-7'), item('9', 'item-9')]),
-      ),
-    );
-
-    final emitted = expectLater(
-      cubit.stream,
-      emitsInOrder([
-        isA<CartState>().having(
-          (state) => state.itemLoadings,
-          'itemLoadings',
-          contains(adding('9')),
+  test(
+    'still adds another product when one product is already in the cart',
+    () async {
+      await seedCart(cartWithItems([item('7', 'item-7')]));
+      when(() => addCartItemUseCase.call(any())).thenAnswer(
+        (_) async => SuccessResponce(
+          cartWithItems([item('7', 'item-7'), item('9', 'item-9')]),
         ),
-        isA<CartState>().having((state) => state.addToCartSuccess, 'success', true),
-      ]),
-    );
+      );
 
-    cubit.doEvent(AddToCartEvent(productId: '9', quantity: 1));
+      final emitted = expectLater(
+        cubit.stream,
+        emitsInOrder([
+          isA<CartState>().having(
+            (state) => state.addingProductIds,
+            'adding',
+            contains('9'),
+          ),
+          isA<CartState>().having(
+            (state) => state.addingProductIds,
+            'adding',
+            isEmpty,
+          ),
+        ]),
+      );
 
-    await emitted;
-  });
+      cubit.doEvent(AddToCartEvent(productId: '9', quantity: 1));
 
-  test('does not dispatch duplicate requests for the same product while it is loading', () async {
-    await seedCart(cartWithItems([item('1', 'item-1'), item('2', 'item-2')]));
-
-    final completer = Completer<BaseResponce<CartEntity>>();
-    when(() => updateCartItemUseCase.call(any(), any())).thenAnswer(
-      (_) => completer.future,
-    );
-
-    cubit.doEvent(
-      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 2),
-    );
-    await pumpEventQueue();
-
-    // A second update and an add for the same product are dropped while loading.
-    cubit.doEvent(
-      UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 3),
-    );
-    cubit.doEvent(AddToCartEvent(productId: '1', quantity: 1));
-    await pumpEventQueue();
-
-    expect(cubit.state.itemLoadings, equals({updating('1')}));
-    verify(() => updateCartItemUseCase.call(any(), any())).called(1);
-    verifyNever(() => addCartItemUseCase.call(any()));
-
-    completer.complete(
-      SuccessResponce(cartWithItems([item('1', 'item-1'), item('2', 'item-2')])),
-    );
-    await pumpEventQueue();
-
-    expect(cubit.state.itemLoadings, isEmpty);
-  });
+      await emitted;
+    },
+  );
 
   test('a failed update stops loading only for that product', () async {
     await seedCart(cartWithItems([item('1', 'item-1'), item('2', 'item-2')]));
@@ -701,13 +776,16 @@ void main() {
     final emitted = expectLater(
       cubit.stream,
       emitsInOrder([
+        isA<CartState>().having((state) => state.pendingQuantities, 'pending', {
+          '1': 2,
+        }),
         isA<CartState>().having(
-          (state) => state.itemLoadings,
-          'itemLoadings',
-          equals({updating('1')}),
+          (state) => state.updatingProductIds,
+          'updating',
+          equals({'1'}),
         ),
         isA<CartState>()
-            .having((state) => state.itemLoadings, 'itemLoadings', isEmpty)
+            .having((state) => state.updatingProductIds, 'updating', isEmpty)
             .having((state) => state.errorMessage, 'error', isEmpty)
             .having((state) => state.data, 'cart unchanged', isNotNull),
       ]),
@@ -724,13 +802,13 @@ void main() {
     await seedCart(cartWithItems([item('1', 'item-1')]));
 
     final completer = Completer<BaseResponce<CartEntity>>();
-    when(() => removeCartItemUseCase.call(any())).thenAnswer(
-      (_) => completer.future,
-    );
+    when(
+      () => removeCartItemUseCase.call(any()),
+    ).thenAnswer((_) => completer.future);
 
     cubit.doEvent(RemoveCartItemEvent(cartItemId: 'item-1'));
     await pumpEventQueue();
-    expect(cubit.state.isItemRemoving('item-1'), isTrue);
+    expect(cubit.state.isCartItemRemoving('item-1'), isTrue);
 
     when(() => getCartUseCase.call()).thenAnswer(
       (_) async => SuccessResponce(cartWithItems([item('1', 'item-1')])),
@@ -738,9 +816,98 @@ void main() {
     cubit.doEvent(CartRefreshRequestedEvent());
     await pumpEventQueue();
 
-    expect(cubit.state.itemLoadings, isEmpty);
+    expect(cubit.state.removingCartItemIds, isEmpty);
 
     completer.complete(SuccessResponce(cart));
     await pumpEventQueue();
+  });
+
+  group('quantity debounce', () {
+    test(
+      'collapses rapid taps into one request with the final quantity',
+      () async {
+        final debounced = buildCubit(
+          quantityDebounce: const Duration(milliseconds: 120),
+        );
+        addTearDown(debounced.close);
+        when(
+          () => updateCartItemUseCase.call(any(), any()),
+        ).thenAnswer((_) async => SuccessResponce(cart));
+
+        debounced.doEvent(
+          UpdateCartItemEvent(
+            cartItemId: 'item-1',
+            productId: '1',
+            quantity: 2,
+          ),
+        );
+        debounced.doEvent(
+          UpdateCartItemEvent(
+            cartItemId: 'item-1',
+            productId: '1',
+            quantity: 3,
+          ),
+        );
+        debounced.doEvent(
+          UpdateCartItemEvent(
+            cartItemId: 'item-1',
+            productId: '1',
+            quantity: 4,
+          ),
+        );
+
+        // The screen already shows the latest value, no request has been sent.
+        expect(debounced.state.displayQuantity('1', 1), 4);
+        verifyNever(() => updateCartItemUseCase.call(any(), any()));
+
+        await Future<void>.delayed(const Duration(milliseconds: 250));
+
+        final captured = verify(
+          () => updateCartItemUseCase.call('1', captureAny()),
+        ).captured;
+        expect(captured, hasLength(1));
+        expect((captured.single as UpdateCartItemParams).quantity, 4);
+      },
+    );
+
+    test('debounces each product independently', () async {
+      final debounced = buildCubit(
+        quantityDebounce: const Duration(milliseconds: 120),
+      );
+      addTearDown(debounced.close);
+      when(
+        () => updateCartItemUseCase.call(any(), any()),
+      ).thenAnswer((_) async => SuccessResponce(cart));
+
+      debounced.doEvent(
+        UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 5),
+      );
+      debounced.doEvent(
+        UpdateCartItemEvent(cartItemId: 'item-2', productId: '2', quantity: 7),
+      );
+
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+
+      verify(() => updateCartItemUseCase.call('1', any())).called(1);
+      verify(() => updateCartItemUseCase.call('2', any())).called(1);
+    });
+
+    test('close cancels every pending debounce timer', () async {
+      final debounced = buildCubit(
+        quantityDebounce: const Duration(milliseconds: 120),
+      );
+      when(
+        () => updateCartItemUseCase.call(any(), any()),
+      ).thenAnswer((_) async => SuccessResponce(cart));
+
+      debounced.doEvent(
+        UpdateCartItemEvent(cartItemId: 'item-1', productId: '1', quantity: 3),
+      );
+      await debounced.close();
+
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+
+      verifyNever(() => updateCartItemUseCase.call(any(), any()));
+    });
   });
 }

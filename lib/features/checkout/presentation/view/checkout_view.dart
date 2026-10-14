@@ -1,6 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
-import 'package:flower_app/core/shared/app_widgets/app_navigation.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -26,6 +26,13 @@ class CheckoutView extends StatefulWidget {
 
 class _CheckoutViewState extends State<CheckoutView> {
   final giftFormKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    getIt.get<AddressCubit>().doEvent(FetchUserAddressesEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -35,9 +42,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               getIt.get<CheckoutCubit>()..doEvent(GetCheckoutEvent()),
         ),
 
-        BlocProvider.value(
-          value: getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
-        ),
+        BlocProvider<AddressCubit>.value(value: getIt.get<AddressCubit>()),
         BlocProvider(create: (context) => getIt.get<PlaceOrderCubit>()),
       ],
 
@@ -52,7 +57,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               Icons.arrow_back_ios_new,
               color: AppColors.blackBase,
             ),
-            onPressed: () => {AppNavigation.controller.jumpToTab(0)},
+            onPressed: () => Navigator.pop(context),
           ),
           titleSpacing: 0,
           title: Text(

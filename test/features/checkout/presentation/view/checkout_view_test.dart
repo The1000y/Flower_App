@@ -1,7 +1,6 @@
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
-import 'package:flower_app/core/shared/app_widgets/app_navigation.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -38,6 +37,8 @@ void main() {
   late CubitStreamStub<CheckoutState, MockCheckoutCubit> checkoutStub;
   late CubitStreamStub<AddressState, MockAddressCubit> addressStub;
   late CubitStreamStub<PlaceOrderState, MockPlaceOrderCubit> placeOrderStub;
+
+  const previousRoute = 'cart-route';
 
   final tAddress = AddressEntity(
     id: 'address-1',
@@ -344,18 +345,32 @@ void main() {
       expect(find.byType(TextFormField), findsNWidgets(2));
     });
 
-    testWidgets('tapping the back button returns to the cart tab', (
+    testWidgets('tapping the back button pops the checkout route', (
       tester,
     ) async {
       // Arrange
       listenToBothCubits();
-      // TODO(flutter-app): the checkout screen lives in the cart tab of the
-      // bottom navigation bar, so its back button switches back to that tab
-      // instead of popping a route.
-      AppNavigation.controller.jumpToTab(1);
-      addTearDown(() => AppNavigation.controller.jumpToTab(0));
+      // The checkout screen is pushed as a route on top of the cart, so its
+      // back button pops that route instead of switching bottom nav tabs.
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-      await pumpApp(tester);
+      final navigatorKey = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(
+        ScreenUtilPlusInit(
+          designSize: const Size(800, 2400),
+          child: MaterialApp(
+            navigatorKey: navigatorKey,
+            home: const Scaffold(body: Text(previousRoute)),
+          ),
+        ),
+      );
+      navigatorKey.currentState!.push(
+        MaterialPageRoute(builder: (_) => const CheckoutView()),
+      );
+      await pumpFrames(tester);
       expect(find.byType(CheckoutView), findsOneWidget);
 
       // Act
@@ -363,8 +378,8 @@ void main() {
       await pumpFrames(tester);
 
       // Assert
-      expect(AppNavigation.controller.index, 0);
-      expect(find.byType(CheckoutView), findsOneWidget);
+      expect(find.byType(CheckoutView), findsNothing);
+      expect(find.text(previousRoute), findsOneWidget);
     });
   });
 }
