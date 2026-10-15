@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/core/services/firebase_messaging_gateway.dart';
+import 'package:flower_app/core/services/firebase_update_messaging_service.dart';
 import 'package:flower_app/core/services/notification_service.dart';
+import 'package:flower_app/core/services/order_update_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
@@ -15,10 +17,15 @@ import 'package:injectable/injectable.dart';
 /// testable.
 @lazySingleton
 class FirebaseMessagingService {
-  FirebaseMessagingService(this._gateway, this._notificationService);
+  FirebaseMessagingService(
+    this._gateway,
+    this._notificationService,
+    this._updateMessagingService,
+  );
 
   final FirebaseMessagingGateway _gateway;
   final NotificationService _notificationService;
+  final FirebaseUpdateMessagingService _updateMessagingService;
 
   final List<StreamSubscription<RemoteMessage>> _subscriptions = [];
 
@@ -43,7 +50,7 @@ class FirebaseMessagingService {
     _subscriptions.add(_gateway.onMessage.listen(_onForegroundMessage));
     _subscriptions.add(
       _gateway.onMessageOpenedApp.listen(
-        (message) => unawaited(_notificationService.handleMessage(message)),
+        (message) => unawaited(_routeMessage(message)),
       ),
     );
 
@@ -58,17 +65,30 @@ class FirebaseMessagingService {
   /// would therefore escape as an unhandled error.
   Future<void> _handleInitialMessage() async {
     try {
-      await _notificationService.handleMessage(
-        await _gateway.getInitialMessage(),
-      );
+      final message = await _gateway.getInitialMessage();
+      if (message == null) return;
+      await _routeMessage(message);
     } catch (e) {
       debugPrint('Error reading initial message: $e');
     }
   }
 
   void _onForegroundMessage(RemoteMessage message) {
-    // TODO: Show a local notification or in-app banner if needed.
+    final update = OrderUpdateMessage.tryParse(message);
+    if (update != null) {
+      unawaited(_updateMessagingService.handle(update));
+      return;
+    }
     debugPrint('Foreground message: ${message.messageId}');
+  }
+
+  Future<void> _routeMessage(RemoteMessage message) async {
+    final update = OrderUpdateMessage.tryParse(message);
+    if (update != null) {
+      await _updateMessagingService.handle(update);
+      return;
+    }
+    await _notificationService.handleMessage(message);
   }
 
   /// Releases the stream subscriptions held by [initialize]. Safe to call more

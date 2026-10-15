@@ -185,6 +185,7 @@ abstract class AppStrings {
   static const String lat = 'lat';
   static const String lng = 'lng';
   static const String addressId = 'addressId';
+  static const String orderId = 'orderId';
 
   static const String myOrdersTitle = 'My orders';
   static const String tabActive = 'Active';
