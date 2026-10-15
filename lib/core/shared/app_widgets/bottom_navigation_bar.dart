@@ -31,7 +31,7 @@ class _PersistentBottomNavBarDemoState
     initialIndex: 0,
   );
 
-  late final Widget _homeScreen = HomeView(controller: _controller);
+  // late final Widget _homeScreen = HomeView(controller: _controller);
 
   @override
   void dispose() {
@@ -74,7 +74,7 @@ class _PersistentBottomNavBarDemoState
       },
       tabs: [
         PersistentTabConfig(
-          screen: _homeScreen,
+          screen: homeScreen,
           item: ItemConfig(
             icon: const Icon(Icons.home),
             title: AppStrings.navHome,
@@ -82,7 +82,7 @@ class _PersistentBottomNavBarDemoState
           ),
         ),
         PersistentTabConfig(
-          screen: const CategoriesView(),
+          screen: categoriesScreen,
           item: ItemConfig(
             icon: const Icon(Icons.category),
             title: AppStrings.navcategories,
@@ -98,7 +98,7 @@ class _PersistentBottomNavBarDemoState
           ),
         ),
         PersistentTabConfig(
-          screen: const Placeholder(),
+          screen: profileScreen,
           item: ItemConfig(
             icon: const Icon(Icons.person),
             title: AppStrings.navProfile,
