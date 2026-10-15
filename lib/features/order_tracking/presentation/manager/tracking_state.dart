@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/tracking_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
 
 class TrackingState extends Equatable {
   final BaseState<TrackingEntity> trackingState;

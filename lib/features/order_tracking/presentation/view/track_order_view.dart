@@ -1,54 +1,27 @@
 import 'package:flower_app/core/shared/app_widgets/custom_app_bar.dart';
-import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/features/order_tracking/presentation/view/waiting_for_driver_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+
 import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/constants/enums/order_status.dart';
 import '../../../../core/shared/animations/animated_car_single_file.dart';
+import '../../../../core/themes/app_colors/app_color.dart';
+import '../../domain/entities/order_status_mapper.dart';
+import '../../domain/entities/tracking_entity.dart';
+import '../manager/tracking_event.dart';
+import '../manager/tracking_state.dart';
+import '../manager/tracking_view_model.dart';
 import '../widgets/custom_delivery_boy_information_card.dart';
 import '../widgets/custom_estimated_arrival_section.dart';
 import '../widgets/custom_tracking_buttons_section.dart';
 import '../widgets/order_status_section.dart';
+import 'waiting_for_driver_view.dart';
 
-import 'dart:async';
+class TrackOrderView extends StatelessWidget {
+  const TrackOrderView({super.key, required this.orderId});
 
-class TrackOrderView extends StatefulWidget {
-  const TrackOrderView({super.key});
-
-  @override
-  State<TrackOrderView> createState() => _TrackOrderViewState();
-}
-
-class _TrackOrderViewState extends State<TrackOrderView> {
-  static const _waitingDuration = Duration(seconds: 5);
-
-  // TEMP: replace with the cubit state later
-  OrderStatus _status = OrderStatus.received;
-
-  bool _isWaitingForDriver = true;
-  Timer? _waitingTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _waitingTimer = Timer(_waitingDuration, () {
-      if (mounted) setState(() => _isWaitingForDriver = false);
-    });
-  }
-
-  @override
-  void dispose() {
-    _waitingTimer?.cancel();
-    super.dispose();
-  }
-
-  void _nextStatus() {
-    setState(() {
-      _status =
-      OrderStatus.values[(_status.index + 1) % OrderStatus.values.length];
-    });
-  }
+  final String orderId;
 
   @override
   Widget build(BuildContext context) {
@@ -60,32 +33,49 @@ class _TrackOrderViewState extends State<TrackOrderView> {
         title: AppStrings.trackOrder,
         onBack: () => Navigator.pop(context),
       ),
-
-      floatingActionButton: _isWaitingForDriver
-          ? null
-          : FloatingActionButton.small(
-        onPressed: _nextStatus,
-        child: const Icon(Icons.skip_next),
-      ),
-
       body: SafeArea(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          layoutBuilder: (current, previous) => Stack(
-            fit: StackFit.expand,
-            children: [...previous, ?current],
-          ),
-          child: _isWaitingForDriver
-              ? const WaitingForDriverView(key: ValueKey('waiting'))
-              : _buildTrackingContent(),
+        child: BlocBuilder<TrackingViewModel, TrackingState>(
+          builder: (context, state) {
+            final data = state.trackingState.data;
+
+            if (state.trackingState.isLoading && data == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (data == null) {
+              return _TrackingMessage(
+                message: state.trackingState.errorMessage.isEmpty
+                    ? AppStrings.unexpectedError
+                    : state.trackingState.errorMessage,
+                onRetry: () => context.read<TrackingViewModel>().handle(
+                  StartTrackingIntent(orderId),
+                ),
+              );
+            }
+
+            if (!data.hasDriver) {
+              return const WaitingForDriverView();
+            }
+
+            return _TrackingContent(tracking: data);
+          },
         ),
       ),
     );
   }
+}
 
-  Widget _buildTrackingContent() {
+class _TrackingContent extends StatelessWidget {
+  const _TrackingContent({required this.tracking});
+
+  final TrackingEntity tracking;
+
+  @override
+  Widget build(BuildContext context) {
+    final driver = tracking.driver;
+    final status = orderStatusFromApi(tracking.status);
+
     return Column(
-      key: const ValueKey('tracking'),
       children: [
         Expanded(
           child: CustomScrollView(
@@ -95,27 +85,30 @@ class _TrackOrderViewState extends State<TrackOrderView> {
                 sliver: SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      CustomEstimatedArrivalSection(
-                        estimatedArrivalDateTime: DateTime.now(),
-                      ),
-                      const Gap(32),
-                      const CustomDeliveryBoyInformationCard(
-                        deliveryBoyName: 'Mohamed',
-                        deliveryBoyPhoneNumber: '01014194042',
-                        deliveryBoyImageURL:
-                        'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=500',
-                      ),
+                      if (tracking.estimatedDeliveryAt != null)
+                        CustomEstimatedArrivalSection(
+                          estimatedArrivalDateTime:
+                              tracking.estimatedDeliveryAt!,
+                        ),
+                      if (driver != null) ...[
+                        const Gap(32),
+                        CustomDeliveryBoyInformationCard(
+                          deliveryBoyName: driver.name ?? '',
+                          deliveryBoyPhoneNumber: driver.phone ?? '',
+                          deliveryBoyImageURL: driver.photoUrl,
+                        ),
+                      ],
                       const Gap(32),
                       AnimatedCar(
                         width: 340,
                         duration: const Duration(milliseconds: 600),
-                        playing: _status == OrderStatus.outForDelivery,
+                        playing: status == OrderStatus.outForDelivery,
                         showRoad: true,
                         showSpeedLines: true,
                         roadColor: AppColors.white70,
                       ),
                       const Gap(32),
-                      OrderStatusSection(status: _status),
+                      OrderStatusSection(tracking: tracking),
                     ],
                   ),
                 ),
@@ -126,10 +119,40 @@ class _TrackOrderViewState extends State<TrackOrderView> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: CustomTrackingButtonsSection(
-            isDelivered: _status == OrderStatus.delivered,
+            isDelivered: status == OrderStatus.delivered,
           ),
         ),
       ],
+    );
+  }
+}
+
+class _TrackingMessage extends StatelessWidget {
+  const _TrackingMessage({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              message,
+              style: textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const Gap(16),
+            TextButton(onPressed: onRetry, child: const Text('Retry')),
+          ],
+        ),
+      ),
     );
   }
 }

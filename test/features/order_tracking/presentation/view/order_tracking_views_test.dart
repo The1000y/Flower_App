@@ -1,40 +1,75 @@
+import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/driver_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/order_success_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../helpers/fake_tracking_view_model.dart';
+import '../../../../helpers/order_tracking_test_helpers.dart';
+
+final _tracking = TrackingEntity(
+  orderId: 'o-1',
+  status: 'OutForDelivery',
+  driver: const DriverEntity(name: 'Mohamed', phone: '01014194042'),
+  estimatedDeliveryAt: DateTime(2024, 9, 3, 11),
+);
+
 void main() {
-  Future<void> pumpView(WidgetTester tester, Widget view) {
-    return tester.pumpWidget(MaterialApp(home: view));
-  }
-
   group('Order tracking views', () {
-    // The tracking views are not implemented yet: each renders a bare
-    // `Placeholder`. These smoke tests pin that contract so a real UI landing
-    // later is a deliberate change, and they fail loudly if a view throws.
-    testWidgets('TrackOrderView builds and renders a placeholder', (
+    testWidgets('TrackOrderView builds and shows the track order title', (
       tester,
     ) async {
-      await pumpView(tester, const TrackOrderView());
+      final viewModel = FakeTrackingViewModel()..emitTracking(_tracking);
+      addTearDown(viewModel.close);
 
-      expect(find.byType(Placeholder), findsOneWidget);
+      await pumpOrderTrackingApp(
+        tester,
+        BlocProvider<TrackingViewModel>.value(
+          value: viewModel,
+          child: const TrackOrderView(orderId: 'o-1'),
+        ),
+        inScaffold: false,
+      );
+
+      expect(find.text(AppStrings.trackOrder), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
 
-    testWidgets('OrderMapView builds and renders a placeholder', (
+    testWidgets('OrderMapView shows a loader until tracking data arrives', (
       tester,
     ) async {
-      await pumpView(tester, const OrderMapView());
+      final viewModel = FakeTrackingViewModel();
+      addTearDown(viewModel.close);
 
-      expect(find.byType(Placeholder), findsOneWidget);
+      await pumpOrderTrackingApp(
+        tester,
+        BlocProvider<TrackingViewModel>.value(
+          value: viewModel,
+          child: const OrderMapView(),
+        ),
+        inScaffold: false,
+      );
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
 
-    testWidgets('OrderSuccessView builds and renders a placeholder', (
-      tester,
-    ) async {
-      await pumpView(tester, const OrderSuccessView());
+    testWidgets('OrderSuccessView opens the tracking screen', (tester) async {
+      await pumpOrderTrackingApp(tester, const OrderSuccessView(orderId: 'o-1'));
 
-      expect(find.byType(Placeholder), findsOneWidget);
+      expect(find.text(AppStrings.orderPlacedSuccess), findsOneWidget);
+
+      await tester.tap(find.text(AppStrings.trackOrder));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text(routeStubText(Routes.trackOrder)), findsOneWidget);
     });
   });
 }

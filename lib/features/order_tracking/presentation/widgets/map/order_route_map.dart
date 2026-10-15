@@ -12,17 +12,17 @@ class OrderRouteMap extends StatefulWidget {
   const OrderRouteMap({
     super.key,
     required this.route,
-    required this.origin,
     required this.originLabel,
-    required this.destination,
     required this.destinationLabel,
+    this.origin,
+    this.destination,
     this.courier,
   });
 
   final List<LatLng> route;
-  final LatLng origin;
+  final LatLng? origin;
   final String originLabel;
-  final LatLng destination;
+  final LatLng? destination;
   final String destinationLabel;
   final LatLng? courier;
 
@@ -32,6 +32,7 @@ class OrderRouteMap extends StatefulWidget {
 
 class _OrderRouteMapState extends State<OrderRouteMap> {
   static const _stylePath = 'assets/jsons/style_map.json';
+  static const _fallbackCenter = LatLng(30.0444, 31.2357);
 
   GoogleMapController? _controller;
 
@@ -41,6 +42,13 @@ class _OrderRouteMapState extends State<OrderRouteMap> {
   BitmapDescriptor? _originIcon;
   BitmapDescriptor? _destinationIcon;
   BitmapDescriptor? _courierIcon;
+
+  List<LatLng> get _points => [
+    ...widget.route,
+    if (widget.origin != null) widget.origin!,
+    if (widget.destination != null) widget.destination!,
+    if (widget.courier != null) widget.courier!,
+  ];
 
   @override
   void didChangeDependencies() {
@@ -58,26 +66,34 @@ class _OrderRouteMapState extends State<OrderRouteMap> {
       style = null;
     }
 
-    final icons = await Future.wait([
-      buildPinBitmap(
-        label: widget.originLabel,
-        icon: Icons.home_outlined,
-        dpr: dpr,
-      ),
-      buildPinBitmap(
-        label: widget.destinationLabel,
-        icon: Icons.local_florist_outlined,
-        dpr: dpr,
-      ),
-      svgToBitmap(AppSvgs.motorcycle, width: 52, dpr: dpr),
-    ]);
+    final originIcon = widget.origin == null
+        ? null
+        : await buildPinBitmap(
+            label: widget.originLabel,
+            icon: Icons.home_outlined,
+            dpr: dpr,
+          );
+
+    final destinationIcon = widget.destination == null
+        ? null
+        : await buildPinBitmap(
+            label: widget.destinationLabel,
+            icon: Icons.local_florist_outlined,
+            dpr: dpr,
+          );
+
+    final courierIcon = await svgToBitmap(
+      AppSvgs.motorcycle,
+      width: 52,
+      dpr: dpr,
+    );
 
     if (!mounted) return;
     setState(() {
       _mapStyle = style;
-      _originIcon = icons[0];
-      _destinationIcon = icons[1];
-      _courierIcon = icons[2];
+      _originIcon = originIcon;
+      _destinationIcon = destinationIcon;
+      _courierIcon = courierIcon;
       _ready = true;
     });
   }
@@ -89,12 +105,20 @@ class _OrderRouteMapState extends State<OrderRouteMap> {
   }
 
   LatLngBounds _routeBounds() {
-    var minLat = widget.route.first.latitude;
+    final points = _points;
+    if (points.isEmpty) {
+      return LatLngBounds(
+        southwest: _fallbackCenter,
+        northeast: _fallbackCenter,
+      );
+    }
+
+    var minLat = points.first.latitude;
     var maxLat = minLat;
-    var minLng = widget.route.first.longitude;
+    var minLng = points.first.longitude;
     var maxLng = minLng;
 
-    for (final p in widget.route) {
+    for (final p in points) {
       minLat = math.min(minLat, p.latitude);
       maxLat = math.max(maxLat, p.latitude);
       minLng = math.min(minLng, p.longitude);
@@ -130,19 +154,21 @@ class _OrderRouteMapState extends State<OrderRouteMap> {
     if (!_ready) return const ColoredBox(color: AppColors.lightPink);
 
     final markers = <Marker>{
-      Marker(
-        markerId: const MarkerId('origin'),
-        position: widget.origin,
-        icon: _originIcon!,
-        anchor: const Offset(0.5, 1.0),
-      ),
-      Marker(
-        markerId: const MarkerId('destination'),
-        position: widget.destination,
-        icon: _destinationIcon!,
-        anchor: const Offset(0.5, 1.0),
-      ),
-      if (widget.courier != null)
+      if (widget.origin != null && _originIcon != null)
+        Marker(
+          markerId: const MarkerId('origin'),
+          position: widget.origin!,
+          icon: _originIcon!,
+          anchor: const Offset(0.5, 1.0),
+        ),
+      if (widget.destination != null && _destinationIcon != null)
+        Marker(
+          markerId: const MarkerId('destination'),
+          position: widget.destination!,
+          icon: _destinationIcon!,
+          anchor: const Offset(0.5, 1.0),
+        ),
+      if (widget.courier != null && _courierIcon != null)
         Marker(
           markerId: const MarkerId('courier'),
           position: widget.courier!,
@@ -152,15 +178,16 @@ class _OrderRouteMapState extends State<OrderRouteMap> {
     };
 
     final polylines = <Polyline>{
-      Polyline(
-        polylineId: const PolylineId('route'),
-        points: widget.route,
-        color: AppColors.pinkBase,
-        width: 3,
-        jointType: JointType.round,
-        startCap: Cap.roundCap,
-        endCap: Cap.roundCap,
-      ),
+      if (widget.route.length > 1)
+        Polyline(
+          polylineId: const PolylineId('route'),
+          points: widget.route,
+          color: AppColors.pinkBase,
+          width: 3,
+          jointType: JointType.round,
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+        ),
     };
 
     return GoogleMap(

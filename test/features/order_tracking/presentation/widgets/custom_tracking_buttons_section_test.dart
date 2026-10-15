@@ -2,10 +2,13 @@ import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_tracking_buttons_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../helpers/fake_tracking_view_model.dart';
 import '../../../../helpers/order_tracking_test_helpers.dart';
 
 Finder _showMapButton() =>
@@ -14,8 +17,15 @@ Finder _showMapButton() =>
 Finder _deliveredButton() =>
     find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction);
 
-Widget _section({required bool isDelivered}) =>
-    CustomTrackingButtonsSection(isDelivered: isDelivered);
+Widget _section({required bool isDelivered}) {
+  final viewModel = FakeTrackingViewModel();
+  addTearDown(viewModel.close);
+
+  return BlocProvider<TrackingViewModel>.value(
+    value: viewModel,
+    child: CustomTrackingButtonsSection(isDelivered: isDelivered),
+  );
+}
 
 void main() {
   group('CustomTrackingButtonsSection - visibility', () {

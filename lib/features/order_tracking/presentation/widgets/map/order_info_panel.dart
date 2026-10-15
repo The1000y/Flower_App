@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../config/routing/routes.dart';
 import '../../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../../core/shared/app_widgets/custom_button.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
+import '../../../domain/entities/tracking_entity.dart';
 import '../custom_delivery_boy_information_card.dart';
 import '../custom_estimated_arrival_section.dart';
 
 class OrderInfoPanel extends StatelessWidget {
-  const OrderInfoPanel({super.key});
+  const OrderInfoPanel({super.key, required this.tracking});
+
+  final TrackingEntity tracking;
 
   @override
   Widget build(BuildContext context) {
+    final driver = tracking.driver;
+    final estimatedArrival = tracking.estimatedDeliveryAt;
+    final orderId = tracking.orderId ?? '';
+
     return Material(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
@@ -21,22 +29,28 @@ class OrderInfoPanel extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomEstimatedArrivalSection(
-                estimatedArrivalDateTime: DateTime(2024, 9, 3, 11),
-              ),
-              const Gap(16),
-              CustomDeliveryBoyInformationCard(
-                deliveryBoyName: 'Muhamed',
-                deliveryBoyPhoneNumber: '01014194042',
-                deliveryBoyImageURL:
-                'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=500',
-              ),
+              if (estimatedArrival != null)
+                CustomEstimatedArrivalSection(
+                  estimatedArrivalDateTime: estimatedArrival,
+                ),
+              if (driver != null) ...[
+                const Gap(16),
+                CustomDeliveryBoyInformationCard(
+                  deliveryBoyName: driver.name ?? '',
+                  deliveryBoyPhoneNumber: driver.phone ?? '',
+                  deliveryBoyImageURL: driver.photoUrl,
+                ),
+              ],
               const Gap(24),
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(
                   text: AppStrings.orderDetails,
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    Routes.orderDetails,
+                    arguments: orderId,
+                  ),
                   isEnabled: true,
                   enabledColor: AppColors.pinkBase,
                 ),

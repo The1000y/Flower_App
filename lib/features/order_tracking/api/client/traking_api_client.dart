@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/core/constants/api_strings/api_strings.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
-import 'package:flower_app/features/trakingOrder/data/model/tracking_dto.dart';
+import 'package:flower_app/features/order_tracking/data/model/tracking_dto.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 

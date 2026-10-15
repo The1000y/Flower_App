@@ -1,5 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_event.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
+import 'package:flower_app/features/order_tracking/presentation/view/order_success_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -184,13 +187,29 @@ abstract class AppRoutes {
         );
 
       case Routes.orderSuccess:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        final successOrderId = settings.arguments as String? ?? '';
+        return MaterialPageRoute(
+          builder: (_) => OrderSuccessView(orderId: successOrderId),
+        );
 
       case Routes.trackOrder:
-        return MaterialPageRoute(builder: (_) => const TrackOrderView());
+        final trackOrderId = settings.arguments as String? ?? '';
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<TrackingViewModel>()
+              ..handle(StartTrackingIntent(trackOrderId)),
+            child: TrackOrderView(orderId: trackOrderId),
+          ),
+        );
 
       case Routes.orderMap:
-        return MaterialPageRoute(builder: (_) => const OrderMapView());
+        final trackingViewModel = settings.arguments as TrackingViewModel;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<TrackingViewModel>.value(
+            value: trackingViewModel,
+            child: const OrderMapView(),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

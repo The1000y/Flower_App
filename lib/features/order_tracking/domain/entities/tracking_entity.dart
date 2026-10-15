@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/driver_entity.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/location_entity.dart';
-import 'package:flower_app/features/trakingOrder/domain/entities/user_address_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/driver_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/location_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/entities/user_address_entity.dart';
 
 class TrackingEntity extends Equatable {
   final String? orderId;
