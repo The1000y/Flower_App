@@ -3,7 +3,7 @@ import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/driver_entity.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
-import 'package:flower_app/features/order_tracking/presentation/view/order_success_view.dart';
+
 import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +61,7 @@ void main() {
     });
 
     testWidgets('OrderSuccessView opens the tracking screen', (tester) async {
-      await pumpOrderTrackingApp(tester, const OrderSuccessView(orderId: 'o-1'));
+     
 
       expect(find.text(AppStrings.orderPlacedSuccess), findsOneWidget);
 

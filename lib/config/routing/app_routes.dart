@@ -111,7 +111,7 @@ abstract class AppRoutes {
           settings: settings,
           builder: (_) => BlocProvider.value(
             value: getIt<CartCubit>(),
-            child: PersistenBottomNavBarDemo(
+            child: PersistentBottomNavBarDemo(
               onCartTabSelected: () {
                 getIt<CartCubit>().doEvent(
                   CartRefreshRequestedEvent(),

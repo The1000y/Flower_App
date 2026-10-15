@@ -26,13 +26,7 @@ class PersistentBottomNavBarDemo extends StatefulWidget {
 
 class _PersistentBottomNavBarDemoState
     extends State<PersistentBottomNavBarDemo> {
-  /// The controller is owned by this screen and disposed with it.
-  ///
-  /// A [PersistentTabController] carries the [Scaffold]'s [GlobalKey], so a
-  /// single controller shared between two live `PersistentTabView`s (for
-  /// example while a new home route animates over the previous one) would
-  /// attach the same key to both trees and throw "Duplicate GlobalKey detected
-  /// in widget tree". Creating it per instance keeps every key unique.
+
   late final PersistentTabController _controller = PersistentTabController(
     initialIndex: 0,
   );
@@ -56,7 +50,7 @@ class _PersistentBottomNavBarDemoState
           value: getIt<AddressCubit>(),
         ),
       ],
-      child: HomeView(controller: controller),
+      child: HomeView(controller: _controller),
     );
 
     final categoriesScreen = const CategoriesView();
