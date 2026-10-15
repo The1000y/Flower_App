@@ -12,11 +12,7 @@ class AreasResponseDto {
   @JsonKey(name: 'message')
   final String? message;
 
-  AreasResponseDto({
-    this.data,
-    this.isSuccess,
-    this.message,
-  });
+  AreasResponseDto({this.data, this.isSuccess, this.message});
 
   factory AreasResponseDto.fromJson(Map<String, dynamic> json) =>
       _$AreasResponseDtoFromJson(json);

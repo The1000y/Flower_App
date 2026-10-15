@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/config/di/di.dart';
@@ -13,6 +12,7 @@ import 'package:flower_app/core/shared/app_widgets/notification_navigation_liste
 import 'package:flower_app/core/themes/app_themes/app_them.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/view/cart_ui_event_listener.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +33,7 @@ Future<void> firebaseMessagingBackgroundHandler(
   debugPrint('Background message: ${message.messageId}');
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: '.env');
@@ -42,11 +42,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await configureDependencies();
+
   FirebaseMessaging.onBackgroundMessage(
     firebaseMessagingBackgroundHandler,
   );
-
-  await configureDependencies();
 
   final localeCubit = getIt<LocaleCubit>();
 
@@ -108,9 +108,11 @@ class FlowerApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Flower App',
           builder: (context, child) {
-            return NotificationNavigationListener(
-              navigatorKey: _navigatorKey,
-              child: child ?? const SizedBox.shrink(),
+            return CartUiEventListener(
+              child: NotificationNavigationListener(
+                navigatorKey: _navigatorKey,
+                child: child ?? const SizedBox.shrink(),
+              ),
             );
           },
         );

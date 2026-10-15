@@ -24,18 +24,21 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   @override
+  void initState() {
+    super.initState();
+    getIt.get<AddressCubit>().doEvent(FetchUserAddressesEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) =>
-          getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
+              getIt.get<HomeCubit>()..doEvent(GetSectionEvent()),
         ),
-        BlocProvider(
-          create: (context) =>
-          getIt.get<AddressCubit>()..doEvent(FetchUserAddressesEvent()),
-        ),
+        BlocProvider<AddressCubit>.value(value: getIt.get<AddressCubit>()),
       ],
       child: Scaffold(
         backgroundColor: AppColors.whiteBase,
@@ -94,7 +97,10 @@ class _HomeViewState extends State<HomeView> {
                             },
                             onAddressChanged: (newAddress) {
                               context.read<AddressCubit>().doEvent(
-                                SelectAddressEvent(selectedAddress: newAddress),
+                                SelectAddressEvent(
+                                  selectedAddress: newAddress,
+                                  addressId: newAddress.id,
+                                ),
                               );
                             },
                           );

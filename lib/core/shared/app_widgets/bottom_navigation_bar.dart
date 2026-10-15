@@ -14,17 +14,36 @@ import 'package:flower_app/features/profile/presentation/view/profile_home_view.
 
 import '../../constants/app_strings/app_strings.dart';
 
-class PersistenBottomNavBarDemo extends StatelessWidget {
-  PersistenBottomNavBarDemo({
-    super.key,
-    this.onCartTabSelected,
-  });
+class PersistentBottomNavBarDemo extends StatefulWidget {
+  const PersistentBottomNavBarDemo({super.key, this.onCartTabSelected});
 
   final VoidCallback? onCartTabSelected;
 
-  final PersistentTabController controller = PersistentTabController(
+  @override
+  State<PersistentBottomNavBarDemo> createState() =>
+      _PersistentBottomNavBarDemoState();
+}
+
+class _PersistentBottomNavBarDemoState
+    extends State<PersistentBottomNavBarDemo> {
+  /// The controller is owned by this screen and disposed with it.
+  ///
+  /// A [PersistentTabController] carries the [Scaffold]'s [GlobalKey], so a
+  /// single controller shared between two live `PersistentTabView`s (for
+  /// example while a new home route animates over the previous one) would
+  /// attach the same key to both trees and throw "Duplicate GlobalKey detected
+  /// in widget tree". Creating it per instance keeps every key unique.
+  late final PersistentTabController _controller = PersistentTabController(
     initialIndex: 0,
   );
+
+  late final Widget _homeScreen = HomeView(controller: _controller);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +72,15 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
     );
 
     return PersistentTabView(
-      controller: controller,
+      controller: _controller,
       onTabChanged: (index) {
         if (index == 2) {
-          onCartTabSelected?.call();
+          widget.onCartTabSelected?.call();
         }
       },
       tabs: [
         PersistentTabConfig(
-          screen: homeScreen,
+          screen: _homeScreen,
           item: ItemConfig(
             icon: const Icon(Icons.home),
             title: AppStrings.navHome,
@@ -69,7 +88,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
           ),
         ),
         PersistentTabConfig(
-          screen: categoriesScreen,
+          screen: const CategoriesView(),
           item: ItemConfig(
             icon: const Icon(Icons.category),
             title: AppStrings.navcategories,
@@ -85,7 +104,7 @@ class PersistenBottomNavBarDemo extends StatelessWidget {
           ),
         ),
         PersistentTabConfig(
-          screen: profileScreen,
+          screen: const Placeholder(),
           item: ItemConfig(
             icon: const Icon(Icons.person),
             title: AppStrings.navProfile,

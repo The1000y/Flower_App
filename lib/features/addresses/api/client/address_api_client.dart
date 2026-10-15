@@ -31,7 +31,9 @@ abstract class AddressApiClient {
   Future<AddressListResponseDto> getAddresses();
 
   @GET('${ApiStrings.userAddresses}/{addressId}')
-  Future<AddressResponse> getAddressById(@Path(AppStrings.addressId) String addressId);
+  Future<AddressResponse> getAddressById(
+    @Path(AppStrings.addressId) String addressId,
+  );
 
   @POST(ApiStrings.userAddresses)
   Future<AddressResponse> createAddress(@Body() AddAddressRequest request);
@@ -48,7 +50,5 @@ abstract class AddressApiClient {
   );
 
   @DELETE('${ApiStrings.userAddresses}/{addressId}')
-  Future<HttpResponse<void>> deleteAddress(
-    @Path('addressId') String addressId,
-  );
+  Future<HttpResponse<void>> deleteAddress(@Path('addressId') String addressId);
 }

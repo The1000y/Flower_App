@@ -7,6 +7,15 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../../../core/constants/app_strings/app_strings.dart';
 
+/// Everything a single cart line needs to render.
+typedef _CartItemView = ({CartItemEntity item, int quantity, bool isBusy});
+
+/// A single cart line.
+///
+/// The widget is presentational: it reads only its own slice of the state with
+/// [BlocSelector] (so changing one quantity rebuilds that one line) and emits
+/// the requested new quantity through [onQuantityChanged]. Deciding whether that
+/// means an update or a removal is the cubit's job.
 class CartItem extends StatelessWidget {
   final CartItemEntity item;
   final VoidCallback onDelete;
@@ -21,27 +30,32 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<
-      CartCubit,
-      CartState,
-      ({CartItemEntity item, bool isLoading})
-    >(
+    return BlocSelector<CartCubit, CartState, _CartItemView>(
       selector: (state) {
-        final currentItem = state.data?.items.firstWhere(
-          (cartItem) =>
-              cartItem.id == item.id || cartItem.productId == item.productId,
-          orElse: () => item,
-        );
+        final currentItem =
+            state.data?.items.firstWhere(
+              (cartItem) =>
+                  cartItem.id == item.id ||
+                  cartItem.productId == item.productId,
+              orElse: () => item,
+            ) ??
+            item;
 
         return (
-          item: currentItem ?? item,
-          isLoading:
-              state.isItemBusy(item.productId) || state.isItemRemoving(item.id),
+          item: currentItem,
+          quantity: state.displayQuantity(
+            currentItem.productId,
+            currentItem.quantity,
+          ),
+          isBusy:
+              state.isItemBusy(currentItem.productId) ||
+              state.isCartItemRemoving(currentItem.id),
         );
       },
       builder: (context, view) {
         final currentItem = view.item;
-        final isLoading = view.isLoading;
+        final quantity = view.quantity;
+        final lineSubtotal = currentItem.unitPrice * quantity;
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -98,7 +112,7 @@ class CartItem extends StatelessWidget {
                           ),
 
                           IconButton(
-                            onPressed: isLoading ? null : onDelete,
+                            onPressed: view.isBusy ? null : onDelete,
                             icon: const Icon(Icons.delete, color: Colors.red),
                           ),
                         ],
@@ -108,7 +122,7 @@ class CartItem extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              '${AppStrings.currencyEGP}${currentItem.lineSubtotal.toStringAsFixed(2)}',
+                              '${AppStrings.currencyEGP}${lineSubtotal.toStringAsFixed(2)}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -121,7 +135,7 @@ class CartItem extends StatelessWidget {
 
                           const Spacer(),
 
-                          if (isLoading)
+                          if (view.isBusy)
                             SizedBox(
                               width: 24.w,
                               height: 24.h,
@@ -131,19 +145,15 @@ class CartItem extends StatelessWidget {
                             )
                           else ...[
                             IconButton(
-                              onPressed: () {
-                                onQuantityChanged(-1);
-                              },
+                              onPressed: () => onQuantityChanged(quantity - 1),
                               icon: const Icon(Icons.remove),
                               visualDensity: VisualDensity.compact,
                             ),
 
-                            Text(currentItem.quantity.toString()),
+                            Text(quantity.toString()),
 
                             IconButton(
-                              onPressed: () {
-                                onQuantityChanged(1);
-                              },
+                              onPressed: () => onQuantityChanged(quantity + 1),
                               icon: const Icon(Icons.add),
                               visualDensity: VisualDensity.compact,
                             ),

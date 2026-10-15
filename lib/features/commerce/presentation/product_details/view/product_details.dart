@@ -5,7 +5,6 @@ import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
-import 'package:flower_app/features/commerce/presentation/categories/navigation/categories_navigation.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_event.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/manager/cubit/product_details_state.dart';
@@ -36,20 +35,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ..doEvent(GetProductDetailsEvent(widget.productId)),
         ),
       ],
-      child: BlocListener<CartCubit, CartState>(
-        listenWhen: (previous, current) =>
-            !previous.addToCartSuccess && current.addToCartSuccess,
-        listener: (context, state) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                content: Text(AppStrings.productAddedToCart),
-                backgroundColor: AppColors.success,
-              ),
-            );
-        },
-        child: Scaffold(
+      child: Scaffold(
           backgroundColor: Colors.white,
           body: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
             builder: (context, state) {
@@ -138,10 +124,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         size: 20,
                                       ),
                                       color: AppColors.blackBase,
-                                onPressed: () {
-                                  CategoriesNavigation.selectedIndex.value = 0;
-                                  Navigator.pop(context);
-                                },
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
                                     ),
                                   ),
                                 ),
@@ -326,7 +311,6 @@ class _ProductDetailsState extends State<ProductDetails> {
             },
           ),
         ),
-      ),
     );
   }
 
@@ -342,5 +326,3 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 }
-
-

@@ -1,0 +1,1 @@
+enum CheckoutPaymentMethod { COD, Card }

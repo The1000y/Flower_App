@@ -95,6 +95,7 @@ abstract class AppStrings {
   static const String navcategories = 'Categories';
 
   static const String currencyEGP = 'EGP';
+  static const String currencyUsd = '\$';
   static const String bloomSubtitle = 'Bloom with our exquisite best sellers';
 
   static const String statusLabel = 'Status: ';
@@ -118,7 +119,8 @@ abstract class AppStrings {
   static const String checkoutTitle = 'Checkout';
   static const String checkout = 'Checkout';
   static const String deliveryTime = 'Delivery time';
-  static const String instant = 'Instant, ';
+  static const String instant = ' Instant, ';
+  static const String arriveByPrefix = 'Arrive by ';
   static const String deliveryAddress = 'Delivery address';
 
   static const String addressTypeHome = 'Home';
@@ -126,6 +128,7 @@ abstract class AppStrings {
   static const String addNew = '+ Add new';
 
   static const String paymentMethod = 'Payment method';
+  static const String payment = 'Paymentd';
   static const String cashOnDelivery = 'Cash on delivery';
   static const String creditCard = 'Credit card';
   static const String itIsAGift = 'It is a gift';
@@ -133,6 +136,8 @@ abstract class AppStrings {
   static const String nameLabel = 'Name';
   static const String enterNameHint = 'Enter the name';
   static const String enterPhoneHintAlt = 'Enter the phone number';
+  static const String noSavedAddresses = 'No saved addresses';
+  static const String giftNameValidation = 'Enter your name';
 
   static const String subTotal = 'Sub Total';
   static const String subtotal = 'Sub total:';
@@ -186,6 +191,7 @@ abstract class AppStrings {
   static const String tabActive = 'Active';
   static const String tabCompleted = 'Completed';
   static const String orderNumberPrefix = 'Order number# ';
+  static const String orderIdPrefix = 'Order number# ';
   static const String trackOrder = 'Track order';
   static const String deliveredOnPrefix = 'Delivered on ';
   static const String reorder = 'Reorder';
@@ -212,6 +218,11 @@ abstract class AppStrings {
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
+  // Auth storage keys
+   static const String loading = 'loading....';
+
+  static const String tryAgain = 'tryAgain';
+  static const String noAddress = 'no address selected';
   static const String orderPlacedSuccess = 'Your order placed successfully!';
 
   static const String yourCartIsEmpty = 'Your cart is empty';

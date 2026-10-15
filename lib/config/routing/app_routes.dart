@@ -1,14 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flower_app/features/order_tracking/presentation/manager/tracking_event.dart';
-import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
-import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
-import 'package:flower_app/features/order_tracking/presentation/view/order_success_view.dart';
-import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/config/routing/web_view_payment_args.dart';
 import 'package:flower_app/core/shared/app_widgets/bottom_navigation_bar.dart';
 
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
@@ -24,13 +20,27 @@ import 'package:flower_app/features/auth/presentation/login/view/login_view.dart
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
 import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 
+import 'package:flower_app/features/checkout/presentation/view/checkout_view.dart';
+
 import 'package:flower_app/features/commerce/presentation/bestseller/view/bestseller_view.dart';
-import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
+import 'package:flower_app/features/commerce/presentation/occasion/view/occasion_view.dart';
 import 'package:flower_app/features/commerce/presentation/product_details/view/product_details.dart';
+
+import 'package:flower_app/features/orders/presentation/manager/cubit/orders_cubit.dart';
+import 'package:flower_app/features/orders/presentation/manager/orders_intent.dart';
+import 'package:flower_app/features/orders/presentation/view/my_orders_view.dart';
+import 'package:flower_app/features/orders/presentation/view/order_success_view.dart';
+
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_event.dart';
+import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
+import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
+import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
+
+import 'package:flower_app/features/payment/presentation/web_view_payment.dart';
 
 import 'package:flower_app/features/profile/presentation/manager/cubit/change_password_cubit.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
@@ -47,6 +57,7 @@ abstract class AppRoutes {
     switch (settings.name) {
       case Routes.login:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => getIt<LoginViewModel>(),
             child: const LoginView(),
@@ -55,6 +66,7 @@ abstract class AppRoutes {
 
       case Routes.signUp:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => getIt<RegisterViewModel>(),
             child: const RegisterView(),
@@ -62,43 +74,67 @@ abstract class AppRoutes {
         );
 
       case Routes.forgotPassword:
-        return MaterialPageRoute(builder: (_) => const ForgetPassword());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const ForgetPassword(),
+        );
 
       case Routes.verificationCode:
         final args = settings.arguments as Map<String, dynamic>;
+
         return MaterialPageRoute(
-          builder: (_) => VerificationView(email: args['email']),
+          settings: settings,
+          builder: (_) => VerificationView(
+            email: args['email'],
+          ),
         );
 
       case Routes.resetPassword:
         final args = settings.arguments as Map<String, dynamic>;
+
         return MaterialPageRoute(
-          builder: (_) =>
-              ResetPassword(email: args['email'], otpcode: args['otpcode']),
+          settings: settings,
+          builder: (_) => ResetPassword(
+            email: args['email'],
+            otpcode: args['otpcode'],
+          ),
         );
 
       case Routes.mainLayout:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.home:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider.value(
             value: getIt<CartCubit>(),
             child: PersistenBottomNavBarDemo(
               onCartTabSelected: () {
-                getIt<CartCubit>().doEvent(CartRefreshRequestedEvent());
+                getIt<CartCubit>().doEvent(
+                  CartRefreshRequestedEvent(),
+                );
               },
             ),
           ),
         );
 
       case Routes.bestSeller:
-        return MaterialPageRoute(builder: (_) => const BestsellerView());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const BestsellerView(),
+        );
 
       case Routes.productDetails:
         final productId = settings.arguments as String? ?? '';
+
         return MaterialPageRoute(
-          builder: (_) => ProductDetails(productId: productId),
+          settings: settings,
+          builder: (_) => ProductDetails(
+            productId: productId,
+          ),
         );
 
       case Routes.occasion:
@@ -108,10 +144,14 @@ abstract class AppRoutes {
         );
 
       case Routes.categories:
-        return MaterialPageRoute(builder: (_) => const CategoriesView());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const CategoriesView(),
+        );
 
       case Routes.search:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider<SearchCubit>(
             create: (_) => getIt<SearchCubit>(),
             child: const SearchView(),
@@ -120,38 +160,67 @@ abstract class AppRoutes {
 
       case Routes.cart:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider.value(value: getIt<CartCubit>()),
-              BlocProvider.value(value: getIt<AddressCubit>()),
+              BlocProvider<CartCubit>.value(
+                value: getIt<CartCubit>(),
+              ),
+              BlocProvider<AddressCubit>.value(
+                value: getIt<AddressCubit>(),
+              ),
             ],
             child: const CartView(),
           ),
         );
 
       case Routes.checkout:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const CheckoutView(),
+        );
 
       case Routes.shippingAddress:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.savedAddresses:
-        return MaterialPageRoute(builder: (_) => const SavedAddressView());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const SavedAddressView(),
+        );
 
       case Routes.addAddress:
         final editingAddress = settings.arguments as AddressEntity?;
+
         return MaterialPageRoute(
-          builder: (_) => AddressView(editingAddress: editingAddress),
+          settings: settings,
+          builder: (_) => AddressView(
+            editingAddress: editingAddress,
+          ),
         );
 
       case Routes.myOrders:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<OrdersCubit>()
+              ..doIntent(const FetchOrdersIntent()),
+            child: const MyOrdersView(),
+          ),
+        );
 
       case Routes.orderDetails:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.notification:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => NotificationView(
             message: settings.arguments is RemoteMessage
                 ? settings.arguments as RemoteMessage
@@ -161,6 +230,7 @@ abstract class AppRoutes {
 
       case Routes.profile:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => getIt<ProfileViewModel>(),
             child: const ProfileHomeView(),
@@ -169,6 +239,7 @@ abstract class AppRoutes {
 
       case Routes.editProfile:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => getIt<ProfileViewModel>(),
             child: const UpdateProfileView(),
@@ -176,10 +247,14 @@ abstract class AppRoutes {
         );
 
       case Routes.changeLanguage:
-        return MaterialPageRoute(builder: (_) => const Placeholder());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const Placeholder(),
+        );
 
       case Routes.changePassword:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => getIt<ChangePasswordCubit>(),
             child: const ChangePasswordView(),
@@ -187,24 +262,47 @@ abstract class AppRoutes {
         );
 
       case Routes.orderSuccess:
-        final successOrderId = settings.arguments as String? ?? '';
+        final orderId = settings.arguments as String? ?? '';
+
         return MaterialPageRoute(
-          builder: (_) => OrderSuccessView(orderId: successOrderId),
+          settings: settings,
+          builder: (_) => OrderSuccessView(
+            orderId: orderId,
+          ),
+        );
+
+      case Routes.webView:
+        final args = settings.arguments as WebViewPaymentArgs;
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => WebViewPayment(
+            successUrl: args.successUrl,
+            cancelUrl: args.cancelUrl,
+            sessionUrl: args.sessionUrl,
+          ),
         );
 
       case Routes.trackOrder:
         final trackOrderId = settings.arguments as String? ?? '';
+
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
+          settings: settings,
+          builder: (_) => BlocProvider<TrackingViewModel>(
             create: (_) => getIt<TrackingViewModel>()
               ..handle(StartTrackingIntent(trackOrderId)),
-            child: TrackOrderView(orderId: trackOrderId),
+            child: TrackOrderView(
+              orderId: trackOrderId,
+            ),
           ),
         );
 
       case Routes.orderMap:
-        final trackingViewModel = settings.arguments as TrackingViewModel;
+        final trackingViewModel =
+            settings.arguments as TrackingViewModel;
+
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider<TrackingViewModel>.value(
             value: trackingViewModel,
             child: const OrderMapView(),
@@ -213,8 +311,12 @@ abstract class AppRoutes {
 
       default:
         return MaterialPageRoute(
-          builder: (_) =>
-              const Scaffold(body: Center(child: Text('Route Not Found'))),
+          settings: settings,
+          builder: (_) => const Scaffold(
+            body: Center(
+              child: Text('Route Not Found'),
+            ),
+          ),
         );
     }
   }

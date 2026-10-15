@@ -1,8 +1,13 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import 'cart_item.dart';
+
+/// Renders the lines of the cart.
+///
+/// The widget is intentionally dumb: it forwards the id and the requested new
+/// quantity and lets the cubit decide what that means (update or remove).
 class CartItemsList extends StatelessWidget {
   final List<CartItemEntity> items;
   final void Function(String cartItemId) onDelete;
@@ -19,9 +24,7 @@ class CartItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return const Center(
-        child: Text(AppStrings.yourCartIsEmpty),
-      );
+      return Center(child: Lottie.asset('assets/lottie_json/Empty.json'),);
     }
 
     return ListView.builder(
@@ -32,20 +35,8 @@ class CartItemsList extends StatelessWidget {
         return CartItem(
           item: item,
           onDelete: () => onDelete(item.id),
-          onQuantityChanged: (delta) {
-            final newQuantity = item.quantity + delta;
-
-            if (newQuantity <= 0) {
-              onDelete(item.id);
-              return;
-            }
-
-            onQuantityChanged(
-              item.id,
-              item.productId,
-              newQuantity,
-            );
-          },
+          onQuantityChanged: (newQuantity) =>
+              onQuantityChanged(item.id, item.productId, newQuantity),
         );
       },
     );

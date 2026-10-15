@@ -42,7 +42,10 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   }
 
   @override
-  Future<BaseResponce<List<OccasionDto>>> getOccasions({int pageNumber = 1, int pageSize = 10}) async {
+  Future<BaseResponce<List<OccasionDto>>> getOccasions({
+    int pageNumber = 1,
+    int pageSize = 10,
+  }) async {
     try {
       final response = await commerceApi.getOccasions(pageNumber, pageSize);
       if (response.isSuccess == true || response.isSuccess == null) {
@@ -55,9 +58,23 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   }
 
   @override
-  Future<BaseResponce<ProductsResponseDto>> getProducts({String? categoryId, String? occasionId, String? keyword, String? sortBy, int page = 1, int pageSize = 10}) async {
+  Future<BaseResponce<ProductsResponseDto>> getProducts({
+    String? categoryId,
+    String? occasionId,
+    String? keyword,
+    String? sortBy,
+    int page = 1,
+    int pageSize = 10,
+  }) async {
     try {
-      final response = await commerceApi.getProducts(categoryId, occasionId, keyword, sortBy, page, pageSize);
+      final response = await commerceApi.getProducts(
+        categoryId,
+        occasionId,
+        keyword,
+        sortBy,
+        page,
+        pageSize,
+      );
       if (response.isSuccess == true || response.isSuccess == null) {
         return SuccessResponce(response);
       }
@@ -109,4 +126,3 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
     }
   }
 }
-

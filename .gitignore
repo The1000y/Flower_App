@@ -51,7 +51,7 @@ app.*.map.json
 *.mocks.dart
 *.gr.dart
 *.config.dart
-
+secrets
 # Firebase credentials (contain project API keys - never commit these).
 # Commit the adjacent *.example templates instead; see README.md.
 /android/app/google-services.json
@@ -71,5 +71,6 @@ docker-compose.prod.yml
 # Postman collection
 flowery_postman_collection.json
 
-.cursor/
+.cursor/secrets
+
 android/build/

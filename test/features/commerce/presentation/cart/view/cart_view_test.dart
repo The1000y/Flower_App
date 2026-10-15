@@ -7,6 +7,7 @@ import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.da
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/request_state.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MockCartCubit extends MockCubit<CartState> implements CartCubit {}
 
-class MockAddressCubit extends MockCubit<AddressState> implements AddressCubit {}
+class MockAddressCubit extends MockCubit<AddressState>
+    implements AddressCubit {}
 
 void main() {
   late MockCartCubit mockCubit;
@@ -71,7 +73,7 @@ void main() {
   testWidgets('shows a loading indicator while the cart is loading', (
     tester,
   ) async {
-    await pumpApp(tester, const CartState(isLoading: true));
+    await pumpApp(tester, const CartState(fetch: RequestLoading<CartEntity>()));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
@@ -81,7 +83,9 @@ void main() {
   ) async {
     await pumpApp(
       tester,
-      const CartState(errorMessage: 'Something went wrong'),
+      const CartState(
+        fetch: RequestFailure<CartEntity>('Something went wrong'),
+      ),
     );
 
     expect(find.text('Something went wrong'), findsOneWidget);
@@ -162,12 +166,7 @@ void main() {
 
     await pumpApp(
       tester,
-      CartState(
-        data: cart,
-        itemLoadings: {
-          const CartItemLoading(id: '1', action: CartItemAction.update),
-        },
-      ),
+      CartState(data: cart, updatingProductIds: const {'1'}),
     );
 
     // Both items remain visible (no full-page loading).
@@ -183,9 +182,7 @@ void main() {
 
     // The affected product's delete is disabled; the other remains enabled.
     final deleteButtons = tester
-        .widgetList<IconButton>(
-          find.widgetWithIcon(IconButton, Icons.delete),
-        )
+        .widgetList<IconButton>(find.widgetWithIcon(IconButton, Icons.delete))
         .toList();
     expect(deleteButtons.length, 2);
     expect(deleteButtons[0].onPressed, isNull);

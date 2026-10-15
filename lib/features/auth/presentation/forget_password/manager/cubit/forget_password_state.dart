@@ -32,5 +32,5 @@ class ForgetPasswordState extends Equatable {
   }
 
   @override
-  List<Object> get props => [otpState, resendOtpState , forgotstate, resetstate];
+  List<Object> get props => [otpState, resendOtpState, forgotstate, resetstate];
 }

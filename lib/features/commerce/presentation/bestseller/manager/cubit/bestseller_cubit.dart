@@ -21,22 +21,18 @@ class BestsellerCubit extends Cubit<BestsellerState> {
   }
 
   Future<void> getBestsellerList() async {
-    emit(state.copyWith(
-      isLoading: true,
-      errorMessage: '',
-    ));
+    emit(state.copyWith(isLoading: true, errorMessage: ''));
 
     final result = await _getBestSellerUseCase.call();
 
     switch (result) {
       case SuccessResponce<List<BestSellerEntity>>():
-        emit(state.copyWith(
-          isLoading: false,
-          data: result.data,
-        ));
+        emit(state.copyWith(isLoading: false, data: result.data));
         break;
       case ErrorResponce<List<BestSellerEntity>>():
-        emit(state.copyWith(isLoading: false, errorMessage: result.errorMessage));
+        emit(
+          state.copyWith(isLoading: false, errorMessage: result.errorMessage),
+        );
         break;
     }
   }

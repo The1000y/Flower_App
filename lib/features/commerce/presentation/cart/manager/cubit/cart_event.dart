@@ -32,3 +32,4 @@ class RemoveCartItemEvent extends CartEvent {
 class ClearCartEvent extends CartEvent {}
 
 class CartRefreshRequestedEvent extends CartEvent {}
+class ResetCartStateEvent extends CartEvent {}

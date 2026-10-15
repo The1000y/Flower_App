@@ -22,6 +22,7 @@ dependencies:
   persistent_bottom_nav_bar_v2: ^6.3.2
   flutter_secure_storage: ^11.0.0
   google_fonts: ^8.2.0
+  lottie: ^3.6.1
   pinput: ^6.0.2
   cached_network_image: ^4.0.0
   firebase_core: ^4.15.0
@@ -33,7 +34,11 @@ dependencies:
   geolocator: ^14.0.3
   google_maps_flutter: ^2.18.0
   geocoding: ^4.0.0
-  collection: ^1.19.0
+  collection: ^1.19.1
+  shimmer: ^4.0.0
+  material_ui: ^1.0.1
+  webview_flutter: ^4.14.1
+  bloc: ^8.1.4
   intl: any
   flutter_localizations:
     sdk: flutter
@@ -68,6 +73,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/lottie_json/
     - assets/jsons/
     - assets/svgs/
     - .env

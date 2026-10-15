@@ -34,19 +34,13 @@ class OccasionAppBar extends StatelessWidget implements PreferredSizeWidget {
                 constraints: const BoxConstraints(),
               ),
               SizedBox(width: 8.w),
-              Text(
-                AppStrings.occasionTitle,
-                style: textTheme.titleSmall,
-              ),
+              Text(AppStrings.occasionTitle, style: textTheme.titleSmall),
             ],
           ),
           SizedBox(height: 4.h),
           Padding(
             padding: EdgeInsets.only(left: 32.w),
-            child: Text(
-              AppStrings.bloomSubtitle,
-              style: textTheme.labelMedium,
-            ),
+            child: Text(AppStrings.bloomSubtitle, style: textTheme.labelMedium),
           ),
         ],
       ),
