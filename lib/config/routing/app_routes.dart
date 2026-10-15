@@ -1,6 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
-import 'package:flower_app/features/order_tracking/presentation/view/order_success_view.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/track_order_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,31 +59,23 @@ abstract class AppRoutes {
         );
 
       case Routes.forgotPassword:
-        return MaterialPageRoute(
-          builder: (_) => const ForgetPassword(),
-        );
+        return MaterialPageRoute(builder: (_) => const ForgetPassword());
 
       case Routes.verificationCode:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (_) => VerificationView(
-            email: args['email'],
-          ),
+          builder: (_) => VerificationView(email: args['email']),
         );
 
       case Routes.resetPassword:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (_) => ResetPassword(
-            email: args['email'],
-            otpcode: args['otpcode'],
-          ),
+          builder: (_) =>
+              ResetPassword(email: args['email'], otpcode: args['otpcode']),
         );
 
       case Routes.mainLayout:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.home:
         return MaterialPageRoute(
@@ -92,25 +83,19 @@ abstract class AppRoutes {
             value: getIt<CartCubit>(),
             child: PersistenBottomNavBarDemo(
               onCartTabSelected: () {
-                getIt<CartCubit>().doEvent(
-                  CartRefreshRequestedEvent(),
-                );
+                getIt<CartCubit>().doEvent(CartRefreshRequestedEvent());
               },
             ),
           ),
         );
 
       case Routes.bestSeller:
-        return MaterialPageRoute(
-          builder: (_) => const BestsellerView(),
-        );
+        return MaterialPageRoute(builder: (_) => const BestsellerView());
 
       case Routes.productDetails:
         final productId = settings.arguments as String? ?? '';
         return MaterialPageRoute(
-          builder: (_) => ProductDetails(
-            productId: productId,
-          ),
+          builder: (_) => ProductDetails(productId: productId),
         );
 
       case Routes.occasion:
@@ -120,9 +105,7 @@ abstract class AppRoutes {
         );
 
       case Routes.categories:
-        return MaterialPageRoute(
-          builder: (_) => const CategoriesView(),
-        );
+        return MaterialPageRoute(builder: (_) => const CategoriesView());
 
       case Routes.search:
         return MaterialPageRoute(
@@ -136,49 +119,33 @@ abstract class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider.value(
-                value: getIt<CartCubit>(),
-              ),
-              BlocProvider.value(
-                value: getIt<AddressCubit>(),
-              ),
+              BlocProvider.value(value: getIt<CartCubit>()),
+              BlocProvider.value(value: getIt<AddressCubit>()),
             ],
             child: const CartView(),
           ),
         );
 
       case Routes.checkout:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.shippingAddress:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.savedAddresses:
-        return MaterialPageRoute(
-          builder: (_) => const SavedAddressView(),
-        );
+        return MaterialPageRoute(builder: (_) => const SavedAddressView());
 
       case Routes.addAddress:
         final editingAddress = settings.arguments as AddressEntity?;
         return MaterialPageRoute(
-          builder: (_) => AddressView(
-            editingAddress: editingAddress,
-          ),
+          builder: (_) => AddressView(editingAddress: editingAddress),
         );
 
       case Routes.myOrders:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.orderDetails:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.notification:
         return MaterialPageRoute(
@@ -206,9 +173,7 @@ abstract class AppRoutes {
         );
 
       case Routes.changeLanguage:
-        return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.changePassword:
         return MaterialPageRoute(
@@ -219,27 +184,18 @@ abstract class AppRoutes {
         );
 
       case Routes.orderSuccess:
-        return MaterialPageRoute(
-          builder: (_) => const OrderSuccessView(),
-        );
+        return MaterialPageRoute(builder: (_) => const Placeholder());
 
       case Routes.trackOrder:
-        return MaterialPageRoute(
-          builder: (_) => const TrackOrderView(),
-        );
+        return MaterialPageRoute(builder: (_) => const TrackOrderView());
 
       case Routes.orderMap:
-        return MaterialPageRoute(
-          builder: (_) => const OrderMapView(),
-        );
+        return MaterialPageRoute(builder: (_) => const OrderMapView());
 
       default:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(
-              child: Text('Route Not Found'),
-            ),
-          ),
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('Route Not Found'))),
         );
     }
   }

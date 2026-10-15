@@ -18,6 +18,10 @@ val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
+val flutterRootLocalPropertiesFile = rootProject.file("../local.properties")
+if (flutterRootLocalPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(flutterRootLocalPropertiesFile))
+}
 
 android {
     namespace = "com.example.flower_app"

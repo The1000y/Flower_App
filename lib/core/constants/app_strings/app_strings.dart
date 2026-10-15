@@ -95,8 +95,7 @@ abstract class AppStrings {
   static const String navcategories = 'Categories';
 
   static const String currencyEGP = 'EGP';
-  static const String bloomSubtitle =
-      'Bloom with our exquisite best sellers';
+  static const String bloomSubtitle = 'Bloom with our exquisite best sellers';
 
   static const String statusLabel = 'Status: ';
   static const String addToCart = 'Add to cart';
@@ -106,8 +105,7 @@ abstract class AppStrings {
   static const String description = 'Description';
   static const String bouquetInclude = 'Bouquet include';
 
-  static const String searchPlaceholder =
-      'Search For Any Product You Want';
+  static const String searchPlaceholder = 'Search For Any Product You Want';
   static const String filterButton = 'Filter';
   static const String sortBy = 'Sort by';
   static const String sortLowestPrice = 'Lowes Price';
@@ -146,11 +144,9 @@ abstract class AppStrings {
   static const String addNewAddress = 'Add new address';
   static const String addressTitle = 'Address';
   static const String enterAddressHint = 'Enter the address';
-  static const String enterTheThePhoneHint =
-      'Enter the the phone number';
+  static const String enterTheThePhoneHint = 'Enter the the phone number';
   static const String recipientNameLabel = 'Recipient name';
-  static const String enterRecipientNameHint =
-      'Enter the recipient name';
+  static const String enterRecipientNameHint = 'Enter the recipient name';
   static const String cityLabel = 'City';
   static const String areaLabel = 'Area';
   static const String saveAddress = 'Save address';
@@ -168,8 +164,7 @@ abstract class AppStrings {
   static const String cityRequired = 'City is Required';
   static const String phoneNumberRequired = 'Phone is Required';
   static const String addYourAddress = 'Add Your Address';
-  static const String addressAddedSuccess =
-      'Address added successfully';
+  static const String addressAddedSuccess = 'Address added successfully';
   static const String addressUpdatedSuccess = 'Address updated';
 
   static const String addressAddFailedServer =
@@ -194,10 +189,12 @@ abstract class AppStrings {
   static const String trackOrder = 'Track order';
   static const String deliveredOnPrefix = 'Delivered on ';
   static const String reorder = 'Reorder';
+  static const String waitingForDriverTitle = 'Waiting for a driver';
+  static const String waitingForDriverSubtitle =
+      "We'll assign one to your order shortly";
 
   static const String estimatedArrival = 'Estimated arrival';
-  static const String deliveryHeroSubtitle =
-      'Is your delivery hero for today';
+  static const String deliveryHeroSubtitle = 'Is your delivery hero for today';
 
   static const String statusReceived = 'Received your order';
   static const String statusPreparing = 'Preparing your order';
@@ -205,6 +202,7 @@ abstract class AppStrings {
   static const String statusDelivered = 'Delivered';
 
   static const String showMap = 'Show map';
+  static const String apartment = 'Apartment';
   static const String orderDeliveredAction = 'Order Delivered';
   static const String orderDetails = 'Order details';
   static const String stepPayment = 'Payment';
@@ -214,8 +212,7 @@ abstract class AppStrings {
   static const String itemsLabel = ' Items';
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
-  static const String orderPlacedSuccess =
-      'Your order placed successfully!';
+  static const String orderPlacedSuccess = 'Your order placed successfully!';
 
   static const String yourCartIsEmpty = 'Your cart is empty';
 
