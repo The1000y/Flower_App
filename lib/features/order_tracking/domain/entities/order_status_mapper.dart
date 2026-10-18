@@ -1,23 +1,29 @@
 import 'package:flower_app/core/constants/enums/order_status.dart';
 
 OrderStatus orderStatusFromApi(String? value) {
-  final normalized = (value ?? '').trim().toLowerCase().replaceAll('_', '').replaceAll(' ', '');
+  final normalized = (value ?? '')
+      .trim().toLowerCase().replaceAll('_', '').replaceAll(' ', '');
 
   switch (normalized) {
+    case 'placed':
     case 'received':
     case 'confirmed':
-    case 'placed':
     case 'pending':
       return OrderStatus.received;
     case 'preparing':
-    case 'processing':
       return OrderStatus.preparing;
+    case 'pickedup':
+      return OrderStatus.pickedUp;
     case 'outfordelivery':
-    case 'shipping':
       return OrderStatus.outForDelivery;
+    case 'awaitingdeliveryconfirmation':
+      return OrderStatus.awaitingDeliveryConfirmation;
     case 'delivered':
     case 'completed':
       return OrderStatus.delivered;
+    case 'cancelled':
+    case 'canceled':
+      return OrderStatus.cancelled;
     default:
       return OrderStatus.received;
   }

@@ -198,6 +198,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get instant => 'فوري، ';
 
   @override
+  String get statusPickedUp => 'استلمه المندوب';
+
+  @override
+  String get statusAwaitingConfirmation => 'بانتظار تأكيد استلامك';
+
+  @override
+  String get orderCancelledTitle => 'تم إلغاء الطلب';
+
+  @override
+  String get orderCancelledSubtitle => 'تم إلغاء هذا الطلب';
+
+  @override
+  String get confirmDeliveryAction => 'تأكيد الاستلام';
+
+  @override
   String get deliveryAddress => 'عنوان التوصيل';
 
   @override

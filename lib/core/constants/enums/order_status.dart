@@ -1,1 +1,9 @@
-enum OrderStatus { received, preparing, outForDelivery, delivered }
+enum OrderStatus {
+  received,
+  preparing,
+  pickedUp,
+  outForDelivery,
+  awaitingDeliveryConfirmation,
+  delivered,
+  cancelled, 
+}

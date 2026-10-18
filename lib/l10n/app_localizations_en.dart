@@ -198,6 +198,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get instant => 'Instant, ';
 
   @override
+  String get statusPickedUp => 'Picked up by the driver';
+
+  @override
+  String get statusAwaitingConfirmation => 'Awaiting your confirmation';
+
+  @override
+  String get orderCancelledTitle => 'Order cancelled';
+
+  @override
+  String get orderCancelledSubtitle => 'This order was cancelled';
+
+  @override
+  String get confirmDeliveryAction => 'Confirm delivery';
+
+  @override
   String get deliveryAddress => 'Delivery address';
 
   @override

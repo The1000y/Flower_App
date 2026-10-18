@@ -55,7 +55,7 @@ class CartCubit extends Cubit<CartState> {
     required this.getCartUseCase,
     required this.addCartItemUseCase,
     required this.clearCartUseCase,
-    this.quantityDebounce = const Duration(milliseconds: 700),
+    @ignoreParam this.quantityDebounce = const Duration(milliseconds: 700),
   }) : super(const CartState());
 
   Future<void> doEvent(CartEvent event) async {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
@@ -82,23 +83,40 @@ class TrackingViewModel extends Cubit<TrackingState> {
     _emitResult(response);
   }
 
-  void _emitResult(BaseResponce<TrackingEntity> response) {
-    switch (response) {
-      case SuccessResponce<TrackingEntity>(:final data):
-        emit(
-          state.copyWith(trackingState: BaseState<TrackingEntity>(data: data)),
-        );
-      case ErrorResponce<TrackingEntity>(:final errorMessage):
+ void _emitResult(BaseResponce<TrackingEntity> response) {
+  switch (response) {
+    case SuccessResponce<TrackingEntity>(:final data):
+      emit(
+        state.copyWith(
+          isWaitingForDriver: false,
+          trackingState: BaseState<TrackingEntity>(data: data),
+        ),
+      );
+    case ErrorResponce<TrackingEntity>(:final error, :final errorMessage):
+      final isNotAvailableYet =
+          error is DioException && error.response?.statusCode == 422;
+
+      if (isNotAvailableYet) {
         emit(
           state.copyWith(
-            trackingState: state.trackingState.copyWith(
-              isLoading: false,
-              errorMessage: errorMessage,
-            ),
+            isWaitingForDriver: true,
+            trackingState: const BaseState<TrackingEntity>(),
           ),
         );
-    }
+        return;
+      }
+
+      emit(
+        state.copyWith(
+          isWaitingForDriver: false,
+          trackingState: state.trackingState.copyWith(
+            isLoading: false,
+            errorMessage: errorMessage,
+          ),
+        ),
+      );
   }
+}
 
   @override
   Future<void> close() async {

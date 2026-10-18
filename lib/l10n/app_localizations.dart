@@ -470,6 +470,36 @@ abstract class AppLocalizations {
   /// **'Instant, '**
   String get instant;
 
+  /// No description provided for @statusPickedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked up by the driver'**
+  String get statusPickedUp;
+
+  /// No description provided for @statusAwaitingConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting your confirmation'**
+  String get statusAwaitingConfirmation;
+
+  /// No description provided for @orderCancelledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled'**
+  String get orderCancelledTitle;
+
+  /// No description provided for @orderCancelledSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This order was cancelled'**
+  String get orderCancelledSubtitle;
+
+  /// No description provided for @confirmDeliveryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm delivery'**
+  String get confirmDeliveryAction;
+
   /// No description provided for @deliveryAddress.
   ///
   /// In en, this message translates to:

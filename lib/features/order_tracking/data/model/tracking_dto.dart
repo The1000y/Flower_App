@@ -10,7 +10,7 @@ part 'tracking_dto.g.dart';
 class TrackingDto {
   @JsonKey(name: 'data')
   final TrackingDataDto? data;
-  @JsonKey(name: 'isSuccess')
+  @JsonKey(name: 'success')
   final bool? isSuccess;
   @JsonKey(name: 'message')
   final String? message;

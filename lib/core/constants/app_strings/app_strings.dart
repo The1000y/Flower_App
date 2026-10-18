@@ -206,6 +206,11 @@ abstract class AppStrings {
   static const String statusPreparing = 'Preparing your order';
   static const String statusOutForDelivery = 'Out for delivery';
   static const String statusDelivered = 'Delivered';
+  static const String statusPickedUp = 'Picked up by the driver';
+  static const String statusAwaitingConfirmation = 'Awaiting your confirmation';
+  static const String orderCancelledTitle = 'Order cancelled';
+  static const String orderCancelledSubtitle = 'This order was cancelled';
+  static const String confirmDeliveryAction = 'Confirm delivery';
 
   static const String showMap = 'Show map';
   static const String apartment = 'Apartment';
@@ -219,7 +224,7 @@ abstract class AppStrings {
   static const String enjoyYourOrderPrefix = 'Enjoy your order ';
   static const String rateButton = 'Rate';
   // Auth storage keys
-   static const String loading = 'loading....';
+  static const String loading = 'loading....';
 
   static const String tryAgain = 'tryAgain';
   static const String noAddress = 'no address selected';

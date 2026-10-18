@@ -36,14 +36,21 @@ class HandelErrorException {
 
   String? _messageFromBody(dynamic data) {
     if (data is Map) {
-      final error = data['error'] ?? data['message'] ?? data['details'];
-      if (error != null && error.toString().trim().isNotEmpty) {
+      final message = data['message']?.toString().trim();
+      if (message != null && message.isNotEmpty) return message;
+
+      final error = data['error'];
+      if (error is Map) {
+        final code = error['code']?.toString().trim();
+        if (code != null && code.isNotEmpty) return code;
+      } else if (error != null && error.toString().trim().isNotEmpty) {
         return error.toString();
       }
+
+      final details = data['details']?.toString().trim();
+      if (details != null && details.isNotEmpty) return details;
     }
-    if (data is String && data.trim().isNotEmpty) {
-      return data;
-    }
+    if (data is String && data.trim().isNotEmpty) return data;
     return null;
   }
 }

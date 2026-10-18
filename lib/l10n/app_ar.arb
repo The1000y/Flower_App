@@ -160,5 +160,10 @@
   "registerSuccess": "تم التسجيل بنجاح",
   "occasionTitle": "المناسبات",
   "versionProfile": "v6.3.0 - 1.40.0",
+ "statusPickedUp": "استلمه المندوب",
+"statusAwaitingConfirmation": "بانتظار تأكيد استلامك",
+"orderCancelledTitle": "تم إلغاء الطلب",
+"orderCancelledSubtitle": "تم إلغاء هذا الطلب",
+"confirmDeliveryAction": "تأكيد الاستلام",
   "noNotificationsYet": "لا توجد إشعارات بعد"
 }

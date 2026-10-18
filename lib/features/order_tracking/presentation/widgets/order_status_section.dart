@@ -16,16 +16,18 @@ class OrderStatusSection extends StatelessWidget {
     final status = orderStatusFromApi(tracking.status);
 
     return OrderStatusTimeline(
-      currentIndex: status.index,
-      steps: [
-        const OrderStepEntity(title: AppStrings.statusReceived),
-        const OrderStepEntity(title: AppStrings.statusPreparing),
-        const OrderStepEntity(title: AppStrings.statusOutForDelivery),
-        OrderStepEntity(
-          title: AppStrings.statusDelivered,
-          dateTime: tracking.estimatedDeliveryAt,
-        ),
-      ],
-    );
+  currentIndex: status.index,
+  steps: [
+    const OrderStepEntity(title: AppStrings.statusReceived),
+    const OrderStepEntity(title: AppStrings.statusPreparing),
+    const OrderStepEntity(title: AppStrings.statusPickedUp),              
+    const OrderStepEntity(title: AppStrings.statusOutForDelivery),
+    const OrderStepEntity(title: AppStrings.statusAwaitingConfirmation),  
+    OrderStepEntity(
+      title: AppStrings.statusDelivered,
+      dateTime: tracking.estimatedDeliveryAt,
+    ),
+  ],
+);
   }
 }

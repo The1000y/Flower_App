@@ -42,6 +42,10 @@ class TrackOrderView extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
+            if (state.isWaitingForDriver) {
+              return const WaitingForDriverView();
+            }
+
             if (data == null) {
               return _TrackingMessage(
                 message: state.trackingState.errorMessage.isEmpty
@@ -50,6 +54,15 @@ class TrackOrderView extends StatelessWidget {
                 onRetry: () => context.read<TrackingViewModel>().handle(
                   StartTrackingIntent(orderId),
                 ),
+              );
+            }
+
+            final status = orderStatusFromApi(data.status);
+
+            if (status == OrderStatus.cancelled) {
+              return _TrackingMessage(
+                message: AppStrings.orderCancelledSubtitle,
+                onRetry: () => Navigator.pop(context),
               );
             }
 
