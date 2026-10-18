@@ -21,7 +21,6 @@ class OrderSummarySection extends StatelessWidget {
   final GlobalKey<FormState> formKey;
 
   @override
-
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -94,6 +93,7 @@ class OrderSummarySection extends StatelessWidget {
                 return;
               }
               if (state.placeOrderState.data?.sessionUrl == null) {
+                log('ORDER_ID: ${state.placeOrderState.data!.orderId}');
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.orderSuccess,
                   (route) => false,
@@ -102,11 +102,13 @@ class OrderSummarySection extends StatelessWidget {
               }
               if (state.placeOrderState.data?.sessionUrl != null) {
                 log('sessionUrl: ${state.placeOrderState.data!.sessionUrl}');
+                log('ORDER_ID: ${state.placeOrderState.data!.orderId}');
 
-                Navigator.of(context).pushNamedAndRemoveUntil( 
+                Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.webView,
                   (route) => false,
                   arguments: WebViewPaymentArgs(
+                    orderId: state.placeOrderState.data!.orderId!,
                     successUrl: state.placeOrderState.data!.successUrl!,
                     cancelUrl: state.placeOrderState.data!.cancelUrl!,
                     sessionUrl: state.placeOrderState.data!.sessionUrl!,

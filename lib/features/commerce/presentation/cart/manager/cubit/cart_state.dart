@@ -64,6 +64,7 @@ class CartState extends Equatable {
   /// stay silent so they never replace the cart with an error page.
   String get errorMessage {
     if (fetch case RequestFailure<CartEntity>(:final message)) return message;
+    if (clear case RequestFailure<CartEntity>(:final message)) return message;
     return '';
   }
 

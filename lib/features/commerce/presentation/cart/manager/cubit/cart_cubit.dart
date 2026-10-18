@@ -49,6 +49,22 @@ class CartCubit extends Cubit<CartState> {
   /// [CartState] so they never replay on rebuild.
   Stream<CartUiEvent> get uiEvents => _uiEventsController.stream;
 
+  @factoryMethod
+  factory CartCubit.create({
+    required UpdateCartItemUseCase updateCartItemUseCase,
+    required RemoveCartItemUseCase removeCartItemUseCase,
+    required GetCartUseCase getCartUseCase,
+    required AddCartItemUseCase addCartItemUseCase,
+    required ClearCartUseCase clearCartUseCase,
+  }) =>
+      CartCubit(
+        updateCartItemUseCase: updateCartItemUseCase,
+        removeCartItemUseCase: removeCartItemUseCase,
+        getCartUseCase: getCartUseCase,
+        addCartItemUseCase: addCartItemUseCase,
+        clearCartUseCase: clearCartUseCase,
+      );
+
   CartCubit({
     required this.updateCartItemUseCase,
     required this.removeCartItemUseCase,

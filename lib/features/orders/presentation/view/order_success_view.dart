@@ -22,10 +22,11 @@ class OrderSuccessView extends StatefulWidget {
 
 class _OrderSuccessViewState extends State<OrderSuccessView> {
   @override
-void initState() {
-  super.initState();
-  getIt<CartCubit>().doEvent(ClearCartEvent());
-}
+  void initState() {
+    super.initState();
+    getIt<CartCubit>().doEvent(ClearCartEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -38,6 +39,7 @@ void initState() {
               rootNavigator: true,
             ).pushNamedAndRemoveUntil(Routes.home, (route) => false);
           } else if (state.action == OrderSuccessAction.navigateToTrackOrder) {
+            debugPrint('BlocListener state.orderId = ${state.orderId}');
             Navigator.of(
               context,
               rootNavigator: true,

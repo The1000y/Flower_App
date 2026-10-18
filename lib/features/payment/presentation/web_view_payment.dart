@@ -17,10 +17,12 @@ class WebViewPayment extends StatefulWidget {
     required this.sessionUrl,
     required this.successUrl,
     required this.cancelUrl,
+    required this.orderId,
   });
   final String sessionUrl;
   final String successUrl;
   final String cancelUrl;
+  final String orderId;
 
   @override
   State<WebViewPayment> createState() => _WebViewAppState();
@@ -103,6 +105,7 @@ class _WebViewAppState extends State<WebViewPayment> {
     await getIt<CartCubit>().doEvent(ResetCartStateEvent());
     if (!mounted) return;
     Navigator.pushNamedAndRemoveUntil(
+      arguments: widget.orderId,
       context,
       Routes.orderSuccess,
       (route) => false,

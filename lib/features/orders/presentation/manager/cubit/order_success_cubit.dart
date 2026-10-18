@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 enum OrderSuccessAction { navigateToHome, navigateToTrackOrder }
 
@@ -26,6 +27,7 @@ class OrderSuccessCubit extends Cubit<OrderSuccessState> {
   }
 
   void onTrackOrderTap() {
+    debugPrint('Cubit state.orderId = ${state.orderId}');
     emit(state.copyWith(action: OrderSuccessAction.navigateToTrackOrder));
   }
 }
