@@ -7,22 +7,24 @@ import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/domain/entities/login_credentials.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../../../helpers/mock_auth_api_client.mocks.dart';
 
 import '../../../../helpers/auth_test_helpers.dart';
 
 void main() {
   group('AuthRepoImpl', () {
     late SecureStorageService storage;
-    late AuthRepoImpl repo;
 
     setUp(() {
       useInMemorySecureStorage();
       storage = SecureStorageService(const FlutterSecureStorage());
-      repo = buildLoginRepo(RemoteDataSourceImpl(MockAuthApiClient()), storage);
     });
 
+    AuthRepoImpl repoWith(FakeAuthApiClient client) =>
+        buildLoginRepo(RemoteDataSourceImpl(client), storage);
+
     test('returns success and saves tokens when remember me is true', () async {
+      final repo = repoWith(FakeAuthApiClient());
+
       final result = await repo.login(
         LoginCredentials(email: Dummy.email, password: Dummy.pass),
         rememberMe: true,
@@ -34,6 +36,8 @@ void main() {
     });
 
     test('saves tokens on success even when remember me is false', () async {
+      final repo = repoWith(FakeAuthApiClient());
+
       final result = await repo.login(
         LoginCredentials(email: Dummy.email, password: Dummy.pass),
       );
@@ -44,6 +48,10 @@ void main() {
     });
 
     test('returns error for invalid credentials', () async {
+      final repo = repoWith(
+        FakeAuthApiClient(loginError: Exception('invalid credentials')),
+      );
+
       final result = await repo.login(
         LoginCredentials(email: 'wrong@example.com', password: 'wrong'),
       );
@@ -53,6 +61,8 @@ void main() {
     });
 
     test('delegates remember-me methods to storage service', () async {
+      final repo = repoWith(FakeAuthApiClient());
+
       await repo.saveRememberedEmail(validEmail);
       expect(await repo.getRememberedEmail(), validEmail);
 
@@ -61,6 +71,3 @@ void main() {
     });
   });
 }
-
-
-

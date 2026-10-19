@@ -198,6 +198,7 @@ class FakeAuthApiClient implements AuthApiClient {
     this.loginResponse,
     this.loginError,
     this.registerResponse,
+    this.registerError,
     this.refreshResponse,
     this.refreshError,
     this.refreshDelay = Duration.zero,
@@ -206,6 +207,7 @@ class FakeAuthApiClient implements AuthApiClient {
   final LoginResponse? loginResponse;
   final Object? loginError;
   final RegisterResponse? registerResponse;
+  final Object? registerError;
   final RefreshTokenResponseDto? refreshResponse;
   final Object? refreshError;
 
@@ -237,14 +239,20 @@ class FakeAuthApiClient implements AuthApiClient {
   }
 
   @override
-  Future<RegisterResponse> register(RegisterRequest request) async =>
-      registerResponse ??
-      RegisterResponse(
-        isSuccess: true,
-        errorCode: 200,
-        message: 'Registration successful',
-        data: true,
-      );
+  Future<RegisterResponse> register(RegisterRequest request) async {
+    final error = registerError;
+    if (error != null) {
+      throw error;
+    }
+
+    return registerResponse ??
+        RegisterResponse(
+          isSuccess: true,
+          errorCode: 200,
+          message: 'Registration successful',
+          data: true,
+        );
+  }
 
   @override
   Future<RefreshTokenResponseDto> refreshToken(

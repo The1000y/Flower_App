@@ -3,13 +3,13 @@ import 'package:flower_app/features/auth/api/data_source_impl/remote/dummy.dart'
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/login_request.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../../../helpers/mock_auth_api_client.mocks.dart';
+import '../../../../helpers/auth_test_helpers.dart';
 
 void main() {
   group('RemoteDataSourceImpl', () {
-    final dataSource = RemoteDataSourceImpl(MockAuthApiClient());
-
     test('returns success for valid credentials', () async {
+      final dataSource = RemoteDataSourceImpl(FakeAuthApiClient());
+
       final result = await dataSource.login(
         LoginRequest(email: Dummy.email, password: Dummy.pass),
       );
@@ -19,6 +19,10 @@ void main() {
     });
 
     test('returns failure for invalid credentials', () async {
+      final dataSource = RemoteDataSourceImpl(
+        FakeAuthApiClient(loginError: Exception('invalid credentials')),
+      );
+
       final result = await dataSource.login(
         LoginRequest(email: 'wrong@example.com', password: 'wrong'),
       );
@@ -28,6 +32,10 @@ void main() {
     });
 
     test('returns failure for correct email wrong password', () async {
+      final dataSource = RemoteDataSourceImpl(
+        FakeAuthApiClient(loginError: Exception('wrong password')),
+      );
+
       final result = await dataSource.login(
         LoginRequest(email: Dummy.email, password: 'wrongpass'),
       );
@@ -36,5 +44,3 @@ void main() {
     });
   });
 }
-
-

@@ -77,11 +77,15 @@ class FakePlatformNavigationDelegate extends PlatformNavigationDelegate {
 
   NavigationRequestCallback? onNavigationRequest;
   WebResourceErrorCallback? onWebResourceError;
+  UrlChangeCallback? onUrlChange;
 
   /// Runs the callback the production `NavigationDelegate` registered, i.e.
   /// simulates the web view navigating to [url].
   Future<NavigationDecision> navigate(String url) async =>
       onNavigationRequest!(NavigationRequest(url: url, isMainFrame: true));
+
+  /// Simulates the web view reporting that it moved to [url].
+  void changeUrl(String url) => onUrlChange?.call(UrlChange(url: url));
 
   @override
   Future<void> setOnNavigationRequest(NavigationRequestCallback handler) async {
@@ -91,6 +95,11 @@ class FakePlatformNavigationDelegate extends PlatformNavigationDelegate {
   @override
   Future<void> setOnWebResourceError(WebResourceErrorCallback handler) async {
     onWebResourceError = handler;
+  }
+
+  @override
+  Future<void> setOnUrlChange(UrlChangeCallback handler) async {
+    onUrlChange = handler;
   }
 }
 
