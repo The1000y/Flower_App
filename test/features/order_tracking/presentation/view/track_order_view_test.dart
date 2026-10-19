@@ -172,7 +172,7 @@ void main() {
     testWidgets('shows the delivered action once the order is delivered', (
       tester,
     ) async {
-      await _pump(tester, entity: _tracking(status: 'Delivered'));
+      await _pump(tester, entity: _tracking(status: 'AwaitingDeliveryConfirmation'));
 
       expect(
         find.widgetWithText(CustomButton, AppLocalizationsEn().orderDeliveredAction),

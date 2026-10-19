@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/payment/presentation/web_view_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,6 +22,10 @@ void main() {
 
   late FakeWebViewPlatform fakePlatform;
   late MockCartCubit cartCubit;
+
+  setUpAll(() {
+    mocktail.registerFallbackValue(ResetCartStateEvent());
+  });
 
   setUp(() {
     fakePlatform = FakeWebViewPlatform();

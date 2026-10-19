@@ -9,7 +9,9 @@ import '../../../../helpers/order_tracking_test_helpers.dart';
 const _titles = [
   'Received your order',
   'Preparing your order',
+  'Picked up by the driver',
   'Out for delivery',
+  'Awaiting your confirmation',
   'Delivered',
 ];
 
@@ -37,7 +39,7 @@ void main() {
           expect(_timelineOf(tester).currentIndex, status.index);
         });
 
-        testWidgets('always builds the four steps in the same order', (
+        testWidgets('always builds the steps in the same order', (
           tester,
         ) async {
           await pumpOrderTrackingApp(
@@ -60,10 +62,10 @@ void main() {
 
       final steps = _timelineOf(tester).steps;
       expect(steps.last.dateTime, _estimatedArrival);
-      expect(steps.take(3).every((s) => s.dateTime == null), isTrue);
+      expect(steps.take(steps.length - 1).every((s) => s.dateTime == null), isTrue);
     });
 
-    testWidgets('shows the four titles on screen', (tester) async {
+    testWidgets('shows every step title on screen', (tester) async {
       await pumpOrderTrackingApp(
         tester,
         OrderStatusSection(tracking: _tracking('Preparing')),

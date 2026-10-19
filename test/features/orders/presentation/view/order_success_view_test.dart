@@ -1,5 +1,8 @@
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
+import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flower_app/features/orders/presentation/view/order_success_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -9,18 +12,28 @@ import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
+class MockCartCubit extends Mock implements CartCubit {}
+
 class FakeRoute extends Fake implements Route<dynamic> {}
 
 void main() {
   setUpAll(() {
     registerFallbackValue(FakeRoute());
+    registerFallbackValue(ClearCartEvent());
   });
 
   late MockNavigatorObserver mockObserver;
+  late MockCartCubit mockCartCubit;
 
   setUp(() {
     mockObserver = MockNavigatorObserver();
+    mockCartCubit = MockCartCubit();
+    when(() => mockCartCubit.doEvent(any())).thenAnswer((_) async {});
+    getIt.allowReassignment = true;
+    getIt.registerSingleton<CartCubit>(mockCartCubit);
   });
+
+  tearDown(() => getIt.reset());
 
   Widget createWidgetUnderTest({String? orderId}) {
     return ScreenUtilPlusInit(

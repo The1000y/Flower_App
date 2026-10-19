@@ -1,7 +1,9 @@
-import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flower_app/core/shared/app_widgets/custom_profile_image.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_contract_card.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_delivery_boy_information_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/order_tracking_test_helpers.dart';
@@ -55,39 +57,37 @@ void main() {
   });
 
   group('CustomDeliveryBoyInformationCard - avatar', () {
-    testWidgets('uses a 50px pink circular avatar', (tester) async {
+    testWidgets('uses a 50px rounded avatar', (tester) async {
       await pumpOrderTrackingApp(tester, _card());
 
-      final avatar = tester.widget<CircleAvatar>(find.byType(CircleAvatar));
-      expect(avatar.radius, 25);
-      expect(avatar.backgroundColor, AppColors.pinkBase);
+      final clip = tester.widget<ClipRRect>(
+        find.descendant(
+          of: find.byType(CustomProfileImage),
+          matching: find.byType(ClipRRect),
+        ),
+      );
+      expect(clip.borderRadius, BorderRadius.circular(25));
     });
 
     testWidgets('loads the picture from the given url', (tester) async {
       await pumpOrderTrackingApp(tester, _card());
 
-      final image = tester.widget<Image>(
-        find.descendant(
-          of: find.byType(CircleAvatar),
-          matching: find.byType(Image),
-        ),
+      final image = tester.widget<CachedNetworkImage>(
+        find.byType(CachedNetworkImage),
       );
-      expect(image.image, isA<NetworkImage>());
-      expect((image.image as NetworkImage).url, _imageUrl);
+      expect(image.imageUrl, _imageUrl);
       expect(image.width, 50);
       expect(image.height, 50);
       expect(image.fit, BoxFit.cover);
     });
 
-    // flutter_test answers every HTTP request with status 400, so the network
-    // image always fails here and the app's errorBuilder fallback is shown.
-    testWidgets('falls back to a person icon when the picture cannot load', (
+    testWidgets('shows the delivery boy fallback when there is no picture', (
       tester,
     ) async {
-      await pumpOrderTrackingApp(tester, _card());
-      await tester.pumpAndSettle();
+      await pumpOrderTrackingApp(tester, _card(imageUrl: ''));
 
-      expect(find.byIcon(Icons.person), findsOneWidget);
+      expect(find.byType(CachedNetworkImage), findsNothing);
+      expect(find.byType(SvgPicture), findsWidgets);
     });
   });
 

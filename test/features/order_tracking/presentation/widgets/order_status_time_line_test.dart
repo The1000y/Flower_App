@@ -13,7 +13,7 @@ const _titles = [
   'Delivered',
 ];
 final _date = DateTime(2024, 9, 3, 2, 10);
-const _formattedDate = '03 Sep 2024 - 2:10';
+const _formattedDate = '3 September 2024, 2:10 AM';
 
 /// The four steps; only the first [withDates] have a date (= reached).
 List<OrderStepEntity> _steps({int withDates = 4}) => [
@@ -258,11 +258,11 @@ void main() {
         ),
       );
 
-      expect(_dotColors(tester), [
-        Colors.green,
-        Colors.green,
-        Colors.grey,
-        Colors.grey,
+      expect(_dotColors(tester).map((color) => color.toARGB32()), [
+        Colors.green.toARGB32(),
+        Colors.green.toARGB32(),
+        Colors.grey.toARGB32(),
+        Colors.grey.toARGB32(),
       ]);
     });
   });

@@ -11,10 +11,11 @@ void main() {
   const confirmPassword = 'P@ssw0rd';
 
   const json = <String, dynamic>{
-    'fullName': fullName,
+    'firstName': 'John',
+    'lastName': 'Doe',
     'email': email,
     'phoneNumber': phoneNumber,
-    'gender': gender,
+    'gender': 'Female',
     'password': password,
     'confirmPassword': confirmPassword,
   };

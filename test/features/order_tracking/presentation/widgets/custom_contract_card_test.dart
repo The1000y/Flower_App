@@ -1,36 +1,31 @@
+import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/core/services/url_launcher_service.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_contract_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../../../helpers/order_tracking_test_helpers.dart';
 import 'package:flower_app/l10n/app_localizations_en.dart';
 
-/// Replaces the real url_launcher platform so no native call is made and we can
+/// Replaces the real url launcher service so no native call is made and we can
 /// see exactly which urls the buttons try to open.
-class _FakeUrlLauncher extends Fake
-    with MockPlatformInterfaceMixin
-    implements UrlLauncherPlatform {
+class _FakeUrlLauncher implements UrlLauncherService {
   _FakeUrlLauncher({this.canLaunchResult = true});
 
   final bool canLaunchResult;
-  final List<String> checkedUrls = [];
-  final List<String> launchedUrls = [];
-  final List<LaunchOptions> launchOptions = [];
+  final List<Uri> launchedUris = [];
+  final List<LaunchMode> modes = [];
 
   @override
-  Future<bool> canLaunch(String url) async {
-    checkedUrls.add(url);
-    return canLaunchResult;
-  }
-
-  @override
-  Future<bool> launchUrl(String url, LaunchOptions options) async {
-    launchedUrls.add(url);
-    launchOptions.add(options);
+  Future<bool> launch(
+    Uri uri, {
+    LaunchMode mode = LaunchMode.platformDefault,
+  }) async {
+    if (!canLaunchResult) return false;
+    launchedUris.add(uri);
+    modes.add(mode);
     return true;
   }
 }
@@ -46,10 +41,15 @@ Future<void> _pumpCard(
 void main() {
   late _FakeUrlLauncher launcher;
 
-  setUp(() {
-    launcher = _FakeUrlLauncher();
-    UrlLauncherPlatform.instance = launcher;
-  });
+  void registerLauncher(_FakeUrlLauncher value) {
+    launcher = value;
+    getIt.allowReassignment = true;
+    getIt.registerSingleton<UrlLauncherService>(launcher);
+  }
+
+  setUp(() => registerLauncher(_FakeUrlLauncher()));
+
+  tearDown(() => getIt.reset());
 
   group('CustomContractCard - rendering', () {
     testWidgets('shows two icon buttons', (tester) async {
@@ -81,8 +81,9 @@ void main() {
       await tester.tap(_callButton());
       await tester.pump();
 
-      expect(launcher.checkedUrls, ['tel:01014194042']);
-      expect(launcher.launchedUrls, ['tel:01014194042']);
+      expect(launcher.launchedUris.map((uri) => uri.toString()), [
+        'tel:01014194042',
+      ]);
     });
 
     testWidgets('does not touch the WhatsApp link', (tester) async {
@@ -91,7 +92,10 @@ void main() {
       await tester.tap(_callButton());
       await tester.pump();
 
-      expect(launcher.launchedUrls.any((u) => u.contains('wa.me')), isFalse);
+      expect(
+        launcher.launchedUris.any((uri) => uri.toString().contains('wa.me')),
+        isFalse,
+      );
     });
   });
 
@@ -104,7 +108,7 @@ void main() {
       await tester.tap(_whatsAppButton());
       await tester.pump();
 
-      expect(launcher.launchedUrls, ['https://wa.me/01014194042']);
+      expect(launcher.launchedUris.single.toString(), 'https://wa.me/01014194042');
     });
 
     testWidgets('strips spaces, dashes and the plus sign from the number', (
@@ -115,7 +119,7 @@ void main() {
       await tester.tap(_whatsAppButton());
       await tester.pump();
 
-      expect(launcher.launchedUrls, ['https://wa.me/201014194042']);
+      expect(launcher.launchedUris.single.toString(), 'https://wa.me/201014194042');
     });
 
     testWidgets('opens in the external WhatsApp app, not in a web view', (
@@ -126,18 +130,12 @@ void main() {
       await tester.tap(_whatsAppButton());
       await tester.pump();
 
-      expect(
-        launcher.launchOptions.single.mode,
-        PreferredLaunchMode.externalApplication,
-      );
+      expect(launcher.modes.single, LaunchMode.externalApplication);
     });
   });
 
   group('CustomContractCard - when the link cannot be opened', () {
-    setUp(() {
-      launcher = _FakeUrlLauncher(canLaunchResult: false);
-      UrlLauncherPlatform.instance = launcher;
-    });
+    setUp(() => registerLauncher(_FakeUrlLauncher(canLaunchResult: false)));
 
     for (final entry in {
       'call': _callButton,
@@ -152,7 +150,7 @@ void main() {
         await tester.pump(); // let the async launcher finish
         await tester.pump(const Duration(milliseconds: 750)); // snack bar in
 
-        expect(launcher.launchedUrls, isEmpty);
+        expect(launcher.launchedUris, isEmpty);
         expect(find.text(AppLocalizationsEn().somethingWentWrong), findsOneWidget);
         expect(
           tester.widget<SnackBar>(find.byType(SnackBar)).backgroundColor,
