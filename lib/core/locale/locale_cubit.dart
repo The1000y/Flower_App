@@ -12,7 +12,6 @@ class LocaleCubit extends Cubit<AppLanguage> {
 
   static const String _localeKey = 'app_locale';
 
-
   Future<void> load() async {
     try {
       emit(AppLanguage.fromLanguageCode(_prefs.getString(_localeKey)));
@@ -22,7 +21,6 @@ class LocaleCubit extends Cubit<AppLanguage> {
     }
   }
 
- 
   Future<void> changeLanguage(AppLanguage language) async {
     if (language == state) return;
 

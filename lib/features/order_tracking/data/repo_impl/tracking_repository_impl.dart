@@ -4,6 +4,7 @@ import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/order_tracking/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/order_tracking/data/model/tracking_dto.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/exceptions/tracking_exception.dart';
 import 'package:flower_app/features/order_tracking/domain/repo/tracking_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,16 +17,24 @@ class TrackingRepositoryImpl implements TrackingRepository {
   final Map<String, _TrackingSession> _sessions = {};
 
   Duration get pollingInterval => const Duration(seconds: 5);
+  static const int _maxConsecutiveFailures = 5;
 
   @override
   Future<BaseResponce<TrackingEntity>> getTracking(String orderId) async {
+    if (orderId.trim().isEmpty) {
+      return ErrorResponce<TrackingEntity>(
+        const TrackingInvalidRequestException('Invalid order id'),
+      );
+    }
+
     final result = await _remoteDataSource.getOrderTracking(orderId);
+
     switch (result) {
       case SuccessResponce<TrackingDto>(:final data):
         final entity = data.toEntity();
         if (entity == null) {
           return ErrorResponce<TrackingEntity>(
-            Exception('Missing tracking response data'),
+            const TrackingServerException('Missing tracking response data'),
           );
         }
         return SuccessResponce<TrackingEntity>(entity);
@@ -36,6 +45,14 @@ class TrackingRepositoryImpl implements TrackingRepository {
 
   @override
   Stream<BaseResponce<TrackingEntity>> startTracking(String orderId) {
+    if (orderId.trim().isEmpty) {
+      return Stream.value(
+        ErrorResponce<TrackingEntity>(
+          const TrackingInvalidRequestException('Invalid order id'),
+        ),
+      );
+    }
+
     final existing = _sessions[orderId];
     if (existing != null && !existing.isClosed) {
       return existing.stream;
@@ -74,6 +91,13 @@ class TrackingRepositoryImpl implements TrackingRepository {
     }
   }
 
+  Future<void> _stopSession(_TrackingSession session) async {
+    if (_sessions[session.orderId] == session) {
+      _sessions.remove(session.orderId);
+    }
+    await _closeSession(session);
+  }
+
   Future<void> _fetch(_TrackingSession session) async {
     if (session.isClosed || session.isFetching) return;
     session.isFetching = true;
@@ -82,17 +106,29 @@ class TrackingRepositoryImpl implements TrackingRepository {
       if (session.isClosed) return;
       switch (result) {
         case SuccessResponce<TrackingEntity>(:final data):
+          session.failures = 0;
           _emit(session, SuccessResponce<TrackingEntity>(data));
           if (data.isTerminal) {
-            _sessions.remove(session.orderId);
-            await _closeSession(session);
+            await _stopSession(session);
           }
         case ErrorResponce<TrackingEntity>(:final error):
           _emit(session, ErrorResponce<TrackingEntity>(error));
+
+          final tracking = error is TrackingException ? error : null;
+          if (tracking?.countsAsFailure ?? true) session.failures++;
+
+          if ((tracking?.stopsPolling ?? false) ||
+              session.failures >= _maxConsecutiveFailures) {
+            await _stopSession(session);
+          }
       }
     } catch (error, stackTrace) {
       if (session.isClosed) return;
       session.addError(error, stackTrace);
+      session.failures++;
+      if (session.failures >= _maxConsecutiveFailures) {
+        await _stopSession(session);
+      }
     } finally {
       session.isFetching = false;
     }
@@ -127,6 +163,7 @@ class _TrackingSession {
   Timer? timer;
   bool isFetching = false;
   bool isClosed = false;
+  int failures = 0;
 
   /// Built once: repeated session lookups reuse the same transformed stream
   /// instead of allocating a fresh transformer on every access.

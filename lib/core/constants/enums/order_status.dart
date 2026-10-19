@@ -5,5 +5,5 @@ enum OrderStatus {
   outForDelivery,
   awaitingDeliveryConfirmation,
   delivered,
-  cancelled, 
+  cancelled,
 }

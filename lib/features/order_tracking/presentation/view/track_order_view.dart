@@ -2,7 +2,6 @@ import 'package:flower_app/core/shared/app_widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-
 import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/constants/enums/order_status.dart';
 import '../../../../core/shared/animations/animated_car_single_file.dart';
@@ -51,7 +50,7 @@ class TrackOrderView extends StatelessWidget {
                 message: state.trackingState.errorMessage.isEmpty
                     ? AppStrings.unexpectedError
                     : state.trackingState.errorMessage,
-                onRetry: () => context.read<TrackingViewModel>().handle(
+                onPressed: () => context.read<TrackingViewModel>().handle(
                   StartTrackingIntent(orderId),
                 ),
               );
@@ -62,7 +61,8 @@ class TrackOrderView extends StatelessWidget {
             if (status == OrderStatus.cancelled) {
               return _TrackingMessage(
                 message: AppStrings.orderCancelledSubtitle,
-                onRetry: () => Navigator.pop(context),
+                buttonText: 'Back',
+                onPressed: () => Navigator.pop(context),
               );
             }
 
@@ -141,10 +141,15 @@ class _TrackingContent extends StatelessWidget {
 }
 
 class _TrackingMessage extends StatelessWidget {
-  const _TrackingMessage({required this.message, required this.onRetry});
+  const _TrackingMessage({
+    required this.message,
+    required this.onPressed,
+    this.buttonText = 'Retry',
+  });
 
   final String message;
-  final VoidCallback onRetry;
+  final VoidCallback onPressed;
+  final String buttonText;
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +167,7 @@ class _TrackingMessage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const Gap(16),
-            TextButton(onPressed: onRetry, child: const Text('Retry')),
+            TextButton(onPressed: onPressed, child: Text(buttonText)),
           ],
         ),
       ),

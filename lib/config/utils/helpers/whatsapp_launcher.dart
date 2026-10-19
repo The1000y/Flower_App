@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../core/services/url_launcher_service.dart';
 import 'launch_failure_snack_bar.dart';
 
-
 Future<void> whatsAppLauncher(
   String phoneNumber,
   BuildContext context,

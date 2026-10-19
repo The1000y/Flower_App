@@ -145,14 +145,12 @@ class ProductCard extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(AppColors.pinkBase),
               ),
-              onPressed: onAddToCart ??
+              onPressed:
+                  onAddToCart ??
                   () {
                     context.read<CartCubit>().doEvent(
-                          AddToCartEvent(
-                            productId: id,
-                            quantity: 1,
-                          ),
-                        );
+                      AddToCartEvent(productId: id, quantity: 1),
+                    );
                   },
               icon: Icon(
                 Icons.shopping_cart_outlined,

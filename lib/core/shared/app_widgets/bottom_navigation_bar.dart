@@ -26,7 +26,6 @@ class PersistentBottomNavBarDemo extends StatefulWidget {
 
 class _PersistentBottomNavBarDemoState
     extends State<PersistentBottomNavBarDemo> {
-
   late final PersistentTabController _controller = PersistentTabController(
     initialIndex: 0,
   );
@@ -43,12 +42,8 @@ class _PersistentBottomNavBarDemoState
   Widget build(BuildContext context) {
     final homeScreen = MultiBlocProvider(
       providers: [
-        BlocProvider.value(
-          value: getIt<HomeCubit>(),
-        ),
-        BlocProvider.value(
-          value: getIt<AddressCubit>(),
-        ),
+        BlocProvider.value(value: getIt<HomeCubit>()),
+        BlocProvider.value(value: getIt<AddressCubit>()),
       ],
       child: HomeView(controller: _controller),
     );

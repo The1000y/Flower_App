@@ -19,16 +19,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-final GlobalKey<NavigatorState> _navigatorKey =
-    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(
-  RemoteMessage message,
-) async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   debugPrint('Background message: ${message.messageId}');
 }
@@ -38,15 +33,11 @@ Future<void> main() async {
 
   await dotenv.load(fileName: '.env');
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await configureDependencies();
 
-  FirebaseMessaging.onBackgroundMessage(
-    firebaseMessagingBackgroundHandler,
-  );
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   final localeCubit = getIt<LocaleCubit>();
 
@@ -65,15 +56,9 @@ Future<void> main() async {
       splitScreenMode: true,
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<CartCubit>(
-            create: (_) => getIt<CartCubit>(),
-          ),
-          BlocProvider<LoginViewModel>(
-            create: (_) => getIt<LoginViewModel>(),
-          ),
-          BlocProvider<LocaleCubit>.value(
-            value: localeCubit,
-          ),
+          BlocProvider<CartCubit>(create: (_) => getIt<CartCubit>()),
+          BlocProvider<LoginViewModel>(create: (_) => getIt<LoginViewModel>()),
+          BlocProvider<LocaleCubit>.value(value: localeCubit),
         ],
         child: const FlowerApp(),
       ),
@@ -102,8 +87,7 @@ class FlowerApp extends StatelessWidget {
           initialRoute: Routes.login,
           locale: language.locale,
           supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates:
-              AppLocalizations.localizationsDelegates,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
           theme: AppTheme.lightThem,
           debugShowCheckedModeBanner: false,
           title: 'Flower App',

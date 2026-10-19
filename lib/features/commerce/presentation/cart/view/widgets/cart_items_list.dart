@@ -24,7 +24,7 @@ class CartItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return Center(child: Lottie.asset('assets/lottie_json/Empty.json'),);
+      return Center(child: Lottie.asset('assets/lottie_json/Empty.json'));
     }
 
     return ListView.builder(

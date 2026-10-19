@@ -52,8 +52,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<BaseResponce<ForgotPasswordResponseDto>> forgotPassword(
-      ForgotPasswordRequestDto request,
-      ) async {
+    ForgotPasswordRequestDto request,
+  ) async {
     try {
       final response = await _authApiClient.forgotPassword(request);
       if (response.isSuccess) {
@@ -88,8 +88,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<BaseResponce<ResetPasswordResponseDto>> resetPassword(
-      ResetPasswordRequestDto request,
-      ) async {
+    ResetPasswordRequestDto request,
+  ) async {
     try {
       final response = await _authApiClient.resetPassword(request);
       if (response.isSuccess) {

@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:injectable/injectable.dart';
+
 abstract interface class FirebaseMessagingGateway {
   Stream<RemoteMessage> get onMessage;
 

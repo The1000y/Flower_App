@@ -56,14 +56,13 @@ class CartCubit extends Cubit<CartState> {
     required GetCartUseCase getCartUseCase,
     required AddCartItemUseCase addCartItemUseCase,
     required ClearCartUseCase clearCartUseCase,
-  }) =>
-      CartCubit(
-        updateCartItemUseCase: updateCartItemUseCase,
-        removeCartItemUseCase: removeCartItemUseCase,
-        getCartUseCase: getCartUseCase,
-        addCartItemUseCase: addCartItemUseCase,
-        clearCartUseCase: clearCartUseCase,
-      );
+  }) => CartCubit(
+    updateCartItemUseCase: updateCartItemUseCase,
+    removeCartItemUseCase: removeCartItemUseCase,
+    getCartUseCase: getCartUseCase,
+    addCartItemUseCase: addCartItemUseCase,
+    clearCartUseCase: clearCartUseCase,
+  );
 
   CartCubit({
     required this.updateCartItemUseCase,

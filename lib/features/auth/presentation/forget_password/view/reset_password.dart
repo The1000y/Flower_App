@@ -123,8 +123,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         text: AppStrings.confirmButton,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            if (_newpassword.text ==
-                                _confirmPassword.text) {
+                            if (_newpassword.text == _confirmPassword.text) {
                               viewModel.doEvent(
                                 ResetPasswordEvent(
                                   email: widget.email,

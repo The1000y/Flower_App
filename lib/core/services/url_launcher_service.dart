@@ -1,7 +1,8 @@
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:injectable/injectable.dart';
 import 'package:url_launcher/url_launcher.dart' show LaunchMode;
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart' show LaunchOptions, PreferredLaunchMode, UrlLauncherPlatform;
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart'
+    show LaunchOptions, PreferredLaunchMode, UrlLauncherPlatform;
 
 export 'package:url_launcher/url_launcher.dart' show LaunchMode;
 

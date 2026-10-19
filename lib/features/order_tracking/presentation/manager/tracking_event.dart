@@ -12,4 +12,4 @@ class StartTrackingIntent extends TrackingEvent {
   StartTrackingIntent(this.orderId);
 }
 
-class StopTrackingIntent extends TrackingEvent  {}
+class StopTrackingIntent extends TrackingEvent {}

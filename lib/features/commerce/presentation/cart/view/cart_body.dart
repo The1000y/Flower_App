@@ -235,14 +235,18 @@ class _CheckoutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
-   return Padding(
-     padding: const EdgeInsets.all(16.0),
-     child: CustomButton(text: AppStrings.checkout, onPressed: () => Navigator.pushNamed(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: CustomButton(
+        text: AppStrings.checkout,
+        onPressed: () => Navigator.pushNamed(
           context,
           Routes.checkout,
           arguments: totalPrice.toStringAsFixed(2),
-        ), isEnabled: true, enabledColor: AppColors.pinkBase,),
-   );
+        ),
+        isEnabled: true,
+        enabledColor: AppColors.pinkBase,
+      ),
+    );
   }
 }

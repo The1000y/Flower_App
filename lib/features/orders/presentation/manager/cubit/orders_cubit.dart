@@ -86,7 +86,6 @@ class OrdersCubit extends Cubit<OrdersState> {
   }
 
   void _trackOrderTapped(String id) {
-    
     emit(
       state.copyWith(
         sideEffect: OrdersSideEffect.navigateToTrack,

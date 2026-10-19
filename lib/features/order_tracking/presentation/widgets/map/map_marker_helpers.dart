@@ -86,12 +86,12 @@ Future<BitmapDescriptor> buildPinBitmap({
 }
 
 void _paintIcon(
-    Canvas canvas,
-    IconData icon, {
-      required double size,
-      required Color color,
-      required Offset offset,
-    }) {
+  Canvas canvas,
+  IconData icon, {
+  required double size,
+  required Color color,
+  required Offset offset,
+}) {
   final painter = TextPainter(
     text: TextSpan(
       text: String.fromCharCode(icon.codePoint),
@@ -110,10 +110,10 @@ void _paintIcon(
 }
 
 Future<BitmapDescriptor> svgToBitmap(
-    String assetName, {
-      required double width,
-      required double dpr,
-    }) async {
+  String assetName, {
+  required double width,
+  required double dpr,
+}) async {
   final info = await vg.loadPicture(SvgAssetLoader(assetName), null);
 
   final scale = (width * dpr) / info.size.width;

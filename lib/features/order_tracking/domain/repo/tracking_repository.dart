@@ -9,6 +9,6 @@ abstract interface class TrackingRepository {
   Future<void> stopTracking(String orderId);
 
   Future<void> refreshTracking(String orderId);
-  
+
   Future<void> dispose();
 }

@@ -28,12 +28,10 @@ class RefreshTokenResponseDto {
   });
 
   /// A refresh only counts as successful when a usable access token came back.
-  bool get isSuccessful =>
-      accessToken != null && accessToken!.isNotEmpty;
+  bool get isSuccessful => accessToken != null && accessToken!.isNotEmpty;
 
-  factory RefreshTokenResponseDto.fromJson(
-    Map<String, dynamic> json,
-  ) => _$RefreshTokenResponseDtoFromJson(json);
+  factory RefreshTokenResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$RefreshTokenResponseDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$RefreshTokenResponseDtoToJson(this);
 }

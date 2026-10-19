@@ -2,7 +2,10 @@ import 'package:flower_app/core/constants/enums/order_status.dart';
 
 OrderStatus orderStatusFromApi(String? value) {
   final normalized = (value ?? '')
-      .trim().toLowerCase().replaceAll('_', '').replaceAll(' ', '');
+      .trim()
+      .toLowerCase()
+      .replaceAll('_', '')
+      .replaceAll(' ', '');
 
   switch (normalized) {
     case 'placed':

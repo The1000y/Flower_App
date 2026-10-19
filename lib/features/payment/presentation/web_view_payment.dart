@@ -163,7 +163,5 @@ class _WebViewAppState extends State<WebViewPayment> {
   }
 }
 
-
-
 //http://localhost:8080/payments/callback
 //http://localhost:8080/payments/callback

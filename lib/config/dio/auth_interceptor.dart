@@ -11,7 +11,6 @@ class AuthInterceptors extends Interceptor {
   /// a request the gateway keeps rejecting would loop forever.
   static const String retriedFlag = 'authRetried';
 
-  
   // d6e34328-9941-49a2-9b9f-e275dd0f35f0
 
   @override

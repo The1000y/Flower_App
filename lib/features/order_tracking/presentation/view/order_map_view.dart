@@ -28,7 +28,10 @@ class OrderMapView extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final address = _toLatLng(data.userAddress?.lat, data.userAddress?.lng);
+          final address = _toLatLng(
+            data.userAddress?.lat,
+            data.userAddress?.lng,
+          );
           final courier = _toLatLng(
             data.currentLocation?.lat,
             data.currentLocation?.lng,

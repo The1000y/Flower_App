@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/routing/web_view_payment_args.dart';
@@ -84,9 +84,7 @@ abstract class AppRoutes {
 
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => VerificationView(
-            email: args['email'],
-          ),
+          builder: (_) => VerificationView(email: args['email']),
         );
 
       case Routes.resetPassword:
@@ -94,10 +92,8 @@ abstract class AppRoutes {
 
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => ResetPassword(
-            email: args['email'],
-            otpcode: args['otpcode'],
-          ),
+          builder: (_) =>
+              ResetPassword(email: args['email'], otpcode: args['otpcode']),
         );
 
       case Routes.mainLayout:
@@ -113,9 +109,7 @@ abstract class AppRoutes {
             value: getIt<CartCubit>(),
             child: PersistentBottomNavBarDemo(
               onCartTabSelected: () {
-                getIt<CartCubit>().doEvent(
-                  CartRefreshRequestedEvent(),
-                );
+                getIt<CartCubit>().doEvent(CartRefreshRequestedEvent());
               },
             ),
           ),
@@ -132,9 +126,7 @@ abstract class AppRoutes {
 
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => ProductDetails(
-            productId: productId,
-          ),
+          builder: (_) => ProductDetails(productId: productId),
         );
 
       case Routes.occasion:
@@ -163,12 +155,8 @@ abstract class AppRoutes {
           settings: settings,
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider<CartCubit>.value(
-                value: getIt<CartCubit>(),
-              ),
-              BlocProvider<AddressCubit>.value(
-                value: getIt<AddressCubit>(),
-              ),
+              BlocProvider<CartCubit>.value(value: getIt<CartCubit>()),
+              BlocProvider<AddressCubit>.value(value: getIt<AddressCubit>()),
             ],
             child: const CartView(),
           ),
@@ -197,17 +185,15 @@ abstract class AppRoutes {
 
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => AddressView(
-            editingAddress: editingAddress,
-          ),
+          builder: (_) => AddressView(editingAddress: editingAddress),
         );
 
       case Routes.myOrders:
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider(
-            create: (_) => getIt<OrdersCubit>()
-              ..doIntent(const FetchOrdersIntent()),
+            create: (_) =>
+                getIt<OrdersCubit>()..doIntent(const FetchOrdersIntent()),
             child: const MyOrdersView(),
           ),
         );
@@ -266,9 +252,7 @@ abstract class AppRoutes {
 
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => OrderSuccessView(
-            orderId: orderId,
-          ),
+          builder: (_) => OrderSuccessView(orderId: orderId),
         );
 
       case Routes.webView:
@@ -277,7 +261,7 @@ abstract class AppRoutes {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => WebViewPayment(
-            orderId:args.orderId ,
+            orderId: args.orderId,
             successUrl: args.successUrl,
             cancelUrl: args.cancelUrl,
             sessionUrl: args.sessionUrl,
@@ -285,22 +269,29 @@ abstract class AppRoutes {
         );
 
       case Routes.trackOrder:
-        final trackOrderId = settings.arguments as String? ?? '';
+        final args = settings.arguments;
+        final trackOrderId = args is String ? args.trim() : '';
+
+        if (trackOrderId.isEmpty) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (_) =>
+                Scaffold(body: Center(child: Text(AppStrings.unexpectedError))),
+          );
+        }
 
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider<TrackingViewModel>(
-            create: (_) => getIt<TrackingViewModel>()
-              ..handle(StartTrackingIntent(trackOrderId)),
-            child: TrackOrderView(
-              orderId: trackOrderId,
-            ),
+            create: (_) =>
+                getIt<TrackingViewModel>()
+                  ..handle(StartTrackingIntent(trackOrderId)),
+            child: TrackOrderView(orderId: trackOrderId),
           ),
         );
 
       case Routes.orderMap:
-        final trackingViewModel =
-            settings.arguments as TrackingViewModel;
+        final trackingViewModel = settings.arguments as TrackingViewModel;
 
         return MaterialPageRoute(
           settings: settings,
@@ -313,11 +304,8 @@ abstract class AppRoutes {
       default:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const Scaffold(
-            body: Center(
-              child: Text('Route Not Found'),
-            ),
-          ),
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('Route Not Found'))),
         );
     }
   }
