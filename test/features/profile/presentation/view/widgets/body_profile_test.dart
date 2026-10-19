@@ -264,5 +264,26 @@ void main() {
 
       expect(savedAddressTapped, isTrue);
     });
+
+    testWidgets('invokes onMyOrders when My orders is tapped', (tester) async {
+      var myOrdersTapped = false;
+      await tester.pumpWidget(
+        wrap(
+          ProfileBody(
+            profile: testProfile,
+            onEditProfile: () {},
+            onNotification: () {},
+            onLanguage: () {},
+            onLogout: () {},
+            onMyOrders: () => myOrdersTapped = true,
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('My orders'));
+      await tester.pump();
+
+      expect(myOrdersTapped, isTrue);
+    });
   });
 }

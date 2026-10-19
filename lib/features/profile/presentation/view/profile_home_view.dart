@@ -99,6 +99,7 @@ class _ProfileHomeViewState extends State<ProfileHomeView> {
                 context.read<ProfileViewModel>().doEvent(FetchProfileEvent());
               }
             },
+            onMyOrders: () => Navigator.pushNamed(context, Routes.myOrders),
             onSavedAddress: () =>
                 Navigator.pushNamed(context, Routes.savedAddresses),
             onNotification: () =>

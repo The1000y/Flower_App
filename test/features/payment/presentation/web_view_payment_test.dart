@@ -151,7 +151,7 @@ void main() {
       final handleNavigation = fakePlatform.lastDelegate.onNavigationRequest!;
 
       // Act
-      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      await tester.pumpWidget(const SizedBox());
       final decision = await handleNavigation(
         const NavigationRequest(url: successUrl, isMainFrame: true),
       );

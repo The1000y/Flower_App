@@ -17,6 +17,7 @@ class ProfileBody extends StatelessWidget {
     required this.onLanguage,
     required this.onLogout,
     this.onSavedAddress,
+    this.onMyOrders,
     this.unreadNotificationsCount,
     this.notificationsEnabled = true,
     this.onNotificationsChanged,
@@ -28,6 +29,7 @@ class ProfileBody extends StatelessWidget {
   final VoidCallback onLanguage;
   final VoidCallback onLogout;
   final VoidCallback? onSavedAddress;
+  final VoidCallback? onMyOrders;
 
   final int? unreadNotificationsCount;
 
@@ -208,7 +210,7 @@ class ProfileBody extends StatelessWidget {
         ProfileOptionTile(
           icon: Icons.receipt_long_outlined,
           title: l10n.myOrdersTitle,
-          onTap: () {},
+          onTap: onMyOrders ?? () {},
         ),
         ProfileOptionTile(
           icon: Icons.bookmark_border_outlined,
