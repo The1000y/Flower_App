@@ -2,6 +2,7 @@ import 'package:flower_app/core/shared/app_widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+
 import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/constants/enums/order_status.dart';
 import '../../../../core/shared/animations/animated_car_single_file.dart';
@@ -33,7 +34,17 @@ class TrackOrderView extends StatelessWidget {
         onBack: () => Navigator.pop(context),
       ),
       body: SafeArea(
-        child: BlocBuilder<TrackingViewModel, TrackingState>(
+        child: BlocConsumer<TrackingViewModel, TrackingState>(
+          listenWhen: (prev, curr) =>
+              prev.confirmDeliveryError != curr.confirmDeliveryError &&
+              curr.confirmDeliveryError.isNotEmpty,
+          listener: (context, state) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text(state.confirmDeliveryError)),
+              );
+          },
           builder: (context, state) {
             final data = state.trackingState.data;
 
@@ -70,7 +81,10 @@ class TrackOrderView extends StatelessWidget {
               return const WaitingForDriverView();
             }
 
-            return _TrackingContent(tracking: data);
+            return _TrackingContent(
+              tracking: data,
+              isConfirming: state.isConfirmingDelivery,
+            );
           },
         ),
       ),
@@ -79,9 +93,10 @@ class TrackOrderView extends StatelessWidget {
 }
 
 class _TrackingContent extends StatelessWidget {
-  const _TrackingContent({required this.tracking});
+  const _TrackingContent({required this.tracking, required this.isConfirming});
 
   final TrackingEntity tracking;
+  final bool isConfirming;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +147,12 @@ class _TrackingContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: CustomTrackingButtonsSection(
-            isDelivered: status == OrderStatus.delivered,
+            isAwaitingConfirmation:
+                status == OrderStatus.awaitingDeliveryConfirmation,
+            isConfirming: isConfirming,
+            onConfirm: () => context.read<TrackingViewModel>().handle(
+              ConfirmDeliveryIntent(),
+            ),
           ),
         ),
       ],

@@ -55,6 +55,7 @@ class TrackingRepositoryImpl implements TrackingRepository {
 
     final existing = _sessions[orderId];
     if (existing != null && !existing.isClosed) {
+      unawaited(_fetch(existing));
       return existing.stream;
     }
     final session = _TrackingSession(orderId);
@@ -143,6 +144,20 @@ class TrackingRepositoryImpl implements TrackingRepository {
     if (_sessions[session.orderId] != session) return;
     _sessions.remove(session.orderId);
     await _closeSession(session);
+  }
+
+  @override
+  Future<BaseResponce<void>> confirmDelivery(String orderId) async {
+    if (orderId.trim().isEmpty) {
+      return ErrorResponce<void>(
+        const TrackingInvalidRequestException('Invalid order id'),
+      );
+    }
+    final result = await _remoteDataSource.confirmOrderDelivery(orderId);
+    if (result is SuccessResponce<void>) {
+      await stopTracking(orderId);
+    }
+    return result;
   }
 
   Future<void> _closeSession(_TrackingSession session) async {

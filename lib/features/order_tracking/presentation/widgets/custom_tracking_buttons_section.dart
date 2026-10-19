@@ -9,9 +9,16 @@ import '../../../../core/themes/app_colors/app_color.dart';
 import '../manager/tracking_view_model.dart';
 
 class CustomTrackingButtonsSection extends StatelessWidget {
-  const CustomTrackingButtonsSection({super.key, required this.isDelivered});
+  const CustomTrackingButtonsSection({
+    super.key,
+    required this.isAwaitingConfirmation,
+    required this.isConfirming,
+    required this.onConfirm,
+  });
 
-  final bool isDelivered;
+  final bool isAwaitingConfirmation;
+  final bool isConfirming;
+  final VoidCallback onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +36,14 @@ class CustomTrackingButtonsSection extends StatelessWidget {
             enabledColor: AppColors.pinkBase,
           ),
         ),
-
-        if (isDelivered) ...[
+        if (isAwaitingConfirmation) ...[
           const Gap(8),
           Expanded(
             child: CustomButton(
               text: AppStrings.orderDeliveredAction,
-              onPressed: () {},
+              onPressed: onConfirm,
               isEnabled: true,
+              isLoading: isConfirming,
               enabledColor: AppColors.pinkBase,
             ),
           ),

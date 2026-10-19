@@ -6,3 +6,5 @@ class MockTrackingRepository extends Mock implements TrackingRepository {}
 
 class MockTrackingRemoteDataSource extends Mock
     implements TrackingRemoteDataSource {}
+class MockConfirmOrderDeliveryUseCase extends Mock
+    implements ConfirmOrderDeliveryUseCase {}

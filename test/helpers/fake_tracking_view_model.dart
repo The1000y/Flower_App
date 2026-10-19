@@ -14,6 +14,7 @@ class FakeTrackingViewModel extends TrackingViewModel {
         GetTrackingUseCase(MockTrackingRepository()),
         StartTrackingUseCase(MockTrackingRepository()),
         StopTrackingUseCase(MockTrackingRepository()),
+        MockConfirmOrderDeliveryUseCase(),
       );
 
   void emitLoading() {

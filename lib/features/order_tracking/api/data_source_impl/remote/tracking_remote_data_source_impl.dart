@@ -26,4 +26,17 @@ class TrackingRemoteDataSourceImpl implements TrackingRemoteDataSource {
       return ErrorResponce<TrackingDto>(Exception(e.toString()));
     }
   }
+
+  @override
+  Future<BaseResponce<void>> confirmOrderDelivery(String orderId) async {
+    try {
+      await _client.confirmOrderDelivery(orderId);
+      return SuccessResponce<void>(null);
+    } on DioException catch (e) {
+      final mapped = e.error;
+      return ErrorResponce<void>(mapped is TrackingException ? mapped : e);
+    } catch (e) {
+      return ErrorResponce<void>(Exception(e.toString()));
+    }
+  }
 }

@@ -13,3 +13,5 @@ class StartTrackingIntent extends TrackingEvent {
 }
 
 class StopTrackingIntent extends TrackingEvent {}
+
+class ConfirmDeliveryIntent extends TrackingEvent {}

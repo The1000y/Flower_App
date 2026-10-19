@@ -37,6 +37,8 @@ abstract class ApiStrings {
   static const String pageQuery = 'page';
   static const String limitQuery = 'limit';
   static const String orderTracking = '/orders/{orderId}/tracking';
+  static const String confirmOrderDelivery =
+      '/orders/{orderId}/confirm-delivery';
 
   // Profile
   static const String getProfile = '/api/users/GetProfile';

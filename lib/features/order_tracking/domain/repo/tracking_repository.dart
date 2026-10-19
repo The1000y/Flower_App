@@ -11,4 +11,6 @@ abstract interface class TrackingRepository {
   Future<void> refreshTracking(String orderId);
 
   Future<void> dispose();
+
+  Future<BaseResponce<void>> confirmDelivery(String orderId);
 }

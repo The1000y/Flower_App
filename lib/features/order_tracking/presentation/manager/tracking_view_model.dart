@@ -3,6 +3,7 @@ import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
 import 'package:flower_app/features/order_tracking/domain/exceptions/tracking_exception.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/confirm_order_delivery_use_case.dart';
 import 'package:flower_app/features/order_tracking/domain/use_case/get_tracking_use_case.dart';
 import 'package:flower_app/features/order_tracking/domain/use_case/start_tracking_use_case.dart';
 import 'package:flower_app/features/order_tracking/domain/use_case/stop_tracking_use_case.dart';
@@ -17,11 +18,13 @@ class TrackingViewModel extends Cubit<TrackingState> {
     this._getTrackingUseCase,
     this._startTrackingUseCase,
     this._stopTrackingUseCase,
+    this._confirmOrderDeliveryUseCase,
   ) : super(const TrackingState());
 
   final GetTrackingUseCase _getTrackingUseCase;
   final StartTrackingUseCase _startTrackingUseCase;
   final StopTrackingUseCase _stopTrackingUseCase;
+  final ConfirmOrderDeliveryUseCase _confirmOrderDeliveryUseCase;
 
   StreamSubscription<BaseResponce<TrackingEntity>>? _subscription;
 
@@ -33,6 +36,8 @@ class TrackingViewModel extends Cubit<TrackingState> {
         _startTracking(intent.orderId);
       case StopTrackingIntent():
         _stopTracking();
+      case ConfirmDeliveryIntent():
+        _confirmDelivery();
     }
   }
 
@@ -116,6 +121,43 @@ class TrackingViewModel extends Cubit<TrackingState> {
                   ? backendMessage!
                   : errorMessage,
             ),
+          ),
+        );
+    }
+  }
+
+  Future<void> _confirmDelivery() async {
+    final orderId = state.orderId;
+    if (orderId == null || state.isConfirmingDelivery) return;
+    emit(state.copyWith(isConfirmingDelivery: true, confirmDeliveryError: ''));
+    final result = await _confirmOrderDeliveryUseCase(orderId);
+    if (isClosed) return;
+    switch (result) {
+      case SuccessResponce<void>():
+        emit(
+          state.copyWith(
+            isConfirmingDelivery: false,
+            trackingState: state.trackingState.data != null
+                ? BaseState<TrackingEntity>(
+                    data: state.trackingState.data!.copyWith(
+                      status: 'Delivered',
+                      awaitingCustomerConfirmation: false,
+                    ),
+                  )
+                : state.trackingState.copyWith(isLoading: false),
+          ),
+        );
+      case ErrorResponce<void>(:final error, :final errorMessage):
+        String message = errorMessage;
+        if (error is TrackingException) {
+          if (error.message?.isNotEmpty ?? false) {
+            message = error.message!;
+          }
+        }
+        emit(
+          state.copyWith(
+            isConfirmingDelivery: false,
+            confirmDeliveryError: message,
           ),
         );
     }
