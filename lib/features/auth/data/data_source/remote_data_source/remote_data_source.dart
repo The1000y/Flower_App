@@ -4,11 +4,12 @@ import 'package:flower_app/features/auth/data/model/request/forget_request/reset
 import 'package:flower_app/features/auth/data/model/request/forget_request/verify_otp_request.dart';
 import 'package:flower_app/features/auth/data/model/request/login_request/login_request.dart';
 import 'package:flower_app/features/auth/data/model/request/register_request/register_request.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
-import 'package:flower_app/features/auth/data/model/responce/register_responce/register_response.dart';
 import 'package:flower_app/features/auth/data/model/response/login_response/login_response.dart';
+
+import '../../model/response/forget_response/forgot_password_response_dto.dart';
+import '../../model/response/forget_response/reset_password_response_dto.dart';
+import '../../model/response/forget_response/verify_otp_response.dart';
+import '../../model/response/register_response/register_response.dart';
 
 abstract interface class RemoteDataSource {
   Future<LoginResponse> login(LoginRequest login);

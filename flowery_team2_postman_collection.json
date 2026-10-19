@@ -1,0 +1,602 @@
+{
+  "info": {
+    "_postman_id": "flowery-team2-api-gateway-collection",
+    "name": "Flowery E-Commerce API Gateway (Team 2 - Full & Updated Endpoints)",
+    "description": "Comprehensive Postman Collection for Flowery Team 2 Microservices architecture via API Gateway (Port 8080). Includes all Authentication, User Management, Catalog Listing with dynamic discounts, Categories, Occasions, Storefront Sections, Products, and Health diagnostics endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "description": "API Gateway Base URL (Port 8080)"
+    },
+    {
+      "key": "bearerToken",
+      "value": "",
+      "type": "string",
+      "description": "JWT Bearer Token for Authenticated Endpoints"
+    },
+    {
+      "key": "acceptLanguage",
+      "value": "en",
+      "type": "string",
+      "description": "Language header (en or ar)"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Diagnostics",
+      "item": [
+        {
+          "name": "API Gateway Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Checks the health status of the API Gateway reverse proxy."
+          }
+        },
+        {
+          "name": "Identity Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/identity/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["identity", "health"]
+            },
+            "description": "Checks the health status of the AuthService."
+          }
+        },
+        {
+          "name": "Catalog Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "health"]
+            },
+            "description": "Checks the health status of the Catalog Service."
+          }
+        },
+        {
+          "name": "Cart Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "health"]
+            },
+            "description": "Checks the health status of the Cart Service."
+          }
+        },
+        {
+          "name": "Order Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/order/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "health"]
+            },
+            "description": "Checks the health status of the Order & Fulfillment Service."
+          }
+        },
+        {
+          "name": "Payment Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payment/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["payment", "health"]
+            },
+            "description": "Checks the health status of the Payment Service."
+          }
+        },
+        {
+          "name": "Address Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "health"]
+            },
+            "description": "Checks the health status of the Address & Store Coverage Service."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication & Registration",
+      "item": [
+        {
+          "name": "Customer Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('bearerToken', jsonData.data.token);",
+                  "    console.log('Saved token to bearerToken variable');",
+                  "} else if (jsonData && jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('bearerToken', jsonData.data.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "{{acceptLanguage}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@flowery.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "Login"]
+            },
+            "description": "Authenticates user with email and password, returning JWT and Refresh tokens. Automatically saves bearerToken."
+          }
+        },
+        {
+          "name": "Reactivate Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "1"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Login/reactivate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "Login", "reactivate"]
+            },
+            "description": "Generates a new JWT access token using the user's active refresh token in database."
+          }
+        },
+        {
+          "name": "Customer Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"customer@flowery.com\",\n  \"phoneNumber\": \"+201000000000\",\n  \"gender\": 1,\n  \"password\": \"Password123!\",\n  \"confirmPassword\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/CustomerRegistration/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "CustomerRegistration", "register"]
+            },
+            "description": "Registers a new customer account."
+          }
+        },
+        {
+          "name": "Driver Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ahmed Hassan\",\n  \"email\": \"driver@flowery.com\",\n  \"phoneNumber\": \"+201011111111\",\n  \"password\": \"DriverPassword123!\",\n  \"confirmPassword\": \"DriverPassword123!\",\n  \"vehicleType\": \"Motorcycle\",\n  \"vehicleNumber\": \"ABC-123\",\n  \"nationalIdNumber\": \"29901011234567\",\n  \"vehicleLicenceImage\": \"https://images.unsplash.com/photo-license.jpg\",\n  \"nationalIdImage\": \"https://images.unsplash.com/photo-id.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/DriverRegistration/driverregister",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "DriverRegistration", "driverregister"]
+            },
+            "description": "Registers a new delivery driver with vehicle and identity documents."
+          }
+        },
+        {
+          "name": "Forgot Password (Send OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@flowery.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Password/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "Password", "forgot-password"]
+            },
+            "description": "Initiates forgot password flow by generating and emailing a 6-digit OTP."
+          }
+        },
+        {
+          "name": "Reset Password (Verify OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@flowery.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewPassword123!\",\n  \"confirmPassword\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Password/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "Password", "reset-password"]
+            },
+            "description": "Resets the user's password after verifying the received OTP code."
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Profile & Security",
+      "item": [
+        {
+          "name": "Update Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Updated\",\n  \"email\": \"customer@flowery.com\",\n  \"phoneNumber\": \"+201000000000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Updates authenticated user profile fields (firstName, lastName, email, phoneNumber)."
+          }
+        },
+        {
+          "name": "Change Password (POST /users/me/change-password)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Password123!\",\n  \"newPassword\": \"NewPassword123!\",\n  \"confirmNewPassword\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/me/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me", "change-password"]
+            },
+            "description": "Changes the password for the currently authenticated user."
+          }
+        },
+        {
+          "name": "Update Password (PUT /users/me/password)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Password123!\",\n  \"newPassword\": \"NewPassword123!\",\n  \"confirmNewPassword\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/me/password",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me", "password"]
+            },
+            "description": "Alternative PUT endpoint for updating password of authenticated user."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catalog & Storefront",
+      "item": [
+        {
+          "name": "Get Storefront Sections (Home)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "sections"]
+            },
+            "description": "Fetches enabled storefront sections (Banners, Category Rails, Occasion Rails, Product Rails) ordered by display order for the server-driven Home Screen."
+          }
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "categories"]
+            },
+            "description": "Fetches all categories ordered by displayOrder (Fresh Bouquets, Luxury Arrangements, Plants, Roses, Orchids, etc.)."
+          }
+        },
+        {
+          "name": "Get Products by Category ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/categories/:categoryId/products?pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "categories", ":categoryId", "products"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": "1001",
+                  "description": "Category ID (e.g. 1001 for Fresh Bouquets)"
+                }
+              ]
+            },
+            "description": "Returns paginated list of active products belonging to the specified category ID."
+          }
+        },
+        {
+          "name": "Get All Occasions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/occasions?pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "occasions"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                }
+              ]
+            },
+            "description": "Returns paginated list of occasions (Birthday, Anniversary, Wedding, Graduation, Mother's Day, Valentine's Day, etc.)."
+          }
+        },
+        {
+          "name": "Get Products by Occasion ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/occasions/:occasionId/products?pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "occasions", ":occasionId", "products"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "occasionId",
+                  "value": "2001",
+                  "description": "Occasion ID (e.g. 2001 for Birthday, 2002 for Anniversary, etc.)"
+                }
+              ]
+            },
+            "description": "Returns paginated list of products mapped to the specified occasion ID."
+          }
+        },
+        {
+          "name": "Get Product Catalog Listing (Filtered / Discounted)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog?categoryId=1001&occasionId=2001&pageNumber=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "1001",
+                  "description": "Optional Category filter ID",
+                  "disabled": false
+                },
+                {
+                  "key": "occasionId",
+                  "value": "2001",
+                  "description": "Optional Occasion filter ID",
+                  "disabled": false
+                },
+                {
+                  "key": "storeId",
+                  "value": "",
+                  "description": "Optional Store filter ID",
+                  "disabled": true
+                },
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Items per page (default: 20)"
+                }
+              ]
+            },
+            "description": "Unified Catalog listing endpoint merged in PR #7. Computes dynamic discounted price at query time and supports filtering by category, occasion, and store."
+          }
+        },
+        {
+          "name": "Get All Products (Products Controller)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/products?categoryId=1001&pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "products"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "1001",
+                  "description": "Optional category filter ID",
+                  "disabled": false
+                },
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                }
+              ]
+            },
+            "description": "Returns paginated list of products from ProductsController with optional category filter."
+          }
+        },
+        {
+          "name": "Seed / Re-seed Catalog Database",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/seed",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "seed"]
+            },
+            "description": "Triggers database seeding on demand for all 12 Categories, 16 Occasions, 62 Products, 125+ Images, 120+ Occasion Mappings, and 8 Storefront Sections."
+          }
+        }
+      ]
+    }
+  ]
+}

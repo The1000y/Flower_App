@@ -1,7 +1,7 @@
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
-import 'package:flower_app/features/auth/presentation/register/view/widgets/register_custom_text_form_field.dart';
+import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,29 +48,29 @@ Finder _signUpButton() => find.widgetWithText(CustomButton, AppStrings.signUp);
 
 Future<void> _fillValidFields(WidgetTester tester) async {
   await tester.enterText(
-    find.widgetWithText(RegisterCustomTextFormField, AppStrings.firstNameLabel),
+    find.widgetWithText(CustomTextFormField, AppStrings.firstNameLabel),
     'John',
   );
   await tester.enterText(
-    find.widgetWithText(RegisterCustomTextFormField, AppStrings.lastNameLabel),
+    find.widgetWithText(CustomTextFormField, AppStrings.lastNameLabel),
     'Doe',
   );
   await tester.enterText(
-    find.widgetWithText(RegisterCustomTextFormField, AppStrings.emailLabel),
+    find.widgetWithText(CustomTextFormField, AppStrings.emailLabel),
     validEmail,
   );
   await tester.enterText(
-    find.widgetWithText(RegisterCustomTextFormField, AppStrings.passwordLabel),
+    find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
     validRegisterPassword,
   );
   await tester.enterText(
     find
-        .widgetWithText(RegisterCustomTextFormField, AppStrings.confirmPasswordLabel)
+        .widgetWithText(CustomTextFormField, AppStrings.confirmPasswordLabel)
         .first,
     validRegisterPassword,
   );
   await tester.enterText(
-    find.widgetWithText(RegisterCustomTextFormField, AppStrings.phoneNumberLabel),
+    find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),
     '01012345678',
   );
   await tester.pump();
@@ -84,32 +84,32 @@ void main() {
       await _pumpRegister(tester, FakeAuthRepo());
 
       expect(
-        find.widgetWithText(RegisterCustomTextFormField, AppStrings.firstNameLabel),
+        find.widgetWithText(CustomTextFormField, AppStrings.firstNameLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(RegisterCustomTextFormField, AppStrings.lastNameLabel),
+        find.widgetWithText(CustomTextFormField, AppStrings.lastNameLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(RegisterCustomTextFormField, AppStrings.emailLabel),
+        find.widgetWithText(CustomTextFormField, AppStrings.emailLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(RegisterCustomTextFormField, AppStrings.passwordLabel),
+        find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
         findsOneWidget,
       );
       expect(
         find
             .widgetWithText(
-              RegisterCustomTextFormField,
+              CustomTextFormField,
               AppStrings.confirmPasswordLabel,
             )
             .first,
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(RegisterCustomTextFormField, AppStrings.phoneNumberLabel),
+        find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),
         findsOneWidget,
       );
       expect(_signUpButton(), findsOneWidget);

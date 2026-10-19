@@ -7,10 +7,7 @@ class BestSellerRequestDto {
   final int? page;
   final int? pageSize;
 
-  BestSellerRequestDto({
-    this.page,
-    this.pageSize,
-  });
+  BestSellerRequestDto({this.page, this.pageSize});
 
   factory BestSellerRequestDto.fromJson(Map<String, dynamic> json) =>
       _$BestSellerRequestDtoFromJson(json);

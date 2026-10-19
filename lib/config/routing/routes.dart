@@ -30,7 +30,7 @@ abstract class Routes {
   static const String orderDetails = '/order_details';
 
   // Notifications
-  static const String notifications = '/notifications';
+  static const String notification = '/notification';
 
   // Profile
   static const String profile = '/profile';

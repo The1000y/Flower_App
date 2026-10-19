@@ -1,8 +1,9 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class ApiStrings {
-  static String baseUrl = dotenv.env['BASE_URL'] ?? '';
+  static String baseUrl = dotenv.env['BASE_URL'] ?? 'Api not found';
 
+  // Authentication
   static const String login = '/auth/login';
   static const String register = '/auth/register';
   static const String refreshToken = '/auth/refresh';
@@ -10,9 +11,11 @@ abstract class ApiStrings {
   static const String verifyOtp = '/auth/verify-otp';
   static const String resetPassword = '/auth/reset-password';
 
+  // Catalog
   static const String homeSections = '/catalog/home/sections';
   static const String categories = '/catalog/categories';
   static const String occasions = '/catalog/occasions';
+  static const String occasion = '/occasion';
   static const String products = '/catalog/products';
 
   // Cart
@@ -21,7 +24,7 @@ abstract class ApiStrings {
   static const String cartItemsByProduct = '/cart/api/cart/items';
   static const String cartItemById = '/cart/cart/items';
 
-  // Address & Store Coverage
+  // Address and Checkout
   static const String areas = '/address/api/areas';
   static const String nearestStore = '/address/api/stores/nearest-store';
   static const String userAddresses = '/address/users/me/addresses';
@@ -29,7 +32,23 @@ abstract class ApiStrings {
   static const String estimationTime = '/checkout/estimate-delivery';
   static const String placeOrder = '/orders/place';
 
+  // Orders
   static const String ordersEndpoint = '/api/v1/orders';
   static const String pageQuery = 'page';
   static const String limitQuery = 'limit';
+  static const String orderTracking = '/orders/{orderId}/tracking';
+  static const String confirmOrderDelivery =
+      '/orders/{orderId}/confirm-delivery';
+
+  // Profile
+  static const String getProfile = '/api/users/GetProfile';
+  static const String updateProfile = '/api/users/UpdateProfile';
+  static const String changePassword = '/users/me/change-password';
+
+  // Profile Request Keys
+  static const String fullNameKey = 'FullName';
+  static const String emailKey = 'Email';
+  static const String phoneKey = 'Phone';
+  static const String genderKey = 'Gender';
+  static const String photoKey = 'Photo';
 }

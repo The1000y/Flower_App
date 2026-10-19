@@ -23,6 +23,8 @@ class ResetPassword extends StatefulWidget {
   State<ResetPassword> createState() => _ResetPasswordState();
 }
 
+ForgetPasswordCubit viewModel = getIt.get<ForgetPasswordCubit>();
+
 class _ResetPasswordState extends State<ResetPassword> {
   final _formKey = GlobalKey<FormState>();
 
@@ -32,7 +34,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt.get<ForgetPasswordCubit>(),
+      create: (context) => viewModel,
       child: Scaffold(
         appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
         body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
@@ -121,9 +123,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                         text: AppStrings.confirmButton,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            if (_newpassword.text ==
-                                _confirmPassword.text) {
-                              context.read<ForgetPasswordCubit>().doEvent(
+                            if (_newpassword.text == _confirmPassword.text) {
+                              viewModel.doEvent(
                                 ResetPasswordEvent(
                                   email: widget.email,
                                   newPassword: _newpassword.text,

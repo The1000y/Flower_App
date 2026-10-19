@@ -136,6 +136,8 @@ class AppTheme {
       }),
     ),
 
+    dividerTheme: DividerThemeData(color: AppColors.white70, thickness: 0.5),
+
     fontFamily: GoogleFonts.roboto().fontFamily,
     textTheme: TextTheme(
       // Roboto

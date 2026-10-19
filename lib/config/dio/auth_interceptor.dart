@@ -11,6 +11,8 @@ class AuthInterceptors extends Interceptor {
   /// a request the gateway keeps rejecting would loop forever.
   static const String retriedFlag = 'authRetried';
 
+  // d6e34328-9941-49a2-9b9f-e275dd0f35f0
+
   @override
   Future<void> onRequest(
     RequestOptions options,
@@ -41,6 +43,11 @@ class AuthInterceptors extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
+    debugPrint('================ RESPONSE ================');
+    debugPrint('URL: ${response.requestOptions.uri}');
+    debugPrint('STATUS: ${response.statusCode}');
+    debugPrint('DATA: ${response.data}');
+    debugPrint('==========================================');
     handler.next(response);
   }
 
@@ -51,6 +58,11 @@ class AuthInterceptors extends Interceptor {
     final isRejectedToken = err.response?.statusCode == 401;
     final isRefreshCall = options.path == ApiStrings.refreshToken;
     final alreadyRetried = options.extra[retriedFlag] == true;
+    debugPrint('================ ERROR ===================');
+    debugPrint('URL: ${err.requestOptions.uri}');
+    debugPrint('STATUS: ${err.response?.statusCode}');
+    debugPrint('DATA: ${err.response?.data}');
+    debugPrint('==========================================');
 
     // A 401 is the only signal that the access token was rejected, so
     // everything else passes straight through. The refresh call itself is

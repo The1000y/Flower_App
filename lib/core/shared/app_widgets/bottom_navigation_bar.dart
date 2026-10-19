@@ -1,9 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+
+import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart.dart';
 import 'package:flower_app/features/commerce/presentation/categories/view/categories.dart';
+import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
-import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
+import 'package:flower_app/features/profile/presentation/view/profile_home_view.dart';
 
 import '../../constants/app_strings/app_strings.dart';
 
@@ -19,18 +26,11 @@ class PersistentBottomNavBarDemo extends StatefulWidget {
 
 class _PersistentBottomNavBarDemoState
     extends State<PersistentBottomNavBarDemo> {
-  /// The controller is owned by this screen and disposed with it.
-  ///
-  /// A [PersistentTabController] carries the [Scaffold]'s [GlobalKey], so a
-  /// single controller shared between two live `PersistentTabView`s (for
-  /// example while a new home route animates over the previous one) would
-  /// attach the same key to both trees and throw "Duplicate GlobalKey detected
-  /// in widget tree". Creating it per instance keeps every key unique.
   late final PersistentTabController _controller = PersistentTabController(
     initialIndex: 0,
   );
 
-  late final Widget _homeScreen = HomeView(controller: _controller);
+  // late final Widget _homeScreen = HomeView(controller: _controller);
 
   @override
   void dispose() {
@@ -40,6 +40,26 @@ class _PersistentBottomNavBarDemoState
 
   @override
   Widget build(BuildContext context) {
+    final homeScreen = MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: getIt<HomeCubit>()),
+        BlocProvider.value(value: getIt<AddressCubit>()),
+      ],
+      child: HomeView(controller: _controller),
+    );
+
+    final categoriesScreen = const CategoriesView();
+
+    final cartScreen = BlocProvider.value(
+      value: getIt<AddressCubit>(),
+      child: const CartView(),
+    );
+
+    final profileScreen = BlocProvider(
+      create: (_) => getIt<ProfileViewModel>(),
+      child: const ProfileHomeView(),
+    );
+
     return PersistentTabView(
       controller: _controller,
       onTabChanged: (index) {
@@ -49,7 +69,7 @@ class _PersistentBottomNavBarDemoState
       },
       tabs: [
         PersistentTabConfig(
-          screen: _homeScreen,
+          screen: homeScreen,
           item: ItemConfig(
             icon: const Icon(Icons.home),
             title: AppStrings.navHome,
@@ -57,7 +77,7 @@ class _PersistentBottomNavBarDemoState
           ),
         ),
         PersistentTabConfig(
-          screen: const CategoriesView(),
+          screen: categoriesScreen,
           item: ItemConfig(
             icon: const Icon(Icons.category),
             title: AppStrings.navcategories,
@@ -65,7 +85,7 @@ class _PersistentBottomNavBarDemoState
           ),
         ),
         PersistentTabConfig(
-          screen: const CartView(),
+          screen: cartScreen,
           item: ItemConfig(
             icon: const Icon(Icons.shopping_cart),
             title: AppStrings.navCart,
@@ -73,7 +93,7 @@ class _PersistentBottomNavBarDemoState
           ),
         ),
         PersistentTabConfig(
-          screen: const Placeholder(),
+          screen: profileScreen,
           item: ItemConfig(
             icon: const Icon(Icons.person),
             title: AppStrings.navProfile,

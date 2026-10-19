@@ -1,0 +1,26 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Build APK and upload to Firebase App Distribution"
+  lane :firebase_distribute do
+
+    # بناء الـ APK
+    sh "flutter build apk --release"
+
+    # مسار الـ APK
+    apk_path = "../build/app/outputs/flutter-apk/app-release.apk"
+
+    # رفع على Firebase
+    firebase_app_distribution(
+      app: "1:7511405725:android:eea6e9756172f0686d9074",
+      android_artifact_path: apk_path,
+      service_credentials_file: "fastlane/flower-app-a1fed-firebase-adminsdk-fbsvc-57ce4620cb.json",
+      groups: "testers-team",
+      release_notes: "🚀 نسخة جديدة - تم البناء بـ Fastlane 🚀"
+    )
+
+    UI.success("✅✅ الـ APK اترفع بنجاح على Firebase App Distribution!")
+  end
+
+end

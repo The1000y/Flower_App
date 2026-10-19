@@ -97,9 +97,8 @@ class RemoteDataSourceImpl implements CommerceRemoteDataSource {
   Future<BaseResponce<CartResponseDto>> updateCartItemQuantity(
     String productId,
     UpdateCartItemRequestDto request,
-  ) async => _cartCall(
-    () => commerceApi.updateCartItemQuantity(productId, request),
-  );
+  ) async =>
+      _cartCall(() => commerceApi.updateCartItemQuantity(productId, request));
 
   @override
   Future<BaseResponce<CartResponseDto>> removeCartItem(

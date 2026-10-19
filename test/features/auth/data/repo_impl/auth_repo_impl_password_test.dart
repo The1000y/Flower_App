@@ -1,9 +1,9 @@
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/auth/data/model/data_dto.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/verify_otp_response.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/forgot_password_response_dto.dart';
-import 'package:flower_app/features/auth/data/model/responce/forget_responce/reset_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/forgot_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/reset_password_response_dto.dart';
+import 'package:flower_app/features/auth/data/model/response/forget_response/verify_otp_response.dart';
 import 'package:flower_app/features/auth/domain/entities/forget_entity/verify_oto_entity.dart';
 import 'package:flower_app/features/auth/data/repo_impl/auth_repo_impl.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'auth_repo_impl_test.mocks.dart';
+import 'auth_repo_impl_password_test.mocks.dart';
 
 @GenerateMocks([RemoteDataSource, LocalDataSource])
 void main() {
