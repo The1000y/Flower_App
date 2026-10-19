@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -13,7 +14,7 @@ class RegisterGenderSelector extends StatelessWidget {
     return Row(
       children: [
         Text(
-          AppStrings.genderTitle,
+          context.l10n.genderTitle,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             fontSize: 18.sp,
             fontWeight: FontWeight.w500,
@@ -34,7 +35,7 @@ class RegisterGenderSelector extends StatelessWidget {
                     activeColor: AppColors.pinkBase,
                   ),
                   Text(
-                    AppStrings.female,
+                    context.l10n.female,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.blackBase,
                     ),
@@ -45,7 +46,7 @@ class RegisterGenderSelector extends StatelessWidget {
                     activeColor: AppColors.pinkBase,
                   ),
                   Text(
-                    AppStrings.male,
+                    context.l10n.male,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.blackBase,
                     ),

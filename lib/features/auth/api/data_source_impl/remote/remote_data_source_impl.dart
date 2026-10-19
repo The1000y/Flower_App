@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/auth/api/client/auth_api_client.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
 import 'package:flower_app/features/auth/data/model/request/forget_request/forgot_password_request_dto.dart';
@@ -30,7 +30,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return LoginResponse(
         isSuccess: false,
         errorCode: _statusCode(error),
-        message: _errorMessage(error, AppStrings.invalidCredentials),
+        message: _errorMessage(error, L10n.instance.invalidCredentials),
         data: null,
       );
     }
@@ -44,7 +44,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return RegisterResponse(
         isSuccess: false,
         errorCode: _statusCode(error),
-        message: _errorMessage(error, AppStrings.registerError),
+        message: _errorMessage(error, L10n.instance.registerError),
         data: false,
       );
     }
@@ -77,7 +77,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         return SuccessResponce(response);
       }
       return ErrorResponce(
-        Exception(response.message ?? 'Invalid OTP or email'),
+        Exception(response.message ?? L10n.instance.invalidOtpOrEmail),
       );
     } catch (error) {
       return ErrorResponce(

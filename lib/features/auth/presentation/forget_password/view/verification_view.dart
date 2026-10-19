@@ -1,9 +1,10 @@
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/view/widgets/custom_pin_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_cubit.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_state.dart';
@@ -27,7 +28,7 @@ class VerificationView extends StatelessWidget {
           ),
           titleSpacing: 0,
           title: Text(
-            AppStrings.passwordAppBarTitle,
+            context.l10n.passwordAppBarTitle,
             style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
           ),
         ),
@@ -53,10 +54,10 @@ class VerificationView extends StatelessWidget {
                 );
               } else if (state.otpState.data != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    duration: Duration(seconds: 1),
+                  SnackBar(
+                    duration: const Duration(seconds: 1),
                     backgroundColor: AppColors.success,
-                    content: Text("OTP verified successfully"),
+                    content: Text(context.l10n.otpVerifiedSuccess),
                   ),
                 );
                 Navigator.pushNamed(
@@ -79,10 +80,10 @@ class VerificationView extends StatelessWidget {
                 );
               } else if (state.resendOtpState.data != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    duration: Duration(seconds: 1),
+                  SnackBar(
+                    duration: const Duration(seconds: 1),
                     backgroundColor: AppColors.success,
-                    content: Text("Code resent successfully"),
+                    content: Text(context.l10n.codeResentSuccess),
                   ),
                 );
               }
@@ -96,7 +97,7 @@ class VerificationView extends StatelessWidget {
                 children: [
                   SizedBox(height: 40),
                   Text(
-                    AppStrings.emailVerificationTitle,
+                    context.l10n.emailVerificationTitle,
                     style: textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -106,7 +107,7 @@ class VerificationView extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 34),
                     child: Text(
                       textAlign: TextAlign.center,
-                      AppStrings.emailVerificationSubtitle,
+                      context.l10n.emailVerificationSubtitle,
                       style: textTheme.bodyMedium,
                     ),
                   ),

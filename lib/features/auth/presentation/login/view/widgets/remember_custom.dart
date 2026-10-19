@@ -1,5 +1,6 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_event.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_state.dart';
 import 'package:flower_app/features/auth/presentation/login/manager/login_view_model.dart';
@@ -32,7 +33,7 @@ class RememberCustom extends StatelessWidget {
                   RememberMeChanged(!state.rememberMe),
                 );
               },
-              child: Text(AppStrings.rememberMe),
+              child: Text(context.l10n.rememberMe),
             ),
 
             const Spacer(),
@@ -41,7 +42,7 @@ class RememberCustom extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, Routes.forgotPassword);
               },
-              child: const Text(AppStrings.forgetPassword),
+              child: Text(context.l10n.forgetPassword),
             ),
           ],
         );

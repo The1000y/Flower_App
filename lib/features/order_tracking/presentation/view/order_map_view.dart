@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -47,8 +48,8 @@ class OrderMapView extends StatelessWidget {
                     OrderRouteMap(
                       route: route,
                       origin: address,
-                      originLabel: AppStrings.apartment,
-                      destinationLabel: AppStrings.floweryAppbarTitle,
+                      originLabel: context.l10n.apartment,
+                      destinationLabel: context.l10n.floweryAppbarTitle,
                       courier: courier,
                     ),
                     Positioned(

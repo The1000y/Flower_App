@@ -132,10 +132,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newPasswordLabel => 'كلمة المرور الجديدة';
 
   @override
+  String get otpSentSuccess => 'تم إرسال رمز التحقق بنجاح';
+
+  @override
+  String get otpVerifiedSuccess => 'تم التحقق من الرمز بنجاح';
+
+  @override
+  String get codeResentSuccess => 'تم إعادة إرسال الرمز بنجاح';
+
+  @override
+  String get passwordResetSuccess => 'تم تعيين كلمة المرور الجديدة بنجاح';
+
+  @override
   String get floweryAppbarTitle => 'فلوري';
 
   @override
   String get searchHint => 'بحث';
+
+  @override
+  String get searchPlaceholder => 'ابحث عن أي منتج تريده';
+
+  @override
+  String get searchStartTyping => 'ابدأ الكتابة للبحث';
 
   @override
   String get deliverToPrefix => 'التوصيل إلى ';
@@ -177,6 +195,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addToCart => 'إضافة إلى السلة';
 
   @override
+  String get productAddedToCart => 'تمت إضافة المنتج إلى السلة';
+
+  @override
   String get inStock => 'متوفر';
 
   @override
@@ -192,25 +213,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutTitle => 'الدفع';
 
   @override
+  String get checkout => 'الدفع';
+
+  @override
   String get deliveryTime => 'وقت التوصيل';
 
   @override
   String get instant => 'فوري، ';
 
   @override
-  String get statusPickedUp => 'استلمه المندوب';
-
-  @override
-  String get statusAwaitingConfirmation => 'بانتظار تأكيد استلامك';
-
-  @override
-  String get orderCancelledTitle => 'تم إلغاء الطلب';
-
-  @override
-  String get orderCancelledSubtitle => 'تم إلغاء هذا الطلب';
-
-  @override
-  String get confirmDeliveryAction => 'تأكيد الاستلام';
+  String get arriveByPrefix => 'يصل بحلول ';
 
   @override
   String get deliveryAddress => 'عنوان التوصيل';
@@ -237,6 +249,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get itIsAGift => 'إنه هدية';
 
   @override
+  String get noPaymentMethodSelected => 'لم يتم اختيار طريقة الدفع';
+
+  @override
   String get nameLabel => 'الاسم';
 
   @override
@@ -249,6 +264,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get subTotal => 'المجموع الفرعي';
 
   @override
+  String get subtotal => 'المجموع الفرعي:';
+
+  @override
   String get deliveryFee => 'رسوم التوصيل';
 
   @override
@@ -258,10 +276,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get placeOrder => 'تأكيد الطلب';
 
   @override
+  String get loading => 'جارٍ التحميل....';
+
+  @override
+  String get loadingAddress => 'جارٍ التحميل...';
+
+  @override
+  String get noAddress => 'لم يتم اختيار عنوان';
+
+  @override
+  String get yourCartIsEmpty => 'سلتك فارغة';
+
+  @override
   String get savedAddressTitle => 'العناوين المحفوظة';
 
   @override
   String get addNewAddress => 'إضافة عنوان جديد';
+
+  @override
+  String get addYourAddress => 'أضف عنوانك';
 
   @override
   String get addressTitle => 'العنوان';
@@ -291,7 +324,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get filterButton => 'فلتر';
 
   @override
+  String get filterProducts => 'تصفية المنتجات';
+
+  @override
   String get sortBy => 'ترتيب حسب';
+
+  @override
+  String get sortRecommended => 'موصى به';
+
+  @override
+  String get sortNewest => 'الأحدث';
+
+  @override
+  String get sortPriceLowToHigh => 'السعر من الأقل إلى الأعلى';
+
+  @override
+  String get sortPriceHighToLow => 'السعر من الأعلى إلى الأقل';
 
   @override
   String get sortLowestPrice => 'أقل سعر';
@@ -309,6 +357,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sortDiscount => 'الخصم';
 
   @override
+  String get noResult => 'لا توجد نتائج';
+
+  @override
+  String get noItemsFound => 'لا توجد منتجات';
+
+  @override
+  String get noCategoriesFound => 'لا توجد أقسام';
+
+  @override
+  String get noOccasionsAvailable => 'لا توجد مناسبات متاحة حالياً.';
+
+  @override
+  String get productNotFound => 'المنتج غير موجود';
+
+  @override
+  String get comingSoon => 'قريباً';
+
+  @override
   String get myOrdersTitle => 'طلباتي';
 
   @override
@@ -321,6 +387,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get orderNumberPrefix => 'رقم الطلب# ';
 
   @override
+  String get orderIdPrefix => 'رقم الطلب# ';
+
+  @override
   String get trackOrder => 'تتبع الطلب';
 
   @override
@@ -330,9 +399,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reorder => 'إعادة الطلب';
 
   @override
-  String get searchPlaceholder => 'ابحث عن أي منتج تريده';
-
-  @override
   String get notificationTitle => 'الإشعارات';
 
   @override
@@ -340,6 +406,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notificationRemember => 'تذكير';
+
+  @override
+  String get noNotificationsYet => 'لا توجد إشعارات بعد';
 
   @override
   String get language => 'اللغة';
@@ -411,6 +480,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get statusDelivered => 'تم التوصيل';
 
   @override
+  String get statusPickedUp => 'استلمه المندوب';
+
+  @override
+  String get statusAwaitingConfirmation => 'بانتظار تأكيد استلامك';
+
+  @override
+  String get orderCancelledTitle => 'تم إلغاء الطلب';
+
+  @override
+  String get orderCancelledSubtitle => 'تم إلغاء هذا الطلب';
+
+  @override
+  String get confirmDeliveryAction => 'تأكيد الاستلام';
+
+  @override
   String get showMap => 'عرض الخريطة';
 
   @override
@@ -426,6 +510,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nextButton => 'التالي';
 
   @override
+  String get backButton => 'رجوع';
+
+  @override
   String get payWithCash => 'الدفع نقداً';
 
   @override
@@ -438,6 +525,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rateButton => 'تقييم';
 
   @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get tryAgain => 'حاول مرة أخرى';
+
+  @override
   String get loginFailed => 'فشل تسجيل الدخول';
 
   @override
@@ -448,6 +541,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'حدث خطأ ما';
+
+  @override
+  String get somethingWentWrongTryAgain => 'حدث خطأ ما، يرجى المحاولة مرة أخرى';
 
   @override
   String get emailRequired => 'البريد الإلكتروني مطلوب';
@@ -505,8 +601,98 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionTitle => 'المناسبات';
 
   @override
+  String get apartment => 'الشقة';
+
+  @override
   String get versionProfile => 'v6.3.0 - 1.40.0';
 
   @override
-  String get noNotificationsYet => 'لا توجد إشعارات بعد';
+  String get savedAddressEmpty => 'لا توجد عناوين محفوظة بعد';
+
+  @override
+  String get noSavedAddresses => 'لا توجد عناوين محفوظة';
+
+  @override
+  String get titleAddress => 'التسمية';
+
+  @override
+  String get labelAddress => 'أدخل تسمية العنوان';
+
+  @override
+  String get labelTitle => 'التسمية';
+
+  @override
+  String get labelTitleHint => 'اسم العنوان';
+
+  @override
+  String get addressError => 'تعذر الحصول على تفاصيل العنوان';
+
+  @override
+  String get addressRequired => 'العنوان مطلوب';
+
+  @override
+  String get labelRequired => 'التسمية مطلوبة';
+
+  @override
+  String get recipientNameRequired => 'الاسم مطلوب';
+
+  @override
+  String get cityRequired => 'المدينة مطلوبة';
+
+  @override
+  String get governorateRequired => 'المحافظة مطلوبة';
+
+  @override
+  String get selectGovernorate => 'اختر المحافظة !!';
+
+  @override
+  String get phoneNumberRequired => 'الهاتف مطلوب';
+
+  @override
+  String get addressAddedSuccess => 'تمت إضافة العنوان بنجاح';
+
+  @override
+  String get addressUpdatedSuccess => 'تم تحديث العنوان';
+
+  @override
+  String get addressAddFailedServer =>
+      'حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقاً.';
+
+  @override
+  String get addressAddFailedNotServiceable =>
+      'هذا العنوان غير متاح للتوصيل. يرجى اختيار موقع آخر.';
+
+  @override
+  String get addressAddFailedInvalid =>
+      'معلومات العنوان غير صحيحة. يرجى التحقق من التفاصيل.';
+
+  @override
+  String get profileUpdated => 'تم تحديث الملف الشخصي';
+
+  @override
+  String get passwordUpdatedSuccessfully => 'تم تحديث كلمة المرور بنجاح';
+
+  @override
+  String get waitingForDriverTitle => 'بانتظار مندوب التوصيل';
+
+  @override
+  String get waitingForDriverSubtitle => 'سنقوم بتخصيص مندوب لطلبك قريباً';
+
+  @override
+  String get unexpectedError => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get routeNotFound => 'الصفحة غير موجودة';
+
+  @override
+  String get giftNameValidation => 'أدخل اسمك';
+
+  @override
+  String get noCitiesFoundForGovernorate => 'لا توجد مدن لهذه المحافظة';
+
+  @override
+  String get failedToDeleteAddress => 'فشل حذف العنوان.';
+
+  @override
+  String get invalidOtpOrEmail => 'رمز التحقق أو البريد الإلكتروني غير صالح';
 }

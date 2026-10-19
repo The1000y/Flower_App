@@ -15,16 +15,25 @@ void main() {
   const sessionUrl = 'https://accept.paymob.com/unifiedcheckout/session';
   const successUrl = 'flowery://payment/success?orderId=order-1';
   const cancelUrl = 'flowery://payment/cancel?orderId=order-1';
+  const orderId = 'order-1';
   const orderSuccessRoute = 'order-success-route';
-  const checkoutRoute = 'checkout-route';
+  const previousRoute = 'previous-route';
 
   late FakeWebViewPlatform fakePlatform;
+  late MockCartCubit cartCubit;
 
   setUp(() {
     fakePlatform = FakeWebViewPlatform();
     WebViewPlatform.instance = fakePlatform;
     getIt.allowReassignment = true;
-    getIt.registerSingleton<CartCubit>(MockCartCubit());
+    cartCubit = MockCartCubit();
+    mocktail.when(() => cartCubit.stream).thenAnswer(
+          (_) => const Stream.empty(),
+        );
+    mocktail.when(() => cartCubit.doEvent(mocktail.any())).thenAnswer(
+          (_) async {},
+        );
+    getIt.registerSingleton<CartCubit>(cartCubit);
   });
 
   tearDown(() => getIt.reset());
@@ -34,15 +43,30 @@ void main() {
       MaterialApp(
         routes: {
           Routes.orderSuccess: (_) => const Text(orderSuccessRoute),
-          Routes.checkout: (_) => const Text(checkoutRoute),
         },
-        home: const WebViewPayment(
-          sessionUrl: sessionUrl,
-          successUrl: successUrl,
-          cancelUrl: cancelUrl,
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const WebViewPayment(
+                      sessionUrl: sessionUrl,
+                      successUrl: successUrl,
+                      cancelUrl: cancelUrl,
+                      orderId: orderId,
+                    ),
+                  ),
+                ),
+                child: const Text(previousRoute),
+              ),
+            ),
+          ),
         ),
       ),
     );
+    await tester.tap(find.text(previousRoute));
+    await tester.pumpAndSettle();
   }
 
   Future<void> pumpFrames(WidgetTester tester) async {
@@ -69,59 +93,25 @@ void main() {
       expect(find.byType(WebViewWidget), findsOneWidget);
     });
 
-    testWidgets('renders the payment app bar with both shortcuts', (
-      tester,
-    ) async {
-      // Act
-      await pumpPayment(tester);
+    testWidgets(
+      'intercepts the success url, resets the cart and opens the success route',
+      (tester) async {
+        // Act
+        await pumpPayment(tester);
+        final decision = await fakePlatform.lastDelegate.navigate(successUrl);
+        await pumpFrames(tester);
 
-      // Assert
-      expect(find.text('Payment'), findsOneWidget);
-      expect(find.byIcon(Icons.web_asset_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.web_asset_off_rounded), findsOneWidget);
-    });
+        // Assert
+        expect(decision, NavigationDecision.prevent);
+        expect(find.text(orderSuccessRoute), findsOneWidget);
+        expect(find.byType(WebViewPayment), findsNothing);
+        mocktail
+            .verify(() => cartCubit.doEvent(mocktail.any()))
+            .called(1);
+      },
+    );
 
-    testWidgets('tapping the success shortcut opens the success route', (
-      tester,
-    ) async {
-      // Act
-      await pumpPayment(tester);
-      await tester.tap(find.byIcon(Icons.web_asset_outlined));
-      await pumpFrames(tester);
-
-      // Assert
-      expect(find.text(orderSuccessRoute), findsOneWidget);
-      expect(find.byType(WebViewPayment), findsNothing);
-    });
-
-    testWidgets('tapping the cancel shortcut opens the checkout route', (
-      tester,
-    ) async {
-      // Act
-      await pumpPayment(tester);
-      await tester.tap(find.byIcon(Icons.web_asset_off_rounded));
-      await pumpFrames(tester);
-
-      // Assert
-      expect(find.text(checkoutRoute), findsOneWidget);
-      expect(find.byType(WebViewPayment), findsNothing);
-    });
-
-    testWidgets('intercepts the success url and blocks the navigation', (
-      tester,
-    ) async {
-      // Act
-      await pumpPayment(tester);
-      final decision = await fakePlatform.lastDelegate.navigate(successUrl);
-      await pumpFrames(tester);
-
-      // Assert
-      expect(decision, NavigationDecision.prevent);
-      expect(find.text(orderSuccessRoute), findsOneWidget);
-      expect(find.byType(WebViewPayment), findsNothing);
-    });
-
-    testWidgets('intercepts the cancel url and blocks the navigation', (
+    testWidgets('intercepts the cancel url and pops the screen', (
       tester,
     ) async {
       // Act
@@ -131,8 +121,8 @@ void main() {
 
       // Assert
       expect(decision, NavigationDecision.prevent);
-      expect(find.text(checkoutRoute), findsOneWidget);
       expect(find.byType(WebViewPayment), findsNothing);
+      expect(find.text(previousRoute), findsOneWidget);
     });
 
     testWidgets('leaves unrelated urls to the web view', (tester) async {
@@ -146,7 +136,6 @@ void main() {
       expect(decision, NavigationDecision.navigate);
       expect(find.byType(WebViewPayment), findsOneWidget);
       expect(find.text(orderSuccessRoute), findsNothing);
-      expect(find.text(checkoutRoute), findsNothing);
     });
 
     testWidgets('ignores a success url once the screen is gone', (

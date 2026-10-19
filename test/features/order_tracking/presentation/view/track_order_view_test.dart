@@ -1,5 +1,4 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/animations/animated_car_single_file.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/driver_entity.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fake_tracking_view_model.dart';
 import '../../../../helpers/order_tracking_test_helpers.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 const _driver = DriverEntity(
   name: 'Mohamed',
@@ -67,7 +67,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byType(AppBar),
-          matching: find.text(AppStrings.trackOrder),
+          matching: find.text(AppLocalizationsEn().trackOrder),
         ),
         findsOneWidget,
       );
@@ -160,11 +160,11 @@ void main() {
       await _pump(tester, entity: _tracking());
 
       expect(
-        find.widgetWithText(CustomButton, AppStrings.showMap),
+        find.widgetWithText(CustomButton, AppLocalizationsEn().showMap),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction),
+        find.widgetWithText(CustomButton, AppLocalizationsEn().orderDeliveredAction),
         findsNothing,
       );
     });
@@ -175,7 +175,7 @@ void main() {
       await _pump(tester, entity: _tracking(status: 'Delivered'));
 
       expect(
-        find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction),
+        find.widgetWithText(CustomButton, AppLocalizationsEn().orderDeliveredAction),
         findsOneWidget,
       );
     });
@@ -183,7 +183,7 @@ void main() {
     testWidgets('"Show map" opens the order map route', (tester) async {
       await _pump(tester, entity: _tracking());
 
-      await tester.tap(find.widgetWithText(CustomButton, AppStrings.showMap));
+      await tester.tap(find.widgetWithText(CustomButton, AppLocalizationsEn().showMap));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
 

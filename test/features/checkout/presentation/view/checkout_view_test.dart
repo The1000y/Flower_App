@@ -1,6 +1,5 @@
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -29,6 +28,7 @@ import '../../mocks/mocks.mocks.dart';
 import '../../../../helpers/flutter_diagnostic_tolerances.dart';
 import '../../fixtures/checkout_fixtures.dart';
 import '../../../payment/mocks/mocks.mocks.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 void main() {
   late MockCheckoutCubit mockCheckoutCubit;
@@ -141,7 +141,7 @@ void main() {
       await pumpApp(tester);
 
       // Assert
-      expect(find.text(AppStrings.checkoutTitle), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().checkoutTitle), findsOneWidget);
       expect(find.byIcon(Icons.arrow_back_ios_new), findsOneWidget);
     });
 
@@ -231,7 +231,7 @@ void main() {
       );
       expect(find.text(CheckoutFixtures.tCod), findsOneWidget);
       expect(find.text(CheckoutFixtures.tCard), findsOneWidget);
-      expect(find.text(AppStrings.placeOrder), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().placeOrder), findsOneWidget);
       expect(find.text('Home'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsNothing);
     });
@@ -318,7 +318,7 @@ void main() {
       await pumpFrames(tester);
 
       // Assert
-      expect(find.text(AppStrings.itIsAGift), findsNothing);
+      expect(find.text(AppLocalizationsEn().itIsAGift), findsNothing);
     });
 
     testWidgets('shows the gift fields for a gift order with a card payment', (
@@ -341,7 +341,7 @@ void main() {
       await pumpFrames(tester);
 
       // Assert
-      expect(find.text(AppStrings.itIsAGift), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().itIsAGift), findsOneWidget);
       expect(find.byType(TextFormField), findsNWidgets(2));
     });
 

@@ -1,11 +1,10 @@
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
-
-import '../../../../../../core/constants/app_strings/app_strings.dart';
 
 /// Everything a single cart line needs to render.
 typedef _CartItemView = ({CartItemEntity item, int quantity, bool isBusy});
@@ -105,7 +104,7 @@ class CartItem extends StatelessWidget {
                                 ),
 
                                 Text(
-                                  '${AppStrings.currencyEGP}${currentItem.unitPrice.toStringAsFixed(2)}',
+                                  '${context.l10n.currencyEGP}${currentItem.unitPrice.toStringAsFixed(2)}',
                                 ),
                               ],
                             ),
@@ -122,7 +121,7 @@ class CartItem extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              '${AppStrings.currencyEGP}${lineSubtotal.toStringAsFixed(2)}',
+                              '${context.l10n.currencyEGP}${lineSubtotal.toStringAsFixed(2)}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(

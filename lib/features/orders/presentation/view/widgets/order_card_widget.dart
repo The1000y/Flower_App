@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -54,11 +55,11 @@ class OrderCardWidget extends StatelessWidget {
                   Text(orderPrice),
                   Text(
                     isActive
-                        ? "${AppStrings.orderNumberPrefix}$orderId"
-                        : "${AppStrings.deliveredOnPrefix}$orderDeliverDate",
+                        ? "${context.l10n.orderNumberPrefix}$orderId"
+                        : "${context.l10n.deliveredOnPrefix}$orderDeliverDate",
                   ),
                   CustomButton(
-                    text: isActive ? AppStrings.trackOrder : AppStrings.reorder,
+                    text: isActive ? context.l10n.trackOrder : context.l10n.reorder,
                     isEnabled: true,
                     onPressed: onActionPressed,
                     enabledColor: AppColors.pinkBase,

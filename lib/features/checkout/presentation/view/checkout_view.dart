@@ -1,6 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -61,7 +61,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           ),
           titleSpacing: 0,
           title: Text(
-            AppStrings.checkoutTitle,
+            context.l10n.checkoutTitle,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 20.sp,

@@ -1,5 +1,6 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class DeliveryTimeSection extends StatelessWidget {
         children: [
           const SizedBox(height: 12),
           Text(
-            AppStrings.deliveryTime,
+            context.l10n.deliveryTime,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
               fontSize: 18,
@@ -30,7 +31,7 @@ class DeliveryTimeSection extends StatelessWidget {
             children: [
               const Icon(Icons.schedule, color: AppColors.black100),
               Text(
-                AppStrings.instant,
+                context.l10n.instant,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -66,7 +67,7 @@ class DeliveryTimeSection extends StatelessWidget {
                       );
                     } else {
                       return Text(
-                        'Arrive by $estimatedTime',
+                        '${context.l10n.arriveByPrefix}$estimatedTime',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.titleMedium?.copyWith(

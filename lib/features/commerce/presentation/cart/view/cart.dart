@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
@@ -31,7 +32,7 @@ class _CartViewState extends State<CartView> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text(AppStrings.navCart),
+          title: Text(context.l10n.navCart),
           backgroundColor: Colors.white,
         ),
         body: CartBody(

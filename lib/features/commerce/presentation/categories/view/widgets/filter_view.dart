@@ -1,6 +1,5 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart'
-    show AppStrings;
 import 'package:flutter/material.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../../../core/themes/app_colors/app_color.dart';
@@ -34,7 +33,7 @@ class _FilterViewState extends State<FilterView> {
         Padding(
           padding: EdgeInsetsGeometry.all(10),
           child: Text(
-            AppStrings.sortBy,
+            context.l10n.sortBy,
             style: TextStyle(
               color: AppColors.pinkBase,
               fontSize: 18.sp,
@@ -44,7 +43,7 @@ class _FilterViewState extends State<FilterView> {
         ),
         SizedBox(height: 20),
         BuildSortItemFilter(
-          title: 'Recommended',
+          title: context.l10n.sortRecommended,
           value: SortType.recommended,
           groupValue: selectedSort,
           onChanged: (value) {
@@ -54,7 +53,7 @@ class _FilterViewState extends State<FilterView> {
         ),
 
         BuildSortItemFilter(
-          title: 'Newest',
+          title: context.l10n.sortNewest,
           value: SortType.newest,
           groupValue: selectedSort,
           onChanged: (value) {
@@ -64,7 +63,7 @@ class _FilterViewState extends State<FilterView> {
         ),
 
         BuildSortItemFilter(
-          title: 'Price Low To High',
+          title: context.l10n.sortPriceLowToHigh,
           value: SortType.priceLowToHigh,
           groupValue: selectedSort,
           onChanged: (value) {
@@ -74,7 +73,7 @@ class _FilterViewState extends State<FilterView> {
         ),
 
         BuildSortItemFilter(
-          title: 'Price High To Low',
+          title: context.l10n.sortPriceHighToLow,
           value: SortType.priceHighToLow,
           groupValue: selectedSort,
           onChanged: (value) {

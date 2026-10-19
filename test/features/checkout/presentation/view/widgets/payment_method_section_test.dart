@@ -1,5 +1,4 @@
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/checkout/domain/entities/checkout_details_entity.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
@@ -16,6 +15,7 @@ import '../../../mocks/mocks.mocks.dart';
 
 import '../../../../../helpers/flutter_diagnostic_tolerances.dart';
 import '../../../fixtures/checkout_fixtures.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 void main() {
   late MockCheckoutCubit mockCubit;
@@ -117,7 +117,7 @@ void main() {
       await pumpApp(tester);
 
       // Assert
-      expect(find.text(AppStrings.somethingWentWrong), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().somethingWentWrong), findsOneWidget);
     });
 
     testWidgets('renders the section title when the details are loaded', (
@@ -131,7 +131,7 @@ void main() {
       await pumpApp(tester);
 
       // Assert
-      expect(find.text(AppStrings.paymentMethod), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().paymentMethod), findsOneWidget);
     });
 
     testWidgets('renders one radio option per payment method', (tester) async {
@@ -175,7 +175,7 @@ void main() {
 
         // Assert
         expect(find.byType(RadioListTile<String>), findsNothing);
-        expect(find.text(AppStrings.paymentMethod), findsOneWidget);
+        expect(find.text(AppLocalizationsEn().paymentMethod), findsOneWidget);
       },
     );
 

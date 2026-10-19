@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -34,13 +35,13 @@ class OccasionAppBar extends StatelessWidget implements PreferredSizeWidget {
                 constraints: const BoxConstraints(),
               ),
               SizedBox(width: 8.w),
-              Text(AppStrings.occasionTitle, style: textTheme.titleSmall),
+              Text(context.l10n.occasionTitle, style: textTheme.titleSmall),
             ],
           ),
           SizedBox(height: 4.h),
           Padding(
             padding: EdgeInsets.only(left: 32.w),
-            child: Text(AppStrings.bloomSubtitle, style: textTheme.labelMedium),
+            child: Text(context.l10n.bloomSubtitle, style: textTheme.labelMedium),
           ),
         ],
       ),

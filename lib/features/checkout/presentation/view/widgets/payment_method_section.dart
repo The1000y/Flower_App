@@ -1,5 +1,6 @@
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
@@ -27,14 +28,14 @@ class PaymentMethodSection extends StatelessWidget {
             return Center(child: Text(state.checkoutDetailsState.errorMessage));
           }
           if (state.checkoutDetailsState.data == null) {
-            return const Center(child: Text(AppStrings.somethingWentWrong));
+            return Center(child: Text(context.l10n.somethingWentWrong));
           }
           final paymentList = state.checkoutDetailsState.data!.paymentMethods;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.paymentMethod,
+                context.l10n.paymentMethod,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,

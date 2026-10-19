@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/view/widgets/custom_address_body.dart';
@@ -43,7 +44,7 @@ class _AddressViewState extends State<AddressView> {
           icon: const Icon(Icons.arrow_back_ios),
         ),
         titleSpacing: 0,
-        title: Text(AppStrings.addressTitle, style: testTheme.titleLarge),
+        title: Text(context.l10n.addressTitle, style: testTheme.titleLarge),
       ),
       body: BlocProvider<AddressCubit>.value(
         value: getIt.get<AddressCubit>(),

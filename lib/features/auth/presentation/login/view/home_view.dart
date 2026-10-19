@@ -1,3 +1,4 @@
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -9,7 +10,10 @@ class HomeView extends StatelessWidget {
       body: Center(
         child: Row(
           children: [
-            Text("comming soon", style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              context.l10n.comingSoon,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             CircularProgressIndicator(),
           ],
         ),

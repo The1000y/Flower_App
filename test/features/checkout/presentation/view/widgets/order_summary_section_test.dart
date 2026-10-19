@@ -31,6 +31,7 @@ import '../../../../payment/mocks/mocks.mocks.dart';
 import '../../../mocks/cubit_stream_stub.dart';
 import '../../../mocks/mocks.mocks.dart';
 import '../../../fixtures/checkout_fixtures.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockCartCubit extends mocktail.Mock implements CartCubit {}
 
@@ -99,6 +100,7 @@ void main() {
                 successUrl: args.successUrl,
                 cancelUrl: args.cancelUrl,
                 sessionUrl: args.sessionUrl,
+                orderId: args.orderId,
               );
             },
           },
@@ -168,9 +170,9 @@ void main() {
       await pumpApp(tester);
 
       // Assert
-      expect(find.text(AppStrings.subTotal), findsOneWidget);
-      expect(find.text(AppStrings.deliveryFee), findsOneWidget);
-      expect(find.text(AppStrings.total), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().subTotal), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().deliveryFee), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().total), findsOneWidget);
     });
 
     testWidgets('shows the error message when the checkout details fail', (
@@ -214,7 +216,7 @@ void main() {
       await pumpApp(tester);
 
       // Assert
-      expect(find.text(AppStrings.somethingWentWrong), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().somethingWentWrong), findsOneWidget);
     });
 
     testWidgets('renders the subtotal, the delivery fee and the total', (
@@ -282,7 +284,7 @@ void main() {
 
       // Assert
       final button = tester.widget<CustomButton>(find.byType(CustomButton));
-      expect(button.text, AppStrings.placeOrder);
+      expect(button.text, AppLocalizationsEn().placeOrder);
       expect(button.isEnabled, isTrue);
     });
 
@@ -296,7 +298,7 @@ void main() {
       await pumpApp(tester);
 
       // Act
-      await tester.tap(find.text(AppStrings.placeOrder));
+      await tester.tap(find.text(AppLocalizationsEn().placeOrder));
       await pumpStream(tester);
 
       // Assert
@@ -316,7 +318,7 @@ void main() {
       );
 
       // Act
-      await tester.tap(find.text(AppStrings.placeOrder));
+      await tester.tap(find.text(AppLocalizationsEn().placeOrder));
       await pumpStream(tester);
 
       // Assert
@@ -339,7 +341,7 @@ void main() {
       );
 
       // Act
-      await tester.tap(find.text(AppStrings.placeOrder));
+      await tester.tap(find.text(AppLocalizationsEn().placeOrder));
       await pumpStream(tester);
 
       // Assert
@@ -425,6 +427,7 @@ void main() {
           placeOrderState: BaseState<PlaceOrderEntity>(
             data: PlaceOrderEntity(
               message: 'created',
+              orderId: 'order-1',
               sessionUrl: 'https://pay.example/session',
               successUrl: 'https://pay.example/success',
               cancelUrl: 'https://pay.example/cancel',

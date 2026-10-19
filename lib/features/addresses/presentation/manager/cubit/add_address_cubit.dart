@@ -4,7 +4,7 @@ import 'dart:developer' as developer;
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/config/base/base_state.dart';
 import 'package:flower_app/config/errors/friendly_error_message.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/location_entity.dart';
 import 'package:flower_app/features/addresses/domain/entities/params/add_address_params.dart';
@@ -252,8 +252,8 @@ class AddressCubit extends Cubit<AddressState> {
         emit(
           state.copyWith(
             selectedCoordinates: coordinates,
-            locationState: const BaseState<LatLng>(
-              errorMessage: AppStrings.addressError,
+            locationState: BaseState<LatLng>(
+              errorMessage: L10n.instance.addressError,
               isLoading: false,
             ),
           ),
@@ -293,7 +293,7 @@ class AddressCubit extends Cubit<AddressState> {
         emit(
           state.copyWith(
             reverseGeocodeState: BaseState<String>(
-              errorMessage: AppStrings.addressError,
+              errorMessage: L10n.instance.addressError,
             ),
           ),
         );
@@ -314,7 +314,7 @@ class AddressCubit extends Cubit<AddressState> {
       emit(
         state.copyWith(
           reverseGeocodeState: BaseState<String>(
-            errorMessage: 'Could not get address details: $e',
+            errorMessage: L10n.instance.addressError,
           ),
         ),
       );
@@ -335,7 +335,7 @@ class AddressCubit extends Cubit<AddressState> {
       emit(
         state.copyWith(
           citiesState: BaseState<List<CityEntity>>(
-            errorMessage: 'No cities found for this governorate',
+            errorMessage: L10n.instance.noCitiesFoundForGovernorate,
             isLoading: false,
           ),
         ),
@@ -584,11 +584,11 @@ class AddressCubit extends Cubit<AddressState> {
           state.copyWith(
             addressesState: BaseState<List<AddressEntity>>(
               isLoading: false,
-              errorMessage: 'Failed to delete address.',
+              errorMessage: L10n.instance.failedToDeleteAddress,
             ),
             fetchAddressesState: BaseState<List<AddressEntity>>(
               isLoading: false,
-              errorMessage: 'Failed to delete address.',
+              errorMessage: L10n.instance.failedToDeleteAddress,
             ),
           ),
         );

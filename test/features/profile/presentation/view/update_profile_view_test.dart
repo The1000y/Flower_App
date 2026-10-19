@@ -1,5 +1,4 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/services/image_picker_service.dart';
 import 'package:flower_app/features/profile/domain/entities/change_password_entity.dart';
 import 'package:flower_app/features/profile/domain/entities/profile_entity.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class FakeProfileRepo implements ProfileRepo {
   final BaseResponce<ProfileEntity> getProfileResponse;
@@ -132,14 +132,14 @@ void main() {
         await tester.enterText(find.byType(TextFormField).first, 'Mona');
         await tester.pump();
 
-        final updateFinder = find.text(AppStrings.actionUpdate);
+        final updateFinder = find.text(AppLocalizationsEn().actionUpdate);
         await tester.ensureVisible(updateFinder);
         await tester.tap(updateFinder);
         await tester.pump(); // start the update
         await tester.pumpAndSettle(); // finish the update and SnackBar animation
 
         expect(fakeRepo.updateCallCount, 1);
-        expect(find.text(AppStrings.profileUpdated), findsWidgets);
+        expect(find.text(AppLocalizationsEn().profileUpdated), findsWidgets);
       });
 
   testWidgets('When getProfile returns an error, a SnackBar with the error message appears',

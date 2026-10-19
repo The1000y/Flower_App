@@ -1,5 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flower_app/config/di/di.dart';
@@ -281,8 +281,9 @@ abstract class AppRoutes {
         if (trackOrderId.isEmpty) {
           return MaterialPageRoute(
             settings: settings,
-            builder: (_) =>
-                Scaffold(body: Center(child: Text(AppStrings.unexpectedError))),
+            builder: (context) => Scaffold(
+              body: Center(child: Text(context.l10n.unexpectedError)),
+            ),
           );
         }
 
@@ -310,8 +311,9 @@ abstract class AppRoutes {
       default:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) =>
-              const Scaffold(body: Center(child: Text('Route Not Found'))),
+          builder: (context) => Scaffold(
+            body: Center(child: Text(context.l10n.routeNotFound)),
+          ),
         );
     }
   }

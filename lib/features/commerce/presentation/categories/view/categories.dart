@@ -1,4 +1,5 @@
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -124,7 +125,7 @@ class _CategoriesContentState extends State<_CategoriesContent>
                     SizedBox(height: 16.h),
                     ElevatedButton(
                       onPressed: _reload,
-                      child: const Text('Retry'),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -136,8 +137,8 @@ class _CategoriesContentState extends State<_CategoriesContent>
         final categories = categoriesState.data ?? <CategoryEntity>[];
         final products = productsState.data ?? [];
         if (categories.isEmpty) {
-          return const Scaffold(
-            body: Center(child: Text('No categories found')),
+          return Scaffold(
+            body: Center(child: Text(context.l10n.noCategoriesFound)),
           );
         }
 
@@ -159,7 +160,7 @@ class _CategoriesContentState extends State<_CategoriesContent>
                     Expanded(
                       child: CustomTextFormField(
                         label: '',
-                        hintText: 'Search',
+                        hintText: context.l10n.searchHint,
                         controller: searchController,
                         prefixIcon: const Icon(Icons.search),
                       ),
@@ -167,7 +168,7 @@ class _CategoriesContentState extends State<_CategoriesContent>
                     SizedBox(width: 8.w),
                     IconButton(
                       onPressed: () => _showFilter(context),
-                      tooltip: 'Filter products',
+                      tooltip: context.l10n.filterProducts,
                       icon: const Icon(Icons.filter_list),
                     ),
                   ],
@@ -209,7 +210,7 @@ class _CategoriesContentState extends State<_CategoriesContent>
             builder: (context) => FloatingActionButton.extended(
               onPressed: () => _showFilter(context),
               icon: const Icon(Icons.tune),
-              label: const Text('Filter'),
+              label: Text(context.l10n.filterButton),
               backgroundColor: AppColors.pinkBase,
               foregroundColor: Colors.white,
             ),

@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -18,9 +19,9 @@ class RegisterTermsText extends StatelessWidget {
           context,
         ).textTheme.bodySmall?.copyWith(color: AppColors.blackBase),
         children: [
-          const TextSpan(text: AppStrings.termsPrefix),
+          TextSpan(text: context.l10n.termsPrefix),
           TextSpan(
-            text: AppStrings.termsLink,
+            text: context.l10n.termsLink,
             style: TextStyle(
               decoration: TextDecoration.underline,
               color: AppColors.blackBase,

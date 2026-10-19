@@ -1,5 +1,4 @@
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_events.dart';
@@ -18,6 +17,7 @@ import '../../../mocks/cubit_stream_stub.dart';
 import '../../../mocks/mocks.mocks.dart';
 
 import '../../../../../helpers/flutter_diagnostic_tolerances.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 void main() {
   late MockAddressCubit mockAddressCubit;
@@ -104,8 +104,8 @@ void main() {
       await pumpApp(tester);
 
       // Assert
-      expect(find.text(AppStrings.deliveryAddress), findsOneWidget);
-      expect(find.text(AppStrings.addNew), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().deliveryAddress), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().addNew), findsOneWidget);
     });
 
     testWidgets('shows a loading indicator while the addresses are loading', (
@@ -143,7 +143,7 @@ void main() {
       await pumpApp(tester);
 
       // Assert
-      expect(find.text(AppStrings.noSavedAddresses), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().noSavedAddresses), findsOneWidget);
     });
 
     testWidgets('shows the error message when loading the addresses fails', (
@@ -165,7 +165,7 @@ void main() {
 
       // Assert
       expect(find.text('Failed to load addresses'), findsOneWidget);
-      expect(find.text(AppStrings.noSavedAddresses), findsNothing);
+      expect(find.text(AppLocalizationsEn().noSavedAddresses), findsNothing);
     });
 
     testWidgets('renders one tile per saved address', (tester) async {

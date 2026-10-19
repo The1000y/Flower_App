@@ -1,5 +1,4 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_item_entity.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockCartCubit extends MockCubit<CartState> implements CartCubit {}
 
@@ -77,11 +77,11 @@ void main() {
 
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
     expect(
-      find.text('${AppStrings.currencyEGP}${200.toStringAsFixed(2)}'),
+      find.text('${AppLocalizationsEn().currencyEGP}${200.toStringAsFixed(2)}'),
       findsOneWidget,
     );
     expect(
-      find.text('${AppStrings.currencyEGP}${400.toStringAsFixed(2)}'),
+      find.text('${AppLocalizationsEn().currencyEGP}${400.toStringAsFixed(2)}'),
       findsOneWidget,
     );
   });

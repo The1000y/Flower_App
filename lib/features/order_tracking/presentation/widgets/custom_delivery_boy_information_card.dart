@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/shared/app_widgets/custom_profile_image.dart';
 import '../../../../core/themes/app_colors/app_color.dart';
 import 'custom_contract_card.dart';
@@ -36,7 +36,7 @@ class CustomDeliveryBoyInformationCard extends StatelessWidget {
               style: textTheme.titleMedium?.copyWith(fontSize: 14),
             ),
             Text(
-              AppStrings.deliveryHeroSubtitle,
+              context.l10n.deliveryHeroSubtitle,
               style: textTheme.bodySmall?.copyWith(
                 color: AppColors.gray,
                 fontWeight: FontWeight.w500,

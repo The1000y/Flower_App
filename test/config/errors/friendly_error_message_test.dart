@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flower_app/config/errors/friendly_error_message.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 void main() {
   DioException dioException({
@@ -20,10 +20,10 @@ void main() {
 
   group('FriendlyErrorMessage.from', () {
     test('maps an empty message to the generic fallback', () {
-      expect(FriendlyErrorMessage.from(''), AppStrings.addressAddFailedServer);
+      expect(FriendlyErrorMessage.from(''), AppLocalizationsEn().addressAddFailedServer);
       expect(
         FriendlyErrorMessage.from(null),
-        AppStrings.addressAddFailedServer,
+        AppLocalizationsEn().addressAddFailedServer,
       );
     });
 
@@ -40,7 +40,7 @@ void main() {
       );
       expect(
         FriendlyErrorMessage.from(dioError),
-        AppStrings.addressAddFailedNotServiceable,
+        AppLocalizationsEn().addressAddFailedNotServiceable,
       );
     });
 
@@ -49,18 +49,18 @@ void main() {
         FriendlyErrorMessage.from(
           Exception('This address is outside our delivery area'),
         ),
-        AppStrings.addressAddFailedNotServiceable,
+        AppLocalizationsEn().addressAddFailedNotServiceable,
       );
     });
 
     test('maps invalid-data messages to the invalid data message', () {
       expect(
         FriendlyErrorMessage.from(Exception('City not found')),
-        AppStrings.addressAddFailedInvalid,
+        AppLocalizationsEn().addressAddFailedInvalid,
       );
       expect(
         FriendlyErrorMessage.from('Recipient name is required'),
-        AppStrings.addressAddFailedInvalid,
+        AppLocalizationsEn().addressAddFailedInvalid,
       );
     });
 
@@ -69,17 +69,17 @@ void main() {
         FriendlyErrorMessage.from(
           dioException(type: DioExceptionType.connectionError),
         ),
-        AppStrings.addressAddFailedServer,
+        AppLocalizationsEn().addressAddFailedServer,
       );
       expect(
         FriendlyErrorMessage.from(
           dioException(type: DioExceptionType.receiveTimeout),
         ),
-        AppStrings.addressAddFailedServer,
+        AppLocalizationsEn().addressAddFailedServer,
       );
       expect(
         FriendlyErrorMessage.from('connectionError'),
-        AppStrings.addressAddFailedServer,
+        AppLocalizationsEn().addressAddFailedServer,
       );
     });
 
@@ -88,11 +88,11 @@ void main() {
         FriendlyErrorMessage.from(
           Exception('Null check operator used on a null value'),
         ),
-        AppStrings.addressAddFailedServer,
+        AppLocalizationsEn().addressAddFailedServer,
       );
       expect(
         FriendlyErrorMessage.from('HTTP error 500'),
-        AppStrings.addressAddFailedServer,
+        AppLocalizationsEn().addressAddFailedServer,
       );
     });
   });

@@ -1,11 +1,11 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/features/orders/presentation/view/order_success_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -43,17 +43,17 @@ void main() {
     ) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.text(AppStrings.orderPlacedSuccess), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().orderPlacedSuccess), findsOneWidget);
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
       expect(find.byIcon(Icons.arrow_back_ios), findsOneWidget);
       expect(find.byType(CustomButton), findsOneWidget);
-      expect(find.text(AppStrings.trackOrder), findsWidgets);
+      expect(find.text(AppLocalizationsEn().trackOrder), findsWidgets);
     });
 
     testWidgets('displays order ID when provided', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest(orderId: '12345'));
 
-      expect(find.text('${AppStrings.orderIdPrefix}12345'), findsOneWidget);
+      expect(find.text('${AppLocalizationsEn().orderIdPrefix}12345'), findsOneWidget);
     });
 
     testWidgets(

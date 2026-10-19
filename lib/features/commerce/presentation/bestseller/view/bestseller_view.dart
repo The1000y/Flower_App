@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/domain/entities/best_sellers/best_seller_entity.dart';
 import 'package:flower_app/features/commerce/presentation/bestseller/manager/cubit/bestseller_cubit.dart';
@@ -52,7 +53,7 @@ class _BestsellerViewState extends State<BestsellerView> {
           ),
           titleSpacing: 0,
           title: Text(
-            AppStrings.bestsellerLabel,
+            context.l10n.bestsellerLabel,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 20.sp,
@@ -74,7 +75,7 @@ class _BestsellerViewState extends State<BestsellerView> {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () => _cubit.getBestsellerList(),
-                      child: const Text('Retry'),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -84,7 +85,7 @@ class _BestsellerViewState extends State<BestsellerView> {
             final items = state.data ?? [];
 
             if (items.isEmpty) {
-              return const Center(child: Text('No items found'));
+              return Center(child: Text(context.l10n.noItemsFound));
             }
 
             return Column(
@@ -93,7 +94,7 @@ class _BestsellerViewState extends State<BestsellerView> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Text(
-                    AppStrings.bloomSubtitle,
+                    context.l10n.bloomSubtitle,
                     style: Theme.of(
                       context,
                     ).textTheme.bodyMedium?.copyWith(color: AppColors.black30),
@@ -245,7 +246,7 @@ class BestsellerProductCard extends StatelessWidget {
                         size: 16.sp,
                       ),
                       label: Text(
-                        AppStrings.addToCart,
+                        context.l10n.addToCart,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12.sp,

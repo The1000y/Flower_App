@@ -1,8 +1,7 @@
 import 'package:flower_app/core/extensions/date_time_extension.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-import '../../../../core/constants/app_strings/app_strings.dart';
 
 class CustomEstimatedArrivalSection extends StatelessWidget {
   const CustomEstimatedArrivalSection({
@@ -24,7 +23,7 @@ class CustomEstimatedArrivalSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(AppStrings.estimatedArrival, style: textTheme.bodyMedium),
+              Text(context.l10n.estimatedArrival, style: textTheme.bodyMedium),
               const Gap(8),
               Text(
                 estimatedArrivalDateTime.toEstimatedArrivalFormat(),

@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +16,9 @@ class RegisterLoginLink extends StatelessWidget {
         TextSpan(
           style: Theme.of(context).textTheme.bodyMedium,
           children: [
-            const TextSpan(text: AppStrings.alreadyHaveAccount),
+            TextSpan(text: context.l10n.alreadyHaveAccount),
             TextSpan(
-              text: ' ${AppStrings.loginTitle}',
+              text: ' ${context.l10n.loginTitle}',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.pinkBase,
                 decoration: TextDecoration.underline,

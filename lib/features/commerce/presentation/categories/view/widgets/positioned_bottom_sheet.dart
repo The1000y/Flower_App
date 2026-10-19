@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:flower_app/l10n/l10n.dart';
 
 import '../../../../../../core/themes/app_colors/app_color.dart';
 import 'build_sort_item_filter.dart';
@@ -47,7 +48,7 @@ class Positionedbottomsheet extends StatelessWidget {
 
                 SizedBox(width: 8.w),
                 Text(
-                  'Filter',
+                  context.l10n.filterButton,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

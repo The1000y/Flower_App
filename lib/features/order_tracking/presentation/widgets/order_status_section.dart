@@ -1,6 +1,7 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flutter/material.dart';
 
+import 'package:flower_app/l10n/l10n.dart';
 import '../../domain/entities/order_status_mapper.dart';
 import '../../domain/entities/order_step_entity.dart';
 import '../../domain/entities/tracking_entity.dart';
@@ -18,13 +19,13 @@ class OrderStatusSection extends StatelessWidget {
     return OrderStatusTimeline(
       currentIndex: status.index,
       steps: [
-        const OrderStepEntity(title: AppStrings.statusReceived),
-        const OrderStepEntity(title: AppStrings.statusPreparing),
-        const OrderStepEntity(title: AppStrings.statusPickedUp),
-        const OrderStepEntity(title: AppStrings.statusOutForDelivery),
-        const OrderStepEntity(title: AppStrings.statusAwaitingConfirmation),
+        OrderStepEntity(title: context.l10n.statusReceived),
+        OrderStepEntity(title: context.l10n.statusPreparing),
+        OrderStepEntity(title: context.l10n.statusPickedUp),
+        OrderStepEntity(title: context.l10n.statusOutForDelivery),
+        OrderStepEntity(title: context.l10n.statusAwaitingConfirmation),
         OrderStepEntity(
-          title: AppStrings.statusDelivered,
+          title: context.l10n.statusDelivered,
           dateTime: tracking.estimatedDeliveryAt,
         ),
       ],

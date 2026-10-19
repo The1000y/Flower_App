@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/features/orders/presentation/manager/cubit/orders_cubit.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/orders/presentation/manager/orders_intent.dart';
 import 'package:flower_app/features/orders/presentation/manager/orders_state.dart';
 import 'package:flower_app/features/orders/presentation/view/widgets/orders_list_widget.dart';
@@ -39,16 +40,16 @@ class MyOrdersView extends StatelessWidget {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
-              title: const Text(AppStrings.myOrdersTitle),
+              title: Text(context.l10n.myOrdersTitle),
               bottom: TabBar(
                 tabs: [
                   Padding(
                     padding: EdgeInsets.only(bottom: 6.h),
-                    child: const Text(AppStrings.tabActive),
+                    child: Text(context.l10n.tabActive),
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 6.h),
-                    child: const Text(AppStrings.tabCompleted),
+                    child: Text(context.l10n.tabCompleted),
                   ),
                 ],
               ),

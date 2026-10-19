@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_snack_bar.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
@@ -156,7 +156,7 @@ class _CustomAddressBodyState extends State<CustomAddressBody> {
     if (state.addAddressState.data != null) {
       CustomSnackBar.showSuccess(
         context,
-        message: AppStrings.addressAddedSuccess,
+        message: context.l10n.addressAddedSuccess,
       );
       if (Navigator.canPop(context)) {
         Navigator.pop(context);

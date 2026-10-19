@@ -1,5 +1,6 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
@@ -27,7 +28,7 @@ class DeliveryAddressSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.deliveryAddress,
+            context.l10n.deliveryAddress,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
               fontSize: 18,
@@ -50,7 +51,7 @@ class DeliveryAddressSection extends StatelessWidget {
                 return Text(
                   addressesState.errorMessage.isNotEmpty
                       ? addressesState.errorMessage
-                      : AppStrings.noSavedAddresses,
+                      : context.l10n.noSavedAddresses,
                 );
               }
               return Column(
@@ -92,7 +93,7 @@ class DeliveryAddressSection extends StatelessWidget {
             },
             icon: Icon(Icons.add, color: AppColors.pinkBase, size: 22.sp),
             label: Text(
-              AppStrings.addNew,
+              context.l10n.addNew,
               style: TextStyle(
                 color: AppColors.pinkBase,
                 fontSize: 16.sp,

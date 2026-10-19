@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_responce.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
+import 'package:flower_app/features/order_tracking/domain/use_case/confirm_order_delivery_use_case.dart';
 import 'package:flower_app/features/order_tracking/domain/use_case/get_tracking_use_case.dart';
 import 'package:flower_app/features/order_tracking/domain/use_case/start_tracking_use_case.dart';
 import 'package:flower_app/features/order_tracking/domain/use_case/stop_tracking_use_case.dart';
@@ -34,6 +35,7 @@ void main() {
       GetTrackingUseCase(repository),
       StartTrackingUseCase(repository),
       StopTrackingUseCase(repository),
+      ConfirmOrderDeliveryUseCase(repository),
     );
   });
 

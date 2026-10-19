@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_snack_bar.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_ui_event.dart';
@@ -46,12 +46,12 @@ class _CartUiEventListenerState extends State<CartUiEventListener> {
       case AddToCartSuccessUiEvent():
         CustomSnackBar.showSuccess(
           context,
-          message: AppStrings.productAddedToCart,
+          message: context.l10n.productAddedToCart,
         );
       case AddToCartFailureUiEvent(:final message):
         CustomSnackBar.showError(
           context,
-          message: message.isEmpty ? AppStrings.somethingWentWrong : message,
+          message: message.isEmpty ? context.l10n.somethingWentWrong : message,
         );
     }
   }

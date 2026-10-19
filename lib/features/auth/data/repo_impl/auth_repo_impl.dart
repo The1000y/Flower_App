@@ -1,5 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:flower_app/features/auth/data/data_source/remote_data_source/remote_data_source.dart';
@@ -106,7 +106,7 @@ class AuthRepoImpl implements AuthRepo {
         return SuccessResponce(login);
       }
       return ErrorResponce(
-        Exception(response.message ?? AppStrings.loginFailed),
+        Exception(response.message ?? L10n.instance.loginFailed),
       );
     } catch (error) {
       return ErrorResponce(
@@ -137,7 +137,7 @@ class AuthRepoImpl implements AuthRepo {
       }
 
       return ErrorResponce(
-        Exception(response.message ?? AppStrings.registerError),
+        Exception(response.message ?? L10n.instance.registerError),
       );
     } catch (error) {
       return ErrorResponce(

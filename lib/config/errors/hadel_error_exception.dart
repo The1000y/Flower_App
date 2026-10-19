@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flower_app/l10n/l10n.dart';
 
 class HandelErrorException {
   String handelErrorexception(Exception error) {
     if (error is DioException) return _hadelDioException(error);
-    return 'something went wrong, pls try again';
+    return L10n.instance.somethingWentWrongTryAgain;
   }
 
   String _hadelDioException(DioException error) {

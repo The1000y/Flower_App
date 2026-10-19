@@ -1,9 +1,9 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_estimated_arrival_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/order_tracking_test_helpers.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 Widget _section(DateTime dateTime) =>
     CustomEstimatedArrivalSection(estimatedArrivalDateTime: dateTime);
@@ -13,7 +13,7 @@ void main() {
     testWidgets('shows the "Estimated arrival" label', (tester) async {
       await pumpOrderTrackingApp(tester, _section(DateTime(2024, 9, 3, 11)));
 
-      expect(find.text(AppStrings.estimatedArrival), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().estimatedArrival), findsOneWidget);
     });
 
     testWidgets('formats a morning time as "3 September 2024, 11:00 AM"', (

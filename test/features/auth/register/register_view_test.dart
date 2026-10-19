@@ -1,5 +1,4 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/features/auth/presentation/register/view/register_view.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../../helpers/auth_test_helpers.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 Widget _app(FakeAuthRepo repo) {
   return ScreenUtilPlusInit(
@@ -44,33 +44,33 @@ Future<void> _pumpRegister(WidgetTester tester, FakeAuthRepo repo) async {
   await tester.pump();
 }
 
-Finder _signUpButton() => find.widgetWithText(CustomButton, AppStrings.signUp);
+Finder _signUpButton() => find.widgetWithText(CustomButton, AppLocalizationsEn().signUp);
 
 Future<void> _fillValidFields(WidgetTester tester) async {
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.firstNameLabel),
+    find.widgetWithText(CustomTextFormField, AppLocalizationsEn().firstNameLabel),
     'John',
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.lastNameLabel),
+    find.widgetWithText(CustomTextFormField, AppLocalizationsEn().lastNameLabel),
     'Doe',
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.emailLabel),
+    find.widgetWithText(CustomTextFormField, AppLocalizationsEn().emailLabel),
     validEmail,
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
+    find.widgetWithText(CustomTextFormField, AppLocalizationsEn().passwordLabel),
     validRegisterPassword,
   );
   await tester.enterText(
     find
-        .widgetWithText(CustomTextFormField, AppStrings.confirmPasswordLabel)
+        .widgetWithText(CustomTextFormField, AppLocalizationsEn().confirmPasswordLabel)
         .first,
     validRegisterPassword,
   );
   await tester.enterText(
-    find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),
+    find.widgetWithText(CustomTextFormField, AppLocalizationsEn().phoneNumberLabel),
     '01012345678',
   );
   await tester.pump();
@@ -84,32 +84,32 @@ void main() {
       await _pumpRegister(tester, FakeAuthRepo());
 
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.firstNameLabel),
+        find.widgetWithText(CustomTextFormField, AppLocalizationsEn().firstNameLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.lastNameLabel),
+        find.widgetWithText(CustomTextFormField, AppLocalizationsEn().lastNameLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.emailLabel),
+        find.widgetWithText(CustomTextFormField, AppLocalizationsEn().emailLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.passwordLabel),
+        find.widgetWithText(CustomTextFormField, AppLocalizationsEn().passwordLabel),
         findsOneWidget,
       );
       expect(
         find
             .widgetWithText(
               CustomTextFormField,
-              AppStrings.confirmPasswordLabel,
+              AppLocalizationsEn().confirmPasswordLabel,
             )
             .first,
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(CustomTextFormField, AppStrings.phoneNumberLabel),
+        find.widgetWithText(CustomTextFormField, AppLocalizationsEn().phoneNumberLabel),
         findsOneWidget,
       );
       expect(_signUpButton(), findsOneWidget);
@@ -124,12 +124,12 @@ void main() {
       await tester.tap(_signUpButton());
       await tester.pump();
 
-      expect(find.text(AppStrings.firstNameRequired), findsOneWidget);
-      expect(find.text(AppStrings.lastNameRequired), findsOneWidget);
-      expect(find.text(AppStrings.emailRequired), findsOneWidget);
-      expect(find.text(AppStrings.passwordRequired), findsOneWidget);
-      expect(find.text(AppStrings.confirmPasswordRequired), findsOneWidget);
-      expect(find.text(AppStrings.phoneRequired), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().firstNameRequired), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().lastNameRequired), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().emailRequired), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().passwordRequired), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().confirmPasswordRequired), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().phoneRequired), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 5));
     });
@@ -144,7 +144,7 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.text(AppStrings.registerSuccess), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().registerSuccess), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 2));
       await tester.pump(const Duration(milliseconds: 400));

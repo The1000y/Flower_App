@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
@@ -102,7 +103,7 @@ class _ErrorView extends StatelessWidget {
           const SizedBox(height: 12),
           ElevatedButton(
             onPressed: onRetry,
-            child: const Text(AppStrings.retry),
+            child: Text(context.l10n.retry),
           ),
         ],
       ),
@@ -179,17 +180,17 @@ class _OrderSummary extends StatelessWidget {
       child: Column(
         children: [
           _SummaryRow(
-            label: AppStrings.subtotal,
-            value: '${AppStrings.currencyEGP}${subtotal.toStringAsFixed(2)}',
+            label: context.l10n.subtotal,
+            value: '${context.l10n.currencyEGP}${subtotal.toStringAsFixed(2)}',
           ),
           _SummaryRow(
-            label: AppStrings.deliveryFee,
-            value: '${AppStrings.currencyEGP}${deliveryFee.toStringAsFixed(2)}',
+            label: context.l10n.deliveryFee,
+            value: '${context.l10n.currencyEGP}${deliveryFee.toStringAsFixed(2)}',
           ),
           SizedBox(height: 10.h),
           _SummaryRow(
-            label: AppStrings.total,
-            value: '${AppStrings.currencyEGP}${total.toStringAsFixed(2)}',
+            label: context.l10n.total,
+            value: '${context.l10n.currencyEGP}${total.toStringAsFixed(2)}',
             emphasized: true,
           ),
         ],
@@ -238,7 +239,7 @@ class _CheckoutButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: CustomButton(
-        text: AppStrings.checkout,
+        text: context.l10n.checkout,
         onPressed: () => Navigator.pushNamed(
           context,
           Routes.checkout,

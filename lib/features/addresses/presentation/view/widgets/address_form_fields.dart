@@ -1,5 +1,6 @@
 import 'package:flower_app/config/utils/auth_validators.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -41,26 +42,26 @@ class AddressFormFields extends StatelessWidget {
       children: [
         CustomTextFormField(
           validator: (value) =>
-              AuthValidators.addressFields(value, AppStrings.addressRequired),
+              AuthValidators.addressFields(value, context.l10n.addressRequired),
           controller: addressController,
-          label: AppStrings.addressTitle,
-          hintText: AppStrings.enterAddressHint,
+          label: context.l10n.addressTitle,
+          hintText: context.l10n.enterAddressHint,
           readOnly: true,
         ),
         const SizedBox(height: 24),
         CustomTextFormField(
           validator: (value) =>
-              AuthValidators.addressFields(value, AppStrings.labelRequired),
+              AuthValidators.addressFields(value, context.l10n.labelRequired),
           controller: labelController,
-          label: AppStrings.labelTitle,
-          hintText: AppStrings.labelTitleHint,
+          label: context.l10n.labelTitle,
+          hintText: context.l10n.labelTitleHint,
         ),
         const SizedBox(height: 24),
         CustomTextFormField(
           controller: phoneNumberController,
           validator: AuthValidators.phone,
-          label: AppStrings.phoneNumberLabel,
-          hintText: AppStrings.phoneNumberHint,
+          label: context.l10n.phoneNumberLabel,
+          hintText: context.l10n.phoneNumberHint,
           keyboardType: TextInputType.number,
         ),
         const SizedBox(height: 24),
@@ -68,10 +69,10 @@ class AddressFormFields extends StatelessWidget {
           controller: recipientNameController,
           validator: (value) => AuthValidators.addressFields(
             value,
-            AppStrings.recipientNameRequired,
+            context.l10n.recipientNameRequired,
           ),
-          label: AppStrings.recipientNameLabel,
-          hintText: AppStrings.enterRecipientNameHint,
+          label: context.l10n.recipientNameLabel,
+          hintText: context.l10n.enterRecipientNameHint,
           keyboardType: TextInputType.name,
         ),
         const SizedBox(height: 24),
@@ -82,7 +83,7 @@ class AddressFormFields extends StatelessWidget {
         ),
         const SizedBox(height: 48),
         CustomButton(
-          text: isLoading ? AppStrings.loadingAddress : AppStrings.saveAddress,
+          text: isLoading ? context.l10n.loadingAddress : context.l10n.saveAddress,
           onPressed: isLoading ? null : _submit,
           isEnabled: !isLoading,
           enabledColor: AppColors.pinkBase,
@@ -141,12 +142,12 @@ class _LocationDropdowns extends StatelessWidget {
           child: DropdownButtonFormField<String>(
             isExpanded: true,
             initialValue: state.selectedGovernorate,
-            hint: const Text(
-              AppStrings.cityLabel,
+            hint: Text(
+              context.l10n.cityLabel,
               overflow: TextOverflow.ellipsis,
             ),
             decoration: InputDecoration(
-              labelText: AppStrings.cityLabel,
+              labelText: context.l10n.cityLabel,
               prefixIconColor: AppColors.pinkBase,
               prefixIcon: const Icon(Icons.location_city_outlined),
               filled: true,
@@ -213,7 +214,7 @@ class _LocationDropdowns extends StatelessWidget {
               }
             },
             validator: (value) => value == null || value.isEmpty
-                ? 'Governorate is Required'
+                ? context.l10n.governorateRequired
                 : null,
           ),
         ),
@@ -225,12 +226,12 @@ class _LocationDropdowns extends StatelessWidget {
                 filteredCities.any((city) => city.id == state.selectedCity)
                 ? state.selectedCity
                 : null,
-            hint: const Text(
-              AppStrings.areaLabel,
+            hint: Text(
+              context.l10n.areaLabel,
               overflow: TextOverflow.ellipsis,
             ),
             decoration: InputDecoration(
-              labelText: AppStrings.areaLabel,
+              labelText: context.l10n.areaLabel,
               prefixIconColor: AppColors.pinkBase,
               prefixIcon: const Icon(Icons.map_outlined),
               filled: true,
@@ -299,14 +300,14 @@ class _LocationDropdowns extends StatelessWidget {
             validator: (value) {
               if (state.selectedGovernorate != null &&
                   (value == null || value.isEmpty)) {
-                return AppStrings.cityRequired;
+                return context.l10n.cityRequired;
               }
               return null;
             },
             disabledHint: Text(
               state.selectedGovernorate == null
-                  ? 'Select Governorate !!'
-                  : AppStrings.cityLabel,
+                  ? context.l10n.selectGovernorate
+                  : context.l10n.cityLabel,
             ),
           ),
         ),

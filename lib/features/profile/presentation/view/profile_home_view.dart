@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/locale/app_language.dart';
 import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -82,7 +83,7 @@ class _ProfileHomeViewState extends State<ProfileHomeView> {
                   onPressed: () => context.read<ProfileViewModel>().doEvent(
                     FetchProfileEvent(),
                   ),
-                  child: const Text(AppStrings.retry),
+                  child: Text(context.l10n.retry),
                 ),
               ],
             ),

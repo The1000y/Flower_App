@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/shared/app_widgets/product_card.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -55,7 +56,7 @@ class _SearchViewState extends State<SearchView> {
         ),
         titleSpacing: 0,
         title: Text(
-          'Search',
+          context.l10n.searchHint,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 20.sp,
@@ -68,7 +69,7 @@ class _SearchViewState extends State<SearchView> {
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: CustomTextFormField(
               label: '',
-              hintText: 'Search for any product',
+              hintText: context.l10n.searchPlaceholder,
               controller: _searchController,
               prefixIcon: const Icon(Icons.search),
               onChanged: _onQueryChanged,
@@ -92,7 +93,7 @@ class _SearchViewState extends State<SearchView> {
     if (state.query.trim().isEmpty) {
       return Center(
         child: Text(
-          'Start typing to search',
+          context.l10n.searchStartTyping,
           style: TextStyle(color: AppColors.black30, fontSize: 16.sp),
         ),
       );
@@ -113,7 +114,7 @@ class _SearchViewState extends State<SearchView> {
               onPressed: () => context.read<SearchCubit>().doEvent(
                 SearchProductsEvent(state.query),
               ),
-              child: const Text('Retry'),
+              child: Text(context.l10n.retry),
             ),
           ],
         ),
@@ -124,7 +125,7 @@ class _SearchViewState extends State<SearchView> {
     if (products.isEmpty) {
       return Center(
         child: Text(
-          AppStrings.noResult,
+          context.l10n.noResult,
           style: TextStyle(color: AppColors.black30, fontSize: 16.sp),
         ),
       );

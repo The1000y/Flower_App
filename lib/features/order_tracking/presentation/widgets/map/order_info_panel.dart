@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../config/routing/routes.dart';
-import '../../../../../core/constants/app_strings/app_strings.dart';
+
 import '../../../../../core/shared/app_widgets/custom_button.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
 import '../../../domain/entities/tracking_entity.dart';
@@ -45,7 +46,7 @@ class OrderInfoPanel extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(
-                  text: AppStrings.orderDetails,
+                  text: context.l10n.orderDetails,
                   onPressed: () => Navigator.pushNamed(
                     context,
                     Routes.orderDetails,

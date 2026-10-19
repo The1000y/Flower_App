@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -32,7 +33,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     return BlocProvider(
       create: (context) => viewModel,
       child: Scaffold(
-        appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
+        appBar: AppBar(title: Text(context.l10n.passwordAppBarTitle)),
         body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
           listenWhen: (previous, current) {
             return previous.forgotstate.isLoading !=
@@ -49,8 +50,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 );
               } else if (state.forgotstate.data != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("OTP sent successfully"),
+                  SnackBar(
+                    content: Text(context.l10n.otpSentSuccess),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -66,25 +67,25 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 child: Column(
                   children: [
                     SizedBox(height: 50.h),
-                    Center(child: Text(AppStrings.forgetPassword)),
+                    Center(child: Text(context.l10n.forgetPassword)),
                     SizedBox(height: 10.h),
                     Text(
-                      AppStrings.forgetPasswordSubtitle,
+                      context.l10n.forgetPasswordSubtitle,
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 20.h),
 
                     CustomTextFormField(
                       controller: _emailController,
-                      label: AppStrings.emailLabel,
-                      hintText: AppStrings.emailHint,
+                      label: context.l10n.emailLabel,
+                      hintText: context.l10n.emailHint,
                       validator: AuthValidators.email,
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 30.h),
                     CustomButton(
                       isLoading: state.forgotstate.isLoading,
-                      text: AppStrings.confirmButton,
+                      text: context.l10n.confirmButton,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           viewModel.doEvent(

@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,8 +52,8 @@ class _OccasionScaffold extends StatelessWidget {
 
           final occasions = occasionsState.data ?? const [];
           if (occasions.isEmpty) {
-            return const Center(
-              child: Text('No occasions available right now.'),
+            return Center(
+              child: Text(context.l10n.noOccasionsAvailable),
             );
           }
 

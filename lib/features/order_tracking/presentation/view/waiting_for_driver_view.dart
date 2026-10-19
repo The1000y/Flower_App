@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/themes/app_colors/app_color.dart';
 
 class WaitingForDriverView extends StatefulWidget {
@@ -66,13 +66,13 @@ class _WaitingForDriverViewState extends State<WaitingForDriverView>
             const Gap(56),
 
             Text(
-              AppStrings.waitingForDriverTitle,
+              context.l10n.waitingForDriverTitle,
               style: textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             const Gap(8),
             Text(
-              AppStrings.waitingForDriverSubtitle,
+              context.l10n.waitingForDriverSubtitle,
               style: textTheme.bodyMedium?.copyWith(color: AppColors.gray),
               textAlign: TextAlign.center,
             ),

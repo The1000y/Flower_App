@@ -1,9 +1,9 @@
 import 'package:flower_app/core/shared/app_widgets/custom_app_bar.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/constants/app_strings/app_strings.dart';
 import '../../../../core/constants/enums/order_status.dart';
 import '../../../../core/shared/animations/animated_car_single_file.dart';
 import '../../../../core/themes/app_colors/app_color.dart';
@@ -30,7 +30,7 @@ class TrackOrderView extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         textStyle: textTheme.titleLarge,
-        title: AppStrings.trackOrder,
+        title: context.l10n.trackOrder,
         onBack: () => Navigator.pop(context),
       ),
       body: SafeArea(
@@ -59,7 +59,7 @@ class TrackOrderView extends StatelessWidget {
             if (data == null) {
               return _TrackingMessage(
                 message: state.trackingState.errorMessage.isEmpty
-                    ? AppStrings.unexpectedError
+                    ? context.l10n.unexpectedError
                     : state.trackingState.errorMessage,
                 onPressed: () => context.read<TrackingViewModel>().handle(
                   StartTrackingIntent(orderId),
@@ -71,8 +71,8 @@ class TrackOrderView extends StatelessWidget {
 
             if (status == OrderStatus.cancelled) {
               return _TrackingMessage(
-                message: AppStrings.orderCancelledSubtitle,
-                buttonText: 'Back',
+                message: context.l10n.orderCancelledSubtitle,
+                buttonText: context.l10n.backButton,
                 onPressed: () => Navigator.pop(context),
               );
             }
@@ -164,12 +164,12 @@ class _TrackingMessage extends StatelessWidget {
   const _TrackingMessage({
     required this.message,
     required this.onPressed,
-    this.buttonText = 'Retry',
+    this.buttonText,
   });
 
   final String message;
   final VoidCallback onPressed;
-  final String buttonText;
+  final String? buttonText;
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +187,10 @@ class _TrackingMessage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const Gap(16),
-            TextButton(onPressed: onPressed, child: Text(buttonText)),
+            TextButton(
+              onPressed: onPressed,
+              child: Text(buttonText ?? context.l10n.retry),
+            ),
           ],
         ),
       ),

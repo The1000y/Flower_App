@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/features/profile/domain/entities/change_password_entity.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockChangePasswordCubit extends MockCubit<ChangePasswordState>
     implements ChangePasswordCubit {}
@@ -118,7 +118,7 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
 
-      expect(find.text(AppStrings.passwordUpdatedSuccessfully), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().passwordUpdatedSuccessfully), findsOneWidget);
     });
   });
 }

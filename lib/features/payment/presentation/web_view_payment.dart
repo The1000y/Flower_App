@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
@@ -141,7 +142,7 @@ class _WebViewAppState extends State<WebViewPayment> {
             SizedBox(
               width: 200,
               child: CustomButton(
-                text: AppStrings.tryAgain,
+                text: context.l10n.tryAgain,
                 onPressed: () {
                   if (!mounted) return;
 

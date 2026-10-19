@@ -1,6 +1,5 @@
 import 'package:flower_app/config/base/base_responce.dart';
 
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/auth/api/client/auth_api_client.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/local/local_data_source_impl.dart';
 import 'package:flower_app/features/auth/api/data_source_impl/remote/remote_data_source_impl.dart';
@@ -39,6 +38,7 @@ import 'package:flower_app/features/auth/data/model/request/refresh_token_reques
 import 'package:flower_app/features/auth/data/model/response/refresh_token_response/refresh_token_response_dto.dart';
 import 'package:flutter_secure_storage/test/test_flutter_secure_storage_platform.dart';
 import 'package:flutter_secure_storage_platform_interface/flutter_secure_storage_platform_interface.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 const String validEmail = 'bassiony555@gmail.com';
 const String validPassword = '12345678';
@@ -86,7 +86,7 @@ class FakeAuthRepo implements AuthRepo {
       );
     }
 
-    return ErrorResponce(Exception(AppStrings.invalidCredentials));
+    return ErrorResponce(Exception(AppLocalizationsEn().invalidCredentials));
   }
 
   @override
@@ -106,7 +106,7 @@ class FakeAuthRepo implements AuthRepo {
       );
     }
 
-    return ErrorResponce<RegisterEntity>(Exception(AppStrings.registerError));
+    return ErrorResponce<RegisterEntity>(Exception(AppLocalizationsEn().registerError));
   }
 
   @override

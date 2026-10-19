@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_cubit.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_event.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_state.dart';
@@ -57,7 +58,7 @@ class CustomPinWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 4),
                 Text(
-                  // AppStrings.invalidCodeError,
+                  // context.l10n.invalidCodeError,
                   state.otpState.errorMessage,
                   style: textTheme.bodySmall?.copyWith(color: AppColors.error),
                 ),
@@ -68,7 +69,7 @@ class CustomPinWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("${AppStrings.didntReceiveCode} ", style: textTheme.bodyLarge),
+            Text("${context.l10n.didntReceiveCode} ", style: textTheme.bodyLarge),
             InkWell(
               onTap: () {
                 context.read<ForgetPasswordCubit>().doEvent(
@@ -76,7 +77,7 @@ class CustomPinWidget extends StatelessWidget {
                 );
               },
               child: Text(
-                AppStrings.resendLink,
+                context.l10n.resendLink,
                 style: textTheme.bodyLarge?.copyWith(
                   color: AppColors.pinkBase,
                   decoration: TextDecoration.underline,

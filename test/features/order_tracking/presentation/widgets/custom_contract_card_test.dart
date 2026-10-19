@@ -1,4 +1,3 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_contract_card.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../../../helpers/order_tracking_test_helpers.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 /// Replaces the real url_launcher platform so no native call is made and we can
 /// see exactly which urls the buttons try to open.
@@ -153,7 +153,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 750)); // snack bar in
 
         expect(launcher.launchedUrls, isEmpty);
-        expect(find.text(AppStrings.somethingWentWrong), findsOneWidget);
+        expect(find.text(AppLocalizationsEn().somethingWentWrong), findsOneWidget);
         expect(
           tester.widget<SnackBar>(find.byType(SnackBar)).backgroundColor,
           AppColors.error,

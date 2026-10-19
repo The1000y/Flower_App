@@ -1,5 +1,4 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/order_tracking/presentation/manager/tracking_view_model.dart';
@@ -10,20 +9,29 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fake_tracking_view_model.dart';
 import '../../../../helpers/order_tracking_test_helpers.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 Finder _showMapButton() =>
-    find.widgetWithText(CustomButton, AppStrings.showMap);
+    find.widgetWithText(CustomButton, AppLocalizationsEn().showMap);
 
 Finder _deliveredButton() =>
-    find.widgetWithText(CustomButton, AppStrings.orderDeliveredAction);
+    find.widgetWithText(CustomButton, AppLocalizationsEn().orderDeliveredAction);
 
-Widget _section({required bool isDelivered}) {
+Widget _section({
+  required bool isDelivered,
+  bool isConfirming = false,
+  VoidCallback? onConfirm,
+}) {
   final viewModel = FakeTrackingViewModel();
   addTearDown(viewModel.close);
 
   return BlocProvider<TrackingViewModel>.value(
     value: viewModel,
-    child: CustomTrackingButtonsSection(isDelivered: isDelivered),
+    child: CustomTrackingButtonsSection(
+      isAwaitingConfirmation: isDelivered,
+      isConfirming: isConfirming,
+      onConfirm: onConfirm ?? () {},
+    ),
   );
 }
 
@@ -149,19 +157,21 @@ void main() {
       expect(find.text(routeStubText(Routes.orderMap)), findsOneWidget);
     });
 
-    // The "Order Delivered" action is still a TODO in the widget. When it is
-    // implemented, replace this test with one that checks the real behavior.
-    testWidgets('tapping "Order Delivered" does nothing yet (no crash, no navigation)', (
+    testWidgets('tapping "Order Delivered" invokes the confirm callback', (
       tester,
     ) async {
-      await pumpOrderTrackingApp(tester, _section(isDelivered: true));
+      var confirmed = false;
+      await pumpOrderTrackingApp(
+        tester,
+        _section(isDelivered: true, onConfirm: () => confirmed = true),
+      );
 
       await tester.tap(_deliveredButton());
       await tester.pumpAndSettle();
 
+      expect(confirmed, isTrue);
       expect(tester.takeException(), isNull);
       expect(find.byType(CustomTrackingButtonsSection), findsOneWidget);
-      expect(find.textContaining('route:'), findsNothing);
     });
   });
 }

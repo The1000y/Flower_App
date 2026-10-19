@@ -1,4 +1,3 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_contract_card.dart';
 import 'package:flower_app/features/order_tracking/presentation/widgets/custom_delivery_boy_information_card.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/order_tracking_test_helpers.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 const _imageUrl = 'https://example.com/delivery-boy.jpg';
 
@@ -32,7 +32,7 @@ void main() {
     testWidgets('shows the "delivery hero" subtitle', (tester) async {
       await pumpOrderTrackingApp(tester, _card());
 
-      expect(find.text(AppStrings.deliveryHeroSubtitle), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().deliveryHeroSubtitle), findsOneWidget);
     });
 
     testWidgets('shows a different name when another one is passed in', (
@@ -49,7 +49,7 @@ void main() {
 
       expect(
         tester.getTopLeft(find.text('Mohamed')).dy,
-        lessThan(tester.getTopLeft(find.text(AppStrings.deliveryHeroSubtitle)).dy),
+        lessThan(tester.getTopLeft(find.text(AppLocalizationsEn().deliveryHeroSubtitle)).dy),
       );
     });
   });

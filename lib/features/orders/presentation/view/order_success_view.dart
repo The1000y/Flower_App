@@ -1,4 +1,5 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_event.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../../config/routing/routes.dart';
-import '../../../../../core/constants/app_strings/app_strings.dart';
+
 import '../../../../../core/shared/app_widgets/custom_button.dart';
 import '../../../../../core/themes/app_colors/app_color.dart';
 import '../manager/cubit/order_success_cubit.dart';
@@ -67,7 +68,7 @@ class _OrderSuccessViewState extends State<OrderSuccessView> {
                     onPressed: () => cubit.onHomeTap(),
                   ),
                   title: Text(
-                    AppStrings.trackOrder,
+                    context.l10n.trackOrder,
                     style: textTheme.titleLarge!.copyWith(
                       fontSize: 18.sp,
                       color: AppColors.blackBase,
@@ -107,7 +108,7 @@ class _OrderSuccessViewState extends State<OrderSuccessView> {
                         ),
                         SizedBox(height: 32.h),
                         Text(
-                          AppStrings.orderPlacedSuccess,
+                          context.l10n.orderPlacedSuccess,
                           textAlign: TextAlign.center,
                           style: textTheme.headlineMedium!.copyWith(
                             fontSize: 24.sp,
@@ -118,7 +119,7 @@ class _OrderSuccessViewState extends State<OrderSuccessView> {
                         SizedBox(height: 12.h),
                         if (widget.orderId != null)
                           Text(
-                            '${AppStrings.orderIdPrefix}${widget.orderId}',
+                            '${context.l10n.orderIdPrefix}${widget.orderId}',
                             textAlign: TextAlign.center,
                             style: textTheme.bodyMedium!.copyWith(
                               fontSize: 16.sp,
@@ -127,7 +128,7 @@ class _OrderSuccessViewState extends State<OrderSuccessView> {
                           ),
                         SizedBox(height: 80.h),
                         CustomButton(
-                          text: AppStrings.trackOrder,
+                          text: context.l10n.trackOrder,
                           onPressed: () => cubit.onTrackOrderTap(),
                           isEnabled: true,
                           enabledColor: AppColors.pinkBase,

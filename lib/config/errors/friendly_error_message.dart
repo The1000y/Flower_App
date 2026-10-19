@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 
 /// Converts a raw failure (Dio error, backend message, or thrown exception)
 /// into a safe, user-friendly message.
@@ -13,7 +13,7 @@ class FriendlyErrorMessage {
   /// message instead.
   static String from(Object? error) {
     final raw = _extractMessage(error);
-    if (raw.isEmpty) return AppStrings.addressAddFailedServer;
+    if (raw.isEmpty) return L10n.instance.addressAddFailedServer;
     return _classify(raw);
   }
 
@@ -51,7 +51,7 @@ class FriendlyErrorMessage {
     final normalized = message.toLowerCase();
 
     if (_isTechnical(normalized)) {
-      return AppStrings.addressAddFailedServer;
+      return L10n.instance.addressAddFailedServer;
     }
 
     if (_containsAny(normalized, const [
@@ -72,7 +72,7 @@ class FriendlyErrorMessage {
       'no coverage',
       'no service',
     ])) {
-      return AppStrings.addressAddFailedNotServiceable;
+      return L10n.instance.addressAddFailedNotServiceable;
     }
 
     if (_containsAny(normalized, const [
@@ -87,11 +87,11 @@ class FriendlyErrorMessage {
       'must not',
       'must be',
     ])) {
-      return AppStrings.addressAddFailedInvalid;
+      return L10n.instance.addressAddFailedInvalid;
     }
 
     if (_containsAny(normalized, const ['something went wrong'])) {
-      return AppStrings.addressAddFailedServer;
+      return L10n.instance.addressAddFailedServer;
     }
 
     return message;

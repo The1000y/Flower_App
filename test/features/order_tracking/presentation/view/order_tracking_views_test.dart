@@ -1,5 +1,4 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/driver_entity.dart';
 import 'package:flower_app/features/order_tracking/domain/entities/tracking_entity.dart';
 import 'package:flower_app/features/order_tracking/presentation/view/order_map_view.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fake_tracking_view_model.dart';
 import '../../../../helpers/order_tracking_test_helpers.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 final _tracking = TrackingEntity(
   orderId: 'o-1',
@@ -37,7 +37,7 @@ void main() {
         inScaffold: false,
       );
 
-      expect(find.text(AppStrings.trackOrder), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().trackOrder), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
@@ -63,9 +63,9 @@ void main() {
     testWidgets('OrderSuccessView opens the tracking screen', (tester) async {
      
 
-      expect(find.text(AppStrings.orderPlacedSuccess), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().orderPlacedSuccess), findsOneWidget);
 
-      await tester.tap(find.text(AppStrings.trackOrder));
+      await tester.tap(find.text(AppLocalizationsEn().trackOrder));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
 

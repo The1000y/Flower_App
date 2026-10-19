@@ -14,6 +14,7 @@ import 'package:flower_app/features/auth/presentation/login/manager/login_view_m
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/view/cart_ui_event_listener.dart';
 import 'package:flower_app/l10n/app_localizations.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -90,8 +91,9 @@ class FlowerApp extends StatelessWidget {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           theme: AppTheme.lightThem,
           debugShowCheckedModeBanner: false,
-          title: 'Flower App',
+          onGenerateTitle: (context) => context.l10n.floweryAppbarTitle,
           builder: (context, child) {
+            L10n.update(context.l10n);
             return CartUiEventListener(
               child: NotificationNavigationListener(
                 navigatorKey: _navigatorKey,

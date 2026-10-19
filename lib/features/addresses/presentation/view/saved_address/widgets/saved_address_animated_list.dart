@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:flower_app/l10n/l10n.dart';
 import '../../../../../../config/routing/routes.dart';
 import '../../../../domain/entities/address_entity.dart';
 import '../../../manager/cubit/add_address_cubit.dart';
@@ -69,7 +70,7 @@ class _SavedAddressAnimatedListState extends State<SavedAddressAnimatedList> {
       context.read<AddressCubit>().doEvent(FetchUserAddressesEvent());
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Address updated')));
+      ).showSnackBar(SnackBar(content: Text(context.l10n.addressUpdatedSuccess)));
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flower_app/config/utils/auth_validators.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
@@ -45,7 +46,7 @@ class GiftSection extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            AppStrings.itIsAGift,
+                            context.l10n.itIsAGift,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               fontSize: 18,
@@ -60,12 +61,12 @@ class GiftSection extends StatelessWidget {
                           validator: (value) {
                             return AuthValidators.firstName(
                               value,
-                              AppStrings.giftNameValidation,
+                              context.l10n.giftNameValidation,
                             );
                           },
 
-                          hintText: AppStrings.nameLabel,
-                          label: AppStrings.enterNameHint,
+                          hintText: context.l10n.nameLabel,
+                          label: context.l10n.enterNameHint,
                           keyboardType: TextInputType.name,
                           onChanged: (value) => cubit.doEvent(
                             ChangeGiftRecipientNameEvent(name: value),
@@ -74,8 +75,8 @@ class GiftSection extends StatelessWidget {
                         const SizedBox(height: 16),
                         CustomTextFormField(
                           validator: (value) => AuthValidators.phone(value),
-                          hintText: AppStrings.phoneNumberLabel,
-                          label: AppStrings.enterPhoneHintAlt,
+                          hintText: context.l10n.phoneNumberLabel,
+                          label: context.l10n.enterPhoneHintAlt,
                           keyboardType: TextInputType.phone,
                           onChanged: (value) => cubit.doEvent(
                             ChangeGiftRecipientPhoneEvent(phone: value),

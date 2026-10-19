@@ -1,4 +1,3 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_event.dart';
 import 'package:flower_app/features/checkout/presentation/manager/cubit/checkout_state.dart';
@@ -13,6 +12,7 @@ import '../../../mocks/cubit_stream_stub.dart';
 import '../../../mocks/mocks.mocks.dart';
 
 import '../../../fixtures/checkout_fixtures.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 void main() {
   late MockCheckoutCubit mockCubit;
@@ -57,7 +57,7 @@ void main() {
 
       // Assert
       expect(find.byType(Switch), findsOneWidget);
-      expect(find.text(AppStrings.itIsAGift), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().itIsAGift), findsOneWidget);
       expect(tester.widget<Switch>(find.byType(Switch)).value, isFalse);
     });
 
@@ -73,11 +73,11 @@ void main() {
 
       // Assert
       expect(
-        find.widgetWithText(TextFormField, AppStrings.enterNameHint),
+        find.widgetWithText(TextFormField, AppLocalizationsEn().enterNameHint),
         findsNothing,
       );
       expect(
-        find.widgetWithText(TextFormField, AppStrings.enterPhoneHintAlt),
+        find.widgetWithText(TextFormField, AppLocalizationsEn().enterPhoneHintAlt),
         findsNothing,
       );
     });
@@ -95,11 +95,11 @@ void main() {
       // Assert
       expect(find.byType(TextFormField), findsNWidgets(2));
       expect(
-        find.widgetWithText(TextFormField, AppStrings.nameLabel),
+        find.widgetWithText(TextFormField, AppLocalizationsEn().nameLabel),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(TextFormField, AppStrings.phoneNumberLabel),
+        find.widgetWithText(TextFormField, AppLocalizationsEn().phoneNumberLabel),
         findsOneWidget,
       );
     });
@@ -163,7 +163,7 @@ void main() {
 
         // Act
         await tester.enterText(
-          find.widgetWithText(TextFormField, AppStrings.nameLabel),
+          find.widgetWithText(TextFormField, AppLocalizationsEn().nameLabel),
           'Mona',
         );
         await tester.pump();
@@ -185,7 +185,7 @@ void main() {
 
         // Act
         await tester.enterText(
-          find.widgetWithText(TextFormField, AppStrings.phoneNumberLabel),
+          find.widgetWithText(TextFormField, AppLocalizationsEn().phoneNumberLabel),
           '01012345678',
         );
         await tester.pump();
@@ -213,7 +213,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert
-      expect(find.text(AppStrings.giftNameValidation), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().giftNameValidation), findsOneWidget);
     });
 
     testWidgets('collapses the whole section for the COD payment method', (
@@ -237,7 +237,7 @@ void main() {
       // form key keeps validating, only its content collapses.
       expect(find.byType(SizedBox), findsOneWidget);
       expect(find.byType(Switch), findsNothing);
-      expect(find.text(AppStrings.itIsAGift), findsNothing);
+      expect(find.text(AppLocalizationsEn().itIsAGift), findsNothing);
       expect(find.byType(TextFormField), findsNothing);
       expect(find.byType(Form), findsOneWidget);
     });
@@ -260,7 +260,7 @@ void main() {
 
       // Assert
       expect(find.byType(Form), findsOneWidget);
-      expect(find.text(AppStrings.itIsAGift), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().itIsAGift), findsOneWidget);
     });
 
     testWidgets('hides the section once COD gets selected on the stream', (

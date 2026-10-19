@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_outlined_button.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/domain/entities/address_entity.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class CustomLocationData extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: CustomOutlinedButton(
             onPressed: onAddNewAddressTap,
-            text: AppStrings.addYourAddress,
+            text: context.l10n.addYourAddress,
             icon: Icons.add_location_alt_outlined,
           ),
         ),
@@ -74,13 +75,13 @@ class CustomLocationData extends StatelessWidget {
           ),
 
           // إضافة عنوان جديد
-          const DropdownMenuItem(
+          DropdownMenuItem(
             value: 'add_new_address',
             child: Row(
               children: [
-                Icon(Icons.add_location_alt_outlined, size: 18),
-                SizedBox(width: 8),
-                Text('Add New Address'),
+                const Icon(Icons.add_location_alt_outlined, size: 18),
+                const SizedBox(width: 8),
+                Text(context.l10n.addNewAddress),
               ],
             ),
           ),

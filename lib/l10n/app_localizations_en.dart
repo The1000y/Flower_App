@@ -132,10 +132,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newPasswordLabel => 'New password';
 
   @override
+  String get otpSentSuccess => 'OTP sent successfully';
+
+  @override
+  String get otpVerifiedSuccess => 'OTP verified successfully';
+
+  @override
+  String get codeResentSuccess => 'Code resent successfully';
+
+  @override
+  String get passwordResetSuccess => 'New password set successfully';
+
+  @override
   String get floweryAppbarTitle => 'Flowery';
 
   @override
   String get searchHint => 'Search';
+
+  @override
+  String get searchPlaceholder => 'Search For Any Product You Want';
+
+  @override
+  String get searchStartTyping => 'Start typing to search';
 
   @override
   String get deliverToPrefix => 'Deliver to ';
@@ -177,6 +195,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addToCart => 'Add to cart';
 
   @override
+  String get productAddedToCart => 'Product added to cart';
+
+  @override
   String get inStock => 'In stock';
 
   @override
@@ -192,25 +213,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkoutTitle => 'Checkout';
 
   @override
+  String get checkout => 'Checkout';
+
+  @override
   String get deliveryTime => 'Delivery time';
 
   @override
-  String get instant => 'Instant, ';
+  String get instant => ' Instant, ';
 
   @override
-  String get statusPickedUp => 'Picked up by the driver';
-
-  @override
-  String get statusAwaitingConfirmation => 'Awaiting your confirmation';
-
-  @override
-  String get orderCancelledTitle => 'Order cancelled';
-
-  @override
-  String get orderCancelledSubtitle => 'This order was cancelled';
-
-  @override
-  String get confirmDeliveryAction => 'Confirm delivery';
+  String get arriveByPrefix => 'Arrive by ';
 
   @override
   String get deliveryAddress => 'Delivery address';
@@ -237,6 +249,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itIsAGift => 'It is a gift';
 
   @override
+  String get noPaymentMethodSelected => 'No payment method selected';
+
+  @override
   String get nameLabel => 'Name';
 
   @override
@@ -249,6 +264,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subTotal => 'Sub Total';
 
   @override
+  String get subtotal => 'Sub total:';
+
+  @override
   String get deliveryFee => 'Delivery Fee';
 
   @override
@@ -258,10 +276,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get placeOrder => 'Place order';
 
   @override
+  String get loading => 'loading....';
+
+  @override
+  String get loadingAddress => 'Loading...';
+
+  @override
+  String get noAddress => 'no address selected';
+
+  @override
+  String get yourCartIsEmpty => 'Your cart is empty';
+
+  @override
   String get savedAddressTitle => 'Saved address';
 
   @override
   String get addNewAddress => 'Add new address';
+
+  @override
+  String get addYourAddress => 'Add Your Address';
 
   @override
   String get addressTitle => 'Address';
@@ -291,7 +324,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterButton => 'Filter';
 
   @override
+  String get filterProducts => 'Filter products';
+
+  @override
   String get sortBy => 'Sort by';
+
+  @override
+  String get sortRecommended => 'Recommended';
+
+  @override
+  String get sortNewest => 'Newest';
+
+  @override
+  String get sortPriceLowToHigh => 'Price Low To High';
+
+  @override
+  String get sortPriceHighToLow => 'Price High To Low';
 
   @override
   String get sortLowestPrice => 'Lowes Price';
@@ -309,6 +357,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sortDiscount => 'Discount';
 
   @override
+  String get noResult => 'No Result found';
+
+  @override
+  String get noItemsFound => 'No items found';
+
+  @override
+  String get noCategoriesFound => 'No categories found';
+
+  @override
+  String get noOccasionsAvailable => 'No occasions available right now.';
+
+  @override
+  String get productNotFound => 'Product not found';
+
+  @override
+  String get comingSoon => 'Coming soon';
+
+  @override
   String get myOrdersTitle => 'My orders';
 
   @override
@@ -321,6 +387,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderNumberPrefix => 'Order number# ';
 
   @override
+  String get orderIdPrefix => 'Order number# ';
+
+  @override
   String get trackOrder => 'Track order';
 
   @override
@@ -330,9 +399,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reorder => 'Reorder';
 
   @override
-  String get searchPlaceholder => 'Search For Any Product You Want';
-
-  @override
   String get notificationTitle => 'Notification';
 
   @override
@@ -340,6 +406,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationRemember => 'Remember';
+
+  @override
+  String get noNotificationsYet => 'No notifications yet';
 
   @override
   String get language => 'Language';
@@ -387,7 +456,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmLogoutSubtitle => 'Confirm logout!!';
 
   @override
-  String get actionCancel => 'Cancel';
+  String get actionCancel => 'Cancle';
 
   @override
   String get orderPlacedSuccess => 'Your order placed successfully!';
@@ -411,6 +480,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusDelivered => 'Delivered';
 
   @override
+  String get statusPickedUp => 'Picked up by the driver';
+
+  @override
+  String get statusAwaitingConfirmation => 'Awaiting your confirmation';
+
+  @override
+  String get orderCancelledTitle => 'Order cancelled';
+
+  @override
+  String get orderCancelledSubtitle => 'This order was cancelled';
+
+  @override
+  String get confirmDeliveryAction => 'Confirm delivery';
+
+  @override
   String get showMap => 'Show map';
 
   @override
@@ -426,6 +510,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nextButton => 'Next';
 
   @override
+  String get backButton => 'Back';
+
+  @override
   String get payWithCash => 'Pay with cash';
 
   @override
@@ -438,6 +525,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rateButton => 'Rate';
 
   @override
+  String get retry => 'Retry';
+
+  @override
+  String get tryAgain => 'tryAgain';
+
+  @override
   String get loginFailed => 'Login failed';
 
   @override
@@ -448,6 +541,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get somethingWentWrongTryAgain =>
+      'something went wrong, pls try again';
 
   @override
   String get emailRequired => 'Email is required';
@@ -505,8 +602,100 @@ class AppLocalizationsEn extends AppLocalizations {
   String get occasionTitle => 'Occasion';
 
   @override
+  String get apartment => 'Apartment';
+
+  @override
   String get versionProfile => 'v6.3.0 - 1.40.0';
 
   @override
-  String get noNotificationsYet => 'No notifications yet';
+  String get savedAddressEmpty => 'No saved addresses yet';
+
+  @override
+  String get noSavedAddresses => 'No saved addresses';
+
+  @override
+  String get titleAddress => 'Title';
+
+  @override
+  String get labelAddress => 'Enter Title Address';
+
+  @override
+  String get labelTitle => 'Title';
+
+  @override
+  String get labelTitleHint => 'Title of the address';
+
+  @override
+  String get addressError => 'Could not get address details';
+
+  @override
+  String get addressRequired => 'Address is Required';
+
+  @override
+  String get labelRequired => 'Label is Required';
+
+  @override
+  String get recipientNameRequired => 'Name is Required';
+
+  @override
+  String get cityRequired => 'City is Required';
+
+  @override
+  String get governorateRequired => 'Governorate is Required';
+
+  @override
+  String get selectGovernorate => 'Select Governorate !!';
+
+  @override
+  String get phoneNumberRequired => 'Phone is Required';
+
+  @override
+  String get addressAddedSuccess => 'Address added successfully';
+
+  @override
+  String get addressUpdatedSuccess => 'Address updated';
+
+  @override
+  String get addressAddFailedServer =>
+      'Something went wrong. Please try again later.';
+
+  @override
+  String get addressAddFailedNotServiceable =>
+      'This address is not available for delivery. Please choose another location.';
+
+  @override
+  String get addressAddFailedInvalid =>
+      'The address information is invalid. Please check your details.';
+
+  @override
+  String get profileUpdated => 'Profile updated';
+
+  @override
+  String get passwordUpdatedSuccessfully => 'Password updated successfully';
+
+  @override
+  String get waitingForDriverTitle => 'Waiting for a driver';
+
+  @override
+  String get waitingForDriverSubtitle =>
+      'We\'ll assign one to your order shortly';
+
+  @override
+  String get unexpectedError => 'Something went wrong. Please try again.';
+
+  @override
+  String get routeNotFound => 'Route Not Found';
+
+  @override
+  String get giftNameValidation => 'Enter your name';
+
+  @override
+  String get noCitiesFoundForGovernorate =>
+      'No cities found for this governorate';
+
+  @override
+  String get failedToDeleteAddress => 'Failed to delete address.';
+
+  @override
+  String get invalidOtpOrEmail => 'Invalid OTP or email';
 }

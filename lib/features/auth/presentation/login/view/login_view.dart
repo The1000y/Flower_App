@@ -1,6 +1,7 @@
 import 'package:flower_app/config/routing/routes.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/utils/auth_validators.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_outlined_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
@@ -57,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppStrings.loginTitle,
+          context.l10n.loginTitle,
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -87,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    content: Text(AppStrings.loginSuccess),
+                    content: Text(context.l10n.loginSuccess),
                     backgroundColor: AppColors.success,
                     duration: const Duration(seconds: 2),
                   ),
@@ -107,8 +108,8 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   CustomTextFormField(
                     controller: emailController,
-                    label: AppStrings.emailLabel,
-                    hintText: AppStrings.emailHint,
+                    label: context.l10n.emailLabel,
+                    hintText: context.l10n.emailHint,
                     keyboardType: TextInputType.emailAddress,
                     validator: AuthValidators.email,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -126,8 +127,8 @@ class _LoginViewState extends State<LoginView> {
                     builder: (context, state) {
                       return CustomTextFormField(
                         controller: passwordController,
-                        label: AppStrings.passwordLabel,
-                        hintText: AppStrings.passwordHint,
+                        label: context.l10n.passwordLabel,
+                        hintText: context.l10n.passwordHint,
                         obscureText: state.obscurePassword,
                         validator: AuthValidators.password,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -160,7 +161,7 @@ class _LoginViewState extends State<LoginView> {
                         previous.isLoading != current.isLoading,
                     builder: (context, state) {
                       return CustomButton(
-                        text: AppStrings.loginButton,
+                        text: context.l10n.loginButton,
                         onPressed: _onLoginPressed,
                         isLoading: state.isLoading,
                         isEnabled: !state.isLoading,
@@ -170,7 +171,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 16),
                   CustomOutlinedButton(
-                    text: AppStrings.continueAsGuest,
+                    text: context.l10n.continueAsGuest,
                     onPressed: () {
                       Navigator.pushNamed(context, Routes.home);
                     },

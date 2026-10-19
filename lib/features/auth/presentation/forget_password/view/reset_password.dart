@@ -1,7 +1,8 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/utils/auth_validators.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/features/auth/presentation/forget_password/manager/cubit/forget_password_cubit.dart';
@@ -36,7 +37,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     return BlocProvider(
       create: (context) => viewModel,
       child: Scaffold(
-        appBar: AppBar(title: Text(AppStrings.passwordAppBarTitle)),
+        appBar: AppBar(title: Text(context.l10n.passwordAppBarTitle)),
         body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
           listenWhen: (previous, current) {
             return previous.resetstate.isLoading !=
@@ -53,8 +54,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                 );
               } else if (state.resetstate.data != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Success, new password"),
+                  SnackBar(
+                    content: Text(context.l10n.passwordResetSuccess),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -79,7 +80,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                       Center(
                         child: Text(
-                          AppStrings.resetPasswordTitle,
+                          context.l10n.resetPasswordTitle,
                           style: TextStyle(
                             color: AppColors.black100,
                             fontSize: 20.sp,
@@ -90,15 +91,15 @@ class _ResetPasswordState extends State<ResetPassword> {
                       SizedBox(height: 10.h),
 
                       Text(
-                        AppStrings.resetPasswordSubtitle,
+                        context.l10n.resetPasswordSubtitle,
                         textAlign: TextAlign.center,
                       ),
 
                       SizedBox(height: 20.h),
 
                       CustomTextFormField(
-                        label: AppStrings.newPasswordLabel,
-                        hintText: AppStrings.passwordHint,
+                        label: context.l10n.newPasswordLabel,
+                        hintText: context.l10n.passwordHint,
                         controller: _newpassword,
                         validator: AuthValidators.password,
                         keyboardType: TextInputType.visiblePassword,
@@ -108,8 +109,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                       SizedBox(height: 20.h),
 
                       CustomTextFormField(
-                        label: AppStrings.confirmPasswordLabel,
-                        hintText: AppStrings.confirmPasswordHint,
+                        label: context.l10n.confirmPasswordLabel,
+                        hintText: context.l10n.confirmPasswordHint,
                         controller: _confirmPassword,
                         validator: AuthValidators.password,
                         keyboardType: TextInputType.visiblePassword,
@@ -120,7 +121,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                       CustomButton(
                         isLoading: state.resetstate.isLoading,
-                        text: AppStrings.confirmButton,
+                        text: context.l10n.confirmButton,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             if (_newpassword.text == _confirmPassword.text) {
@@ -133,8 +134,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Passwords do not match"),
+                                SnackBar(
+                                  content: Text(
+                                    context.l10n.confirmPasswordMismatch,
+                                  ),
                                   backgroundColor: Colors.red,
                                 ),
                               );

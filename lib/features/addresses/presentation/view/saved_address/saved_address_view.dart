@@ -1,6 +1,7 @@
 import 'package:flower_app/config/di/di.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
@@ -37,7 +38,7 @@ class _SavedAddressViewState extends State<SavedAddressView> {
                 icon: const Icon(Icons.arrow_back_ios_new, size: 20),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              title: const Text(AppStrings.savedAddressTitle),
+              title: Text(context.l10n.savedAddressTitle),
             ),
             body: SafeArea(
               child: Padding(
@@ -48,7 +49,7 @@ class _SavedAddressViewState extends State<SavedAddressView> {
                     const Expanded(child: SavedAddressContent()),
                     SizedBox(height: 12.h),
                     CustomButton(
-                      text: AppStrings.addNewAddress,
+                      text: context.l10n.addNewAddress,
                       isEnabled: true,
                       enabledColor: AppColors.pinkBase,
                       onPressed: () => _goToAddAddress(context),
@@ -69,7 +70,7 @@ class _SavedAddressViewState extends State<SavedAddressView> {
       context.read<AddressCubit>().doEvent(FetchUserAddressesEvent());
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Address added')));
+      ).showSnackBar(SnackBar(content: Text(context.l10n.addressAddedSuccess)));
     }
   }
 }

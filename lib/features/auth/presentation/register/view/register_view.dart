@@ -1,5 +1,6 @@
 import 'package:flower_app/config/utils/auth_validators.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/presentation/register/manager/register_view_model.dart';
@@ -96,7 +97,7 @@ class _RegisterViewState extends State<RegisterView> {
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
-                content: Text(AppStrings.registerSuccess),
+                content: Text(context.l10n.registerSuccess),
                 backgroundColor: AppColors.success,
               ),
             );
@@ -111,7 +112,7 @@ class _RegisterViewState extends State<RegisterView> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            AppStrings.signUp,
+            context.l10n.signUp,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
@@ -127,8 +128,8 @@ class _RegisterViewState extends State<RegisterView> {
                   children: [
                     Expanded(
                       child: RegisterCustomTextFormField(
-                        label: AppStrings.firstNameLabel,
-                        hintText: AppStrings.firstNameHint,
+                        label: context.l10n.firstNameLabel,
+                        hintText: context.l10n.firstNameHint,
                         controller: _firstNameController,
                         validator: AuthValidators.firstName,
                         forceShowErrors: _isSubmitted,
@@ -137,8 +138,8 @@ class _RegisterViewState extends State<RegisterView> {
                     SizedBox(width: 17.w),
                     Expanded(
                       child: RegisterCustomTextFormField(
-                        label: AppStrings.lastNameLabel,
-                        hintText: AppStrings.lastNameHint,
+                        label: context.l10n.lastNameLabel,
+                        hintText: context.l10n.lastNameHint,
                         controller: _lastNameController,
                         validator: AuthValidators.lastName,
                         forceShowErrors: _isSubmitted,
@@ -148,8 +149,8 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
                 SizedBox(height: 24.h),
                 RegisterCustomTextFormField(
-                  label: AppStrings.emailLabel,
-                  hintText: AppStrings.emailHint,
+                  label: context.l10n.emailLabel,
+                  hintText: context.l10n.emailHint,
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   validator: AuthValidators.email,
@@ -161,8 +162,8 @@ class _RegisterViewState extends State<RegisterView> {
                   children: [
                     Expanded(
                       child: RegisterCustomTextFormField(
-                        label: AppStrings.passwordLabel,
-                        hintText: AppStrings.passwordHint,
+                        label: context.l10n.passwordLabel,
+                        hintText: context.l10n.passwordHint,
                         controller: _passwordController,
                         isPassword: true,
                         validator: AuthValidators.strongPassword,
@@ -172,8 +173,8 @@ class _RegisterViewState extends State<RegisterView> {
                     SizedBox(width: 17.w),
                     Expanded(
                       child: RegisterCustomTextFormField(
-                        label: AppStrings.confirmPasswordLabel,
-                        hintText: AppStrings.confirmPasswordHint,
+                        label: context.l10n.confirmPasswordLabel,
+                        hintText: context.l10n.confirmPasswordHint,
                         controller: _confirmPasswordController,
                         isPassword: true,
                         forceShowErrors: _isSubmitted,
@@ -187,8 +188,8 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
                 SizedBox(height: 24.h),
                 RegisterCustomTextFormField(
-                  label: AppStrings.phoneNumberLabel,
-                  hintText: AppStrings.phoneNumberHint,
+                  label: context.l10n.phoneNumberLabel,
+                  hintText: context.l10n.phoneNumberHint,
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   validator: AuthValidators.phone,
@@ -201,7 +202,7 @@ class _RegisterViewState extends State<RegisterView> {
                 SizedBox(height: 48.h),
                 BlocBuilder<RegisterViewModel, RegisterState>(
                   builder: (context, state) => CustomButton(
-                    text: AppStrings.signUp,
+                    text: context.l10n.signUp,
                     isEnabled: !state.isLoading,
                     isLoading: state.isLoading,
                     enabledColor: AppColors.pinkBase,

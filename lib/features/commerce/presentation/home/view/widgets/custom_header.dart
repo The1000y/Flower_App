@@ -1,5 +1,6 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/constants/apps_images/app_images.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class CustomHeaderHomeView extends StatelessWidget {
               FocusManager.instance.primaryFocus?.unfocus();
             },
             decoration: InputDecoration(
-              hintText: AppStrings.searchHint,
+              hintText: context.l10n.searchHint,
               prefixIcon: Icon(Icons.search, color: AppColors.white70),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flower_app/config/utils/auth_validators.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -54,7 +55,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          AppStrings.resetPasswordTitle,
+          context.l10n.resetPasswordTitle,
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w500,
@@ -79,7 +80,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             } else if (state.changePasswordState.data != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppStrings.passwordUpdatedSuccessfully),
+                  content: Text(context.l10n.passwordUpdatedSuccessfully),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -99,8 +100,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   SizedBox(height: 20.h),
 
                   CustomTextFormField(
-                    label: AppStrings.currentPasswordLabel,
-                    hintText: AppStrings.currentPasswordHint,
+                    label: context.l10n.currentPasswordLabel,
+                    hintText: context.l10n.currentPasswordHint,
                     controller: _currentPasswordController,
                     validator: AuthValidators.password,
                     keyboardType: TextInputType.visiblePassword,
@@ -110,8 +111,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   SizedBox(height: 20.h),
 
                   CustomTextFormField(
-                    label: AppStrings.newPasswordLabel,
-                    hintText: AppStrings.passwordHint,
+                    label: context.l10n.newPasswordLabel,
+                    hintText: context.l10n.passwordHint,
                     controller: _newPasswordController,
                     validator: AuthValidators
                         .strongPassword, // استخدام strongPassword هنا
@@ -122,8 +123,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   SizedBox(height: 20.h),
 
                   CustomTextFormField(
-                    label: AppStrings.confirmPasswordLabel,
-                    hintText: AppStrings.confirmPasswordHint,
+                    label: context.l10n.confirmPasswordLabel,
+                    hintText: context.l10n.confirmPasswordHint,
                     controller: _confirmPasswordController,
                     validator: (value) => AuthValidators.confirmPassword(
                       value,
@@ -141,7 +142,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
                       return CustomButton(
                         isLoading: isLoading,
-                        text: AppStrings.actionUpdate,
+                        text: context.l10n.actionUpdate,
                         onPressed: _onUpdatePressed,
                         isEnabled: !isLoading,
                         enabledColor: AppColors.gray,

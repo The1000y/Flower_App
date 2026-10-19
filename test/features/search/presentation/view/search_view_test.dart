@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/base/base_state.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/domain/entities/products/product_entity.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/manger/cubit/search_event.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockSearchCubit extends MockCubit<SearchState> implements SearchCubit {}
 
@@ -143,7 +143,7 @@ void main() {
 
     await pumpApp(tester, wrap(state));
 
-    expect(find.text(AppStrings.noResult), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().noResult), findsOneWidget);
   });
 
   testWidgets('renders the product grid with product names', (tester) async {

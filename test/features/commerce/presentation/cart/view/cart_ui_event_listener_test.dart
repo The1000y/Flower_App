@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_state.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_ui_event.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart' as mocktail;
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockCartCubit extends mocktail.Mock implements CartCubit {}
 
@@ -44,7 +44,7 @@ void main() {
     controller.add(const AddToCartSuccessUiEvent());
     await tester.pump();
 
-    expect(find.text(AppStrings.productAddedToCart), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().productAddedToCart), findsOneWidget);
   });
 
   testWidgets('shows the failure message for a failure event', (tester) async {
@@ -64,6 +64,6 @@ void main() {
     controller.add(const AddToCartFailureUiEvent());
     await tester.pump();
 
-    expect(find.text(AppStrings.somethingWentWrong), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().somethingWentWrong), findsOneWidget);
   });
 }

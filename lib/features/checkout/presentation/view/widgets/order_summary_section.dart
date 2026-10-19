@@ -3,6 +3,7 @@ import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/routing/web_view_payment_args.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/checkout/presentation/manager/checkout_payment_method.dart';
@@ -38,19 +39,19 @@ class OrderSummarySection extends StatelessWidget {
                 );
               }
               if (!isLoading && details == null) {
-                return Center(child: Text(AppStrings.somethingWentWrong));
+                return Center(child: Text(context.l10n.somethingWentWrong));
               }
               return Column(
                 children: [
                   _SummaryRow(
-                    label: AppStrings.subTotal,
+                    label: context.l10n.subTotal,
                     value: isLoading
                         ? LoadingCircule()
                         : Text('${details!.subtotal}${AppStrings.currencyUsd}'),
                   ),
                   const SizedBox(height: 8),
                   _SummaryRow(
-                    label: AppStrings.deliveryFee,
+                    label: context.l10n.deliveryFee,
                     value: isLoading
                         ? LoadingCircule()
                         : Text(
@@ -61,7 +62,7 @@ class OrderSummarySection extends StatelessWidget {
                   const Divider(height: 1, color: AppColors.white60),
                   const SizedBox(height: 12),
                   _SummaryRow(
-                    label: AppStrings.total,
+                    label: context.l10n.total,
                     value: isLoading
                         ? LoadingCircule()
                         : Text(
@@ -120,8 +121,8 @@ class OrderSummarySection extends StatelessWidget {
             builder: (context, state) {
               return CustomButton(
                 text: state.placeOrderState.isLoading
-                    ? AppStrings.loading
-                    : AppStrings.placeOrder,
+                    ? context.l10n.loading
+                    : context.l10n.placeOrder,
                 onPressed: state.placeOrderState.isLoading
                     ? null
                     : () {
@@ -136,7 +137,7 @@ class OrderSummarySection extends StatelessWidget {
                           if (addressId == null || addressId.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(AppStrings.noAddress),
+                                content: Text(context.l10n.noAddress),
                                 backgroundColor: AppColors.error,
                               ),
                             );
@@ -145,7 +146,9 @@ class OrderSummarySection extends StatelessWidget {
                           if (checkoutState.selectedPaymentMethod.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('no payment method selected'),
+                                content: Text(
+                                  context.l10n.noPaymentMethodSelected,
+                                ),
                                 backgroundColor: AppColors.error,
                               ),
                             );

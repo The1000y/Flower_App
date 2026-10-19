@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/add_address_cubit.dart';
 import 'package:flower_app/features/addresses/presentation/manager/cubit/address_state.dart';
 import 'package:flower_app/features/commerce/domain/entities/cart/cart_entity.dart';
@@ -13,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockCartCubit extends MockCubit<CartState> implements CartCubit {}
 
@@ -67,7 +67,7 @@ void main() {
   testWidgets('renders an app bar with the cart title', (tester) async {
     await pumpApp(tester, const CartState());
 
-    expect(find.text(AppStrings.navCart), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().navCart), findsOneWidget);
   });
 
   testWidgets('shows a loading indicator while the cart is loading', (
@@ -90,7 +90,7 @@ void main() {
 
     expect(find.text('Something went wrong'), findsOneWidget);
     expect(
-      find.widgetWithText(ElevatedButton, AppStrings.retry),
+      find.widgetWithText(ElevatedButton, AppLocalizationsEn().retry),
       findsOneWidget,
     );
   });
@@ -100,7 +100,7 @@ void main() {
   ) async {
     await pumpApp(tester, const CartState(data: null));
 
-    expect(find.text(AppStrings.yourCartIsEmpty), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().yourCartIsEmpty), findsOneWidget);
   });
 
   testWidgets('renders cart items and totals when the cart is loaded', (
@@ -129,7 +129,7 @@ void main() {
     await pumpApp(tester, CartState(data: cart));
 
     expect(find.text('Red Roses Bouquet'), findsOneWidget);
-    expect(find.text('${AppStrings.currencyEGP}400.00'), findsWidgets);
+    expect(find.text('${AppLocalizationsEn().currencyEGP}400.00'), findsWidgets);
   });
 
   testWidgets('shows loading only for the affected product', (tester) async {

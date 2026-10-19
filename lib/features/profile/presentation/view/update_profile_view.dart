@@ -1,6 +1,7 @@
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/config/utils/auth_validators.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_text_form_field.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
@@ -129,7 +130,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
           listener: (context, state) {
             final update = state.updateProfileState;
             if (update.data != null) {
-              _showSnackBar(AppStrings.profileUpdated);
+              _showSnackBar(context.l10n.profileUpdated);
             } else if (update.errorMessage.isNotEmpty) {
               _showSnackBar(update.errorMessage, isError: true);
             }
@@ -144,7 +145,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            AppStrings.editProfileTitle,
+            context.l10n.editProfileTitle,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
@@ -175,7 +176,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                       onPressed: () => context.read<ProfileViewModel>().doEvent(
                         FetchProfileEvent(),
                       ),
-                      child: const Text(AppStrings.retry),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -203,8 +204,8 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
               children: [
                 Expanded(
                   child: CustomTextFormField(
-                    label: AppStrings.firstNameLabel,
-                    hintText: AppStrings.firstNameHint,
+                    label: context.l10n.firstNameLabel,
+                    hintText: context.l10n.firstNameHint,
                     controller: _firstNameController,
                     validator: AuthValidators.firstName,
                   ),
@@ -212,8 +213,8 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                 SizedBox(width: 17.w),
                 Expanded(
                   child: CustomTextFormField(
-                    label: AppStrings.lastNameLabel,
-                    hintText: AppStrings.lastNameHint,
+                    label: context.l10n.lastNameLabel,
+                    hintText: context.l10n.lastNameHint,
                     controller: _lastNameController,
                     validator: AuthValidators.lastName,
                   ),
@@ -222,23 +223,23 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
             ),
             SizedBox(height: 24.h),
             CustomTextFormField(
-              label: AppStrings.emailLabel,
-              hintText: AppStrings.emailHint,
+              label: context.l10n.emailLabel,
+              hintText: context.l10n.emailHint,
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               validator: AuthValidators.email,
             ),
             SizedBox(height: 24.h),
             CustomTextFormField(
-              label: AppStrings.phoneNumberLabel,
-              hintText: AppStrings.phoneNumberHint,
+              label: context.l10n.phoneNumberLabel,
+              hintText: context.l10n.phoneNumberHint,
               controller: _phoneController,
               keyboardType: TextInputType.phone,
               validator: AuthValidators.phone,
             ),
             SizedBox(height: 24.h),
             CustomTextFormField(
-              label: AppStrings.passwordLabel,
+              label: context.l10n.passwordLabel,
               hintText: '',
               controller: _passwordController,
               readOnly: true,
@@ -246,7 +247,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.changePassword),
                 child: Text(
-                  AppStrings.actionChange,
+                  context.l10n.actionChange,
                   style: const TextStyle(
                     color: AppColors.pinkBase,
                     fontWeight: FontWeight.w600,
@@ -287,7 +288,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                 original != null &&
                 _hasChanges(original, state.pickedImagePath);
             return CustomButton(
-              text: AppStrings.actionUpdate,
+              text: context.l10n.actionUpdate,
               // disabled when nothing changed; CustomButton also blocks taps while loading
               isEnabled: hasChanges,
               isLoading: state.updateProfileState.isLoading,

@@ -1,5 +1,6 @@
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class CustomHeaderOfCollection extends StatelessWidget {
@@ -29,7 +30,7 @@ class CustomHeaderOfCollection extends StatelessWidget {
         InkWell(
           onTap: onTapViewAll,
           child: Text(
-            AppStrings.viewAllLabel,
+            context.l10n.viewAllLabel,
             style: textTheme.bodySmall?.copyWith(
               decoration: TextDecoration.underline,
               decorationColor: AppColors.pinkBase,

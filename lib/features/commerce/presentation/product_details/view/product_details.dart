@@ -1,5 +1,6 @@
 import 'package:flower_app/config/di/di.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+
+import 'package:flower_app/l10n/l10n.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_button.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/commerce/presentation/cart/manager/cubit/cart_cubit.dart';
@@ -53,7 +54,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       onPressed: () => context
                           .read<ProductDetailsCubit>()
                           .getProductDetails(widget.productId),
-                      child: const Text('Retry'),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -63,7 +64,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             final product = state.data;
 
             if (product == null) {
-              return const Center(child: Text('Product not found'));
+              return Center(child: Text(context.l10n.productNotFound));
             }
 
             return SafeArea(
@@ -184,7 +185,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     Row(
                                       children: [
                                         Text(
-                                          AppStrings.statusLabel,
+                                          context.l10n.statusLabel,
                                           style: textTheme.bodyMedium?.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: AppColors.blackBase,
@@ -204,7 +205,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 SizedBox(height: 4.h),
 
                                 Text(
-                                  AppStrings.taxNotice,
+                                  context.l10n.taxNotice,
                                   style: textTheme.bodySmall?.copyWith(
                                     color: AppColors.black30,
                                   ),
@@ -224,7 +225,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 SizedBox(height: 24.h),
 
                                 Text(
-                                  AppStrings.description,
+                                  context.l10n.description,
                                   style: textTheme.titleMedium?.copyWith(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
@@ -245,7 +246,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 SizedBox(height: 24.h),
 
                                 Text(
-                                  AppStrings.bouquetInclude,
+                                  context.l10n.bouquetInclude,
                                   style: textTheme.titleMedium?.copyWith(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
@@ -282,8 +283,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                         return CustomButton(
                           text: isAdded
-                              ? AppStrings.productAddedToCart
-                              : AppStrings.addToCart,
+                              ? context.l10n.productAddedToCart
+                              : context.l10n.addToCart,
                           onPressed: isAdded
                               ? null
                               : () {

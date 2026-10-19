@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
 import 'package:flower_app/features/orders/domain/entities/my_orders_entity.dart';
 import 'package:flower_app/features/orders/presentation/manager/cubit/orders_cubit.dart';
 import 'package:flower_app/features/orders/presentation/manager/orders_intent.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:flower_app/l10n/app_localizations_en.dart';
 
 class MockOrdersCubit extends Mock implements OrdersCubit {}
 
@@ -110,9 +110,9 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
 
-      expect(find.text(AppStrings.myOrdersTitle), findsOneWidget);
-      expect(find.text(AppStrings.tabActive), findsOneWidget);
-      expect(find.text(AppStrings.tabCompleted), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().myOrdersTitle), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().tabActive), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().tabCompleted), findsOneWidget);
       expect(find.byType(OrderCardWidget), findsAtLeastNWidgets(1));
       expect(find.text("Red Roses"), findsOneWidget);
     });
@@ -181,7 +181,7 @@ void main() {
         await tester.pumpWidget(createWidgetUnderTest());
         await tester.pumpAndSettle();
 
-        final trackButton = find.text(AppStrings.trackOrder);
+        final trackButton = find.text(AppLocalizationsEn().trackOrder);
         expect(trackButton, findsOneWidget);
         await tester.tap(trackButton);
         await tester.pump();
