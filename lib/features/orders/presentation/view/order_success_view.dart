@@ -26,6 +26,15 @@ class _OrderSuccessViewState extends State<OrderSuccessView> {
   void initState() {
     super.initState();
     getIt<CartCubit>().doEvent(ClearCartEvent());
+    // Automatically navigate to track order screen after success if orderId is available
+    if (widget.orderId != null && widget.orderId!.isNotEmpty) {
+      // Delay to allow UI to render the success message
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(seconds: 2), () {
+          context.read<OrderSuccessCubit>().onTrackOrderTap();
+        });
+      });
+    }
   }
 
   @override

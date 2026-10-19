@@ -1,9 +1,9 @@
+import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/shared/app_widgets/custom_app_bar.dart';
 import 'package:flower_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-
 import '../../../../core/constants/enums/order_status.dart';
 import '../../../../core/shared/animations/animated_car_single_file.dart';
 import '../../../../core/themes/app_colors/app_color.dart';
@@ -27,7 +27,13 @@ class TrackOrderView extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
+    return BlocListener<TrackingViewModel, TrackingState>(
+        listenWhen: (previous, current) => previous.isWaitingForDriver && !current.isWaitingForDriver && current.trackingState.data?.hasDriver == true,
+        listener: (context, state) {
+          // Navigate to the detailed order map view when driver is assigned
+          Navigator.of(context, rootNavigator: true).pushNamed(Routes.orderMap);
+        },
+        child: Scaffold(
       appBar: CustomAppBar(
         textStyle: textTheme.titleLarge,
         title: context.l10n.trackOrder,
@@ -88,7 +94,7 @@ class TrackOrderView extends StatelessWidget {
           },
         ),
       ),
-    );
+    ));
   }
 }
 
