@@ -241,5 +241,28 @@ void main() {
 
       expect(find.text('العربية'), findsOneWidget);
     });
+
+    testWidgets('invokes onSavedAddress when Saved address is tapped', (
+      tester,
+    ) async {
+      var savedAddressTapped = false;
+      await tester.pumpWidget(
+        wrap(
+          ProfileBody(
+            profile: testProfile,
+            onEditProfile: () {},
+            onNotification: () {},
+            onLanguage: () {},
+            onLogout: () {},
+            onSavedAddress: () => savedAddressTapped = true,
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Saved address'));
+      await tester.pump();
+
+      expect(savedAddressTapped, isTrue);
+    });
   });
 }

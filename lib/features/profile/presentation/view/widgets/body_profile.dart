@@ -16,6 +16,7 @@ class ProfileBody extends StatelessWidget {
     required this.onNotification,
     required this.onLanguage,
     required this.onLogout,
+    this.onSavedAddress,
     this.unreadNotificationsCount,
     this.notificationsEnabled = true,
     this.onNotificationsChanged,
@@ -26,6 +27,7 @@ class ProfileBody extends StatelessWidget {
   final VoidCallback onNotification;
   final VoidCallback onLanguage;
   final VoidCallback onLogout;
+  final VoidCallback? onSavedAddress;
 
   final int? unreadNotificationsCount;
 
@@ -211,7 +213,7 @@ class ProfileBody extends StatelessWidget {
         ProfileOptionTile(
           icon: Icons.bookmark_border_outlined,
           title: l10n.savedAddressTitle,
-          onTap: () {},
+          onTap: onSavedAddress ?? () {},
         ),
         Divider(height: 20, thickness: 1, color: Colors.grey.shade100),
         NotificationSwitchTile(

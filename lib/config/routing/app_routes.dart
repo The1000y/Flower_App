@@ -48,6 +48,7 @@ import 'package:flower_app/features/profile/presentation/view/change_password_vi
 import 'package:flower_app/features/profile/presentation/view/notification_view.dart';
 import 'package:flower_app/features/profile/presentation/view/profile_home_view.dart';
 import 'package:flower_app/features/profile/presentation/view/update_profile_view.dart';
+import 'package:flower_app/features/profile/presentation/view/widgets/language.dart';
 
 import 'package:flower_app/features/search/presentation/manger/cubit/search_cubit.dart';
 import 'package:flower_app/features/search/presentation/view/search_view.dart';
@@ -234,8 +235,13 @@ abstract class AppRoutes {
 
       case Routes.changeLanguage:
         return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const Placeholder(),
+          builder: (_) => Scaffold(
+            appBar: AppBar(),
+            body: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: LanguageBottomSheet(),
+            ),
+          ),
         );
 
       case Routes.changePassword:

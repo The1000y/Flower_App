@@ -11,8 +11,7 @@ import 'package:flower_app/features/commerce/presentation/home/manager/cubit/hom
 import 'package:flower_app/features/commerce/presentation/home/view/home_view.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/view/profile_home_view.dart';
-
-import '../../constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/app_localizations.dart';
 
 class PersistentBottomNavBarDemo extends StatefulWidget {
   const PersistentBottomNavBarDemo({super.key, this.onCartTabSelected});
@@ -60,6 +59,8 @@ class _PersistentBottomNavBarDemoState
       child: const ProfileHomeView(),
     );
 
+    final l10n = AppLocalizations.of(context)!;
+
     return PersistentTabView(
       controller: _controller,
       onTabChanged: (index) {
@@ -72,7 +73,7 @@ class _PersistentBottomNavBarDemoState
           screen: homeScreen,
           item: ItemConfig(
             icon: const Icon(Icons.home),
-            title: AppStrings.navHome,
+            title: l10n.navHome,
             activeForegroundColor: AppColors.pinkBase,
           ),
         ),
@@ -80,7 +81,7 @@ class _PersistentBottomNavBarDemoState
           screen: categoriesScreen,
           item: ItemConfig(
             icon: const Icon(Icons.category),
-            title: AppStrings.navcategories,
+            title: l10n.navcategories,
             activeForegroundColor: AppColors.pinkBase,
           ),
         ),
@@ -88,7 +89,7 @@ class _PersistentBottomNavBarDemoState
           screen: cartScreen,
           item: ItemConfig(
             icon: const Icon(Icons.shopping_cart),
-            title: AppStrings.navCart,
+            title: l10n.navCart,
             activeForegroundColor: AppColors.pinkBase,
           ),
         ),
@@ -96,7 +97,7 @@ class _PersistentBottomNavBarDemoState
           screen: profileScreen,
           item: ItemConfig(
             icon: const Icon(Icons.person),
-            title: AppStrings.navProfile,
+            title: l10n.navProfile,
             activeForegroundColor: AppColors.pinkBase,
           ),
         ),

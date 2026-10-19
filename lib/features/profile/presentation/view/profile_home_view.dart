@@ -1,12 +1,15 @@
 import 'package:flower_app/config/di/di.dart';
 import 'package:flower_app/config/routing/routes.dart';
 import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/core/locale/app_language.dart';
+import 'package:flower_app/core/locale/locale_cubit.dart';
 import 'package:flower_app/core/themes/app_colors/app_color.dart';
 import 'package:flower_app/features/auth/api/service/secure_storage.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/profile_event.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/profile_state.dart';
 import 'package:flower_app/features/profile/presentation/manager/cubit/profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/view/widgets/body_profile.dart';
+import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,19 +28,20 @@ class _ProfileHomeViewState extends State<ProfileHomeView> {
   }
 
   Future<void> _confirmLogout(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text(AppStrings.logoutDialogTitle),
-        content: const Text(AppStrings.confirmLogoutSubtitle),
+        title: Text(l10n.logoutDialogTitle),
+        content: Text(l10n.confirmLogoutSubtitle),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text(AppStrings.actionCancel),
+            child: Text(l10n.actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text(AppStrings.logout),
+            child: Text(l10n.logout),
           ),
         ],
       ),
@@ -47,7 +51,10 @@ class _ProfileHomeViewState extends State<ProfileHomeView> {
     await getIt<SecureStorageService>().clear();
     if (!context.mounted) return;
 
-    Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
+    Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+      Routes.login,
+      (route) => false,
+    );
   }
 
   @override
@@ -85,12 +92,23 @@ class _ProfileHomeViewState extends State<ProfileHomeView> {
         return SafeArea(
           child: ProfileBody(
             profile: profileState.data,
-            onEditProfile: () =>
-                Navigator.pushNamed(context, Routes.editProfile),
+            onEditProfile: () async {
+              await Navigator.pushNamed(context, Routes.editProfile);
+              if (context.mounted) {
+                context.read<ProfileViewModel>().doEvent(FetchProfileEvent());
+              }
+            },
+            onSavedAddress: () =>
+                Navigator.pushNamed(context, Routes.savedAddresses),
             onNotification: () =>
                 Navigator.pushNamed(context, Routes.notification),
-            onLanguage: () =>
-                Navigator.pushNamed(context, Routes.changeLanguage),
+            onLanguage: () {
+              final localeCubit = context.read<LocaleCubit>();
+              final nextLanguage = localeCubit.state == AppLanguage.arabic
+                  ? AppLanguage.english
+                  : AppLanguage.arabic;
+              localeCubit.changeLanguage(nextLanguage);
+            },
             onLogout: () => _confirmLogout(context),
           ),
         );

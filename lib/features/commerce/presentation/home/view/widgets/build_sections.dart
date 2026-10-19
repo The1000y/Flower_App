@@ -1,5 +1,5 @@
 import 'package:flower_app/config/routing/routes.dart';
-import 'package:flower_app/core/constants/app_strings/app_strings.dart';
+import 'package:flower_app/l10n/app_localizations.dart';
 import 'package:flower_app/features/commerce/domain/entities/home/section_entity.dart';
 import 'package:flower_app/features/commerce/presentation/categories/navigation/categories_navigation.dart';
 import 'package:flower_app/features/commerce/presentation/home/manager/cubit/home_cubit.dart';
@@ -17,6 +17,7 @@ class BuildSections {
   final PersistentTabController controller;
   BuildSections(this.context, this.controller);
   Widget buildSection(SectionEntity section, {required TextTheme textTheme}) {
+    final l10n = AppLocalizations.of(context)!;
     switch (section.type) {
       case SectionType.category:
         return Column(
@@ -25,7 +26,7 @@ class BuildSections {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CustomHeaderOfCollection(
                 textTheme: textTheme,
-                collectionName: AppStrings.categoriesLabel,
+                collectionName: l10n.categoriesLabel,
                 onTapViewAll: () {
                   CategoriesNavigation.selectedIndex.value = 0;
                   controller.jumpToTab(1);
@@ -69,7 +70,7 @@ class BuildSections {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: CustomHeaderOfCollection(
                   textTheme: textTheme,
-                  collectionName: AppStrings.bestsellerLabel,
+                  collectionName: l10n.bestsellerLabel,
                   onTapViewAll: () {
                     Navigator.pushNamed(context, Routes.bestSeller);
                   },
@@ -113,7 +114,7 @@ class BuildSections {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: CustomHeaderOfCollection(
                   textTheme: textTheme,
-                  collectionName: AppStrings.ocassionLabel,
+                  collectionName: l10n.ocassionLabel,
                   onTapViewAll: () {
                     Navigator.pushNamed(context, Routes.occasion);
                   },
