@@ -29,7 +29,7 @@ void main() {
           'estimatedDeliveryAt': '2026-10-10T23:29:23.953Z',
           'awaitingCustomerConfirmation': true,
         },
-        'isSuccess': true,
+        'success': true,
         'message': 'ok',
         'messageLocalized': 'تم',
         'statusCode': 'Success',
@@ -80,7 +80,7 @@ void main() {
           'estimatedDeliveryAt': null,
           'awaitingCustomerConfirmation': null,
         },
-        'isSuccess': true,
+        'success': true,
       });
 
       final entity = dto.toEntity()!;
@@ -95,7 +95,7 @@ void main() {
     });
 
     test('returns a null entity when data is missing', () {
-      final dto = TrackingDto.fromJson({'isSuccess': false, 'data': null});
+      final dto = TrackingDto.fromJson({'success': false, 'data': null});
 
       expect(dto.toEntity(), isNull);
     });

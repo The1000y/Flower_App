@@ -23,7 +23,7 @@ void main() {
 
       expect(request.addressId, 'address-1');
       expect(request.paymentMethod, 'COD');
-      expect(request.paymentGateway, isNull);
+      expect(request.paymentGateway, 'cash');
       expect(request.isGift, isFalse);
       expect(request.giftRecipientName, isNull);
       expect(request.giftRecipientPhone, isNull);
@@ -62,13 +62,13 @@ void main() {
       expect(request.giftRecipientPhone, isNull);
     });
 
-    test('omits the null gateway from the json payload', () {
+    test('includes the cash gateway in the json payload', () {
       final json = PlaceOrderRequest.fromParam(param()).toJson();
 
-      expect(json.containsKey('paymentGateway'), isFalse);
       expect(json, {
         'addressId': 'address-1',
         'paymentMethod': 'COD',
+        'paymentGateway': 'cash',
         'isGift': false,
       });
     });

@@ -31,7 +31,7 @@ Widget _app(FakeAuthRepo repo) {
             );
           default:
             return MaterialPageRoute(
-              builder: (_) => const Scaffold(body: Placeholder()),
+              builder: (_) => const Scaffold(body: Text('Login Screen')),
             );
         }
       },

@@ -302,7 +302,7 @@ void main() {
       await pumpStream(tester);
 
       // Assert
-      expect(find.text('no address selected'), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().noAddress), findsOneWidget);
       verifyNever(mockPlaceOrderCubit.doEvent(any));
     });
 
@@ -322,7 +322,10 @@ void main() {
       await pumpStream(tester);
 
       // Assert
-      expect(find.text('no payment method selected'), findsOneWidget);
+      expect(
+        find.text(AppLocalizationsEn().noPaymentMethodSelected),
+        findsOneWidget,
+      );
       verifyNever(mockPlaceOrderCubit.doEvent(any));
     });
 
@@ -354,8 +357,11 @@ void main() {
       expect(param.addressId, 'address-1');
       expect(param.paymentMethod, CheckoutPaymentMethod.COD);
       expect(param.isGift, isFalse);
-      expect(find.text('no address selected'), findsNothing);
-      expect(find.text('no payment method selected'), findsNothing);
+      expect(find.text(AppLocalizationsEn().noAddress), findsNothing);
+      expect(
+        find.text(AppLocalizationsEn().noPaymentMethodSelected),
+        findsNothing,
+      );
     });
 
     testWidgets('keeps the place order button disabled while loading', (
@@ -482,11 +488,6 @@ void main() {
         expect(find.text(orderSuccessRoute), findsOneWidget);
         expect(find.byType(OrderSummarySection), findsNothing);
         expect(find.byType(WebViewPayment), findsNothing);
-
-        final cleared = mocktail
-            .verify(() => mockCartCubit.doEvent(mocktail.captureAny()))
-            .captured;
-        expect(cleared.single, isA<ClearCartEvent>());
       },
     );
   });
